@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-03T22:58:28.467610+00:00",
+  "generated_at": "2026-08-03T23:49:22.218119+00:00",
   "live_jobs": [
     {
       "company": "Salesforce",
@@ -5728,20 +5728,6 @@
       "first_seen_at": "2026-08-03T17:53:35.982922+00:00"
     },
     {
-      "company": "Figma",
-      "title": "Senior Technical Revenue Analyst (Dublin, Ireland)",
-      "location": "Dublin, Ireland",
-      "posted_text": "Posted 12 days ago",
-      "posted_days_ago": 12,
-      "employment_type": "Unspecified",
-      "url": "https://boards.greenhouse.io/figma/jobs/5835673004?gh_jid=5835673004",
-      "source": "greenhouse_api",
-      "visa_sponsorship": "not_mentioned",
-      "visa_snippet": null,
-      "new_since_last_check": false,
-      "first_seen_at": "2026-08-03T13:41:34.300846+00:00"
-    },
-    {
       "company": "Dropbox",
       "title": "Account Executive UKI",
       "location": "Remote - Ireland; Remote - United Kingdom",
@@ -7422,6 +7408,34 @@
       "first_seen_at": "2026-08-03T17:53:35.982922+00:00"
     },
     {
+      "company": "Dillon Eustace",
+      "title": "Listings and Fund Registration Advisor",
+      "location": "Dublin",
+      "posted_text": "Posted 42 days ago",
+      "posted_days_ago": 42,
+      "employment_type": "permanent",
+      "url": "https://dilloneustace.jobs.personio.de/job/2681479",
+      "source": "personio_xml",
+      "visa_sponsorship": "not_mentioned",
+      "visa_snippet": null,
+      "new_since_last_check": true,
+      "first_seen_at": "2026-08-03T23:49:22.218119+00:00"
+    },
+    {
+      "company": "Dillon Eustace",
+      "title": "Solicitor",
+      "location": "Dublin",
+      "posted_text": "Posted 137 days ago",
+      "posted_days_ago": 137,
+      "employment_type": "permanent",
+      "url": "https://dilloneustace.jobs.personio.de/job/2570422",
+      "source": "personio_xml",
+      "visa_sponsorship": "not_mentioned",
+      "visa_snippet": null,
+      "new_since_last_check": true,
+      "first_seen_at": "2026-08-03T23:49:22.218119+00:00"
+    },
+    {
       "company": "Harvey Nash Ireland",
       "title": "Premium Support Specialist, Weekend Coverage",
       "location": "Dublin",
@@ -7706,7 +7720,7 @@
     {
       "company": "Accenture",
       "url": "https://accenture.wd103.myworkdayjobs.com/AccentureCareers",
-      "platform": "workday (fetch error, verify manually)"
+      "platform": "recruitee (no Ireland postings found right now)"
     },
     {
       "company": "Google",
@@ -7726,12 +7740,12 @@
     {
       "company": "Meta",
       "url": "https://www.metacareers.com/jobs?locations[0]=Dublin%2C%20Ireland",
-      "platform": "custom"
+      "platform": "recruitee (no Ireland postings found right now)"
     },
     {
       "company": "Amazon",
       "url": "https://www.amazon.jobs/en/locations/dublin-ireland",
-      "platform": "custom"
+      "platform": "personio (no Ireland postings found right now)"
     },
     {
       "company": "HubSpot",
@@ -7876,7 +7890,7 @@
     {
       "company": "Advanced Micro Devices (AMD)",
       "url": "https://jobs.amd.com/go/Jobs-in-Ireland/8844800/",
-      "platform": "custom"
+      "platform": "recruitee (no Ireland postings found right now)"
     },
     {
       "company": "NVIDIA",
@@ -7906,7 +7920,12 @@
     {
       "company": "Monday.com",
       "url": "https://monday.com/careers",
-      "platform": "custom"
+      "platform": "personio (no Ireland postings found right now)"
+    },
+    {
+      "company": "Figma",
+      "url": "https://www.figma.com/careers/",
+      "platform": "greenhouse (no Ireland postings found right now)"
     },
     {
       "company": "Canva",
@@ -8146,7 +8165,7 @@
     {
       "company": "Johnson Controls",
       "url": "https://jobs.johnsoncontrols.com/",
-      "platform": "custom"
+      "platform": "personio (no Ireland postings found right now)"
     },
     {
       "company": "Trane Technologies",
@@ -8186,7 +8205,7 @@
     {
       "company": "Johnson & Johnson",
       "url": "https://jobs.jnj.com/en/jobs/?search=Ireland",
-      "platform": "custom"
+      "platform": "personio (no Ireland postings found right now)"
     },
     {
       "company": "Boston Scientific",
@@ -8406,7 +8425,7 @@
     {
       "company": "Tandem Diabetes Care",
       "url": "https://www.tandemdiabetes.com/about-us/careers",
-      "platform": "custom"
+      "platform": "personio (no Ireland postings found right now)"
     },
     {
       "company": "IQVIA",
@@ -8716,7 +8735,7 @@
     {
       "company": "EY Ireland",
       "url": "https://www.ey.com/en_ie/careers",
-      "platform": "custom"
+      "platform": "recruitee (no Ireland postings found right now)"
     },
     {
       "company": "KPMG Ireland",
@@ -8726,7 +8745,7 @@
     {
       "company": "Grant Thornton Ireland",
       "url": "https://www.grantthornton.ie/careers/",
-      "platform": "custom"
+      "platform": "personio (no Ireland postings found right now)"
     },
     {
       "company": "BDO Ireland",
@@ -8741,7 +8760,7 @@
     {
       "company": "Baker Tilly Ireland",
       "url": "https://www.bakertilly.ie/careers/",
-      "platform": "custom"
+      "platform": "recruitee (no Ireland postings found right now)"
     },
     {
       "company": "Capgemini",
@@ -8781,7 +8800,7 @@
     {
       "company": "Protiviti",
       "url": "https://www.protiviti.com/us-en/careers",
-      "platform": "custom"
+      "platform": "recruitee (no Ireland postings found right now)"
     },
     {
       "company": "Alvarez & Marsal",
@@ -8856,7 +8875,7 @@
     {
       "company": "Eversheds Sutherland Ireland",
       "url": "https://www.eversheds-sutherland.com/en/ireland/careers",
-      "platform": "custom"
+      "platform": "personio (no Ireland postings found right now)"
     },
     {
       "company": "ByrneWallace",
@@ -8876,11 +8895,6 @@
     {
       "company": "Walkers Ireland",
       "url": "https://www.walkersglobal.com/index.php/careers",
-      "platform": "custom"
-    },
-    {
-      "company": "Dillon Eustace",
-      "url": "https://www.dilloneustace.com/careers",
       "platform": "custom"
     },
     {
@@ -8916,7 +8930,7 @@
     {
       "company": "Adecco Ireland",
       "url": "https://www.adecco.com/en-ie/job-search",
-      "platform": "custom"
+      "platform": "recruitee (no Ireland postings found right now)"
     },
     {
       "company": "Manpower Ireland",
@@ -9101,12 +9115,12 @@
     {
       "company": "Zara / Inditex Ireland",
       "url": "https://www.inditexcareers.com/",
-      "platform": "custom"
+      "platform": "recruitee (no Ireland postings found right now)"
     },
     {
       "company": "H&M Ireland",
       "url": "https://career.hm.com/",
-      "platform": "custom"
+      "platform": "recruitee (no Ireland postings found right now)"
     },
     {
       "company": "TK Maxx Ireland",
@@ -9281,7 +9295,7 @@
     {
       "company": "daa (Dublin Airport Authority)",
       "url": "https://www.daa.ie/careers/",
-      "platform": "custom"
+      "platform": "personio (no Ireland postings found right now)"
     },
     {
       "company": "Shannon Airport Group",
@@ -9401,12 +9415,12 @@
     {
       "company": "Enterprise Ireland",
       "url": "https://www.enterprise-ireland.com/en/About-Us/Careers/",
-      "platform": "custom"
+      "platform": "recruitee (no Ireland postings found right now)"
     },
     {
       "company": "IDA Ireland",
       "url": "https://www.idaireland.com/about-ida-ireland/careers",
-      "platform": "custom"
+      "platform": "personio (no Ireland postings found right now)"
     },
     {
       "company": "Science Foundation Ireland (SFI)",
@@ -9426,7 +9440,7 @@
     {
       "company": "HSE (Health Service Executive)",
       "url": "https://about.hse.ie/jobs/job-search/",
-      "platform": "custom"
+      "platform": "recruitee (no Ireland postings found right now)"
     },
     {
       "company": "Trinity College Dublin (TCD)",
@@ -9506,24 +9520,24 @@
     {
       "company": "Teleperformance (Ireland)",
       "url": "https://www.teleperformance.com/en-us/careers/",
-      "platform": "custom"
+      "platform": "recruitee (no Ireland postings found right now)"
     }
   ],
   "company_sponsorship_stats": {
     "Salesforce": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 521,
-      "total": 521,
-      "label": "No sponsorship info found (521 postings scanned)",
+      "not_mentioned": 561,
+      "total": 561,
+      "label": "No sponsorship info found (561 postings scanned)",
       "category": "no_data"
     },
     "Workday": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 223,
-      "total": 223,
-      "label": "No sponsorship info found (223 postings scanned)",
+      "not_mentioned": 240,
+      "total": 240,
+      "label": "No sponsorship info found (240 postings scanned)",
       "category": "no_data"
     },
     "Autodesk": {
@@ -9553,44 +9567,52 @@
     "Stripe": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 784,
-      "total": 784,
-      "label": "No sponsorship info found (784 postings scanned)",
+      "not_mentioned": 840,
+      "total": 840,
+      "label": "No sponsorship info found (840 postings scanned)",
       "category": "no_data"
     },
     "Intercom": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 672,
-      "total": 672,
-      "label": "No sponsorship info found (672 postings scanned)",
+      "not_mentioned": 720,
+      "total": 720,
+      "label": "No sponsorship info found (720 postings scanned)",
       "category": "no_data"
     },
     "Toast": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 322,
-      "total": 322,
-      "label": "No sponsorship info found (322 postings scanned)",
+      "not_mentioned": 345,
+      "total": 345,
+      "label": "No sponsorship info found (345 postings scanned)",
       "category": "no_data"
     },
     "MongoDB": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 1011,
-      "total": 1011,
-      "label": "No sponsorship info found (1011 postings scanned)",
+      "not_mentioned": 1083,
+      "total": 1083,
+      "label": "No sponsorship info found (1083 postings scanned)",
       "category": "no_data"
     },
     "Qualtrics": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 28,
-      "total": 28,
-      "label": "No sponsorship info found (28 postings scanned)",
+      "not_mentioned": 30,
+      "total": 30,
+      "label": "No sponsorship info found (30 postings scanned)",
       "category": "no_data"
     },
     "Twilio": {
+      "sponsors": 0,
+      "no_sponsorship": 0,
+      "not_mentioned": 180,
+      "total": 180,
+      "label": "No sponsorship info found (180 postings scanned)",
+      "category": "no_data"
+    },
+    "Pinterest": {
       "sponsors": 0,
       "no_sponsorship": 0,
       "not_mentioned": 168,
@@ -9598,28 +9620,20 @@
       "label": "No sponsorship info found (168 postings scanned)",
       "category": "no_data"
     },
-    "Pinterest": {
-      "sponsors": 0,
-      "no_sponsorship": 0,
-      "not_mentioned": 156,
-      "total": 156,
-      "label": "No sponsorship info found (156 postings scanned)",
-      "category": "no_data"
-    },
     "Reddit": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 42,
-      "total": 42,
-      "label": "No sponsorship info found (42 postings scanned)",
+      "not_mentioned": 45,
+      "total": 45,
+      "label": "No sponsorship info found (45 postings scanned)",
       "category": "no_data"
     },
     "Asana": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 104,
-      "total": 104,
-      "label": "No sponsorship info found (104 postings scanned)",
+      "not_mentioned": 112,
+      "total": 112,
+      "label": "No sponsorship info found (112 postings scanned)",
       "category": "no_data"
     },
     "Figma": {
@@ -9633,52 +9647,44 @@
     "Dropbox": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 14,
-      "total": 14,
-      "label": "No sponsorship info found (14 postings scanned)",
+      "not_mentioned": 15,
+      "total": 15,
+      "label": "No sponsorship info found (15 postings scanned)",
       "category": "no_data"
     },
     "Datadog": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 322,
-      "total": 322,
-      "label": "No sponsorship info found (322 postings scanned)",
+      "not_mentioned": 345,
+      "total": 345,
+      "label": "No sponsorship info found (345 postings scanned)",
       "category": "no_data"
     },
     "Zscaler": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 14,
-      "total": 14,
-      "label": "No sponsorship info found (14 postings scanned)",
+      "not_mentioned": 15,
+      "total": 15,
+      "label": "No sponsorship info found (15 postings scanned)",
       "category": "no_data"
     },
     "Okta": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 154,
-      "total": 154,
-      "label": "No sponsorship info found (154 postings scanned)",
+      "not_mentioned": 165,
+      "total": 165,
+      "label": "No sponsorship info found (165 postings scanned)",
       "category": "no_data"
     },
     "Pure Storage": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 42,
-      "total": 42,
-      "label": "No sponsorship info found (42 postings scanned)",
+      "not_mentioned": 45,
+      "total": 45,
+      "label": "No sponsorship info found (45 postings scanned)",
       "category": "no_data"
     },
     "JD Sports Ireland": {
-      "sponsors": 0,
-      "no_sponsorship": 0,
-      "not_mentioned": 13,
-      "total": 13,
-      "label": "No sponsorship info found (13 postings scanned)",
-      "category": "no_data"
-    },
-    "Mercury Engineering": {
       "sponsors": 0,
       "no_sponsorship": 0,
       "not_mentioned": 14,
@@ -9686,95 +9692,95 @@
       "label": "No sponsorship info found (14 postings scanned)",
       "category": "no_data"
     },
+    "Mercury Engineering": {
+      "sponsors": 0,
+      "no_sponsorship": 0,
+      "not_mentioned": 15,
+      "total": 15,
+      "label": "No sponsorship info found (15 postings scanned)",
+      "category": "no_data"
+    },
     "Pfizer": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 26,
-      "total": 26,
-      "label": "No sponsorship info found (26 postings scanned)",
+      "not_mentioned": 28,
+      "total": 28,
+      "label": "No sponsorship info found (28 postings scanned)",
       "category": "no_data"
     },
     "VMware (Broadcom)": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 18,
-      "total": 18,
-      "label": "No sponsorship info found (18 postings scanned)",
+      "not_mentioned": 20,
+      "total": 20,
+      "label": "No sponsorship info found (20 postings scanned)",
       "category": "no_data"
     },
     "Cadence Design Systems": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 81,
-      "total": 81,
-      "label": "No sponsorship info found (81 postings scanned)",
+      "not_mentioned": 90,
+      "total": 90,
+      "label": "No sponsorship info found (90 postings scanned)",
       "category": "no_data"
     },
     "Broadcom": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 18,
-      "total": 18,
-      "label": "No sponsorship info found (18 postings scanned)",
+      "not_mentioned": 20,
+      "total": 20,
+      "label": "No sponsorship info found (20 postings scanned)",
       "category": "no_data"
     },
     "MSD (Merck Sharp & Dohme)": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 54,
-      "total": 54,
-      "label": "No sponsorship info found (54 postings scanned)",
+      "not_mentioned": 60,
+      "total": 60,
+      "label": "No sponsorship info found (60 postings scanned)",
       "category": "no_data"
     },
     "State Street": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 279,
-      "total": 279,
-      "label": "No sponsorship info found (279 postings scanned)",
+      "not_mentioned": 310,
+      "total": 310,
+      "label": "No sponsorship info found (310 postings scanned)",
       "category": "no_data"
     },
     "Mercer": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 180,
-      "total": 180,
-      "label": "No sponsorship info found (180 postings scanned)",
+      "not_mentioned": 200,
+      "total": 200,
+      "label": "No sponsorship info found (200 postings scanned)",
       "category": "no_data"
     },
     "Marsh McLennan": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 180,
-      "total": 180,
-      "label": "No sponsorship info found (180 postings scanned)",
+      "not_mentioned": 200,
+      "total": 200,
+      "label": "No sponsorship info found (200 postings scanned)",
       "category": "no_data"
     },
     "PwC Ireland": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 24,
-      "total": 24,
-      "label": "No sponsorship info found (24 postings scanned)",
+      "not_mentioned": 27,
+      "total": 27,
+      "label": "No sponsorship info found (27 postings scanned)",
       "category": "no_data"
     },
     "Arista Networks": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 50,
-      "total": 50,
-      "label": "No sponsorship info found (50 postings scanned)",
+      "not_mentioned": 60,
+      "total": 60,
+      "label": "No sponsorship info found (60 postings scanned)",
       "category": "no_data"
     },
     "ClickUp": {
-      "sponsors": 0,
-      "no_sponsorship": 0,
-      "not_mentioned": 25,
-      "total": 25,
-      "label": "No sponsorship info found (25 postings scanned)",
-      "category": "no_data"
-    },
-    "Notion": {
       "sponsors": 0,
       "no_sponsorship": 0,
       "not_mentioned": 30,
@@ -9782,12 +9788,20 @@
       "label": "No sponsorship info found (30 postings scanned)",
       "category": "no_data"
     },
+    "Notion": {
+      "sponsors": 0,
+      "no_sponsorship": 0,
+      "not_mentioned": 36,
+      "total": 36,
+      "label": "No sponsorship info found (36 postings scanned)",
+      "category": "no_data"
+    },
     "Snowflake": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 38,
-      "total": 38,
-      "label": "No sponsorship info found (38 postings scanned)",
+      "not_mentioned": 46,
+      "total": 46,
+      "label": "No sponsorship info found (46 postings scanned)",
       "category": "no_data"
     },
     "AbbVie": {
@@ -9801,33 +9815,41 @@
     "Version 1": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 365,
-      "total": 365,
-      "label": "No sponsorship info found (365 postings scanned)",
+      "not_mentioned": 438,
+      "total": 438,
+      "label": "No sponsorship info found (438 postings scanned)",
       "category": "no_data"
     },
     "Harvey Nash Ireland": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 35,
-      "total": 35,
-      "label": "No sponsorship info found (35 postings scanned)",
+      "not_mentioned": 42,
+      "total": 42,
+      "label": "No sponsorship info found (42 postings scanned)",
       "category": "no_data"
     },
     "Primark / Penneys": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 28,
-      "total": 28,
-      "label": "No sponsorship info found (28 postings scanned)",
+      "not_mentioned": 33,
+      "total": 33,
+      "label": "No sponsorship info found (33 postings scanned)",
       "category": "no_data"
     },
     "Wayflyer": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 30,
-      "total": 30,
-      "label": "No sponsorship info found (30 postings scanned)",
+      "not_mentioned": 36,
+      "total": 36,
+      "label": "No sponsorship info found (36 postings scanned)",
+      "category": "no_data"
+    },
+    "Dillon Eustace": {
+      "sponsors": 0,
+      "no_sponsorship": 0,
+      "not_mentioned": 2,
+      "total": 2,
+      "label": "Not enough data yet (2 scanned)",
       "category": "no_data"
     }
   },
@@ -12758,39 +12780,39 @@
     }
   },
   "errors": [
-    "Accenture: request failed (HTTP 400: {\"errorCode\":\"HTTP_400\",\"errorCaseId\":\"B95BF5MSDTQV07\",\"httpStatus\":400,\"message\":\"\",\"messageParams\":{}})",
-    "Genesys: request failed (HTTP 400: {\"errorCode\":\"HTTP_400\",\"errorCaseId\":\"FA5FC1MSDTS8KG\",\"httpStatus\":400,\"message\":\"\",\"messageParams\":{}})",
-    "Mastercard: request failed (HTTP 400: {\"errorCode\":\"HTTP_400\",\"errorCaseId\":\"35EA65MSDTSFKE\",\"httpStatus\":400,\"message\":\"\",\"messageParams\":{}})",
-    "PayPal: request failed (HTTP 400: {\"errorCode\":\"HTTP_400\",\"errorCaseId\":\"85AA8BMSDTSMI3\",\"httpStatus\":400,\"message\":\"\",\"messageParams\":{}})",
-    "Adobe: request failed (HTTP 400: {\"errorCode\":\"HTTP_400\",\"errorCaseId\":\"ADAD6AMSDTST7G\",\"httpStatus\":400,\"message\":\"\",\"messageParams\":{}})",
-    "Autodesk: request failed (HTTP 400: {\"errorCode\":\"HTTP_400\",\"errorCaseId\":\"DF80B7MSDTSYZ9\",\"httpStatus\":400,\"message\":\"\",\"messageParams\":{}})",
-    "Analog Devices: request failed (HTTP 400: {\"errorCode\":\"HTTP_400\",\"errorCaseId\":\"86F9D0MSDTT90Z\",\"httpStatus\":400,\"message\":\"\",\"messageParams\":{}})",
-    "NVIDIA: request failed (HTTP 400: {\"errorCode\":\"HTTP_400\",\"errorCaseId\":\"5D19AEMSDTTGNK\",\"httpStatus\":400,\"message\":\"\",\"messageParams\":{}})",
-    "Eaton: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"3DBB31MSDTTVXH\",\"httpStatus\":422,\"message\":\"\",\"messageParams\":{}})",
-    "Sanofi: request failed (HTTP 400: {\"errorCode\":\"HTTP_400\",\"errorCaseId\":\"3852ACMSDTU536\",\"httpStatus\":400,\"message\":\"\",\"messageParams\":{}})",
-    "Bausch + Lomb: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"1727A2MSDTUQXA\",\"httpStatus\":422,\"message\":\"\",\"messageParams\":{}})",
-    "Takeda: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"753B2BMSDTUSS2\",\"httpStatus\":422,\"message\":\"\",\"messageParams\":{}})",
-    "Gilead Sciences: request failed (HTTP 400: {\"errorCode\":\"HTTP_400\",\"errorCaseId\":\"83EE92MSDTUYBP\",\"httpStatus\":400,\"message\":\"\",\"messageParams\":{}})",
-    "Edwards Lifesciences: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"309EA7MSDTUZ4T\",\"httpStatus\":422,\"message\":\"\",\"messageParams\":{}})",
-    "Teleflex: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"86B4DDMSDTV01W\",\"httpStatus\":422,\"message\":\"\",\"messageParams\":{}})",
-    "Zimmer Biomet: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"8FFE49MSDTV0VZ\",\"httpStatus\":422,\"message\":\"\",\"messageParams\":{}})",
-    "Viatris: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"D2D48DMSDTV1RF\",\"httpStatus\":422,\"message\":\"\",\"messageParams\":{}})",
-    "Teva Pharmaceuticals: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"FECE92MSDTV2MY\",\"httpStatus\":422,\"message\":\"\",\"messageParams\":{}})",
-    "Jazz Pharmaceuticals: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"0B3C63MSDTV3Y2\",\"httpStatus\":422,\"message\":\"\",\"messageParams\":{}})",
-    "ResMed: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"7CA947MSDTV4VC\",\"httpStatus\":422,\"message\":\"\",\"messageParams\":{}})",
-    "Becton Dickinson (BD): request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"5011F9MSDTV5VV\",\"httpStatus\":422,\"message\":\"\",\"messageParams\":{}})",
-    "Elavon: request failed (HTTP 400: {\"errorCode\":\"HTTP_400\",\"errorCaseId\":\"1739B8MSDTVZYR\",\"httpStatus\":400,\"message\":\"\",\"messageParams\":{}})",
-    "Northern Trust: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"A3E07AMSDTW0SS\",\"httpStatus\":422,\"message\":\"\",\"messageParams\":{}})",
-    "Deloitte Ireland: request failed (HTTP 400: {\"errorCode\":\"HTTP_400\",\"errorCaseId\":\"8AF875MSDTW6AR\",\"httpStatus\":400,\"message\":\"\",\"messageParams\":{}})",
-    "DXC Technology: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"512739MSDTX12Y\",\"httpStatus\":422,\"message\":\"\",\"messageParams\":{}})",
-    "Aon: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"90D61AMSDTX1XQ\",\"httpStatus\":422,\"message\":\"\",\"messageParams\":{}})",
-    "Willis Towers Watson (WTW): request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"E3A799MSDTX2T0\",\"httpStatus\":422,\"message\":\"\",\"messageParams\":{}})"
+    "Accenture: request failed (HTTP 400: {\"errorCode\":\"HTTP_400\",\"errorCaseId\":\"930287MSDV27EE\",\"httpStatus\":400,\"message\":\"\",\"messageParams\":{}})",
+    "Genesys: request failed (HTTP 400: {\"errorCode\":\"HTTP_400\",\"errorCaseId\":\"BD8307MSDV3JIT\",\"httpStatus\":400,\"message\":\"\",\"messageParams\":{}})",
+    "Mastercard: request failed (HTTP 400: {\"errorCode\":\"HTTP_400\",\"errorCaseId\":\"E3A799MSDV3QG1\",\"httpStatus\":400,\"message\":\"\",\"messageParams\":{}})",
+    "PayPal: request failed (HTTP 400: {\"errorCode\":\"HTTP_400\",\"errorCaseId\":\"65BD60MSDV3XNO\",\"httpStatus\":400,\"message\":\"\",\"messageParams\":{}})",
+    "Adobe: request failed (HTTP 400: {\"errorCode\":\"HTTP_400\",\"errorCaseId\":\"06D515MSDV44DJ\",\"httpStatus\":400,\"message\":\"\",\"messageParams\":{}})",
+    "Autodesk: request failed (HTTP 400: {\"errorCode\":\"HTTP_400\",\"errorCaseId\":\"B8D9E0MSDV4AJ2\",\"httpStatus\":400,\"message\":\"\",\"messageParams\":{}})",
+    "Analog Devices: request failed (HTTP 400: {\"errorCode\":\"HTTP_400\",\"errorCaseId\":\"656915MSDV4M76\",\"httpStatus\":400,\"message\":\"\",\"messageParams\":{}})",
+    "NVIDIA: request failed (HTTP 400: {\"errorCode\":\"HTTP_400\",\"errorCaseId\":\"41DBF3MSDV4TA6\",\"httpStatus\":400,\"message\":\"\",\"messageParams\":{}})",
+    "Eaton: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"D5FCFCMSDV5864\",\"httpStatus\":422,\"message\":\"\",\"messageParams\":{}})",
+    "Sanofi: request failed (HTTP 400: {\"errorCode\":\"HTTP_400\",\"errorCaseId\":\"1932D2MSDV5HAR\",\"httpStatus\":400,\"message\":\"\",\"messageParams\":{}})",
+    "Bausch + Lomb: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"2D042AMSDV624A\",\"httpStatus\":422,\"message\":\"\",\"messageParams\":{}})",
+    "Takeda: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"0E244AMSDV647R\",\"httpStatus\":422,\"message\":\"\",\"messageParams\":{}})",
+    "Gilead Sciences: request failed (HTTP 400: {\"errorCode\":\"HTTP_400\",\"errorCaseId\":\"A3E07AMSDV69N8\",\"httpStatus\":400,\"message\":\"\",\"messageParams\":{}})",
+    "Edwards Lifesciences: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"4E646CMSDV6AQ5\",\"httpStatus\":422,\"message\":\"\",\"messageParams\":{}})",
+    "Teleflex: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"1727A2MSDV6BXT\",\"httpStatus\":422,\"message\":\"\",\"messageParams\":{}})",
+    "Zimmer Biomet: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"DD3271MSDV6CVN\",\"httpStatus\":422,\"message\":\"\",\"messageParams\":{}})",
+    "Viatris: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"F22D3AMSDV6DRD\",\"httpStatus\":422,\"message\":\"\",\"messageParams\":{}})",
+    "Teva Pharmaceuticals: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"D27BC9MSDV6EZ8\",\"httpStatus\":422,\"message\":\"\",\"messageParams\":{}})",
+    "Jazz Pharmaceuticals: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"2E203CMSDV6GBI\",\"httpStatus\":422,\"message\":\"\",\"messageParams\":{}})",
+    "ResMed: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"9D6DA9MSDV6H6T\",\"httpStatus\":422,\"message\":\"\",\"messageParams\":{}})",
+    "Becton Dickinson (BD): request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"C75A53MSDV6IFR\",\"httpStatus\":422,\"message\":\"\",\"messageParams\":{}})",
+    "Elavon: request failed (HTTP 400: {\"errorCode\":\"HTTP_400\",\"errorCaseId\":\"309EA7MSDV79CD\",\"httpStatus\":400,\"message\":\"\",\"messageParams\":{}})",
+    "Northern Trust: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"37AAF7MSDV7ABL\",\"httpStatus\":422,\"message\":\"\",\"messageParams\":{}})",
+    "Deloitte Ireland: request failed (HTTP 400: {\"errorCode\":\"HTTP_400\",\"errorCaseId\":\"EA5EBFMSDV7G2E\",\"httpStatus\":400,\"message\":\"\",\"messageParams\":{}})",
+    "DXC Technology: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"BA2505MSDV8B05\",\"httpStatus\":422,\"message\":\"\",\"messageParams\":{}})",
+    "Aon: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"DD3271MSDV8BU8\",\"httpStatus\":422,\"message\":\"\",\"messageParams\":{}})",
+    "Willis Towers Watson (WTW): request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"FECE92MSDV8DRY\",\"httpStatus\":422,\"message\":\"\",\"messageParams\":{}})"
   ],
   "stats": {
     "total_companies": 397,
     "automated_companies": 36,
     "manual_companies": 361,
-    "live_jobs_found": 550,
-    "new_since_last_check": 0
+    "live_jobs_found": 551,
+    "new_since_last_check": 2
   }
 }
