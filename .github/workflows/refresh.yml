@@ -1,0 +1,36 @@
+name: refresh-jobs
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests openpyxl
+
+      - name: Run job pipeline
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python job_pipeline.py
+
+      - name: Commit updated data files
+        run: |
+          git config user.name "job-radar-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add jobs.json sponsorship_history.json seen_jobs.json ats_platform_cache.json
+          git commit -m "Refresh job data $(date -u +'%Y-%m-%d %H:%M UTC')" || echo "No changes to commit"
+          git push
