@@ -1,0 +1,1430 @@
+{
+  "Stripe": {
+    "platform": "greenhouse",
+    "slug": "stripe"
+  },
+  "Google": {
+    "platform": "none",
+    "slug": null
+  },
+  "Microsoft": {
+    "platform": "none",
+    "slug": null
+  },
+  "Apple": {
+    "platform": "none",
+    "slug": null
+  },
+  "Meta": {
+    "platform": "none",
+    "slug": null
+  },
+  "Amazon": {
+    "platform": "none",
+    "slug": null
+  },
+  "HubSpot": {
+    "platform": "none",
+    "slug": null
+  },
+  "LinkedIn": {
+    "platform": "greenhouse",
+    "slug": "linkedin"
+  },
+  "TikTok": {
+    "platform": "none",
+    "slug": null
+  },
+  "Intel": {
+    "platform": "none",
+    "slug": null
+  },
+  "Dell Technologies": {
+    "platform": "none",
+    "slug": null
+  },
+  "HP (Hewlett-Packard)": {
+    "platform": "none",
+    "slug": null
+  },
+  "Hewlett Packard Enterprise (HPE)": {
+    "platform": "none",
+    "slug": null
+  },
+  "IBM": {
+    "platform": "none",
+    "slug": null
+  },
+  "Oracle": {
+    "platform": "none",
+    "slug": null
+  },
+  "Cisco": {
+    "platform": "none",
+    "slug": null
+  },
+  "SAP": {
+    "platform": "none",
+    "slug": null
+  },
+  "Intercom": {
+    "platform": "greenhouse",
+    "slug": "intercom"
+  },
+  "Toast": {
+    "platform": "greenhouse",
+    "slug": "toast"
+  },
+  "Zendesk": {
+    "platform": "none",
+    "slug": null
+  },
+  "Genesys": {
+    "platform": "none",
+    "slug": null
+  },
+  "MongoDB": {
+    "platform": "greenhouse",
+    "slug": "mongodb"
+  },
+  "ServiceNow": {
+    "platform": "none",
+    "slug": null
+  },
+  "Slack": {
+    "platform": "none",
+    "slug": null
+  },
+  "DocuSign": {
+    "platform": "none",
+    "slug": null
+  },
+  "Qualtrics": {
+    "platform": "greenhouse",
+    "slug": "qualtrics"
+  },
+  "Twilio": {
+    "platform": "greenhouse",
+    "slug": "twilio"
+  },
+  "Atlassian": {
+    "platform": "none",
+    "slug": null
+  },
+  "NetApp": {
+    "platform": "none",
+    "slug": null
+  },
+  "Fiserv": {
+    "platform": "none",
+    "slug": null
+  },
+  "Visa": {
+    "platform": "none",
+    "slug": null
+  },
+  "Arista Networks": {
+    "platform": "none",
+    "slug": null
+  },
+  "Synopsys": {
+    "platform": "none",
+    "slug": null
+  },
+  "Microchip Technology": {
+    "platform": "none",
+    "slug": null
+  },
+  "Qorvo": {
+    "platform": "none",
+    "slug": null
+  },
+  "Advanced Micro Devices (AMD)": {
+    "platform": "none",
+    "slug": null
+  },
+  "Logitech": {
+    "platform": "none",
+    "slug": null
+  },
+  "Ericsson": {
+    "platform": "none",
+    "slug": null
+  },
+  "Nokia": {
+    "platform": "none",
+    "slug": null
+  },
+  "Pinterest": {
+    "platform": "greenhouse",
+    "slug": "pinterest"
+  },
+  "Reddit": {
+    "platform": "greenhouse",
+    "slug": "reddit"
+  },
+  "Etsy": {
+    "platform": "none",
+    "slug": null
+  },
+  "Asana": {
+    "platform": "greenhouse",
+    "slug": "asana"
+  },
+  "Monday.com": {
+    "platform": "none",
+    "slug": null
+  },
+  "ClickUp": {
+    "platform": "none",
+    "slug": null
+  },
+  "Notion": {
+    "platform": "none",
+    "slug": null
+  },
+  "Figma": {
+    "platform": "greenhouse",
+    "slug": "figma"
+  },
+  "Canva": {
+    "platform": "none",
+    "slug": null
+  },
+  "Box": {
+    "platform": "none",
+    "slug": null
+  },
+  "Dropbox": {
+    "platform": "greenhouse",
+    "slug": "dropbox"
+  },
+  "Snowflake": {
+    "platform": "none",
+    "slug": null
+  },
+  "Databricks": {
+    "platform": "greenhouse",
+    "slug": "databricks"
+  },
+  "Datadog": {
+    "platform": "greenhouse",
+    "slug": "datadog"
+  },
+  "Dynatrace": {
+    "platform": "none",
+    "slug": null
+  },
+  "Splunk": {
+    "platform": "none",
+    "slug": null
+  },
+  "CrowdStrike": {
+    "platform": "none",
+    "slug": null
+  },
+  "Palo Alto Networks": {
+    "platform": "none",
+    "slug": null
+  },
+  "Fortinet": {
+    "platform": "none",
+    "slug": null
+  },
+  "Zscaler": {
+    "platform": "greenhouse",
+    "slug": "zscaler"
+  },
+  "Cloudflare": {
+    "platform": "greenhouse",
+    "slug": "cloudflare"
+  },
+  "Fastly": {
+    "platform": "greenhouse",
+    "slug": "fastly"
+  },
+  "Akamai": {
+    "platform": "none",
+    "slug": null
+  },
+  "Okta": {
+    "platform": "greenhouse",
+    "slug": "okta"
+  },
+  "Ping Identity": {
+    "platform": "greenhouse",
+    "slug": "pingidentity"
+  },
+  "CyberArk": {
+    "platform": "none",
+    "slug": null
+  },
+  "Rapid7": {
+    "platform": "none",
+    "slug": null
+  },
+  "SentinelOne": {
+    "platform": "none",
+    "slug": null
+  },
+  "Check Point Software": {
+    "platform": "none",
+    "slug": null
+  },
+  "Tenable": {
+    "platform": "none",
+    "slug": null
+  },
+  "Proofpoint": {
+    "platform": "none",
+    "slug": null
+  },
+  "Sophos": {
+    "platform": "lever",
+    "slug": "sophos"
+  },
+  "Trend Micro": {
+    "platform": "none",
+    "slug": null
+  },
+  "Jamf": {
+    "platform": "greenhouse",
+    "slug": "jamf"
+  },
+  "Citrix": {
+    "platform": "none",
+    "slug": null
+  },
+  "Nutanix": {
+    "platform": "none",
+    "slug": null
+  },
+  "Pure Storage": {
+    "platform": "greenhouse",
+    "slug": "purestorage"
+  },
+  "Rubrik": {
+    "platform": "greenhouse",
+    "slug": "rubrik"
+  },
+  "Cohesity": {
+    "platform": "none",
+    "slug": null
+  },
+  "Veeam": {
+    "platform": "none",
+    "slug": null
+  },
+  "Western Digital": {
+    "platform": "none",
+    "slug": null
+  },
+  "Seagate": {
+    "platform": "none",
+    "slug": null
+  },
+  "Micron Technology": {
+    "platform": "none",
+    "slug": null
+  },
+  "Texas Instruments": {
+    "platform": "none",
+    "slug": null
+  },
+  "Qualcomm": {
+    "platform": "none",
+    "slug": null
+  },
+  "Marvell Technology": {
+    "platform": "none",
+    "slug": null
+  },
+  "NXP Semiconductors": {
+    "platform": "none",
+    "slug": null
+  },
+  "STMicroelectronics": {
+    "platform": "none",
+    "slug": null
+  },
+  "Infineon Technologies": {
+    "platform": "none",
+    "slug": null
+  },
+  "Renesas Electronics": {
+    "platform": "none",
+    "slug": null
+  },
+  "KLA Corporation": {
+    "platform": "none",
+    "slug": null
+  },
+  "Applied Materials": {
+    "platform": "none",
+    "slug": null
+  },
+  "Lam Research": {
+    "platform": "none",
+    "slug": null
+  },
+  "ASML": {
+    "platform": "none",
+    "slug": null
+  },
+  "Keysight Technologies": {
+    "platform": "none",
+    "slug": null
+  },
+  "Honeywell": {
+    "platform": "none",
+    "slug": null
+  },
+  "Emerson": {
+    "platform": "none",
+    "slug": null
+  },
+  "ABB": {
+    "platform": "none",
+    "slug": null
+  },
+  "Schneider Electric": {
+    "platform": "none",
+    "slug": null
+  },
+  "Johnson Controls": {
+    "platform": "none",
+    "slug": null
+  },
+  "Trane Technologies": {
+    "platform": "none",
+    "slug": null
+  },
+  "Carrier": {
+    "platform": "none",
+    "slug": null
+  },
+  "Eir": {
+    "platform": "none",
+    "slug": null
+  },
+  "Vodafone Ireland": {
+    "platform": "none",
+    "slug": null
+  },
+  "Three Ireland": {
+    "platform": "none",
+    "slug": null
+  },
+  "Virgin Media Ireland": {
+    "platform": "none",
+    "slug": null
+  },
+  "Sky Ireland": {
+    "platform": "none",
+    "slug": null
+  },
+  "Johnson & Johnson": {
+    "platform": "none",
+    "slug": null
+  },
+  "Boston Scientific": {
+    "platform": "none",
+    "slug": null
+  },
+  "Medtronic": {
+    "platform": "none",
+    "slug": null
+  },
+  "Abbott": {
+    "platform": "none",
+    "slug": null
+  },
+  "Novartis": {
+    "platform": "none",
+    "slug": null
+  },
+  "Eli Lilly": {
+    "platform": "none",
+    "slug": null
+  },
+  "Roche": {
+    "platform": "none",
+    "slug": null
+  },
+  "Bristol Myers Squibb": {
+    "platform": "none",
+    "slug": null
+  },
+  "ICON plc": {
+    "platform": "none",
+    "slug": null
+  },
+  "Horizon Therapeutics (Amgen)": {
+    "platform": "lever",
+    "slug": "horizon"
+  },
+  "Stryker": {
+    "platform": "none",
+    "slug": null
+  },
+  "Cook Medical": {
+    "platform": "none",
+    "slug": null
+  },
+  "Amgen": {
+    "platform": "none",
+    "slug": null
+  },
+  "Regeneron": {
+    "platform": "none",
+    "slug": null
+  },
+  "AstraZeneca": {
+    "platform": "none",
+    "slug": null
+  },
+  "Merck Group": {
+    "platform": "none",
+    "slug": null
+  },
+  "Alexion Pharmaceuticals": {
+    "platform": "none",
+    "slug": null
+  },
+  "Biotronik": {
+    "platform": "none",
+    "slug": null
+  },
+  "Alkermes": {
+    "platform": "none",
+    "slug": null
+  },
+  "WuXi Biologics": {
+    "platform": "none",
+    "slug": null
+  },
+  "DePuy Synthes": {
+    "platform": "none",
+    "slug": null
+  },
+  "Baxter International": {
+    "platform": "none",
+    "slug": null
+  },
+  "Terumo": {
+    "platform": "none",
+    "slug": null
+  },
+  "Smith & Nephew": {
+    "platform": "none",
+    "slug": null
+  },
+  "Coloplast": {
+    "platform": "none",
+    "slug": null
+  },
+  "Convatec": {
+    "platform": "none",
+    "slug": null
+  },
+  "Integra LifeSciences": {
+    "platform": "greenhouse",
+    "slug": "integra"
+  },
+  "Merit Medical": {
+    "platform": "none",
+    "slug": null
+  },
+  "Hollister Incorporated": {
+    "platform": "none",
+    "slug": null
+  },
+  "Insulet Corporation": {
+    "platform": "none",
+    "slug": null
+  },
+  "Dexcom": {
+    "platform": "none",
+    "slug": null
+  },
+  "Tandem Diabetes Care": {
+    "platform": "none",
+    "slug": null
+  },
+  "IQVIA": {
+    "platform": "none",
+    "slug": null
+  },
+  "Syneos Health": {
+    "platform": "none",
+    "slug": null
+  },
+  "Charles River Laboratories": {
+    "platform": "greenhouse",
+    "slug": "charles"
+  },
+  "Labcorp": {
+    "platform": "none",
+    "slug": null
+  },
+  "Medpace": {
+    "platform": "none",
+    "slug": null
+  },
+  "Waters Corporation": {
+    "platform": "none",
+    "slug": null
+  },
+  "Agilent Technologies": {
+    "platform": "none",
+    "slug": null
+  },
+  "Thermo Fisher Scientific": {
+    "platform": "none",
+    "slug": null
+  },
+  "Danaher Corporation": {
+    "platform": "none",
+    "slug": null
+  },
+  "Revvity (PerkinElmer)": {
+    "platform": "none",
+    "slug": null
+  },
+  "Bruker": {
+    "platform": "none",
+    "slug": null
+  },
+  "Bio-Rad Laboratories": {
+    "platform": "none",
+    "slug": null
+  },
+  "QIAGEN": {
+    "platform": "none",
+    "slug": null
+  },
+  "Eurofins Scientific": {
+    "platform": "none",
+    "slug": null
+  },
+  "Lonza": {
+    "platform": "none",
+    "slug": null
+  },
+  "Boehringer Ingelheim": {
+    "platform": "none",
+    "slug": null
+  },
+  "Bayer": {
+    "platform": "none",
+    "slug": null
+  },
+  "GlaxoSmithKline (GSK)": {
+    "platform": "none",
+    "slug": null
+  },
+  "Haleon": {
+    "platform": "none",
+    "slug": null
+  },
+  "AIB (Allied Irish Banks)": {
+    "platform": "none",
+    "slug": null
+  },
+  "Bank of Ireland": {
+    "platform": "none",
+    "slug": null
+  },
+  "PTSB (Permanent TSB)": {
+    "platform": "none",
+    "slug": null
+  },
+  "Citi": {
+    "platform": "none",
+    "slug": null
+  },
+  "JPMorgan Chase": {
+    "platform": "none",
+    "slug": null
+  },
+  "BNY Mellon": {
+    "platform": "none",
+    "slug": null
+  },
+  "Fidelity Investments": {
+    "platform": "none",
+    "slug": null
+  },
+  "Susquehanna International Group (SIG)": {
+    "platform": "none",
+    "slug": null
+  },
+  "Irish Life": {
+    "platform": "none",
+    "slug": null
+  },
+  "Zurich Insurance": {
+    "platform": "none",
+    "slug": null
+  },
+  "AXA Ireland": {
+    "platform": "none",
+    "slug": null
+  },
+  "Aviva Ireland": {
+    "platform": "none",
+    "slug": null
+  },
+  "Laya Healthcare": {
+    "platform": "none",
+    "slug": null
+  },
+  "VHI Healthcare": {
+    "platform": "none",
+    "slug": null
+  },
+  "Davy": {
+    "platform": "none",
+    "slug": null
+  },
+  "Goodbody": {
+    "platform": "none",
+    "slug": null
+  },
+  "Cantor Fitzgerald Ireland": {
+    "platform": "none",
+    "slug": null
+  },
+  "FBD Insurance": {
+    "platform": "none",
+    "slug": null
+  },
+  "Morgan Stanley": {
+    "platform": "none",
+    "slug": null
+  },
+  "Goldman Sachs": {
+    "platform": "none",
+    "slug": null
+  },
+  "Barclays": {
+    "platform": "none",
+    "slug": null
+  },
+  "HSBC Ireland": {
+    "platform": "none",
+    "slug": null
+  },
+  "UBS": {
+    "platform": "none",
+    "slug": null
+  },
+  "Societe Generale": {
+    "platform": "none",
+    "slug": null
+  },
+  "BNP Paribas Ireland": {
+    "platform": "none",
+    "slug": null
+  },
+  "SMBC Aviation Capital": {
+    "platform": "none",
+    "slug": null
+  },
+  "Avolon": {
+    "platform": "none",
+    "slug": null
+  },
+  "AerCap": {
+    "platform": "none",
+    "slug": null
+  },
+  "Macquarie Group": {
+    "platform": "none",
+    "slug": null
+  },
+  "FactSet": {
+    "platform": "none",
+    "slug": null
+  },
+  "Morningstar": {
+    "platform": "none",
+    "slug": null
+  },
+  "MSCI": {
+    "platform": "none",
+    "slug": null
+  },
+  "S&P Global": {
+    "platform": "none",
+    "slug": null
+  },
+  "Moody's": {
+    "platform": "none",
+    "slug": null
+  },
+  "Fitch Ratings": {
+    "platform": "none",
+    "slug": null
+  },
+  "Bloomberg": {
+    "platform": "none",
+    "slug": null
+  },
+  "Refinitiv (LSEG)": {
+    "platform": "none",
+    "slug": null
+  },
+  "Deloitte Ireland": {
+    "platform": "none",
+    "slug": null
+  },
+  "PwC Ireland": {
+    "platform": "none",
+    "slug": null
+  },
+  "EY Ireland": {
+    "platform": "none",
+    "slug": null
+  },
+  "KPMG Ireland": {
+    "platform": "none",
+    "slug": null
+  },
+  "Grant Thornton Ireland": {
+    "platform": "none",
+    "slug": null
+  },
+  "BDO Ireland": {
+    "platform": "none",
+    "slug": null
+  },
+  "Forvis Mazars Ireland": {
+    "platform": "greenhouse",
+    "slug": "forvismazars"
+  },
+  "Baker Tilly Ireland": {
+    "platform": "none",
+    "slug": null
+  },
+  "Capgemini": {
+    "platform": "none",
+    "slug": null
+  },
+  "Infosys": {
+    "platform": "none",
+    "slug": null
+  },
+  "Wipro": {
+    "platform": "none",
+    "slug": null
+  },
+  "Tata Consultancy Services (TCS)": {
+    "platform": "none",
+    "slug": null
+  },
+  "Cognizant": {
+    "platform": "none",
+    "slug": null
+  },
+  "Version 1": {
+    "platform": "none",
+    "slug": null
+  },
+  "Slalom": {
+    "platform": "none",
+    "slug": null
+  },
+  "Protiviti": {
+    "platform": "none",
+    "slug": null
+  },
+  "Alvarez & Marsal": {
+    "platform": "none",
+    "slug": null
+  },
+  "FTI Consulting": {
+    "platform": "none",
+    "slug": null
+  },
+  "McKinsey & Company": {
+    "platform": "none",
+    "slug": null
+  },
+  "Boston Consulting Group (BCG)": {
+    "platform": "none",
+    "slug": null
+  },
+  "Bain & Company": {
+    "platform": "none",
+    "slug": null
+  },
+  "Oliver Wyman": {
+    "platform": "lever",
+    "slug": "oliverwyman"
+  },
+  "Matheson": {
+    "platform": "none",
+    "slug": null
+  },
+  "A&L Goodbody": {
+    "platform": "none",
+    "slug": null
+  },
+  "Arthur Cox": {
+    "platform": "none",
+    "slug": null
+  },
+  "McCann FitzGerald": {
+    "platform": "none",
+    "slug": null
+  },
+  "Mason Hayes & Curran": {
+    "platform": "none",
+    "slug": null
+  },
+  "William Fry": {
+    "platform": "none",
+    "slug": null
+  },
+  "Eversheds Sutherland Ireland": {
+    "platform": "none",
+    "slug": null
+  },
+  "ByrneWallace": {
+    "platform": "none",
+    "slug": null
+  },
+  "Philip Lee": {
+    "platform": "none",
+    "slug": null
+  },
+  "Maples Group Ireland": {
+    "platform": "none",
+    "slug": null
+  },
+  "Walkers Ireland": {
+    "platform": "none",
+    "slug": null
+  },
+  "Dillon Eustace": {
+    "platform": "none",
+    "slug": null
+  },
+  "LK Shields": {
+    "platform": "none",
+    "slug": null
+  },
+  "CPL Resources": {
+    "platform": "none",
+    "slug": null
+  },
+  "Sigmar Recruitment": {
+    "platform": "none",
+    "slug": null
+  },
+  "Morgan McKinley": {
+    "platform": "none",
+    "slug": null
+  },
+  "Hays Ireland": {
+    "platform": "none",
+    "slug": null
+  },
+  "Brightwater": {
+    "platform": "none",
+    "slug": null
+  },
+  "Harvey Nash Ireland": {
+    "platform": "none",
+    "slug": null
+  },
+  "Adecco Ireland": {
+    "platform": "none",
+    "slug": null
+  },
+  "Manpower Ireland": {
+    "platform": "none",
+    "slug": null
+  },
+  "Tesco Ireland": {
+    "platform": "none",
+    "slug": null
+  },
+  "Lidl Ireland": {
+    "platform": "none",
+    "slug": null
+  },
+  "Aldi Ireland": {
+    "platform": "none",
+    "slug": null
+  },
+  "Dunnes Stores": {
+    "platform": "none",
+    "slug": null
+  },
+  "Musgrave Group (SuperValu / Centra)": {
+    "platform": "none",
+    "slug": null
+  },
+  "Primark / Penneys": {
+    "platform": "none",
+    "slug": null
+  },
+  "Kerry Group": {
+    "platform": "none",
+    "slug": null
+  },
+  "Glanbia / Tirl\u00e1n": {
+    "platform": "none",
+    "slug": null
+  },
+  "Smurfit Westrock": {
+    "platform": "none",
+    "slug": null
+  },
+  "Carbery Group": {
+    "platform": "none",
+    "slug": null
+  },
+  "Dairygold": {
+    "platform": "none",
+    "slug": null
+  },
+  "Kepak Group": {
+    "platform": "none",
+    "slug": null
+  },
+  "Dawn Meats": {
+    "platform": "none",
+    "slug": null
+  },
+  "ABP Food Group": {
+    "platform": "none",
+    "slug": null
+  },
+  "Greencore": {
+    "platform": "none",
+    "slug": null
+  },
+  "Ornua": {
+    "platform": "none",
+    "slug": null
+  },
+  "Coca-Cola HBC Ireland": {
+    "platform": "none",
+    "slug": null
+  },
+  "Irish Distillers (Pernod Ricard)": {
+    "platform": "none",
+    "slug": null
+  },
+  "Heineken Ireland": {
+    "platform": "none",
+    "slug": null
+  },
+  "C&C Group": {
+    "platform": "greenhouse",
+    "slug": "cc"
+  },
+  "Marks & Spencer Ireland": {
+    "platform": "none",
+    "slug": null
+  },
+  "Brown Thomas Arnotts": {
+    "platform": "none",
+    "slug": null
+  },
+  "Eason": {
+    "platform": "none",
+    "slug": null
+  },
+  "Halfords Ireland": {
+    "platform": "none",
+    "slug": null
+  },
+  "Woodie's": {
+    "platform": "none",
+    "slug": null
+  },
+  "B&Q Ireland": {
+    "platform": "none",
+    "slug": null
+  },
+  "Currys Ireland": {
+    "platform": "none",
+    "slug": null
+  },
+  "Smyths Toys Superstores": {
+    "platform": "none",
+    "slug": null
+  },
+  "JD Sports Ireland": {
+    "platform": "greenhouse",
+    "slug": "jdsports"
+  },
+  "Boots Ireland": {
+    "platform": "none",
+    "slug": null
+  },
+  "LloydsPharmacy Ireland": {
+    "platform": "none",
+    "slug": null
+  },
+  "Uniphar Group": {
+    "platform": "none",
+    "slug": null
+  },
+  "Superdrug Ireland": {
+    "platform": "none",
+    "slug": null
+  },
+  "Holland & Barrett Ireland": {
+    "platform": "none",
+    "slug": null
+  },
+  "Waterstones Ireland": {
+    "platform": "none",
+    "slug": null
+  },
+  "Next Ireland": {
+    "platform": "none",
+    "slug": null
+  },
+  "Zara / Inditex Ireland": {
+    "platform": "none",
+    "slug": null
+  },
+  "H&M Ireland": {
+    "platform": "none",
+    "slug": null
+  },
+  "TK Maxx Ireland": {
+    "platform": "none",
+    "slug": null
+  },
+  "Decathlon Ireland": {
+    "platform": "none",
+    "slug": null
+  },
+  "Life Style Sports": {
+    "platform": "lever",
+    "slug": "life"
+  },
+  "Intersport Elverys": {
+    "platform": "none",
+    "slug": null
+  },
+  "CRH": {
+    "platform": "none",
+    "slug": null
+  },
+  "Kingspan Group": {
+    "platform": "none",
+    "slug": null
+  },
+  "Glenveagh Properties": {
+    "platform": "none",
+    "slug": null
+  },
+  "Cairn Homes": {
+    "platform": "none",
+    "slug": null
+  },
+  "BAM Ireland": {
+    "platform": "none",
+    "slug": null
+  },
+  "John Sisk & Son (Sisk Group)": {
+    "platform": "none",
+    "slug": null
+  },
+  "Jones Engineering": {
+    "platform": "none",
+    "slug": null
+  },
+  "Mercury Engineering": {
+    "platform": "greenhouse",
+    "slug": "mercury"
+  },
+  "PM Group": {
+    "platform": "none",
+    "slug": null
+  },
+  "DPS Group (Arcadis)": {
+    "platform": "none",
+    "slug": null
+  },
+  "Kirby Group Engineering": {
+    "platform": "none",
+    "slug": null
+  },
+  "Linesight": {
+    "platform": "none",
+    "slug": null
+  },
+  "Arup": {
+    "platform": "none",
+    "slug": null
+  },
+  "Jacobs": {
+    "platform": "none",
+    "slug": null
+  },
+  "AECOM": {
+    "platform": "none",
+    "slug": null
+  },
+  "Mott MacDonald": {
+    "platform": "none",
+    "slug": null
+  },
+  "WSP": {
+    "platform": "none",
+    "slug": null
+  },
+  "Tetra Tech": {
+    "platform": "greenhouse",
+    "slug": "tetra"
+  },
+  "Stantec": {
+    "platform": "none",
+    "slug": null
+  },
+  "Arcadis": {
+    "platform": "none",
+    "slug": null
+  },
+  "AtkinsR\u00e9alis": {
+    "platform": "none",
+    "slug": null
+  },
+  "ESB (Electricity Supply Board)": {
+    "platform": "none",
+    "slug": null
+  },
+  "Bord G\u00e1is Energy": {
+    "platform": "none",
+    "slug": null
+  },
+  "Energia Group": {
+    "platform": "none",
+    "slug": null
+  },
+  "SSE Airtricity / SSE": {
+    "platform": "none",
+    "slug": null
+  },
+  "EirGrid Group": {
+    "platform": "none",
+    "slug": null
+  },
+  "Gas Networks Ireland": {
+    "platform": "none",
+    "slug": null
+  },
+  "Coillte": {
+    "platform": "none",
+    "slug": null
+  },
+  "Uisce \u00c9ireann (Irish Water)": {
+    "platform": "none",
+    "slug": null
+  },
+  "Ryanair": {
+    "platform": "none",
+    "slug": null
+  },
+  "Aer Lingus": {
+    "platform": "none",
+    "slug": null
+  },
+  "daa (Dublin Airport Authority)": {
+    "platform": "none",
+    "slug": null
+  },
+  "Shannon Airport Group": {
+    "platform": "none",
+    "slug": null
+  },
+  "Irish Rail (Iarnr\u00f3d \u00c9ireann)": {
+    "platform": "none",
+    "slug": null
+  },
+  "Bus \u00c9ireann": {
+    "platform": "none",
+    "slug": null
+  },
+  "Dublin Bus": {
+    "platform": "greenhouse",
+    "slug": "dublin"
+  },
+  "An Post": {
+    "platform": "none",
+    "slug": null
+  },
+  "DHL Ireland": {
+    "platform": "none",
+    "slug": null
+  },
+  "FedEx Express Ireland": {
+    "platform": "none",
+    "slug": null
+  },
+  "UPS Ireland": {
+    "platform": "none",
+    "slug": null
+  },
+  "Kuehne+Nagel Ireland": {
+    "platform": "none",
+    "slug": null
+  },
+  "DSV Ireland": {
+    "platform": "none",
+    "slug": null
+  },
+  "Fastway Couriers Ireland": {
+    "platform": "none",
+    "slug": null
+  },
+  "Irish Ferries": {
+    "platform": "none",
+    "slug": null
+  },
+  "Stena Line Ireland": {
+    "platform": "none",
+    "slug": null
+  },
+  "Dalata Hotel Group": {
+    "platform": "none",
+    "slug": null
+  },
+  "Press Up Hospitality Group": {
+    "platform": "none",
+    "slug": null
+  },
+  "Clayton Hotels": {
+    "platform": "none",
+    "slug": null
+  },
+  "Maldron Hotels": {
+    "platform": "none",
+    "slug": null
+  },
+  "The Doyle Collection": {
+    "platform": "none",
+    "slug": null
+  },
+  "RT\u00c9 (Raidi\u00f3 Teilif\u00eds \u00c9ireann)": {
+    "platform": "none",
+    "slug": null
+  },
+  "Mediahuis Ireland": {
+    "platform": "none",
+    "slug": null
+  },
+  "The Irish Times": {
+    "platform": "none",
+    "slug": null
+  },
+  "F\u00e1ilte Ireland": {
+    "platform": "none",
+    "slug": null
+  },
+  "Tourism Ireland": {
+    "platform": "none",
+    "slug": null
+  },
+  "Enterprise Ireland": {
+    "platform": "none",
+    "slug": null
+  },
+  "IDA Ireland": {
+    "platform": "none",
+    "slug": null
+  },
+  "Science Foundation Ireland (SFI)": {
+    "platform": "none",
+    "slug": null
+  },
+  "Teagasc": {
+    "platform": "none",
+    "slug": null
+  },
+  "PublicJobs.ie (PAS)": {
+    "platform": "none",
+    "slug": null
+  },
+  "HSE (Health Service Executive)": {
+    "platform": "none",
+    "slug": null
+  },
+  "Trinity College Dublin (TCD)": {
+    "platform": "none",
+    "slug": null
+  },
+  "University College Dublin (UCD)": {
+    "platform": "none",
+    "slug": null
+  },
+  "Dublin City University (DCU)": {
+    "platform": "greenhouse",
+    "slug": "dublin"
+  },
+  "University College Cork (UCC)": {
+    "platform": "none",
+    "slug": null
+  },
+  "University of Galway": {
+    "platform": "none",
+    "slug": null
+  },
+  "University of Limerick (UL)": {
+    "platform": "none",
+    "slug": null
+  },
+  "Maynooth University": {
+    "platform": "none",
+    "slug": null
+  },
+  "South East Technological University (SETU)": {
+    "platform": "none",
+    "slug": null
+  },
+  "Technological University Dublin (TU Dublin)": {
+    "platform": "none",
+    "slug": null
+  },
+  "Atlantic Technological University (ATU)": {
+    "platform": "none",
+    "slug": null
+  },
+  "Munster Technological University (MTU)": {
+    "platform": "none",
+    "slug": null
+  },
+  "Indeed (Ireland)": {
+    "platform": "none",
+    "slug": null
+  },
+  "Wayflyer": {
+    "platform": "none",
+    "slug": null
+  },
+  "Fenergo": {
+    "platform": "none",
+    "slug": null
+  },
+  "SuperValu / Musgrave": {
+    "platform": "none",
+    "slug": null
+  },
+  "Concentrix (Ireland)": {
+    "platform": "none",
+    "slug": null
+  },
+  "Teleperformance (Ireland)": {
+    "platform": "none",
+    "slug": null
+  }
+}
