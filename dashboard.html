@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Job Radar — Ireland</title>
+<style>
+  :root{
+    --bg:#0c121c;
+    --panel:#131b28;
+    --panel-2:#182233;
+    --line:#263349;
+    --ink:#eef2f8;
+    --muted:#8996ab;
+    --amber:#e0a63c;
+    --amber-dim:#e0a63c22;
+    --teal:#3fcf9a;
+    --teal-dim:#3fcf9a22;
+    --rose:#e2643b;
+    --rose-dim:#e2643b22;
+    --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    --mono:'SFMono-Regular',Consolas,'Liberation Mono',Menlo,monospace;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(1200px 600px at 10% -10%, #16223580 0%, transparent 60%),
+      var(--bg);
+    color:var(--ink);
+    font-family:var(--sans);
+    -webkit-font-smoothing:antialiased;
+  }
+  .board{
+    position:sticky; top:0; z-index:20;
+    background:var(--panel);
+    border-bottom:1px solid var(--line);
+    padding:20px 28px 16px;
+  }
+  .board-top{
+    display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:12px;
+    margin-bottom:16px;
+  }
+  .eyebrow{
+    font-family:var(--mono); font-size:11px; letter-spacing:.16em; text-transform:uppercase;
+    color:var(--teal); margin:0 0 6px;
+  }
+  h1{ margin:0; font-size:24px; font-weight:800; letter-spacing:-0.01em; }
+  .readout{
+    display:flex; gap:20px; font-family:var(--mono); font-size:12px; color:var(--muted);
+  }
+  .readout b{ color:var(--ink); font-size:18px; display:block; font-weight:700; font-family:var(--sans); }
+
+  .filter-row{
+    display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+  }
+  .search-wrap{ flex:1 1 240px; min-width:200px; position:relative; }
+  input[type=text]{
+    width:100%;
+    background:var(--panel-2);
+    border:1px solid var(--line);
+    color:var(--ink);
+    padding:10px 12px;
+    border-radius:6px;
+    font-size:13.5px;
+    font-family:var(--sans);
+  }
+  input[type=text]::placeholder{ color:var(--muted); }
+  select{
+    background:var(--panel-2);
+    border:1px solid var(--line);
+    color:var(--ink);
+    padding:10px 10px;
+    border-radius:6px;
+    font-size:13px;
+    font-family:var(--sans);
+    min-width:150px;
+  }
+  .loadctrl{
+    display:flex; align-items:center; gap:8px; margin-left:auto;
+  }
+  .loadctrl button{
+    background:var(--amber); color:#1a1305; border:none;
+    padding:9px 14px; border-radius:6px; font-weight:700; font-size:12.5px; cursor:pointer;
+  }
+  .live-dot{
+    font-family:var(--mono); font-size:11px; color:var(--teal);
+  }
+  .live-dot.stale{ color:var(--rose); }
+  #manualLoadLink{
+    font-family:var(--mono); font-size:11px; color:var(--muted); text-decoration:underline; cursor:pointer;
+  }
+  #genTime{ font-family:var(--mono); font-size:11px; color:var(--muted); }
+
+  main{ padding:22px 28px 60px; }
+  .subhead{
+    display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;
+  }
+  .tabs{ display:flex; gap:4px; }
+  .tab{
+    padding:7px 14px; border-radius:6px 6px 0 0; font-family:var(--mono); font-size:12.5px;
+    background:transparent; color:var(--muted); cursor:pointer; border:1px solid transparent;
+  }
+  .tab.active{ background:var(--panel); color:var(--ink); border-color:var(--line); border-bottom-color:var(--panel); font-weight:700; }
+  #resultCount{ font-family:var(--mono); font-size:12.5px; color:var(--muted); }
+
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+    gap:14px;
+  }
+  .card{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-left:3px solid var(--line);
+    border-radius:8px;
+    padding:16px;
+    cursor:pointer;
+    transition:border-color .12s, transform .12s;
+    display:flex; flex-direction:column; gap:10px;
+    position:relative;
+  }
+  .card:hover{ border-color:var(--amber); transform:translateY(-1px); }
+  .card.fresh{ border-left-color:var(--teal); }
+  .card.stale{ border-left-color:var(--line); }
+  .new-ribbon{
+    position:absolute; top:-1px; right:12px;
+    background:var(--amber); color:#1a1305;
+    font-family:var(--mono); font-size:10px; font-weight:700;
+    letter-spacing:.06em; padding:3px 8px; border-radius:0 0 5px 5px;
+  }
+  .company{
+    font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--teal); font-weight:700;
+  }
+  .title{ font-size:15px; font-weight:700; line-height:1.35; }
+  .meta{ display:flex; gap:6px; flex-wrap:wrap; }
+  .chip{
+    font-size:11px; padding:3px 8px; border-radius:4px;
+    background:var(--panel-2); color:var(--muted); border:1px solid var(--line);
+    font-family:var(--mono);
+  }
+  .chip.postedToday{ background:var(--teal-dim); color:var(--teal); border-color:#3fcf9a44; }
+  .card-foot{
+    display:flex; justify-content:space-between; align-items:center; margin-top:auto; padding-top:6px;
+    border-top:1px solid var(--line);
+  }
+  .visa-badge{
+    font-size:10.5px; font-family:var(--mono); padding:3px 8px; border-radius:20px;
+    border:1px solid var(--line); color:var(--muted);
+  }
+  .visa-badge.sponsors{ background:var(--teal-dim); color:var(--teal); border-color:#3fcf9a44; }
+  .visa-badge.no{ background:var(--rose-dim); color:var(--rose); border-color:#e2643b44; }
+  .visa-badge.rare{ background:var(--amber-dim); color:var(--amber); border-color:#e0a63c44; }
+  .apply-hint{ font-size:11px; color:var(--amber); font-weight:700; }
+
+  .empty{
+    padding:70px 20px; text-align:center; color:var(--muted); font-family:var(--mono); font-size:13px;
+    border:1px dashed var(--line); border-radius:8px;
+  }
+
+  #directoryPane{ display:none; }
+  .dir-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:10px; }
+  .dir-card{
+    background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:12px 14px;
+    display:flex; justify-content:space-between; align-items:center; cursor:pointer;
+  }
+  .dir-card:hover{ border-color:var(--amber); }
+  .dir-name{ font-weight:600; font-size:13.5px; }
+  .dir-plat{ font-family:var(--mono); font-size:10.5px; color:var(--muted); }
+
+  ::-webkit-scrollbar{ width:10px; height:10px; }
+  ::-webkit-scrollbar-thumb{ background:var(--line); border-radius:6px; }
+</style>
+</head>
+<body>
+
+<div class="board">
+  <div class="board-top">
+    <div>
+      <p class="eyebrow">Personal pipeline &middot; Ireland only</p>
+      <h1>Job Radar</h1>
+    </div>
+    <div class="readout">
+      <div><b id="stCompanies">0</b>companies checked</div>
+      <div><b id="stLive">0</b>live matches</div>
+      <div><b id="stManual">0</b>manual-check</div>
+      <div id="genTime">Connecting to live data...</div>
+    </div>
+  </div>
+  <div class="filter-row">
+    <div class="search-wrap">
+      <input type="text" id="fSearch" placeholder="Search title, company, location...">
+    </div>
+    <select id="fLocation">
+      <option value="">All Ireland</option>
+      <option value="dublin">Dublin</option>
+      <option value="cork">Cork</option>
+      <option value="galway">Galway</option>
+      <option value="limerick">Limerick</option>
+      <option value="waterford">Waterford</option>
+      <option value="kildare">Kildare</option>
+      <option value="remote">Remote / Hybrid</option>
+    </select>
+    <select id="fPosted">
+      <option value="9999">Any time posted</option>
+      <option value="1">Last 24 hours</option>
+      <option value="7">Last 7 days</option>
+      <option value="28">Last 28 days</option>
+    </select>
+    <select id="fType">
+      <option value="">All employment types</option>
+      <option>Full-time</option>
+      <option>Part-time</option>
+      <option>Contract</option>
+      <option>Internship</option>
+      <option>Temporary</option>
+      <option>Unspecified</option>
+    </select>
+    <select id="fVisa">
+      <option value="">Any visa status</option>
+      <option value="sponsors">Mentions sponsorship</option>
+      <option value="no_sponsorship">Says no sponsorship</option>
+      <option value="not_mentioned">Not mentioned</option>
+    </select>
+    <select id="fSort">
+      <option value="newest">Newest first</option>
+      <option value="company">Company A–Z</option>
+      <option value="title">Title A–Z</option>
+    </select>
+    <select id="fNew">
+      <option value="">All matches</option>
+      <option value="new">New since last check</option>
+    </select>
+    <div class="loadctrl">
+      <span id="liveStatus" class="live-dot">● live</span>
+      <input type="file" id="fileInput" accept="application/json" style="display:none;">
+      <a href="#" id="manualLoadLink" onclick="document.getElementById('fileInput').click(); return false;">load file manually</a>
+    </div>
+  </div>
+</div>
+
+<main>
+  <div class="subhead">
+    <div class="tabs">
+      <div class="tab active" id="tabLive" onclick="showTab('live')">Live matches — click opens the exact job</div>
+      <div class="tab" id="tabDir" onclick="showTab('dir')">Other companies — click opens their careers page</div>
+    </div>
+    <div id="resultCount">0 results</div>
+  </div>
+
+  <div id="livePane">
+    <div class="grid" id="cardGrid"></div>
+    <div class="empty" id="emptyState">No jobs loaded yet — click "Load jobs.json" above.</div>
+  </div>
+
+  <div id="directoryPane">
+    <div class="dir-grid" id="dirGrid"></div>
+  </div>
+</main>
+
+<script>
+let ALL_JOBS = [];
+let ALL_MANUAL = [];
+let SPONSOR_STATS = {};
+let OFFICIAL_STATS = {};
+
+const JOBS_URL = './jobs.json';          // served from the same GitHub Pages site
+const REFRESH_INTERVAL_MS = 5 * 60 * 1000; // re-check every 5 minutes while the tab is open
+
+function loadData(data){
+  ALL_JOBS = data.live_jobs || [];
+  ALL_MANUAL = data.manual_check_companies || [];
+  SPONSOR_STATS = data.company_sponsorship_stats || {};
+  OFFICIAL_STATS = data.official_permit_stats || {};
+  document.getElementById('genTime').textContent = data.generated_at
+    ? ('Updated ' + new Date(data.generated_at).toLocaleString()) : '';
+  document.getElementById('stLive').textContent = data.stats?.live_jobs_found ?? ALL_JOBS.length;
+  document.getElementById('stCompanies').textContent = data.stats?.total_companies ?? '—';
+  document.getElementById('stManual').textContent = data.stats?.manual_companies ?? ALL_MANUAL.length;
+  renderDirectory();
+  applyFilters();
+}
+
+async function autoFetchJobs(){
+  try{
+    const resp = await fetch(JOBS_URL + '?t=' + Date.now(), {cache: 'no-store'});
+    if(!resp.ok) throw new Error('HTTP ' + resp.status);
+    const data = await resp.json();
+    loadData(data);
+    document.getElementById('liveStatus').textContent = '● live';
+    document.getElementById('liveStatus').classList.remove('stale');
+  }catch(err){
+    // No jobs.json reachable yet (e.g. you're opening this file locally,
+    // or GitHub Pages / the first Action run hasn't happened yet).
+    document.getElementById('liveStatus').textContent = '○ not connected — use "load file manually"';
+    document.getElementById('liveStatus').classList.add('stale');
+  }
+}
+
+document.getElementById('fileInput').addEventListener('change', function(e){
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(evt){
+    try{
+      loadData(JSON.parse(evt.target.result));
+    }catch(err){
+      alert('Could not parse that file — is it the jobs.json produced by job_pipeline.py?');
+    }
+  };
+  reader.readAsText(file);
+});
+
+autoFetchJobs();
+setInterval(autoFetchJobs, REFRESH_INTERVAL_MS);
+
+['fSearch','fLocation','fPosted','fType','fVisa','fSort','fNew'].forEach(id=>{
+  document.getElementById(id).addEventListener('input', applyFilters);
+  document.getElementById(id).addEventListener('change', applyFilters);
+});
+
+
+function visaBadge(job){
+  // This posting's own text is the strongest, most specific signal.
+  if(job.visa_sponsorship === 'sponsors'){
+    return {cls:'sponsors', text:'This posting mentions sponsorship'};
+  }
+  if(job.visa_sponsorship === 'no_sponsorship'){
+    return {cls:'no', text:'This posting rules out sponsorship'};
+  }
+
+  // Next best: official DETE government permit record for the company.
+  const official = OFFICIAL_STATS[job.company];
+  if(official && official.total_permits){
+    const years = Object.keys(official.permits_by_year || {}).sort().join('–');
+    return {cls:'sponsors', text:`DETE record: ${official.total_permits} permits (${years})`};
+  }
+
+  // Fallback: our own text-scan estimate across postings we've seen.
+  const stat = SPONSOR_STATS[job.company];
+  if(stat && stat.label){
+    let cls = 'rare';
+    if(stat.label.startsWith('Frequently')) cls = 'sponsors';
+    if(stat.label.startsWith('No sponsorship')) cls = 'no';
+    return {cls, text: stat.label + ' (' + stat.total + ' scanned)'};
+  }
+  return {cls:'', text:'Not mentioned in posting'};
+}
+
+function applyFilters(){
+  const search = document.getElementById('fSearch').value.trim().toLowerCase();
+  const location = document.getElementById('fLocation').value;
+  const posted = parseInt(document.getElementById('fPosted').value, 10);
+  const type = document.getElementById('fType').value;
+  const visa = document.getElementById('fVisa').value;
+  const sort = document.getElementById('fSort').value;
+  const onlyNew = document.getElementById('fNew').value === 'new';
+
+  let filtered = ALL_JOBS.filter(j=>{
+    if(search){
+      const hay = ((j.title||'') + ' ' + (j.company||'') + ' ' + (j.location||'')).toLowerCase();
+      if(!hay.includes(search)) return false;
+    }
+    if(location && !(j.location||'').toLowerCase().includes(location)) return false;
+    if(type && j.employment_type !== type) return false;
+    if(visa && j.visa_sponsorship !== visa) return false;
+    if(onlyNew && !j.new_since_last_check) return false;
+    if(posted !== 9999){
+      const d = j.posted_days_ago;
+      if(d === null || d === undefined || d > posted) return false;
+    }
+    return true;
+  });
+
+  if(sort === 'newest') filtered.sort((a,b)=> (a.posted_days_ago ?? 999) - (b.posted_days_ago ?? 999));
+  if(sort === 'company') filtered.sort((a,b)=> a.company.localeCompare(b.company));
+  if(sort === 'title') filtered.sort((a,b)=> a.title.localeCompare(b.title));
+
+  document.getElementById('resultCount').textContent =
+    filtered.length + ' of ' + ALL_JOBS.length + ' matches';
+
+  const grid = document.getElementById('cardGrid');
+  grid.innerHTML = '';
+  document.getElementById('emptyState').style.display = filtered.length ? 'none' : 'block';
+
+  filtered.forEach(j=>{
+    const fresh = j.posted_days_ago !== null && j.posted_days_ago !== undefined && j.posted_days_ago <= 1;
+    const badge = visaBadge(j);
+    const card = document.createElement('div');
+    card.className = 'card ' + (fresh ? 'fresh' : 'stale');
+    card.onclick = () => window.open(j.url, '_blank', 'noopener');
+    card.innerHTML = `
+      ${j.new_since_last_check ? '<div class="new-ribbon">NEW</div>' : ''}
+      <div class="company">${escapeHtml(j.company)}</div>
+      <div class="title">${escapeHtml(j.title||'Untitled role')}</div>
+      <div class="meta">
+        <span class="chip">${escapeHtml(j.location||'—')}</span>
+        <span class="chip">${escapeHtml(j.employment_type||'Unspecified')}</span>
+        <span class="chip ${fresh?'postedToday':''}">${escapeHtml(j.posted_text||'—')}</span>
+      </div>
+      <div class="card-foot">
+        <span class="visa-badge ${badge.cls}" title="${escapeHtml(badge.text)}">${escapeHtml(badge.text)}</span>
+        <span class="apply-hint">Open →</span>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+function renderDirectory(){
+  const grid = document.getElementById('dirGrid');
+  grid.innerHTML = '';
+  ALL_MANUAL.slice().sort((a,b)=>a.company.localeCompare(b.company)).forEach(c=>{
+    const card = document.createElement('div');
+    card.className = 'dir-card';
+    card.onclick = () => window.open(c.url, '_blank', 'noopener');
+    card.innerHTML = `
+      <div>
+        <div class="dir-name">${escapeHtml(c.company)}</div>
+        <div class="dir-plat">${escapeHtml(c.platform)}</div>
+      </div>
+      <span class="apply-hint">Open →</span>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+function showTab(which){
+  document.getElementById('livePane').style.display = which==='live' ? 'block':'none';
+  document.getElementById('directoryPane').style.display = which==='dir' ? 'block':'none';
+  document.getElementById('tabLive').classList.toggle('active', which==='live');
+  document.getElementById('tabDir').classList.toggle('active', which==='dir');
+}
+
+function escapeHtml(str){
+  return String(str).replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+</script>
+</body>
+</html>

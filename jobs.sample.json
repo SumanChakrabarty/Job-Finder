@@ -1,0 +1,154 @@
+{
+  "generated_at": "2026-08-02T20:49:22.759302+00:00",
+  "live_jobs": [
+    {
+      "company": "Pfizer",
+      "title": "Process Engineer",
+      "location": "Dublin, Ireland",
+      "posted_text": "Posted Today",
+      "posted_days_ago": 0,
+      "employment_type": "Full-time",
+      "url": "https://pfizer.wd1.myworkdayjobs.com/PfizerCareers/job/1",
+      "source": "workday_api",
+      "visa_sponsorship": "not_mentioned",
+      "visa_snippet": null,
+      "new_since_last_check": true,
+      "first_seen_at": "2026-08-02T20:55:38.334812+00:00"
+    },
+    {
+      "company": "Mastercard",
+      "title": "Data Analyst",
+      "location": "Dublin, Ireland",
+      "posted_text": "Posted 3 Days Ago",
+      "posted_days_ago": 3,
+      "employment_type": "Full-time",
+      "url": "https://mastercard.wd1.myworkdayjobs.com/CorporateCareers/job/2",
+      "source": "workday_api",
+      "visa_sponsorship": "not_mentioned",
+      "visa_snippet": null,
+      "new_since_last_check": false,
+      "first_seen_at": "2026-08-02T20:55:38.334812+00:00"
+    },
+    {
+      "company": "Diageo Ireland",
+      "title": "Supply Chain Intern",
+      "location": "Cork, Ireland",
+      "posted_text": "Posted 20 Days Ago",
+      "posted_days_ago": 20,
+      "employment_type": "Internship",
+      "url": "https://diageo.wd3.myworkdayjobs.com/Diageo_Careers/job/3",
+      "source": "workday_api",
+      "visa_sponsorship": "no_sponsorship",
+      "visa_snippet": "...candidates must be eligible to work in Ireland without sponsorship...",
+      "new_since_last_check": false,
+      "first_seen_at": "2026-08-02T20:55:38.334812+00:00"
+    },
+    {
+      "company": "AbbVie",
+      "title": "Quality Assurance Specialist",
+      "location": "Cork, Ireland",
+      "posted_text": "Posted Yesterday",
+      "posted_days_ago": 1,
+      "employment_type": "Contract",
+      "url": "https://abbvie.wd0.myworkdayjobs.com/abbvie_careers/job/4",
+      "source": "workday_api",
+      "visa_sponsorship": "not_mentioned",
+      "visa_snippet": null,
+      "new_since_last_check": false,
+      "first_seen_at": "2026-08-02T20:55:38.334812+00:00"
+    },
+    {
+      "company": "Pfizer",
+      "title": "Manufacturing Technician",
+      "location": "Cork, Ireland",
+      "posted_text": "Posted 5 Days Ago",
+      "posted_days_ago": 5,
+      "employment_type": "Full-time",
+      "url": "https://pfizer.wd1.myworkdayjobs.com/PfizerCareers/job/5",
+      "source": "workday_api",
+      "visa_sponsorship": "not_mentioned",
+      "visa_snippet": null,
+      "new_since_last_check": false,
+      "first_seen_at": "2026-08-02T20:55:38.334812+00:00"
+    }
+  ],
+  "manual_check_companies": [
+    {
+      "company": "Stripe",
+      "url": "https://stripe.com/jobs",
+      "platform": "custom"
+    },
+    {
+      "company": "Google",
+      "url": "https://www.google.com/about/careers/applications/jobs/results/?location=Ireland",
+      "platform": "custom"
+    },
+    {
+      "company": "Deloitte Ireland",
+      "url": "https://jobs2.deloitte.com/ie/en/search-results",
+      "platform": "custom"
+    }
+  ],
+  "company_sponsorship_stats": {
+    "Pfizer": {
+      "sponsors": 4,
+      "no_sponsorship": 1,
+      "not_mentioned": 15,
+      "total": 20,
+      "label": "Occasionally mentions sponsorship"
+    },
+    "Mastercard": {
+      "sponsors": 0,
+      "no_sponsorship": 0,
+      "not_mentioned": 12,
+      "total": 12,
+      "label": "No sponsorship mentions on record"
+    },
+    "Diageo Ireland": {
+      "sponsors": 0,
+      "no_sponsorship": 2,
+      "not_mentioned": 6,
+      "total": 8,
+      "label": "No sponsorship mentions on record"
+    },
+    "AbbVie": {
+      "sponsors": 1,
+      "no_sponsorship": 0,
+      "not_mentioned": 2,
+      "total": 3,
+      "label": "Not enough data yet"
+    }
+  },
+  "errors": [],
+  "stats": {
+    "total_companies": 397,
+    "automated_companies": 40,
+    "manual_companies": 357,
+    "live_jobs_found": 5,
+    "new_since_last_check": 1
+  },
+  "official_permit_stats": {
+    "Pfizer": {
+      "matched_employer_names": [
+        "Pfizer Ireland Pharmaceuticals"
+      ],
+      "permits_by_year": {
+        "2024": 12,
+        "2025": 18,
+        "2026": 9
+      },
+      "total_permits": 39
+    },
+    "Google": {
+      "matched_employer_names": [
+        "Google Ireland Limited"
+      ],
+      "permits_by_year": {
+        "2024": 20,
+        "2025": 33,
+        "2026": 15
+      },
+      "total_permits": 68
+    }
+  }
+}
