@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-03T16:43:37.995981+00:00",
+  "generated_at": "2026-08-03T17:09:26.415879+00:00",
   "live_jobs": [
     {
       "company": "Salesforce",
@@ -1538,7 +1538,7 @@
       "source": "workday_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-03T16:43:37.995981+00:00"
     },
     {
@@ -1552,7 +1552,7 @@
       "source": "workday_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-03T16:43:37.995981+00:00"
     },
     {
@@ -1566,7 +1566,7 @@
       "source": "workday_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-03T16:43:37.995981+00:00"
     },
     {
@@ -4107,8 +4107,8 @@
       "company": "MongoDB",
       "title": "Director, Web Platform & Technology",
       "location": "Cork, Ireland; Dublin, Ireland",
-      "posted_text": "Posted 2 days ago",
-      "posted_days_ago": 2,
+      "posted_text": "Posted 3 days ago",
+      "posted_days_ago": 3,
       "employment_type": "Unspecified",
       "url": "https://www.mongodb.com/careers/job/?gh_jid=8009965",
       "source": "greenhouse_api",
@@ -7873,17 +7873,17 @@
     "Salesforce": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 241,
-      "total": 241,
-      "label": "No sponsorship info found (241 postings scanned)",
+      "not_mentioned": 281,
+      "total": 281,
+      "label": "No sponsorship info found (281 postings scanned)",
       "category": "no_data"
     },
     "Workday": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 104,
-      "total": 104,
-      "label": "No sponsorship info found (104 postings scanned)",
+      "not_mentioned": 121,
+      "total": 121,
+      "label": "No sponsorship info found (121 postings scanned)",
       "category": "no_data"
     },
     "Autodesk": {
@@ -7913,36 +7913,140 @@
     "Stripe": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 392,
-      "total": 392,
-      "label": "No sponsorship info found (392 postings scanned)",
+      "not_mentioned": 448,
+      "total": 448,
+      "label": "No sponsorship info found (448 postings scanned)",
       "category": "no_data"
     },
     "Intercom": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 336,
-      "total": 336,
-      "label": "No sponsorship info found (336 postings scanned)",
+      "not_mentioned": 384,
+      "total": 384,
+      "label": "No sponsorship info found (384 postings scanned)",
       "category": "no_data"
     },
     "Toast": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 161,
-      "total": 161,
-      "label": "No sponsorship info found (161 postings scanned)",
+      "not_mentioned": 184,
+      "total": 184,
+      "label": "No sponsorship info found (184 postings scanned)",
       "category": "no_data"
     },
     "MongoDB": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 507,
-      "total": 507,
-      "label": "No sponsorship info found (507 postings scanned)",
+      "not_mentioned": 579,
+      "total": 579,
+      "label": "No sponsorship info found (579 postings scanned)",
       "category": "no_data"
     },
     "Qualtrics": {
+      "sponsors": 0,
+      "no_sponsorship": 0,
+      "not_mentioned": 16,
+      "total": 16,
+      "label": "No sponsorship info found (16 postings scanned)",
+      "category": "no_data"
+    },
+    "Twilio": {
+      "sponsors": 0,
+      "no_sponsorship": 0,
+      "not_mentioned": 96,
+      "total": 96,
+      "label": "No sponsorship info found (96 postings scanned)",
+      "category": "no_data"
+    },
+    "Pinterest": {
+      "sponsors": 0,
+      "no_sponsorship": 0,
+      "not_mentioned": 96,
+      "total": 96,
+      "label": "No sponsorship info found (96 postings scanned)",
+      "category": "no_data"
+    },
+    "Reddit": {
+      "sponsors": 0,
+      "no_sponsorship": 0,
+      "not_mentioned": 24,
+      "total": 24,
+      "label": "No sponsorship info found (24 postings scanned)",
+      "category": "no_data"
+    },
+    "Asana": {
+      "sponsors": 0,
+      "no_sponsorship": 0,
+      "not_mentioned": 56,
+      "total": 56,
+      "label": "No sponsorship info found (56 postings scanned)",
+      "category": "no_data"
+    },
+    "Figma": {
+      "sponsors": 0,
+      "no_sponsorship": 0,
+      "not_mentioned": 8,
+      "total": 8,
+      "label": "No sponsorship info found (8 postings scanned)",
+      "category": "no_data"
+    },
+    "Dropbox": {
+      "sponsors": 0,
+      "no_sponsorship": 0,
+      "not_mentioned": 8,
+      "total": 8,
+      "label": "No sponsorship info found (8 postings scanned)",
+      "category": "no_data"
+    },
+    "Datadog": {
+      "sponsors": 0,
+      "no_sponsorship": 0,
+      "not_mentioned": 184,
+      "total": 184,
+      "label": "No sponsorship info found (184 postings scanned)",
+      "category": "no_data"
+    },
+    "Zscaler": {
+      "sponsors": 0,
+      "no_sponsorship": 0,
+      "not_mentioned": 8,
+      "total": 8,
+      "label": "No sponsorship info found (8 postings scanned)",
+      "category": "no_data"
+    },
+    "Okta": {
+      "sponsors": 0,
+      "no_sponsorship": 0,
+      "not_mentioned": 88,
+      "total": 88,
+      "label": "No sponsorship info found (88 postings scanned)",
+      "category": "no_data"
+    },
+    "Pure Storage": {
+      "sponsors": 0,
+      "no_sponsorship": 0,
+      "not_mentioned": 24,
+      "total": 24,
+      "label": "No sponsorship info found (24 postings scanned)",
+      "category": "no_data"
+    },
+    "JD Sports Ireland": {
+      "sponsors": 0,
+      "no_sponsorship": 0,
+      "not_mentioned": 7,
+      "total": 7,
+      "label": "No sponsorship info found (7 postings scanned)",
+      "category": "no_data"
+    },
+    "Mercury Engineering": {
+      "sponsors": 0,
+      "no_sponsorship": 0,
+      "not_mentioned": 8,
+      "total": 8,
+      "label": "No sponsorship info found (8 postings scanned)",
+      "category": "no_data"
+    },
+    "Pfizer": {
       "sponsors": 0,
       "no_sponsorship": 0,
       "not_mentioned": 14,
@@ -7950,87 +8054,7 @@
       "label": "No sponsorship info found (14 postings scanned)",
       "category": "no_data"
     },
-    "Twilio": {
-      "sponsors": 0,
-      "no_sponsorship": 0,
-      "not_mentioned": 84,
-      "total": 84,
-      "label": "No sponsorship info found (84 postings scanned)",
-      "category": "no_data"
-    },
-    "Pinterest": {
-      "sponsors": 0,
-      "no_sponsorship": 0,
-      "not_mentioned": 84,
-      "total": 84,
-      "label": "No sponsorship info found (84 postings scanned)",
-      "category": "no_data"
-    },
-    "Reddit": {
-      "sponsors": 0,
-      "no_sponsorship": 0,
-      "not_mentioned": 21,
-      "total": 21,
-      "label": "No sponsorship info found (21 postings scanned)",
-      "category": "no_data"
-    },
-    "Asana": {
-      "sponsors": 0,
-      "no_sponsorship": 0,
-      "not_mentioned": 48,
-      "total": 48,
-      "label": "No sponsorship info found (48 postings scanned)",
-      "category": "no_data"
-    },
-    "Figma": {
-      "sponsors": 0,
-      "no_sponsorship": 0,
-      "not_mentioned": 7,
-      "total": 7,
-      "label": "No sponsorship info found (7 postings scanned)",
-      "category": "no_data"
-    },
-    "Dropbox": {
-      "sponsors": 0,
-      "no_sponsorship": 0,
-      "not_mentioned": 7,
-      "total": 7,
-      "label": "No sponsorship info found (7 postings scanned)",
-      "category": "no_data"
-    },
-    "Datadog": {
-      "sponsors": 0,
-      "no_sponsorship": 0,
-      "not_mentioned": 161,
-      "total": 161,
-      "label": "No sponsorship info found (161 postings scanned)",
-      "category": "no_data"
-    },
-    "Zscaler": {
-      "sponsors": 0,
-      "no_sponsorship": 0,
-      "not_mentioned": 7,
-      "total": 7,
-      "label": "No sponsorship info found (7 postings scanned)",
-      "category": "no_data"
-    },
-    "Okta": {
-      "sponsors": 0,
-      "no_sponsorship": 0,
-      "not_mentioned": 77,
-      "total": 77,
-      "label": "No sponsorship info found (77 postings scanned)",
-      "category": "no_data"
-    },
-    "Pure Storage": {
-      "sponsors": 0,
-      "no_sponsorship": 0,
-      "not_mentioned": 21,
-      "total": 21,
-      "label": "No sponsorship info found (21 postings scanned)",
-      "category": "no_data"
-    },
-    "JD Sports Ireland": {
+    "VMware (Broadcom)": {
       "sponsors": 0,
       "no_sponsorship": 0,
       "not_mentioned": 6,
@@ -8038,31 +8062,23 @@
       "label": "No sponsorship info found (6 postings scanned)",
       "category": "no_data"
     },
-    "Mercury Engineering": {
-      "sponsors": 0,
-      "no_sponsorship": 0,
-      "not_mentioned": 7,
-      "total": 7,
-      "label": "No sponsorship info found (7 postings scanned)",
-      "category": "no_data"
-    },
-    "Pfizer": {
-      "sponsors": 0,
-      "no_sponsorship": 0,
-      "not_mentioned": 12,
-      "total": 12,
-      "label": "No sponsorship info found (12 postings scanned)",
-      "category": "no_data"
-    },
-    "VMware (Broadcom)": {
-      "sponsors": 0,
-      "no_sponsorship": 0,
-      "not_mentioned": 4,
-      "total": 4,
-      "label": "Not enough data yet (4 scanned)",
-      "category": "no_data"
-    },
     "Cadence Design Systems": {
+      "sponsors": 0,
+      "no_sponsorship": 0,
+      "not_mentioned": 27,
+      "total": 27,
+      "label": "No sponsorship info found (27 postings scanned)",
+      "category": "no_data"
+    },
+    "Broadcom": {
+      "sponsors": 0,
+      "no_sponsorship": 0,
+      "not_mentioned": 6,
+      "total": 6,
+      "label": "No sponsorship info found (6 postings scanned)",
+      "category": "no_data"
+    },
+    "MSD (Merck Sharp & Dohme)": {
       "sponsors": 0,
       "no_sponsorship": 0,
       "not_mentioned": 18,
@@ -8070,52 +8086,36 @@
       "label": "No sponsorship info found (18 postings scanned)",
       "category": "no_data"
     },
-    "Broadcom": {
-      "sponsors": 0,
-      "no_sponsorship": 0,
-      "not_mentioned": 4,
-      "total": 4,
-      "label": "Not enough data yet (4 scanned)",
-      "category": "no_data"
-    },
-    "MSD (Merck Sharp & Dohme)": {
-      "sponsors": 0,
-      "no_sponsorship": 0,
-      "not_mentioned": 12,
-      "total": 12,
-      "label": "No sponsorship info found (12 postings scanned)",
-      "category": "no_data"
-    },
     "State Street": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 62,
-      "total": 62,
-      "label": "No sponsorship info found (62 postings scanned)",
+      "not_mentioned": 93,
+      "total": 93,
+      "label": "No sponsorship info found (93 postings scanned)",
       "category": "no_data"
     },
     "Mercer": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 40,
-      "total": 40,
-      "label": "No sponsorship info found (40 postings scanned)",
+      "not_mentioned": 60,
+      "total": 60,
+      "label": "No sponsorship info found (60 postings scanned)",
       "category": "no_data"
     },
     "Marsh McLennan": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 40,
-      "total": 40,
-      "label": "No sponsorship info found (40 postings scanned)",
+      "not_mentioned": 60,
+      "total": 60,
+      "label": "No sponsorship info found (60 postings scanned)",
       "category": "no_data"
     },
     "PwC Ireland": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 3,
-      "total": 3,
-      "label": "Not enough data yet (3 scanned)",
+      "not_mentioned": 6,
+      "total": 6,
+      "label": "No sponsorship info found (6 postings scanned)",
       "category": "no_data"
     }
   },
@@ -11079,6 +11079,6 @@
     "automated_companies": 28,
     "manual_companies": 369,
     "live_jobs_found": 430,
-    "new_since_last_check": 3
+    "new_since_last_check": 0
   }
 }
