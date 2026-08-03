@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-03T15:47:35.529503+00:00",
+  "generated_at": "2026-08-03T15:54:33.164050+00:00",
   "live_jobs": [
     {
       "company": "Salesforce",
@@ -4020,118 +4020,6 @@
       "first_seen_at": "2026-08-03T13:41:34.300846+00:00"
     },
     {
-      "company": "Asana",
-      "title": "Business Development Representative, German Speaking",
-      "location": "Dublin",
-      "posted_text": "Posted 6 days ago",
-      "posted_days_ago": 6,
-      "employment_type": "Unspecified",
-      "url": "https://www.asana.com/jobs/apply/7477015?gh_jid=7477015",
-      "source": "greenhouse_api",
-      "visa_sponsorship": "not_mentioned",
-      "visa_snippet": null,
-      "new_since_last_check": false,
-      "first_seen_at": "2026-08-03T13:41:34.300846+00:00"
-    },
-    {
-      "company": "Asana",
-      "title": "Enterprise Solutions Engineer, Service Management",
-      "location": "Dublin",
-      "posted_text": "Posted 3 days ago",
-      "posted_days_ago": 3,
-      "employment_type": "Unspecified",
-      "url": "https://www.asana.com/jobs/apply/8078094?gh_jid=8078094",
-      "source": "greenhouse_api",
-      "visa_sponsorship": "not_mentioned",
-      "visa_snippet": null,
-      "new_since_last_check": false,
-      "first_seen_at": "2026-08-03T13:41:34.300846+00:00"
-    },
-    {
-      "company": "Asana",
-      "title": "Product Support Specialist",
-      "location": "Dublin",
-      "posted_text": "Posted 6 days ago",
-      "posted_days_ago": 6,
-      "employment_type": "Unspecified",
-      "url": "https://www.asana.com/jobs/apply/7862870?gh_jid=7862870",
-      "source": "greenhouse_api",
-      "visa_sponsorship": "not_mentioned",
-      "visa_snippet": null,
-      "new_since_last_check": false,
-      "first_seen_at": "2026-08-03T13:41:34.300846+00:00"
-    },
-    {
-      "company": "Asana",
-      "title": "Product Support Specialist - French Speaking",
-      "location": "Dublin",
-      "posted_text": "Posted 3 days ago",
-      "posted_days_ago": 3,
-      "employment_type": "Unspecified",
-      "url": "https://www.asana.com/jobs/apply/7981443?gh_jid=7981443",
-      "source": "greenhouse_api",
-      "visa_sponsorship": "not_mentioned",
-      "visa_snippet": null,
-      "new_since_last_check": false,
-      "first_seen_at": "2026-08-03T13:41:34.300846+00:00"
-    },
-    {
-      "company": "Asana",
-      "title": "Renewals Manager [German speaking]",
-      "location": "Dublin",
-      "posted_text": "Posted 6 days ago",
-      "posted_days_ago": 6,
-      "employment_type": "Unspecified",
-      "url": "https://www.asana.com/jobs/apply/8016018?gh_jid=8016018",
-      "source": "greenhouse_api",
-      "visa_sponsorship": "not_mentioned",
-      "visa_snippet": null,
-      "new_since_last_check": false,
-      "first_seen_at": "2026-08-03T13:41:34.300846+00:00"
-    },
-    {
-      "company": "Asana",
-      "title": "Senior Solutions Architect",
-      "location": "Dublin",
-      "posted_text": "Posted 3 days ago",
-      "posted_days_ago": 3,
-      "employment_type": "Unspecified",
-      "url": "https://www.asana.com/jobs/apply/8027399?gh_jid=8027399",
-      "source": "greenhouse_api",
-      "visa_sponsorship": "not_mentioned",
-      "visa_snippet": null,
-      "new_since_last_check": false,
-      "first_seen_at": "2026-08-03T13:41:34.300846+00:00"
-    },
-    {
-      "company": "Asana",
-      "title": "SMB Account Executive - French speaking",
-      "location": "Dublin",
-      "posted_text": "Posted 6 days ago",
-      "posted_days_ago": 6,
-      "employment_type": "Unspecified",
-      "url": "https://www.asana.com/jobs/apply/8068481?gh_jid=8068481",
-      "source": "greenhouse_api",
-      "visa_sponsorship": "not_mentioned",
-      "visa_snippet": null,
-      "new_since_last_check": false,
-      "first_seen_at": "2026-08-03T13:41:34.300846+00:00"
-    },
-    {
-      "company": "Asana",
-      "title": "Solutions Engineer, Command",
-      "location": "Dublin",
-      "posted_text": "Posted 6 days ago",
-      "posted_days_ago": 6,
-      "employment_type": "Unspecified",
-      "url": "https://www.asana.com/jobs/apply/8078097?gh_jid=8078097",
-      "source": "greenhouse_api",
-      "visa_sponsorship": "not_mentioned",
-      "visa_snippet": null,
-      "new_since_last_check": false,
-      "first_seen_at": "2026-08-03T13:41:34.300846+00:00"
-    },
-    {
       "company": "Figma",
       "title": "Senior Technical Revenue Analyst (Dublin, Ireland)",
       "location": "Dublin, Ireland",
@@ -4935,6 +4823,11 @@
       "company": "Etsy",
       "url": "https://careers.etsy.com/global/en",
       "platform": "custom"
+    },
+    {
+      "company": "Asana",
+      "url": "https://asana.com/careers",
+      "platform": "greenhouse (no Ireland postings found right now)"
     },
     {
       "company": "Monday.com",
@@ -6611,17 +6504,17 @@
     "Salesforce": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 121,
-      "total": 121,
-      "label": "No sponsorship info found (121 postings scanned)",
+      "not_mentioned": 161,
+      "total": 161,
+      "label": "No sponsorship info found (161 postings scanned)",
       "category": "no_data"
     },
     "Workday": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 53,
-      "total": 53,
-      "label": "No sponsorship info found (53 postings scanned)",
+      "not_mentioned": 70,
+      "total": 70,
+      "label": "No sponsorship info found (70 postings scanned)",
       "category": "no_data"
     },
     "Autodesk": {
@@ -6651,65 +6544,65 @@
     "Stripe": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 224,
-      "total": 224,
-      "label": "No sponsorship info found (224 postings scanned)",
+      "not_mentioned": 280,
+      "total": 280,
+      "label": "No sponsorship info found (280 postings scanned)",
       "category": "no_data"
     },
     "Intercom": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 192,
-      "total": 192,
-      "label": "No sponsorship info found (192 postings scanned)",
+      "not_mentioned": 240,
+      "total": 240,
+      "label": "No sponsorship info found (240 postings scanned)",
       "category": "no_data"
     },
     "Toast": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 92,
-      "total": 92,
-      "label": "No sponsorship info found (92 postings scanned)",
+      "not_mentioned": 115,
+      "total": 115,
+      "label": "No sponsorship info found (115 postings scanned)",
       "category": "no_data"
     },
     "MongoDB": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 291,
-      "total": 291,
-      "label": "No sponsorship info found (291 postings scanned)",
+      "not_mentioned": 363,
+      "total": 363,
+      "label": "No sponsorship info found (363 postings scanned)",
       "category": "no_data"
     },
     "Qualtrics": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 8,
-      "total": 8,
-      "label": "No sponsorship info found (8 postings scanned)",
+      "not_mentioned": 10,
+      "total": 10,
+      "label": "No sponsorship info found (10 postings scanned)",
       "category": "no_data"
     },
     "Twilio": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 48,
-      "total": 48,
-      "label": "No sponsorship info found (48 postings scanned)",
+      "not_mentioned": 60,
+      "total": 60,
+      "label": "No sponsorship info found (60 postings scanned)",
       "category": "no_data"
     },
     "Pinterest": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 48,
-      "total": 48,
-      "label": "No sponsorship info found (48 postings scanned)",
+      "not_mentioned": 60,
+      "total": 60,
+      "label": "No sponsorship info found (60 postings scanned)",
       "category": "no_data"
     },
     "Reddit": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 12,
-      "total": 12,
-      "label": "No sponsorship info found (12 postings scanned)",
+      "not_mentioned": 15,
+      "total": 15,
+      "label": "No sponsorship info found (15 postings scanned)",
       "category": "no_data"
     },
     "Asana": {
@@ -6723,73 +6616,73 @@
     "Figma": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 4,
-      "total": 4,
-      "label": "Not enough data yet (4 scanned)",
+      "not_mentioned": 5,
+      "total": 5,
+      "label": "No sponsorship info found (5 postings scanned)",
       "category": "no_data"
     },
     "Dropbox": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 4,
-      "total": 4,
-      "label": "Not enough data yet (4 scanned)",
+      "not_mentioned": 5,
+      "total": 5,
+      "label": "No sponsorship info found (5 postings scanned)",
       "category": "no_data"
     },
     "Datadog": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 92,
-      "total": 92,
-      "label": "No sponsorship info found (92 postings scanned)",
+      "not_mentioned": 115,
+      "total": 115,
+      "label": "No sponsorship info found (115 postings scanned)",
       "category": "no_data"
     },
     "Zscaler": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 4,
-      "total": 4,
-      "label": "Not enough data yet (4 scanned)",
+      "not_mentioned": 5,
+      "total": 5,
+      "label": "No sponsorship info found (5 postings scanned)",
       "category": "no_data"
     },
     "Okta": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 44,
-      "total": 44,
-      "label": "No sponsorship info found (44 postings scanned)",
+      "not_mentioned": 55,
+      "total": 55,
+      "label": "No sponsorship info found (55 postings scanned)",
       "category": "no_data"
     },
     "Pure Storage": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 12,
-      "total": 12,
-      "label": "No sponsorship info found (12 postings scanned)",
+      "not_mentioned": 15,
+      "total": 15,
+      "label": "No sponsorship info found (15 postings scanned)",
       "category": "no_data"
     },
     "JD Sports Ireland": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 4,
-      "total": 4,
-      "label": "Not enough data yet (4 scanned)",
+      "not_mentioned": 5,
+      "total": 5,
+      "label": "No sponsorship info found (5 postings scanned)",
       "category": "no_data"
     },
     "Mercury Engineering": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 4,
-      "total": 4,
-      "label": "Not enough data yet (4 scanned)",
+      "not_mentioned": 5,
+      "total": 5,
+      "label": "No sponsorship info found (5 postings scanned)",
       "category": "no_data"
     },
     "Pfizer": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 6,
-      "total": 6,
-      "label": "No sponsorship info found (6 postings scanned)",
+      "not_mentioned": 8,
+      "total": 8,
+      "label": "No sponsorship info found (8 postings scanned)",
       "category": "no_data"
     }
   },
@@ -9757,9 +9650,9 @@
   ],
   "stats": {
     "total_companies": 397,
-    "automated_companies": 20,
-    "manual_companies": 377,
-    "live_jobs_found": 337,
+    "automated_companies": 19,
+    "manual_companies": 378,
+    "live_jobs_found": 329,
     "new_since_last_check": 0
   }
 }
