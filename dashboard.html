@@ -152,6 +152,7 @@
   .visa-badge.sponsors{ background:var(--teal-dim); color:var(--teal); border-color:#3fcf9a44; }
   .visa-badge.no{ background:var(--rose-dim); color:var(--rose); border-color:#e2643b44; }
   .visa-badge.rare{ background:var(--amber-dim); color:var(--amber); border-color:#e0a63c44; }
+  .visa-badge.neutral{ background:var(--panel-2); color:var(--muted); border-color:var(--line); }
   .apply-hint{ font-size:11px; color:var(--amber); font-weight:700; }
 
   .empty{
@@ -278,7 +279,6 @@ function loadData(data){
   document.getElementById('stLive').textContent = data.stats?.live_jobs_found ?? ALL_JOBS.length;
   document.getElementById('stCompanies').textContent = data.stats?.total_companies ?? '—';
   document.getElementById('stManual').textContent = data.stats?.manual_companies ?? ALL_MANUAL.length;
-  renderDirectory();
   applyFilters();
 }
 
@@ -338,14 +338,21 @@ function visaBadge(job){
   }
 
   // Fallback: our own text-scan estimate across postings we've seen.
+  // IMPORTANT: silence (no postings mentioning it either way) is the most
+  // common, totally normal case — it must read as neutral, not as bad news.
   const stat = SPONSOR_STATS[job.company];
   if(stat && stat.label){
-    let cls = 'rare';
-    if(stat.label.startsWith('Frequently')) cls = 'sponsors';
-    if(stat.label.startsWith('No sponsorship')) cls = 'no';
-    return {cls, text: stat.label + ' (' + stat.total + ' scanned)'};
+    const CATEGORY_STYLE = {
+      no_data: {cls: 'neutral'},
+      explicit_negative: {cls: 'no'},
+      rare_positive: {cls: 'rare'},
+      occasional_positive: {cls: 'rare'},
+      frequent_positive: {cls: 'sponsors'},
+    };
+    const style = CATEGORY_STYLE[stat.category] || {cls: 'neutral'};
+    return {cls: style.cls, text: stat.label};
   }
-  return {cls:'', text:'Not mentioned in posting'};
+  return {cls:'neutral', text:'No sponsorship info found'};
 }
 
 function applyFilters(){
@@ -406,12 +413,32 @@ function applyFilters(){
     `;
     grid.appendChild(card);
   });
+
+  const dirMatches = renderDirectory(search);
+  document.getElementById('tabLive').textContent = `Live matches — click opens the exact job (${filtered.length})`;
+  document.getElementById('tabDir').textContent = `Other companies — click opens their careers page (${dirMatches})`;
+
+  // If someone searches a company that only exists in the directory (no
+  // live job data for it), don't leave them staring at an empty Live tab —
+  // point them at where it actually is.
+  if(search && filtered.length === 0 && dirMatches > 0 && document.getElementById('tabLive').classList.contains('active')){
+    document.getElementById('emptyState').innerHTML =
+      `No live job data for "${escapeHtml(search)}" — but it's listed in the ` +
+      `<a href="#" onclick="showTab('dir'); return false;" style="color:var(--amber);">Other companies tab</a> ` +
+      `with a direct link to their careers page.`;
+  } else {
+    document.getElementById('emptyState').textContent = 'No jobs loaded yet — connecting to live data...';
+  }
 }
 
-function renderDirectory(){
+function renderDirectory(search){
+  search = search || '';
   const grid = document.getElementById('dirGrid');
   grid.innerHTML = '';
-  ALL_MANUAL.slice().sort((a,b)=>a.company.localeCompare(b.company)).forEach(c=>{
+  const matches = ALL_MANUAL
+    .filter(c => !search || c.company.toLowerCase().includes(search))
+    .sort((a,b)=>a.company.localeCompare(b.company));
+  matches.forEach(c=>{
     const card = document.createElement('div');
     card.className = 'dir-card';
     card.onclick = () => window.open(c.url, '_blank', 'noopener');
@@ -424,6 +451,7 @@ function renderDirectory(){
     `;
     grid.appendChild(card);
   });
+  return matches.length;
 }
 
 function showTab(which){

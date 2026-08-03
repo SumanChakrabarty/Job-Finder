@@ -188,8 +188,35 @@ def fetch_job_description(tenant, wd_shard, site, external_path, session):
         return ""
 
 
+def find_ireland_facet_values(facets):
+    """Workday exposes a 'locations' facet (sometimes hierarchical: country ->
+    city). Recursively search it for anything Ireland-related and return the
+    facet parameter name + matching value IDs, so we can ask Workday's API to
+    filter server-side instead of guessing from a few hundred results."""
+    def walk(values):
+        matched = []
+        for v in values or []:
+            descriptor = str(v.get("descriptor", ""))
+            if any(hint in descriptor.lower() for hint in IRELAND_LOCATION_HINTS):
+                matched.append(v.get("id"))
+            # Don't descend into a matched country node's children — including
+            # the parent id already covers them in Workday's filter semantics.
+            elif v.get("values"):
+                matched.extend(walk(v["values"]))
+        return matched
+
+    for facet in facets or []:
+        param = facet.get("facetParameter", "")
+        if "location" not in param.lower():
+            continue
+        ids = walk(facet.get("values"))
+        if ids:
+            return param, ids
+    return None, []
+
+
 def fetch_workday_jobs(company_name, url, session, fetch_descriptions=True,
-                        max_pages=10, page_size=20, detail_delay=0.25):
+                        page_size=20, detail_delay=0.25):
     m = WORKDAY_URL_RE.search(url)
     if not m:
         return [], f"URL did not match Workday pattern: {url}"
@@ -198,12 +225,35 @@ def fetch_workday_jobs(company_name, url, session, fetch_descriptions=True,
     api_base = f"https://{tenant}.{wd_shard}.myworkdayjobs.com/wday/cxs/{tenant}/{site}/jobs"
     site_base = f"https://{tenant}.{wd_shard}.myworkdayjobs.com/{site}"
 
+    # First, small probe request just to read the facet list (no location
+    # filter yet) so we can find Workday's own Ireland location facet IDs.
+    applied_facets = {}
+    max_pages = 10  # fallback cap if we can't find a location facet at all
+    try:
+        probe = session.post(api_base, headers=HEADERS,
+                              json={"appliedFacets": {}, "limit": 1, "offset": 0, "searchText": ""},
+                              timeout=15)
+        probe.raise_for_status()
+        probe_data = probe.json()
+        facet_param, facet_ids = find_ireland_facet_values(probe_data.get("facets"))
+        if facet_param and facet_ids:
+            applied_facets = {facet_param: facet_ids}
+            max_pages = 30  # server-side filtered results should be a small, complete set
+        else:
+            # No usable location facet for this tenant — fall back to a much
+            # wider unfiltered scan so large global job boards (e.g.
+            # multinationals with thousands of postings) aren't missed just
+            # because Ireland roles weren't in the first couple hundred.
+            max_pages = 60
+    except Exception as e:
+        return [], f"{company_name}: facet probe failed ({e})"
+
     results = []
     offset = 0
     error = None
 
     for _ in range(max_pages):
-        payload = {"appliedFacets": {}, "limit": page_size, "offset": offset, "searchText": ""}
+        payload = {"appliedFacets": applied_facets, "limit": page_size, "offset": offset, "searchText": ""}
         try:
             resp = session.post(api_base, headers=HEADERS, json=payload, timeout=15)
             resp.raise_for_status()
@@ -218,6 +268,9 @@ def fetch_workday_jobs(company_name, url, session, fetch_descriptions=True,
 
         for job in postings:
             location_text = job.get("locationsText", "") or job.get("bulletFields", [""])[0]
+            # Keep this client-side check too, even with facet filtering on —
+            # it's a cheap safety net against imprecise facets (e.g. a
+            # "UK & Ireland" combined region matching too broadly).
             if not is_ireland_location(location_text):
                 continue
             posted_text = job.get("postedOn", "")
@@ -485,18 +538,31 @@ def update_history(history, live_jobs):
 
 
 def sponsorship_rarity_label(h):
+    """Returns {'label': str, 'category': str}. Crucially: silence is NOT the
+    same as a 'no'. Most job postings never mention sponsorship either way —
+    that's the default, expected, neutral case ('no_data'), and should never
+    be shown to look like bad news. Only an postings that EXPLICITLY rule out
+    sponsorship should read as a negative signal."""
     total = h.get("total", 0)
     sponsors = h.get("sponsors", 0)
+    no_sponsorship = h.get("no_sponsorship", 0)
+
     if total < 5:
-        return "Not enough data yet"
+        return {"label": f"Not enough data yet ({total} scanned)", "category": "no_data"}
+
+    if sponsors == 0 and no_sponsorship == 0:
+        return {"label": f"No sponsorship info found ({total} postings scanned)", "category": "no_data"}
+
+    if sponsors == 0 and no_sponsorship > 0:
+        return {"label": f"Rules out sponsorship in {no_sponsorship} of {total} postings",
+                "category": "explicit_negative"}
+
     ratio = sponsors / total
-    if ratio == 0:
-        return "No sponsorship mentions on record"
     if ratio < 0.10:
-        return "Rarely mentions sponsorship"
+        return {"label": f"Rarely mentions sponsorship ({sponsors} of {total})", "category": "rare_positive"}
     if ratio < 0.40:
-        return "Occasionally mentions sponsorship"
-    return "Frequently mentions sponsorship"
+        return {"label": f"Occasionally mentions sponsorship ({sponsors} of {total})", "category": "occasional_positive"}
+    return {"label": f"Frequently mentions sponsorship ({sponsors} of {total})", "category": "frequent_positive"}
 
 
 def main():
@@ -553,7 +619,7 @@ def main():
     new_count = sum(1 for j in live_jobs if j["new_since_last_check"])
 
     company_sponsorship_stats = {
-        company: {**h, "label": sponsorship_rarity_label(h)}
+        company: {**h, **sponsorship_rarity_label(h)}
         for company, h in history.items()
     }
 
