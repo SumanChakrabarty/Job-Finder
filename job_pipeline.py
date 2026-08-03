@@ -229,6 +229,7 @@ def fetch_workday_jobs(company_name, url, session, fetch_descriptions=True,
     # filter yet) so we can find Workday's own Ireland location facet IDs.
     applied_facets = {}
     max_pages = 10  # fallback cap if we can't find a location facet at all
+    probe_error = None
     try:
         probe = session.post(api_base, headers=HEADERS,
                               json={"appliedFacets": {}, "limit": 1, "offset": 0, "searchText": ""},
@@ -246,11 +247,16 @@ def fetch_workday_jobs(company_name, url, session, fetch_descriptions=True,
             # because Ireland roles weren't in the first couple hundred.
             max_pages = 60
     except Exception as e:
-        return [], f"{company_name}: facet probe failed ({e})"
+        # Don't give up on the whole company over one failed probe request —
+        # try the plain unfiltered search below instead. If the tenant is
+        # genuinely unreachable, the main loop's own request will fail too
+        # and surface a proper error there.
+        probe_error = f"{company_name}: facet probe failed, falling back to unfiltered scan ({e})"
+        max_pages = 60
 
     results = []
     offset = 0
-    error = None
+    error = probe_error
 
     for _ in range(max_pages):
         payload = {"appliedFacets": applied_facets, "limit": page_size, "offset": offset, "searchText": ""}
@@ -441,18 +447,27 @@ def probe_ats_for_manual_companies(manual_companies, session, cache_path):
                 continue
 
         # Fetch (or re-fetch) this company's postings.
+        company_jobs = []
         if platform == "greenhouse":
             jobs = try_greenhouse(slug, session) or []
             for job in jobs:
                 norm = normalize_greenhouse_job(name, job)
                 if norm:
-                    discovered_jobs.append(norm)
+                    company_jobs.append(norm)
         elif platform == "lever":
             jobs = try_lever(slug, session) or []
             for job in jobs:
                 norm = normalize_lever_job(name, job)
                 if norm:
-                    discovered_jobs.append(norm)
+                    company_jobs.append(norm)
+
+        if company_jobs:
+            discovered_jobs.extend(company_jobs)
+        else:
+            # Matched a platform, but no Ireland postings on it right now —
+            # still needs to show up somewhere clickable, not vanish.
+            still_manual.append({"company": name, "url": url,
+                                  "platform": f"{platform} (no Ireland postings found right now)"})
 
     with open(cache_path, "w", encoding="utf-8") as f:
         json.dump(cache, f, indent=2)
@@ -593,6 +608,12 @@ def main():
             if err:
                 errors.append(err)
             print(f"      -> {len(jobs)} Ireland postings")
+            if not jobs:
+                # Never let a company silently disappear — whether it's a
+                # real fetch error or genuinely zero open Ireland roles
+                # today, it still needs to show up somewhere clickable.
+                reason = "fetch error, verify manually" if err else "no Ireland postings found right now"
+                manual_check.append({"company": name, "url": url, "platform": f"workday ({reason})"})
         else:
             manual_check.append({"company": name, "url": url, "platform": kind})
 
