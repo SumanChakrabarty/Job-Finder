@@ -46,6 +46,7 @@ import os
 import re
 import sys
 import time
+import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
 
 try:
@@ -69,6 +70,8 @@ LEVER_JOBS_URL = "https://api.lever.co/v0/postings/{slug}?mode=json"
 SMARTRECRUITERS_JOBS_URL = "https://api.smartrecruiters.com/v1/companies/{slug}/postings"
 SMARTRECRUITERS_DETAIL_URL = "https://api.smartrecruiters.com/v1/companies/{slug}/postings/{posting_id}"
 ASHBY_JOBS_URL = "https://api.ashbyhq.com/posting-api/job-board/{slug}"
+RECRUITEE_JOBS_URL = "https://{slug}.recruitee.com/api/offers/"
+PERSONIO_XML_URL = "https://{slug}.jobs.personio.de/xml"
 
 CORP_SUFFIX_RE = re.compile(
     r"\b(limited|ltd|plc|unlimited company|uc|inc|incorporated|group|holdings|"
@@ -576,7 +579,107 @@ def normalize_ashby_job(company_name, job):
     }
 
 
-PROBE_VERSION = 2  # bump whenever a new ATS platform is added to the probe list
+def try_recruitee(slug, session):
+    try:
+        resp = session.get(RECRUITEE_JOBS_URL.format(slug=slug), headers=HEADERS, timeout=10)
+        if resp.status_code != 200:
+            return None
+        data = resp.json()
+        offers = data.get("offers")
+        return offers if offers else None
+    except Exception:
+        return None
+
+
+def normalize_recruitee_job(company_name, job):
+    location = ", ".join(filter(None, [job.get("city"), job.get("country_code")]))
+    if job.get("remote"):
+        location = (location + " (Remote)").strip()
+    if not is_ireland_location(location):
+        return None
+    description = job.get("description", "") or job.get("requirements", "")
+    sponsorship, snippet = classify_sponsorship(description)
+    posted_text, days_ago = "Unknown", None
+    published = job.get("published_at")
+    if published:
+        try:
+            posted_dt = datetime.fromisoformat(published.replace("Z", "+00:00"))
+            days_ago = (datetime.now(timezone.utc) - posted_dt).days
+            posted_text = f"Posted {days_ago} days ago" if days_ago > 0 else "Posted Today"
+        except Exception:
+            pass
+    return {
+        "company": company_name,
+        "title": job.get("title", "").strip(),
+        "location": location,
+        "posted_text": posted_text,
+        "posted_days_ago": days_ago,
+        "employment_type": job.get("employment_type_code", "Unspecified") or "Unspecified",
+        "url": job.get("careers_url", ""),
+        "source": "recruitee_api",
+        "visa_sponsorship": sponsorship,
+        "visa_snippet": snippet,
+    }
+
+
+def try_personio(slug, session):
+    """Personio exposes an unauthenticated XML job feed rather than JSON —
+    same public-data idea as the others, different format. Returns a list
+    of parsed <position> elements, or None if this isn't a real Personio
+    board for this slug."""
+    try:
+        resp = session.get(PERSONIO_XML_URL.format(slug=slug), headers=HEADERS, timeout=10)
+        if resp.status_code != 200 or not resp.text.strip():
+            return None
+        root = ET.fromstring(resp.text)
+        positions = root.findall("position")
+        return positions if positions else None
+    except Exception:
+        return None
+
+
+def normalize_personio_job(company_name, slug, position):
+    def field(tag):
+        el = position.find(tag)
+        return el.text.strip() if el is not None and el.text else ""
+
+    office = field("office")
+    if not is_ireland_location(office):
+        return None
+
+    description_parts = []
+    for jd in position.findall("./jobDescriptions/jobDescription"):
+        value = jd.find("jobDescriptionValue")
+        if value is not None and value.text:
+            description_parts.append(value.text)
+    sponsorship, snippet = classify_sponsorship(" ".join(description_parts))
+
+    posted_text, days_ago = "Unknown", None
+    created = field("createdAt")
+    if created:
+        try:
+            posted_dt = datetime.fromisoformat(created.replace("Z", "+00:00"))
+            days_ago = (datetime.now(timezone.utc) - posted_dt).days
+            posted_text = f"Posted {days_ago} days ago" if days_ago > 0 else "Posted Today"
+        except Exception:
+            pass
+
+    position_id = field("id")
+    return {
+        "company": company_name,
+        "title": field("name"),
+        "location": office,
+        "posted_text": posted_text,
+        "posted_days_ago": days_ago,
+        "employment_type": field("employmentType") or "Unspecified",
+        "url": f"https://{slug}.jobs.personio.de/job/{position_id}",
+        "source": "personio_xml",
+        "visa_sponsorship": sponsorship,
+        "visa_snippet": snippet,
+    }
+
+
+PROBE_VERSION = 3  # bump whenever a new ATS platform is added to the probe list
 
 
 def probe_ats_for_manual_companies(manual_companies, session, cache_path, fetch_descriptions=True):
@@ -602,7 +705,7 @@ def probe_ats_for_manual_companies(manual_companies, session, cache_path, fetch_
 
     still_manual = []
     discovered_jobs = []
-    known_platforms = ("greenhouse", "lever", "smartrecruiters", "ashby")
+    known_platforms = ("greenhouse", "lever", "smartrecruiters", "ashby", "recruitee", "personio")
 
     for entry in manual_companies:
         name, url = entry["company"], entry["url"]
@@ -627,6 +730,12 @@ def probe_ats_for_manual_companies(manual_companies, session, cache_path, fetch_
                     break
                 if try_ashby(candidate, session) is not None:
                     platform, slug = "ashby", candidate
+                    break
+                if try_recruitee(candidate, session) is not None:
+                    platform, slug = "recruitee", candidate
+                    break
+                if try_personio(candidate, session) is not None:
+                    platform, slug = "personio", candidate
                     break
             cache[name] = {"platform": platform or "none", "slug": slug}
             if platform is None:
@@ -657,6 +766,18 @@ def probe_ats_for_manual_companies(manual_companies, session, cache_path, fetch_
             jobs = try_ashby(slug, session) or []
             for job in jobs:
                 norm = normalize_ashby_job(name, job)
+                if norm:
+                    company_jobs.append(norm)
+        elif platform == "recruitee":
+            jobs = try_recruitee(slug, session) or []
+            for job in jobs:
+                norm = normalize_recruitee_job(name, job)
+                if norm:
+                    company_jobs.append(norm)
+        elif platform == "personio":
+            jobs = try_personio(slug, session) or []
+            for job in jobs:
+                norm = normalize_personio_job(name, slug, job)
                 if norm:
                     company_jobs.append(norm)
 
@@ -817,7 +938,8 @@ def main():
         else:
             manual_check.append({"company": name, "url": url, "platform": kind})
 
-    print(f"\nProbing remaining {len(manual_check)} companies for Greenhouse/Lever/SmartRecruiters/Ashby "
+    print(f"\nProbing remaining {len(manual_check)} companies for Greenhouse/Lever/SmartRecruiters/"
+          f"Ashby/Recruitee/Personio boards "
           f"boards (cached — only new/changed companies are actually re-probed)...")
     discovered_jobs, manual_check = probe_ats_for_manual_companies(
         manual_check, session, cache_path="ats_platform_cache.json",
