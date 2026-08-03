@@ -243,6 +243,17 @@ def fetch_workday_jobs(company_name, url, session, fetch_descriptions=True,
     api_base = f"https://{tenant}.{wd_shard}.myworkdayjobs.com/wday/cxs/{tenant}/{site}/jobs"
     site_base = f"https://{tenant}.{wd_shard}.myworkdayjobs.com/{site}"
 
+    # IMPORTANT: visit the actual career page first, like a real browser
+    # would, before calling the API directly. Workday's bot-protection
+    # commonly rejects "cold" API calls with no prior page visit (400/422)
+    # regardless of headers — this establishes the session cookies it's
+    # checking for. Best-effort: if this fails, still try the API anyway.
+    try:
+        session.get(site_base, headers=workday_headers(tenant, wd_shard, site), timeout=15)
+        time.sleep(0.5)
+    except Exception:
+        pass
+
     # First, small probe request just to read the facet list (no location
     # filter yet) so we can find Workday's own Ireland location facet IDs.
     applied_facets = {}
@@ -268,6 +279,7 @@ def fetch_workday_jobs(company_name, url, session, fetch_descriptions=True,
         # Don't give up on the whole company over one failed probe request —
         # try the plain unfiltered search below instead. If the tenant is
         # genuinely unreachable, the main loop's own request will fail too
+
         # and surface a proper error there.
         probe_error = f"{company_name}: facet probe failed, falling back to unfiltered scan ({e})"
         max_pages = 60
