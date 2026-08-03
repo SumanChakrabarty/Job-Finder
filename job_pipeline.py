@@ -75,8 +75,26 @@ CORP_SUFFIX_RE = re.compile(
 
 HEADERS = {
     "Content-Type": "application/json",
-    "User-Agent": "Mozilla/5.0 (compatible; job-search-dashboard/1.0)",
+    "Accept": "application/json",
+    "User-Agent": ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+                    "(KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"),
 }
+
+
+def workday_headers(tenant, wd_shard, site):
+    """Many Workday tenants sit behind bot-protection that blocks requests
+    without a Referer/Origin matching the tenant's own domain — a real
+    browser visiting the career page always sends these; a bare API script
+    without them can get flat-out rejected with a 400, even on a perfectly
+    valid endpoint. This makes every request look like it came from the
+    tenant's own career page, which is exactly what it's mimicking."""
+    site_base = f"https://{tenant}.{wd_shard}.myworkdayjobs.com/{site}"
+    return {
+        **HEADERS,
+        "Referer": site_base,
+        "Origin": f"https://{tenant}.{wd_shard}.myworkdayjobs.com",
+    }
+
 
 # --- visa sponsorship text signal -------------------------------------
 
@@ -180,7 +198,7 @@ def guess_employment_type(bullet_fields):
 def fetch_job_description(tenant, wd_shard, site, external_path, session):
     detail_url = f"https://{tenant}.{wd_shard}.myworkdayjobs.com/wday/cxs/{tenant}/{site}{external_path}"
     try:
-        resp = session.get(detail_url, headers=HEADERS, timeout=15)
+        resp = session.get(detail_url, headers=workday_headers(tenant, wd_shard, site), timeout=15)
         resp.raise_for_status()
         data = resp.json()
         return (data.get("jobPostingInfo") or {}).get("jobDescription", "")
@@ -231,8 +249,8 @@ def fetch_workday_jobs(company_name, url, session, fetch_descriptions=True,
     max_pages = 10  # fallback cap if we can't find a location facet at all
     probe_error = None
     try:
-        probe = session.post(api_base, headers=HEADERS,
-                              json={"appliedFacets": {}, "limit": 1, "offset": 0, "searchText": ""},
+        probe = session.post(api_base, headers=workday_headers(tenant, wd_shard, site),
+                              json={"appliedFacets": {}, "limit": 20, "offset": 0, "searchText": ""},
                               timeout=15)
         probe.raise_for_status()
         probe_data = probe.json()
@@ -261,7 +279,7 @@ def fetch_workday_jobs(company_name, url, session, fetch_descriptions=True,
     for _ in range(max_pages):
         payload = {"appliedFacets": applied_facets, "limit": page_size, "offset": offset, "searchText": ""}
         try:
-            resp = session.post(api_base, headers=HEADERS, json=payload, timeout=15)
+            resp = session.post(api_base, headers=workday_headers(tenant, wd_shard, site), json=payload, timeout=15)
             resp.raise_for_status()
             data = resp.json()
         except Exception as e:
@@ -327,7 +345,7 @@ def candidate_slugs(company_name: str):
 
 def try_greenhouse(slug, session):
     try:
-        resp = session.get(GREENHOUSE_JOBS_URL.format(slug=slug), timeout=10)
+        resp = session.get(GREENHOUSE_JOBS_URL.format(slug=slug), headers=HEADERS, timeout=10)
         if resp.status_code != 200:
             return None
         data = resp.json()
@@ -339,7 +357,7 @@ def try_greenhouse(slug, session):
 
 def try_lever(slug, session):
     try:
-        resp = session.get(LEVER_JOBS_URL.format(slug=slug), timeout=10)
+        resp = session.get(LEVER_JOBS_URL.format(slug=slug), headers=HEADERS, timeout=10)
         if resp.status_code != 200:
             return None
         data = resp.json()
