@@ -66,6 +66,9 @@ WORKDAY_URL_RE = re.compile(
 
 GREENHOUSE_JOBS_URL = "https://boards-api.greenhouse.io/v1/boards/{slug}/jobs?content=true"
 LEVER_JOBS_URL = "https://api.lever.co/v0/postings/{slug}?mode=json"
+SMARTRECRUITERS_JOBS_URL = "https://api.smartrecruiters.com/v1/companies/{slug}/postings"
+SMARTRECRUITERS_DETAIL_URL = "https://api.smartrecruiters.com/v1/companies/{slug}/postings/{posting_id}"
+ASHBY_JOBS_URL = "https://api.ashbyhq.com/posting-api/job-board/{slug}"
 
 CORP_SUFFIX_RE = re.compile(
     r"\b(limited|ltd|plc|unlimited company|uc|inc|incorporated|group|holdings|"
@@ -462,25 +465,150 @@ def normalize_lever_job(company_name, job):
     }
 
 
-def probe_ats_for_manual_companies(manual_companies, session, cache_path):
+def try_smartrecruiters(slug, session):
+    try:
+        resp = session.get(SMARTRECRUITERS_JOBS_URL.format(slug=slug), headers=HEADERS, timeout=10)
+        if resp.status_code != 200:
+            return None
+        data = resp.json()
+        content = data.get("content")
+        return content if content else None
+    except Exception:
+        return None
+
+
+def fetch_smartrecruiters_description(slug, posting_id, session):
+    """SmartRecruiters' list endpoint doesn't include the full description —
+    a separate detail call is needed, same pattern as the Workday detail
+    fetch. Only called for postings that already passed the Ireland filter,
+    to keep the extra request count down."""
+    try:
+        url = SMARTRECRUITERS_DETAIL_URL.format(slug=slug, posting_id=posting_id)
+        resp = session.get(url, headers=HEADERS, timeout=10)
+        resp.raise_for_status()
+        data = resp.json()
+        sections = (data.get("jobAd") or {}).get("sections") or {}
+        parts = []
+        for key in ("jobDescription", "qualifications", "additionalInformation"):
+            text = (sections.get(key) or {}).get("text", "")
+            if text:
+                parts.append(text)
+        return " ".join(parts)
+    except Exception:
+        return ""
+
+
+def normalize_smartrecruiters_job(company_name, job, slug, session, fetch_descriptions):
+    location_obj = job.get("location") or {}
+    location = ", ".join(filter(None, [location_obj.get("city"), location_obj.get("region"),
+                                        location_obj.get("country")]))
+    if not is_ireland_location(location):
+        return None
+
+    posting_id = job.get("id", "")
+    posted_text, days_ago = "Unknown", None
+    released = job.get("releasedDate")
+    if released:
+        try:
+            posted_dt = datetime.fromisoformat(released.replace("Z", "+00:00"))
+            days_ago = (datetime.now(timezone.utc) - posted_dt).days
+            posted_text = f"Posted {days_ago} days ago" if days_ago > 0 else "Posted Today"
+        except Exception:
+            pass
+
+    sponsorship, snippet = "not_mentioned", None
+    if fetch_descriptions and posting_id:
+        desc = fetch_smartrecruiters_description(slug, posting_id, session)
+        sponsorship, snippet = classify_sponsorship(desc)
+
+    return {
+        "company": company_name,
+        "title": job.get("name", "").strip(),
+        "location": location,
+        "posted_text": posted_text,
+        "posted_days_ago": days_ago,
+        "employment_type": "Unspecified",
+        "url": f"https://jobs.smartrecruiters.com/{slug}/{posting_id}",
+        "source": "smartrecruiters_api",
+        "visa_sponsorship": sponsorship,
+        "visa_snippet": snippet,
+    }
+
+
+def try_ashby(slug, session):
+    try:
+        resp = session.get(ASHBY_JOBS_URL.format(slug=slug), headers=HEADERS, timeout=10)
+        if resp.status_code != 200:
+            return None
+        data = resp.json()
+        jobs = data.get("jobs")
+        return jobs if jobs else None
+    except Exception:
+        return None
+
+
+def normalize_ashby_job(company_name, job):
+    location = job.get("location", "") or job.get("locationName", "") or ""
+    if not is_ireland_location(location):
+        return None
+    description = job.get("descriptionHtml", "") or job.get("descriptionPlain", "")
+    sponsorship, snippet = classify_sponsorship(description)
+    posted_text, days_ago = "Unknown", None
+    published = job.get("publishedAt")
+    if published:
+        try:
+            posted_dt = datetime.fromisoformat(published.replace("Z", "+00:00"))
+            days_ago = (datetime.now(timezone.utc) - posted_dt).days
+            posted_text = f"Posted {days_ago} days ago" if days_ago > 0 else "Posted Today"
+        except Exception:
+            pass
+    return {
+        "company": company_name,
+        "title": job.get("title", "").strip(),
+        "location": location,
+        "posted_text": posted_text,
+        "posted_days_ago": days_ago,
+        "employment_type": job.get("employmentType", "Unspecified") or "Unspecified",
+        "url": job.get("applyUrl", "") or job.get("jobUrl", ""),
+        "source": "ashby_api",
+        "visa_sponsorship": sponsorship,
+        "visa_snippet": snippet,
+    }
+
+
+PROBE_VERSION = 2  # bump whenever a new ATS platform is added to the probe list
+
+
+def probe_ats_for_manual_companies(manual_companies, session, cache_path, fetch_descriptions=True):
     """For companies with no known API (custom sites), try a few likely
-    Greenhouse/Lever board slugs. If one hits, that company's Ireland jobs
-    get pulled automatically from then on instead of needing a manual visit.
-    Results (including 'no match found') are cached so repeat runs don't
-    re-probe the same misses every 15 minutes."""
+    Greenhouse / Lever / SmartRecruiters / Ashby board slugs. If one hits,
+    that company's Ireland jobs get pulled automatically from then on
+    instead of needing a manual visit. Results (including 'no match found')
+    are cached so repeat runs don't re-probe the same misses every 15 min.
+
+    The cache is versioned: whenever a new platform is added to the probe
+    list, companies previously cached as 'none' get automatically
+    re-probed against the new platform too — otherwise they'd be stuck
+    permanently skipped just because an older run tried fewer platforms.
+    Confirmed real matches are never discarded, only re-checked misses."""
     cache = {}
     if os.path.exists(cache_path):
         with open(cache_path, encoding="utf-8") as f:
-            cache = json.load(f)
+            raw = json.load(f)
+        stored_version = raw.pop("__probe_version__", 1)
+        cache = raw
+        if stored_version != PROBE_VERSION:
+            cache = {name: c for name, c in cache.items() if c.get("platform") != "none"}
 
     still_manual = []
     discovered_jobs = []
+    known_platforms = ("greenhouse", "lever", "smartrecruiters", "ashby")
 
     for entry in manual_companies:
         name, url = entry["company"], entry["url"]
         cached = cache.get(name)
 
-        if cached and cached.get("platform") in ("greenhouse", "lever"):
+        if cached and cached.get("platform") in known_platforms:
             platform, slug = cached["platform"], cached["slug"]
         elif cached and cached.get("platform") == "none":
             still_manual.append(entry)
@@ -488,13 +616,17 @@ def probe_ats_for_manual_companies(manual_companies, session, cache_path):
         else:
             platform, slug = None, None
             for candidate in candidate_slugs(name):
-                jobs = try_greenhouse(candidate, session)
-                if jobs is not None:
+                if try_greenhouse(candidate, session) is not None:
                     platform, slug = "greenhouse", candidate
                     break
-                jobs = try_lever(candidate, session)
-                if jobs is not None:
+                if try_lever(candidate, session) is not None:
                     platform, slug = "lever", candidate
+                    break
+                if try_smartrecruiters(candidate, session) is not None:
+                    platform, slug = "smartrecruiters", candidate
+                    break
+                if try_ashby(candidate, session) is not None:
+                    platform, slug = "ashby", candidate
                     break
             cache[name] = {"platform": platform or "none", "slug": slug}
             if platform is None:
@@ -515,6 +647,18 @@ def probe_ats_for_manual_companies(manual_companies, session, cache_path):
                 norm = normalize_lever_job(name, job)
                 if norm:
                     company_jobs.append(norm)
+        elif platform == "smartrecruiters":
+            jobs = try_smartrecruiters(slug, session) or []
+            for job in jobs:
+                norm = normalize_smartrecruiters_job(name, job, slug, session, fetch_descriptions)
+                if norm:
+                    company_jobs.append(norm)
+        elif platform == "ashby":
+            jobs = try_ashby(slug, session) or []
+            for job in jobs:
+                norm = normalize_ashby_job(name, job)
+                if norm:
+                    company_jobs.append(norm)
 
         if company_jobs:
             discovered_jobs.extend(company_jobs)
@@ -524,6 +668,7 @@ def probe_ats_for_manual_companies(manual_companies, session, cache_path):
             still_manual.append({"company": name, "url": url,
                                   "platform": f"{platform} (no Ireland postings found right now)"})
 
+    cache["__probe_version__"] = PROBE_VERSION
     with open(cache_path, "w", encoding="utf-8") as f:
         json.dump(cache, f, indent=2)
 
@@ -672,10 +817,11 @@ def main():
         else:
             manual_check.append({"company": name, "url": url, "platform": kind})
 
-    print(f"\nProbing remaining {len(manual_check)} companies for Greenhouse/Lever boards "
-          f"(cached — only new/changed companies are actually re-probed)...")
+    print(f"\nProbing remaining {len(manual_check)} companies for Greenhouse/Lever/SmartRecruiters/Ashby "
+          f"boards (cached — only new/changed companies are actually re-probed)...")
     discovered_jobs, manual_check = probe_ats_for_manual_companies(
-        manual_check, session, cache_path="ats_platform_cache.json")
+        manual_check, session, cache_path="ats_platform_cache.json",
+        fetch_descriptions=not args.no_descriptions)
     if discovered_jobs:
         found_companies = sorted(set(j["company"] for j in discovered_jobs))
         print(f"  -> Auto-discovered {len(discovered_jobs)} Ireland postings across "
