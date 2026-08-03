@@ -233,6 +233,30 @@ def find_ireland_facet_values(facets):
     return None, []
 
 
+def post_workday_variants(session, api_base, headers, applied_facets, limit, offset):
+    """Different Workday tenants (depending on their CXS API version) can
+    reject a payload shape that others accept fine — e.g. some reject an
+    empty 'searchText' string, others want 'appliedFacets' omitted when
+    empty. Try a few known-real variants in order and use whichever the
+    tenant actually accepts, instead of assuming one shape works everywhere."""
+    variants = [
+        {"appliedFacets": applied_facets, "limit": limit, "offset": offset, "searchText": ""},
+        {"appliedFacets": applied_facets, "limit": limit, "offset": offset},
+        {"searchText": "", "limit": limit, "offset": offset, "appliedFacets": applied_facets},
+        {"appliedFacets": applied_facets, "limit": limit, "offset": offset, "searchText": "", "clientRequestID": ""},
+    ]
+    last_error = None
+    for payload in variants:
+        try:
+            resp = session.post(api_base, headers=headers, json=payload, timeout=15)
+            if resp.status_code == 200:
+                return resp, None
+            last_error = f"HTTP {resp.status_code}: {resp.text[:150]}"
+        except Exception as e:
+            last_error = str(e)
+    return None, last_error
+
+
 def fetch_workday_jobs(company_name, url, session, fetch_descriptions=True,
                         page_size=20, detail_delay=0.25):
     m = WORKDAY_URL_RE.search(url)
@@ -260,10 +284,10 @@ def fetch_workday_jobs(company_name, url, session, fetch_descriptions=True,
     max_pages = 10  # fallback cap if we can't find a location facet at all
     probe_error = None
     try:
-        probe = session.post(api_base, headers=workday_headers(tenant, wd_shard, site),
-                              json={"appliedFacets": {}, "limit": 20, "offset": 0, "searchText": ""},
-                              timeout=15)
-        probe.raise_for_status()
+        probe, probe_err = post_workday_variants(
+            session, api_base, workday_headers(tenant, wd_shard, site), {}, 20, 0)
+        if probe is None:
+            raise RuntimeError(probe_err)
         probe_data = probe.json()
         facet_param, facet_ids = find_ireland_facet_values(probe_data.get("facets"))
         if facet_param and facet_ids:
@@ -289,10 +313,11 @@ def fetch_workday_jobs(company_name, url, session, fetch_descriptions=True,
     error = probe_error
 
     for _ in range(max_pages):
-        payload = {"appliedFacets": applied_facets, "limit": page_size, "offset": offset, "searchText": ""}
         try:
-            resp = session.post(api_base, headers=workday_headers(tenant, wd_shard, site), json=payload, timeout=15)
-            resp.raise_for_status()
+            resp, req_err = post_workday_variants(
+                session, api_base, workday_headers(tenant, wd_shard, site), applied_facets, page_size, offset)
+            if resp is None:
+                raise RuntimeError(req_err)
             data = resp.json()
         except Exception as e:
             error = f"{company_name}: request failed ({e})"
