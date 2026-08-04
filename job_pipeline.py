@@ -274,17 +274,17 @@ def find_ireland_facet_values(facets):
     return None, []
 
 
-def post_workday_variants(session, api_base, headers, applied_facets, limit, offset):
+def post_workday_variants(session, api_base, headers, applied_facets, limit, offset, search_text=""):
     """Different Workday tenants (depending on their CXS API version) can
     reject a payload shape that others accept fine — e.g. some reject an
     empty 'searchText' string, others want 'appliedFacets' omitted when
     empty. Try a few known-real variants in order and use whichever the
     tenant actually accepts, instead of assuming one shape works everywhere."""
     variants = [
-        {"appliedFacets": applied_facets, "limit": limit, "offset": offset, "searchText": ""},
+        {"appliedFacets": applied_facets, "limit": limit, "offset": offset, "searchText": search_text},
         {"appliedFacets": applied_facets, "limit": limit, "offset": offset},
-        {"searchText": "", "limit": limit, "offset": offset, "appliedFacets": applied_facets},
-        {"appliedFacets": applied_facets, "limit": limit, "offset": offset, "searchText": "", "clientRequestID": ""},
+        {"searchText": search_text, "limit": limit, "offset": offset, "appliedFacets": applied_facets},
+        {"appliedFacets": applied_facets, "limit": limit, "offset": offset, "searchText": search_text, "clientRequestID": ""},
         {"appliedFacets": {}, "limit": limit, "offset": offset, "searchText": "Ireland"},
     ]
     last_error = None
@@ -357,10 +357,19 @@ def fetch_workday_jobs(company_name, url, session, fetch_descriptions=True,
         else:
             probe_data = probe.json()
             total = probe_data.get("total", 0)
-            if total > 0:
+            # Sanity ceiling: no real company has hundreds of simultaneous
+            # open Ireland roles. A "filtered" total this high (we've seen
+            # PwC report 4586, MSD 882) is proof the facet ID wasn't
+            # actually recognized by that tenant and the filter silently
+            # no-op'd, returning their entire global job list instead —
+            # treat that as a non-match rather than trusting it, and let
+            # it fall through to the next strategy.
+            if 0 < total <= 150:
                 applied_facets = known_facets
                 max_pages = 30
                 strategy1_note = f"matched, total={total}"
+            elif total > 150:
+                strategy1_note = f"rejected — total={total} is implausibly high, filter likely didn't apply"
             else:
                 strategy1_note = "request succeeded but total=0 under 'locationCountry' key"
     except Exception as e:
@@ -382,7 +391,7 @@ def fetch_workday_jobs(company_name, url, session, fetch_descriptions=True,
                 alt_facets = {alt_key: ["04a05835925f45b3a59406a2a6b72c8a"]}
                 probe, _ = post_workday_variants(
                     session, api_base, workday_headers(tenant, wd_shard, site), alt_facets, 20, 0)
-                if probe is not None and probe.json().get("total", 0) > 0:
+                if probe is not None and 0 < probe.json().get("total", 0) <= 150:
                     applied_facets = alt_facets
                     max_pages = 30
                     strategy1_note += f" | but '{alt_key}' key worked (untrusted, total={probe.json().get('total')})"
@@ -390,17 +399,55 @@ def fetch_workday_jobs(company_name, url, session, fetch_descriptions=True,
             except Exception:
                 continue
 
+    # Strategy 1c: some tenants' Workday integration expects a plain ISO
+    # country code ('IRL') as the facet value instead of the internal hex
+    # ID — confirmed real for PwC (their own site uses '?wdcountry=IRL').
+    # Still untrusted/unverified for the underlying JSON API specifically,
+    # so the client-side check stays active.
+    if not applied_facets:
+        for key in ("locationCountry", "wdcountry", "country"):
+            for code in ("IRL", "IE"):
+                try:
+                    code_facets = {key: [code]}
+                    probe, _ = post_workday_variants(
+                        session, api_base, workday_headers(tenant, wd_shard, site), code_facets, 20, 0)
+                    if probe is not None and 0 < probe.json().get("total", 0) <= 150:
+                        applied_facets = code_facets
+                        max_pages = 30
+                        strategy1_note += f" | but '{key}={code}' worked (untrusted, total={probe.json().get('total')})"
+                        break
+                except Exception:
+                    continue
+            if applied_facets:
+                break
+
     # Strategy 2 (fallback): the universal ID didn't return anything for
     # this tenant (rare — could be a customized/non-standard instance) —
     # fall back to dynamically discovering whatever facet this specific
-    # tenant does expose for Ireland. This path is less certain, so the
-    # client-side text safety net stays active for it.
+    # tenant does expose for Ireland. Search WITH "Ireland" as the search
+    # text while discovering facets (not an empty/unrelated search) — the
+    # facet counts Workday returns are computed from the CURRENT result
+    # set, so an empty search on a huge global company can completely miss
+    # Ireland as a facet option, even though it exists, simply because
+    # Ireland isn't common enough to surface in an unrelated sample. This
+    # path is less certain either way, so the client-side text safety net
+    # stays active for it.
     if not applied_facets:
         try:
-            probe, probe_err = post_workday_variants(
-                session, api_base, workday_headers(tenant, wd_shard, site), {}, 20, 0)
+            probe = None
+            for search_text in ("Ireland", ""):
+                try:
+                    probe = session.post(
+                        api_base, headers=workday_headers(tenant, wd_shard, site),
+                        json={"appliedFacets": {}, "limit": 20, "offset": 0, "searchText": search_text},
+                        timeout=15)
+                    if probe.status_code == 200:
+                        break
+                    probe = None
+                except Exception:
+                    probe = None
             if probe is None:
-                raise RuntimeError(probe_err)
+                raise RuntimeError("both Ireland-search and empty-search facet probes failed")
             probe_data = probe.json()
             facet_param, facet_ids = find_ireland_facet_values(probe_data.get("facets"))
             if facet_param and facet_ids:
@@ -424,11 +471,13 @@ def fetch_workday_jobs(company_name, url, session, fetch_descriptions=True,
     seen_urls = set()
     offset = 0
     error = probe_error
+    wide_scan_search_text = "" if applied_facets else "Ireland"
 
     for _ in range(max_pages):
         try:
             resp, req_err = post_workday_variants(
-                session, api_base, workday_headers(tenant, wd_shard, site), applied_facets, page_size, offset)
+                session, api_base, workday_headers(tenant, wd_shard, site), applied_facets, page_size, offset,
+                search_text=wide_scan_search_text)
             if resp is None:
                 raise RuntimeError(req_err)
             data = resp.json()
