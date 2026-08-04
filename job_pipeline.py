@@ -329,30 +329,57 @@ def fetch_workday_jobs(company_name, url, session, fetch_descriptions=True,
     applied_facets = {}
     max_pages = 10  # fallback cap if we can't find a location facet at all
     probe_error = None
-    try:
-        probe, probe_err = post_workday_variants(
-            session, api_base, workday_headers(tenant, wd_shard, site), {}, 20, 0)
-        if probe is None:
-            raise RuntimeError(probe_err)
-        probe_data = probe.json()
-        facet_param, facet_ids = find_ireland_facet_values(probe_data.get("facets"))
-        if facet_param and facet_ids:
-            applied_facets = {facet_param: facet_ids}
-            max_pages = 30  # server-side filtered results should be a small, complete set
-        else:
-            # No usable location facet for this tenant — fall back to a much
-            # wider unfiltered scan so large global job boards (e.g.
-            # multinationals with thousands of postings) aren't missed just
-            # because Ireland roles weren't in the first couple hundred.
-            max_pages = 60
-    except Exception as e:
-        # Don't give up on the whole company over one failed probe request —
-        # try the plain unfiltered search below instead. If the tenant is
-        # genuinely unreachable, the main loop's own request will fail too
 
-        # and surface a proper error there.
-        probe_error = f"{company_name}: facet probe failed, falling back to unfiltered scan ({e})"
-        max_pages = 60
+    # Strategy 1 (primary): Workday ships the SAME internal ID for "Ireland"
+    # as a country to every customer who uses its standard country
+    # reference data — confirmed identical across completely unrelated
+    # tenants (Sky, Motorola Solutions, BDR Thermea, even Workday's own
+    # careers site all use this exact value). Trying it directly is far
+    # more reliable than *discovering* the right facet by sampling search
+    # results, which can miss Ireland entirely for large multinationals
+    # where Ireland postings don't happen to appear in the sample window —
+    # this was the actual cause of companies like Accenture showing 0
+    # postings despite having dozens of real open Ireland roles.
+    try:
+        known_facets = {"locationCountry": ["04a05835925f45b3a59406a2a6b72c8a"]}
+        probe, _ = post_workday_variants(
+            session, api_base, workday_headers(tenant, wd_shard, site), known_facets, 20, 0)
+        if probe is not None:
+            probe_data = probe.json()
+            if probe_data.get("total", 0) > 0:
+                applied_facets = known_facets
+                max_pages = 30
+    except Exception:
+        pass
+
+    # Strategy 2 (fallback): the universal ID didn't return anything for
+    # this tenant (rare — could be a customized/non-standard instance) —
+    # fall back to dynamically discovering whatever facet this specific
+    # tenant does expose for Ireland.
+    if not applied_facets:
+        try:
+            probe, probe_err = post_workday_variants(
+                session, api_base, workday_headers(tenant, wd_shard, site), {}, 20, 0)
+            if probe is None:
+                raise RuntimeError(probe_err)
+            probe_data = probe.json()
+            facet_param, facet_ids = find_ireland_facet_values(probe_data.get("facets"))
+            if facet_param and facet_ids:
+                applied_facets = {facet_param: facet_ids}
+                max_pages = 30  # server-side filtered results should be a small, complete set
+            else:
+                # No usable location facet for this tenant — fall back to a much
+                # wider unfiltered scan so large global job boards (e.g.
+                # multinationals with thousands of postings) aren't missed just
+                # because Ireland roles weren't in the first couple hundred.
+                max_pages = 60
+        except Exception as e:
+            # Don't give up on the whole company over one failed probe request —
+            # try the plain unfiltered search below instead. If the tenant is
+            # genuinely unreachable, the main loop's own request will fail too
+            # and surface a proper error there.
+            probe_error = f"{company_name}: facet probe failed, falling back to unfiltered scan ({e})"
+            max_pages = 60
 
     results = []
     offset = 0
