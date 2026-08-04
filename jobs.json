@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-04T10:55:52.527528+00:00",
+  "generated_at": "2026-08-04T11:16:19.578751+00:00",
   "live_jobs": [
     {
       "company": "Salesforce",
@@ -12,7 +12,7 @@
       "source": "workday_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-04T10:55:52.527528+00:00"
     },
     {
@@ -572,7 +572,7 @@
       "source": "workday_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-04T10:55:52.527528+00:00"
     },
     {
@@ -1090,7 +1090,7 @@
       "source": "workday_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-04T10:55:52.527528+00:00"
     },
     {
@@ -2882,7 +2882,7 @@
       "source": "greenhouse_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-04T10:55:52.527528+00:00"
     },
     {
@@ -3028,11 +3028,11 @@
     {
       "company": "Intercom",
       "title": "Engineering Manager, AI Models Infrastructure",
-      "location": "Dublin, Ireland; London, England",
+      "location": "Dublin, Ireland",
       "posted_text": "Posted 14 days ago",
       "posted_days_ago": 14,
       "employment_type": "Unspecified",
-      "url": "https://job-boards.greenhouse.io/intercom/jobs/7784684",
+      "url": "https://job-boards.greenhouse.io/intercom/jobs/7818585",
       "source": "greenhouse_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
@@ -3042,11 +3042,11 @@
     {
       "company": "Intercom",
       "title": "Engineering Manager, AI Models Infrastructure",
-      "location": "Dublin, Ireland",
+      "location": "Dublin, Ireland; London, England",
       "posted_text": "Posted 14 days ago",
       "posted_days_ago": 14,
       "employment_type": "Unspecified",
-      "url": "https://job-boards.greenhouse.io/intercom/jobs/7818585",
+      "url": "https://job-boards.greenhouse.io/intercom/jobs/7784684",
       "source": "greenhouse_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
@@ -3960,7 +3960,7 @@
       "source": "greenhouse_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-04T10:55:52.527528+00:00"
     },
     {
@@ -3971,6 +3971,20 @@
       "posted_days_ago": 0,
       "employment_type": "Unspecified",
       "url": "https://www.mongodb.com/careers/job/?gh_jid=8041640",
+      "source": "greenhouse_api",
+      "visa_sponsorship": "not_mentioned",
+      "visa_snippet": null,
+      "new_since_last_check": false,
+      "first_seen_at": "2026-08-03T13:41:34.300846+00:00"
+    },
+    {
+      "company": "MongoDB",
+      "title": "Cloud Operations Engineer",
+      "location": "Cork, Ireland; Dublin, Ireland",
+      "posted_text": "Posted Today",
+      "posted_days_ago": 0,
+      "employment_type": "Unspecified",
+      "url": "https://www.mongodb.com/careers/job/?gh_jid=8025824",
       "source": "greenhouse_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
@@ -3999,20 +4013,6 @@
       "posted_days_ago": 0,
       "employment_type": "Unspecified",
       "url": "https://www.mongodb.com/careers/job/?gh_jid=7453323",
-      "source": "greenhouse_api",
-      "visa_sponsorship": "not_mentioned",
-      "visa_snippet": null,
-      "new_since_last_check": false,
-      "first_seen_at": "2026-08-03T13:41:34.300846+00:00"
-    },
-    {
-      "company": "MongoDB",
-      "title": "Cloud Operations Engineer",
-      "location": "Cork, Ireland; Dublin, Ireland",
-      "posted_text": "Posted Today",
-      "posted_days_ago": 0,
-      "employment_type": "Unspecified",
-      "url": "https://www.mongodb.com/careers/job/?gh_jid=8025824",
       "source": "greenhouse_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
@@ -4204,11 +4204,11 @@
     {
       "company": "MongoDB",
       "title": "Manager, Site Reliability Engineering - Storage Layer Service",
-      "location": "Dublin",
+      "location": "Cork",
       "posted_text": "Posted Today",
       "posted_days_ago": 0,
       "employment_type": "Unspecified",
-      "url": "https://www.mongodb.com/careers/job/?gh_jid=7818635",
+      "url": "https://www.mongodb.com/careers/job/?gh_jid=7957589",
       "source": "greenhouse_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
@@ -4218,11 +4218,11 @@
     {
       "company": "MongoDB",
       "title": "Manager, Site Reliability Engineering - Storage Layer Service",
-      "location": "Cork",
+      "location": "Dublin",
       "posted_text": "Posted Today",
       "posted_days_ago": 0,
       "employment_type": "Unspecified",
-      "url": "https://www.mongodb.com/careers/job/?gh_jid=7957589",
+      "url": "https://www.mongodb.com/careers/job/?gh_jid=7818635",
       "source": "greenhouse_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
@@ -4372,11 +4372,11 @@
     {
       "company": "MongoDB",
       "title": "Senior Product Security Engineer, Server",
-      "location": "Dublin, Ireland",
+      "location": "Cork, Ireland",
       "posted_text": "Posted Today",
       "posted_days_ago": 0,
       "employment_type": "Unspecified",
-      "url": "https://www.mongodb.com/careers/job/?gh_jid=7484909",
+      "url": "https://www.mongodb.com/careers/job/?gh_jid=7956226",
       "source": "greenhouse_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
@@ -4386,11 +4386,11 @@
     {
       "company": "MongoDB",
       "title": "Senior Product Security Engineer, Server",
-      "location": "Cork, Ireland",
+      "location": "Dublin, Ireland",
       "posted_text": "Posted Today",
       "posted_days_ago": 0,
       "employment_type": "Unspecified",
-      "url": "https://www.mongodb.com/careers/job/?gh_jid=7956226",
+      "url": "https://www.mongodb.com/careers/job/?gh_jid=7484909",
       "source": "greenhouse_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
@@ -4428,11 +4428,11 @@
     {
       "company": "MongoDB",
       "title": "Senior Software Engineer, C2C Services",
-      "location": "Cork, Ireland",
+      "location": "Dublin, Ireland",
       "posted_text": "Posted Today",
       "posted_days_ago": 0,
       "employment_type": "Unspecified",
-      "url": "https://www.mongodb.com/careers/job/?gh_jid=7960501",
+      "url": "https://www.mongodb.com/careers/job/?gh_jid=7378959",
       "source": "greenhouse_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
@@ -4442,11 +4442,11 @@
     {
       "company": "MongoDB",
       "title": "Senior Software Engineer, C2C Services",
-      "location": "Dublin, Ireland",
+      "location": "Cork, Ireland",
       "posted_text": "Posted Today",
       "posted_days_ago": 0,
       "employment_type": "Unspecified",
-      "url": "https://www.mongodb.com/careers/job/?gh_jid=7378959",
+      "url": "https://www.mongodb.com/careers/job/?gh_jid=7960501",
       "source": "greenhouse_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
@@ -4596,11 +4596,11 @@
     {
       "company": "MongoDB",
       "title": "Software Engineer 3",
-      "location": "Dublin",
+      "location": "Cork, Ireland; Dublin, Ireland",
       "posted_text": "Posted Today",
       "posted_days_ago": 0,
       "employment_type": "Unspecified",
-      "url": "https://www.mongodb.com/careers/job/?gh_jid=7939397",
+      "url": "https://www.mongodb.com/careers/job/?gh_jid=7859378",
       "source": "greenhouse_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
@@ -4610,11 +4610,11 @@
     {
       "company": "MongoDB",
       "title": "Software Engineer 3",
-      "location": "Cork, Ireland; Dublin, Ireland",
+      "location": "Dublin",
       "posted_text": "Posted Today",
       "posted_days_ago": 0,
       "employment_type": "Unspecified",
-      "url": "https://www.mongodb.com/careers/job/?gh_jid=7859378",
+      "url": "https://www.mongodb.com/careers/job/?gh_jid=7939397",
       "source": "greenhouse_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
@@ -4750,11 +4750,11 @@
     {
       "company": "MongoDB",
       "title": "Staff Technical Program Manager",
-      "location": "Dublin, Ireland",
+      "location": "Cork, Ireland; Dublin, Ireland",
       "posted_text": "Posted Today",
       "posted_days_ago": 0,
       "employment_type": "Unspecified",
-      "url": "https://www.mongodb.com/careers/job/?gh_jid=8044870",
+      "url": "https://www.mongodb.com/careers/job/?gh_jid=7465124",
       "source": "greenhouse_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
@@ -4764,11 +4764,11 @@
     {
       "company": "MongoDB",
       "title": "Staff Technical Program Manager",
-      "location": "Cork, Ireland; Dublin, Ireland",
+      "location": "Dublin, Ireland",
       "posted_text": "Posted Today",
       "posted_days_ago": 0,
       "employment_type": "Unspecified",
-      "url": "https://www.mongodb.com/careers/job/?gh_jid=7465124",
+      "url": "https://www.mongodb.com/careers/job/?gh_jid=8044870",
       "source": "greenhouse_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
@@ -4838,7 +4838,7 @@
       "posted_text": "Posted Today",
       "posted_days_ago": 0,
       "employment_type": "Unspecified",
-      "url": "https://www.mongodb.com/careers/job/?gh_jid=7948529",
+      "url": "https://www.mongodb.com/careers/job/?gh_jid=8043909",
       "source": "greenhouse_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
@@ -4852,7 +4852,7 @@
       "posted_text": "Posted Today",
       "posted_days_ago": 0,
       "employment_type": "Unspecified",
-      "url": "https://www.mongodb.com/careers/job/?gh_jid=8043909",
+      "url": "https://www.mongodb.com/careers/job/?gh_jid=7948529",
       "source": "greenhouse_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
@@ -5185,8 +5185,8 @@
       "company": "Arista Networks",
       "title": "Software Engineer, Kernel and BIOS - Dublin, Ireland",
       "location": "...., County Dublin, ro",
-      "posted_text": "Posted 46 days ago",
-      "posted_days_ago": 46,
+      "posted_text": "Posted 47 days ago",
+      "posted_days_ago": 47,
       "employment_type": "Unspecified",
       "url": "https://jobs.smartrecruiters.com/aristanetworks/744000132838949",
       "source": "smartrecruiters_api",
@@ -6266,7 +6266,7 @@
       "posted_text": "Posted 3 days ago",
       "posted_days_ago": 3,
       "employment_type": "Unspecified",
-      "url": "https://www.okta.com/company/careers/opportunity/7920579?gh_jid=7920579",
+      "url": "https://www.okta.com/company/careers/opportunity/7645881?gh_jid=7645881",
       "source": "greenhouse_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
@@ -6280,7 +6280,7 @@
       "posted_text": "Posted 3 days ago",
       "posted_days_ago": 3,
       "employment_type": "Unspecified",
-      "url": "https://www.okta.com/company/careers/opportunity/7645881?gh_jid=7645881",
+      "url": "https://www.okta.com/company/careers/opportunity/7920579?gh_jid=7920579",
       "source": "greenhouse_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
@@ -6438,7 +6438,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-04T10:55:52.527528+00:00"
     },
     {
@@ -6452,7 +6452,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-04T10:55:52.527528+00:00"
     },
     {
@@ -6466,7 +6466,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-04T10:55:52.527528+00:00"
     },
     {
@@ -6529,8 +6529,8 @@
       "company": "Version 1",
       "title": "Solution Architect",
       "location": "Dublin, County Dublin, ie",
-      "posted_text": "Posted 3 days ago",
-      "posted_days_ago": 3,
+      "posted_text": "Posted 4 days ago",
+      "posted_days_ago": 4,
       "employment_type": "Unspecified",
       "url": "https://jobs.smartrecruiters.com/version1/744000140882499",
       "source": "smartrecruiters_api",
@@ -7439,8 +7439,8 @@
       "company": "Dillon Eustace",
       "title": "Listings and Fund Registration Advisor",
       "location": "Dublin",
-      "posted_text": "Posted 42 days ago",
-      "posted_days_ago": 42,
+      "posted_text": "Posted 43 days ago",
+      "posted_days_ago": 43,
       "employment_type": "permanent",
       "url": "https://dilloneustace.jobs.personio.de/job/2681479",
       "source": "personio_xml",
@@ -7572,7 +7572,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-04T10:55:52.527528+00:00"
     },
     {
@@ -7586,7 +7586,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-04T10:55:52.527528+00:00"
     },
     {
@@ -9540,17 +9540,17 @@
     "Salesforce": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 801,
-      "total": 801,
-      "label": "No sponsorship info found (801 postings scanned)",
+      "not_mentioned": 841,
+      "total": 841,
+      "label": "No sponsorship info found (841 postings scanned)",
       "category": "no_data"
     },
     "Workday": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 343,
-      "total": 343,
-      "label": "No sponsorship info found (343 postings scanned)",
+      "not_mentioned": 361,
+      "total": 361,
+      "label": "No sponsorship info found (361 postings scanned)",
       "category": "no_data"
     },
     "Autodesk": {
@@ -9580,204 +9580,36 @@
     "Stripe": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 1177,
-      "total": 1177,
-      "label": "No sponsorship info found (1177 postings scanned)",
+      "not_mentioned": 1234,
+      "total": 1234,
+      "label": "No sponsorship info found (1234 postings scanned)",
       "category": "no_data"
     },
     "Intercom": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 1007,
-      "total": 1007,
-      "label": "No sponsorship info found (1007 postings scanned)",
+      "not_mentioned": 1054,
+      "total": 1054,
+      "label": "No sponsorship info found (1054 postings scanned)",
       "category": "no_data"
     },
     "Toast": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 483,
-      "total": 483,
-      "label": "No sponsorship info found (483 postings scanned)",
+      "not_mentioned": 506,
+      "total": 506,
+      "label": "No sponsorship info found (506 postings scanned)",
       "category": "no_data"
     },
     "MongoDB": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 1516,
-      "total": 1516,
-      "label": "No sponsorship info found (1516 postings scanned)",
+      "not_mentioned": 1589,
+      "total": 1589,
+      "label": "No sponsorship info found (1589 postings scanned)",
       "category": "no_data"
     },
     "Qualtrics": {
-      "sponsors": 0,
-      "no_sponsorship": 0,
-      "not_mentioned": 42,
-      "total": 42,
-      "label": "No sponsorship info found (42 postings scanned)",
-      "category": "no_data"
-    },
-    "Twilio": {
-      "sponsors": 0,
-      "no_sponsorship": 0,
-      "not_mentioned": 252,
-      "total": 252,
-      "label": "No sponsorship info found (252 postings scanned)",
-      "category": "no_data"
-    },
-    "Pinterest": {
-      "sponsors": 0,
-      "no_sponsorship": 0,
-      "not_mentioned": 240,
-      "total": 240,
-      "label": "No sponsorship info found (240 postings scanned)",
-      "category": "no_data"
-    },
-    "Reddit": {
-      "sponsors": 0,
-      "no_sponsorship": 0,
-      "not_mentioned": 63,
-      "total": 63,
-      "label": "No sponsorship info found (63 postings scanned)",
-      "category": "no_data"
-    },
-    "Asana": {
-      "sponsors": 0,
-      "no_sponsorship": 0,
-      "not_mentioned": 160,
-      "total": 160,
-      "label": "No sponsorship info found (160 postings scanned)",
-      "category": "no_data"
-    },
-    "Figma": {
-      "sponsors": 0,
-      "no_sponsorship": 0,
-      "not_mentioned": 20,
-      "total": 20,
-      "label": "No sponsorship info found (20 postings scanned)",
-      "category": "no_data"
-    },
-    "Dropbox": {
-      "sponsors": 0,
-      "no_sponsorship": 0,
-      "not_mentioned": 21,
-      "total": 21,
-      "label": "No sponsorship info found (21 postings scanned)",
-      "category": "no_data"
-    },
-    "Datadog": {
-      "sponsors": 0,
-      "no_sponsorship": 0,
-      "not_mentioned": 483,
-      "total": 483,
-      "label": "No sponsorship info found (483 postings scanned)",
-      "category": "no_data"
-    },
-    "Zscaler": {
-      "sponsors": 0,
-      "no_sponsorship": 0,
-      "not_mentioned": 21,
-      "total": 21,
-      "label": "No sponsorship info found (21 postings scanned)",
-      "category": "no_data"
-    },
-    "Okta": {
-      "sponsors": 0,
-      "no_sponsorship": 0,
-      "not_mentioned": 231,
-      "total": 231,
-      "label": "No sponsorship info found (231 postings scanned)",
-      "category": "no_data"
-    },
-    "Pure Storage": {
-      "sponsors": 0,
-      "no_sponsorship": 0,
-      "not_mentioned": 63,
-      "total": 63,
-      "label": "No sponsorship info found (63 postings scanned)",
-      "category": "no_data"
-    },
-    "JD Sports Ireland": {
-      "sponsors": 0,
-      "no_sponsorship": 0,
-      "not_mentioned": 20,
-      "total": 20,
-      "label": "No sponsorship info found (20 postings scanned)",
-      "category": "no_data"
-    },
-    "Mercury Engineering": {
-      "sponsors": 0,
-      "no_sponsorship": 0,
-      "not_mentioned": 21,
-      "total": 21,
-      "label": "No sponsorship info found (21 postings scanned)",
-      "category": "no_data"
-    },
-    "Pfizer": {
-      "sponsors": 0,
-      "no_sponsorship": 0,
-      "not_mentioned": 40,
-      "total": 40,
-      "label": "No sponsorship info found (40 postings scanned)",
-      "category": "no_data"
-    },
-    "VMware (Broadcom)": {
-      "sponsors": 0,
-      "no_sponsorship": 0,
-      "not_mentioned": 30,
-      "total": 30,
-      "label": "No sponsorship info found (30 postings scanned)",
-      "category": "no_data"
-    },
-    "Cadence Design Systems": {
-      "sponsors": 0,
-      "no_sponsorship": 0,
-      "not_mentioned": 144,
-      "total": 144,
-      "label": "No sponsorship info found (144 postings scanned)",
-      "category": "no_data"
-    },
-    "Broadcom": {
-      "sponsors": 0,
-      "no_sponsorship": 0,
-      "not_mentioned": 30,
-      "total": 30,
-      "label": "No sponsorship info found (30 postings scanned)",
-      "category": "no_data"
-    },
-    "MSD (Merck Sharp & Dohme)": {
-      "sponsors": 0,
-      "no_sponsorship": 0,
-      "not_mentioned": 96,
-      "total": 96,
-      "label": "No sponsorship info found (96 postings scanned)",
-      "category": "no_data"
-    },
-    "State Street": {
-      "sponsors": 0,
-      "no_sponsorship": 0,
-      "not_mentioned": 494,
-      "total": 494,
-      "label": "No sponsorship info found (494 postings scanned)",
-      "category": "no_data"
-    },
-    "Mercer": {
-      "sponsors": 0,
-      "no_sponsorship": 0,
-      "not_mentioned": 320,
-      "total": 320,
-      "label": "No sponsorship info found (320 postings scanned)",
-      "category": "no_data"
-    },
-    "Marsh McLennan": {
-      "sponsors": 0,
-      "no_sponsorship": 0,
-      "not_mentioned": 320,
-      "total": 320,
-      "label": "No sponsorship info found (320 postings scanned)",
-      "category": "no_data"
-    },
-    "PwC Ireland": {
       "sponsors": 0,
       "no_sponsorship": 0,
       "not_mentioned": 44,
@@ -9785,36 +9617,204 @@
       "label": "No sponsorship info found (44 postings scanned)",
       "category": "no_data"
     },
+    "Twilio": {
+      "sponsors": 0,
+      "no_sponsorship": 0,
+      "not_mentioned": 264,
+      "total": 264,
+      "label": "No sponsorship info found (264 postings scanned)",
+      "category": "no_data"
+    },
+    "Pinterest": {
+      "sponsors": 0,
+      "no_sponsorship": 0,
+      "not_mentioned": 252,
+      "total": 252,
+      "label": "No sponsorship info found (252 postings scanned)",
+      "category": "no_data"
+    },
+    "Reddit": {
+      "sponsors": 0,
+      "no_sponsorship": 0,
+      "not_mentioned": 66,
+      "total": 66,
+      "label": "No sponsorship info found (66 postings scanned)",
+      "category": "no_data"
+    },
+    "Asana": {
+      "sponsors": 0,
+      "no_sponsorship": 0,
+      "not_mentioned": 168,
+      "total": 168,
+      "label": "No sponsorship info found (168 postings scanned)",
+      "category": "no_data"
+    },
+    "Figma": {
+      "sponsors": 0,
+      "no_sponsorship": 0,
+      "not_mentioned": 21,
+      "total": 21,
+      "label": "No sponsorship info found (21 postings scanned)",
+      "category": "no_data"
+    },
+    "Dropbox": {
+      "sponsors": 0,
+      "no_sponsorship": 0,
+      "not_mentioned": 22,
+      "total": 22,
+      "label": "No sponsorship info found (22 postings scanned)",
+      "category": "no_data"
+    },
+    "Datadog": {
+      "sponsors": 0,
+      "no_sponsorship": 0,
+      "not_mentioned": 506,
+      "total": 506,
+      "label": "No sponsorship info found (506 postings scanned)",
+      "category": "no_data"
+    },
+    "Zscaler": {
+      "sponsors": 0,
+      "no_sponsorship": 0,
+      "not_mentioned": 22,
+      "total": 22,
+      "label": "No sponsorship info found (22 postings scanned)",
+      "category": "no_data"
+    },
+    "Okta": {
+      "sponsors": 0,
+      "no_sponsorship": 0,
+      "not_mentioned": 242,
+      "total": 242,
+      "label": "No sponsorship info found (242 postings scanned)",
+      "category": "no_data"
+    },
+    "Pure Storage": {
+      "sponsors": 0,
+      "no_sponsorship": 0,
+      "not_mentioned": 66,
+      "total": 66,
+      "label": "No sponsorship info found (66 postings scanned)",
+      "category": "no_data"
+    },
+    "JD Sports Ireland": {
+      "sponsors": 0,
+      "no_sponsorship": 0,
+      "not_mentioned": 21,
+      "total": 21,
+      "label": "No sponsorship info found (21 postings scanned)",
+      "category": "no_data"
+    },
+    "Mercury Engineering": {
+      "sponsors": 0,
+      "no_sponsorship": 0,
+      "not_mentioned": 22,
+      "total": 22,
+      "label": "No sponsorship info found (22 postings scanned)",
+      "category": "no_data"
+    },
+    "Pfizer": {
+      "sponsors": 0,
+      "no_sponsorship": 0,
+      "not_mentioned": 42,
+      "total": 42,
+      "label": "No sponsorship info found (42 postings scanned)",
+      "category": "no_data"
+    },
+    "VMware (Broadcom)": {
+      "sponsors": 0,
+      "no_sponsorship": 0,
+      "not_mentioned": 31,
+      "total": 31,
+      "label": "No sponsorship info found (31 postings scanned)",
+      "category": "no_data"
+    },
+    "Cadence Design Systems": {
+      "sponsors": 0,
+      "no_sponsorship": 0,
+      "not_mentioned": 153,
+      "total": 153,
+      "label": "No sponsorship info found (153 postings scanned)",
+      "category": "no_data"
+    },
+    "Broadcom": {
+      "sponsors": 0,
+      "no_sponsorship": 0,
+      "not_mentioned": 31,
+      "total": 31,
+      "label": "No sponsorship info found (31 postings scanned)",
+      "category": "no_data"
+    },
+    "MSD (Merck Sharp & Dohme)": {
+      "sponsors": 0,
+      "no_sponsorship": 0,
+      "not_mentioned": 102,
+      "total": 102,
+      "label": "No sponsorship info found (102 postings scanned)",
+      "category": "no_data"
+    },
+    "State Street": {
+      "sponsors": 0,
+      "no_sponsorship": 0,
+      "not_mentioned": 524,
+      "total": 524,
+      "label": "No sponsorship info found (524 postings scanned)",
+      "category": "no_data"
+    },
+    "Mercer": {
+      "sponsors": 0,
+      "no_sponsorship": 0,
+      "not_mentioned": 340,
+      "total": 340,
+      "label": "No sponsorship info found (340 postings scanned)",
+      "category": "no_data"
+    },
+    "Marsh McLennan": {
+      "sponsors": 0,
+      "no_sponsorship": 0,
+      "not_mentioned": 340,
+      "total": 340,
+      "label": "No sponsorship info found (340 postings scanned)",
+      "category": "no_data"
+    },
+    "PwC Ireland": {
+      "sponsors": 0,
+      "no_sponsorship": 0,
+      "not_mentioned": 46,
+      "total": 46,
+      "label": "No sponsorship info found (46 postings scanned)",
+      "category": "no_data"
+    },
     "Arista Networks": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 120,
-      "total": 120,
-      "label": "No sponsorship info found (120 postings scanned)",
+      "not_mentioned": 130,
+      "total": 130,
+      "label": "No sponsorship info found (130 postings scanned)",
       "category": "no_data"
     },
     "ClickUp": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 60,
-      "total": 60,
-      "label": "No sponsorship info found (60 postings scanned)",
+      "not_mentioned": 65,
+      "total": 65,
+      "label": "No sponsorship info found (65 postings scanned)",
       "category": "no_data"
     },
     "Notion": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 72,
-      "total": 72,
-      "label": "No sponsorship info found (72 postings scanned)",
+      "not_mentioned": 78,
+      "total": 78,
+      "label": "No sponsorship info found (78 postings scanned)",
       "category": "no_data"
     },
     "Snowflake": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 94,
-      "total": 94,
-      "label": "No sponsorship info found (94 postings scanned)",
+      "not_mentioned": 102,
+      "total": 102,
+      "label": "No sponsorship info found (102 postings scanned)",
       "category": "no_data"
     },
     "AbbVie": {
@@ -9828,57 +9828,57 @@
     "Version 1": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 874,
-      "total": 874,
-      "label": "No sponsorship info found (874 postings scanned)",
+      "not_mentioned": 946,
+      "total": 946,
+      "label": "No sponsorship info found (946 postings scanned)",
       "category": "no_data"
     },
     "Harvey Nash Ireland": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 84,
-      "total": 84,
-      "label": "No sponsorship info found (84 postings scanned)",
+      "not_mentioned": 91,
+      "total": 91,
+      "label": "No sponsorship info found (91 postings scanned)",
       "category": "no_data"
     },
     "Primark / Penneys": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 64,
-      "total": 64,
-      "label": "No sponsorship info found (64 postings scanned)",
+      "not_mentioned": 69,
+      "total": 69,
+      "label": "No sponsorship info found (69 postings scanned)",
       "category": "no_data"
     },
     "Wayflyer": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 72,
-      "total": 72,
-      "label": "No sponsorship info found (72 postings scanned)",
+      "not_mentioned": 78,
+      "total": 78,
+      "label": "No sponsorship info found (78 postings scanned)",
       "category": "no_data"
     },
     "Dillon Eustace": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 14,
-      "total": 14,
-      "label": "No sponsorship info found (14 postings scanned)",
+      "not_mentioned": 16,
+      "total": 16,
+      "label": "No sponsorship info found (16 postings scanned)",
       "category": "no_data"
     },
     "Ericsson": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 5,
-      "total": 5,
-      "label": "No sponsorship info found (5 postings scanned)",
+      "not_mentioned": 6,
+      "total": 6,
+      "label": "No sponsorship info found (6 postings scanned)",
       "category": "no_data"
     },
     "PTSB (Permanent TSB)": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 15,
-      "total": 15,
-      "label": "No sponsorship info found (15 postings scanned)",
+      "not_mentioned": 18,
+      "total": 18,
+      "label": "No sponsorship info found (18 postings scanned)",
       "category": "no_data"
     },
     "Eurofins Scientific": {
@@ -12817,39 +12817,39 @@
     }
   },
   "errors": [
-    "Accenture: request failed (HTTP 400: {\"errorCode\":\"HTTP_400\",\"errorCaseId\":\"930287MSEJCLOP\",\"httpStatus\":400,\"message\":\"\",\"messageParams\":{}})",
-    "Genesys: request failed (HTTP 400: {\"errorCode\":\"HTTP_400\",\"errorCaseId\":\"B27DC6MSEJE11A\",\"httpStatus\":400,\"message\":\"\",\"messageParams\":{}})",
-    "Mastercard: request failed (HTTP 400: {\"errorCode\":\"HTTP_400\",\"errorCaseId\":\"7CA947MSEJE9ZY\",\"httpStatus\":400,\"message\":\"\",\"messageParams\":{}})",
-    "PayPal: request failed (HTTP 400: {\"errorCode\":\"HTTP_400\",\"errorCaseId\":\"CA208EMSEJEH4I\",\"httpStatus\":400,\"message\":\"\",\"messageParams\":{}})",
-    "Adobe: request failed (HTTP 400: {\"errorCode\":\"HTTP_400\",\"errorCaseId\":\"9DA345MSEJENWU\",\"httpStatus\":400,\"message\":\"\",\"messageParams\":{}})",
-    "Autodesk: request failed (HTTP 400: {\"errorCode\":\"HTTP_400\",\"errorCaseId\":\"B8D9E0MSEJETO3\",\"httpStatus\":400,\"message\":\"\",\"messageParams\":{}})",
-    "Analog Devices: request failed (HTTP 400: {\"errorCode\":\"HTTP_400\",\"errorCaseId\":\"5049F5MSEJF47G\",\"httpStatus\":400,\"message\":\"\",\"messageParams\":{}})",
-    "NVIDIA: request failed (HTTP 400: {\"errorCode\":\"HTTP_400\",\"errorCaseId\":\"06D515MSEJFC0X\",\"httpStatus\":400,\"message\":\"\",\"messageParams\":{}})",
-    "Eaton: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"8050E5MSEJFR21\",\"httpStatus\":422,\"message\":\"\",\"messageParams\":{}})",
-    "Sanofi: request failed (HTTP 400: {\"errorCode\":\"HTTP_400\",\"errorCaseId\":\"62A572MSEJG0BA\",\"httpStatus\":400,\"message\":\"\",\"messageParams\":{}})",
-    "Bausch + Lomb: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"93FD70MSEJGM7I\",\"httpStatus\":422,\"message\":\"\",\"messageParams\":{}})",
-    "Takeda: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"0D9972MSEJGOC0\",\"httpStatus\":422,\"message\":\"\",\"messageParams\":{}})",
-    "Gilead Sciences: request failed (HTTP 400: {\"errorCode\":\"HTTP_400\",\"errorCaseId\":\"93FD70MSEJGTT5\",\"httpStatus\":400,\"message\":\"\",\"messageParams\":{}})",
-    "Edwards Lifesciences: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"BD8307MSEJGUMA\",\"httpStatus\":422,\"message\":\"\",\"messageParams\":{}})",
-    "Teleflex: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"309EA7MSEJGVOP\",\"httpStatus\":422,\"message\":\"\",\"messageParams\":{}})",
-    "Zimmer Biomet: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"309EA7MSEJGWIE\",\"httpStatus\":422,\"message\":\"\",\"messageParams\":{}})",
-    "Viatris: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"A99B1CMSEJGXRT\",\"httpStatus\":422,\"message\":\"\",\"messageParams\":{}})",
-    "Teva Pharmaceuticals: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"2D042AMSEJGYLY\",\"httpStatus\":422,\"message\":\"\",\"messageParams\":{}})",
-    "Jazz Pharmaceuticals: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"0B5E32MSEJH008\",\"httpStatus\":422,\"message\":\"\",\"messageParams\":{}})",
-    "ResMed: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"007308MSEJH1GT\",\"httpStatus\":422,\"message\":\"\",\"messageParams\":{}})",
-    "Becton Dickinson (BD): request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"FA5FC1MSEJH2C3\",\"httpStatus\":422,\"message\":\"\",\"messageParams\":{}})",
-    "Elavon: request failed (HTTP 400: {\"errorCode\":\"HTTP_400\",\"errorCaseId\":\"D532C6MSEJI3TS\",\"httpStatus\":400,\"message\":\"\",\"messageParams\":{}})",
-    "Northern Trust: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"DAAB81MSEJI4PP\",\"httpStatus\":422,\"message\":\"\",\"messageParams\":{}})",
-    "Deloitte Ireland: request failed (HTTP 400: {\"errorCode\":\"HTTP_400\",\"errorCaseId\":\"753B2BMSEJIACT\",\"httpStatus\":400,\"message\":\"\",\"messageParams\":{}})",
-    "DXC Technology: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"64B3D6MSEJJ3PS\",\"httpStatus\":422,\"message\":\"\",\"messageParams\":{}})",
-    "Aon: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"F19A33MSEJJ534\",\"httpStatus\":422,\"message\":\"\",\"messageParams\":{}})",
-    "Willis Towers Watson (WTW): request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"B8D9E0MSEJJ5XB\",\"httpStatus\":422,\"message\":\"\",\"messageParams\":{}})"
+    "Accenture: request failed (HTTP 400: {\"errorCode\":\"HTTP_400\",\"errorCaseId\":\"9EB985MSEK2CPY\",\"httpStatus\":400,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
+    "Genesys: request failed (HTTP 400: {\"errorCode\":\"HTTP_400\",\"errorCaseId\":\"1727A2MSEK3RFM\",\"httpStatus\":400,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
+    "Mastercard: request failed (HTTP 400: {\"errorCode\":\"HTTP_400\",\"errorCaseId\":\"5EE595MSEK3ZIG\",\"httpStatus\":400,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
+    "PayPal: request failed (HTTP 400: {\"errorCode\":\"HTTP_400\",\"errorCaseId\":\"D27BC9MSEK48V9\",\"httpStatus\":400,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
+    "Adobe: request failed (HTTP 400: {\"errorCode\":\"HTTP_400\",\"errorCaseId\":\"42EF36MSEK4EVC\",\"httpStatus\":400,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
+    "Autodesk: request failed (HTTP 400: {\"errorCode\":\"HTTP_400\",\"errorCaseId\":\"2E00A0MSEK4M4J\",\"httpStatus\":400,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
+    "Analog Devices: request failed (HTTP 400: {\"errorCode\":\"HTTP_400\",\"errorCaseId\":\"8F440AMSEK4YIP\",\"httpStatus\":400,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
+    "NVIDIA: request failed (HTTP 400: {\"errorCode\":\"HTTP_400\",\"errorCaseId\":\"EDBF9DMSEK55UK\",\"httpStatus\":400,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
+    "Eaton: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"2F1000MSEK5O5E\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
+    "Sanofi: request failed (HTTP 400: {\"errorCode\":\"HTTP_400\",\"errorCaseId\":\"F6E889MSEK5YGI\",\"httpStatus\":400,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
+    "Bausch + Lomb: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"007308MSEK6I61\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
+    "Takeda: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"0D9972MSEK6KOU\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
+    "Gilead Sciences: request failed (HTTP 400: {\"errorCode\":\"HTTP_400\",\"errorCaseId\":\"93FD70MSEK6R2D\",\"httpStatus\":400,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
+    "Edwards Lifesciences: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"AE8583MSEK6SC4\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
+    "Teleflex: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"AE8583MSEK6TM0\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
+    "Zimmer Biomet: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"656915MSEK6UZM\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
+    "Viatris: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"309EA7MSEK6WMW\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
+    "Teva Pharmaceuticals: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"D27BC9MSEK6Y12\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
+    "Jazz Pharmaceuticals: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"FEEFB6MSEK6Z1Z\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
+    "ResMed: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"259CB8MSEK70GH\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
+    "Becton Dickinson (BD): request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"C75A53MSEK71UC\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
+    "Elavon: request failed (HTTP 400: {\"errorCode\":\"HTTP_400\",\"errorCaseId\":\"85AA8BMSEK7X2C\",\"httpStatus\":400,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
+    "Northern Trust: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"309EA7MSEK7YEN\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
+    "Deloitte Ireland: request failed (HTTP 400: {\"errorCode\":\"HTTP_400\",\"errorCaseId\":\"1932D2MSEK84G7\",\"httpStatus\":400,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
+    "DXC Technology: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"B023DAMSEK90ZC\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
+    "Aon: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"2E00A0MSEK92D3\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
+    "Willis Towers Watson (WTW): request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"86B4DDMSEK93SM\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})"
   ],
   "stats": {
     "total_companies": 397,
     "automated_companies": 39,
     "manual_companies": 358,
     "live_jobs_found": 553,
-    "new_since_last_check": 10
+    "new_since_last_check": 0
   }
 }
