@@ -55,6 +55,15 @@ except ImportError:
     print("This script needs the 'requests' library: pip install requests")
     sys.exit(1)
 
+try:
+    from curl_cffi import requests as cffi_requests
+    HAS_CURL_CFFI = True
+except ImportError:
+    HAS_CURL_CFFI = False
+    print("Note: 'curl_cffi' not installed — some strictly-protected Workday tenants "
+          "may fail with 400/422 errors that curl_cffi's browser-TLS impersonation "
+          "can get past. Install with: pip install curl_cffi")
+
 IRELAND_LOCATION_HINTS = [
     "ireland", "dublin", "cork", "galway", "limerick", "waterford",
     "kilkenny", "kildare", "leinster", "munster", "belfast", "shannon",
@@ -72,6 +81,11 @@ SMARTRECRUITERS_DETAIL_URL = "https://api.smartrecruiters.com/v1/companies/{slug
 ASHBY_JOBS_URL = "https://api.ashbyhq.com/posting-api/job-board/{slug}"
 RECRUITEE_JOBS_URL = "https://{slug}.recruitee.com/api/offers/"
 PERSONIO_XML_URL = "https://{slug}.jobs.personio.de/xml"
+PINPOINT_JOBS_URL = "https://{slug}.pinpointhq.com/postings.json"
+# Eightfold has no officially documented public API — this is a widely-used
+# reverse-engineered endpoint. Less stable than the others; could change
+# without notice since it's not a supported public contract.
+EIGHTFOLD_SMARTAPPLY_URL = "https://{slug}.eightfold.ai/api/apply/v2/jobs?domain={domain}&hl=en&start=0"
 
 CORP_SUFFIX_RE = re.compile(
     r"\b(limited|ltd|plc|unlimited company|uc|inc|incorporated|group|holdings|"
@@ -100,6 +114,21 @@ def workday_headers(tenant, wd_shard, site):
         "Referer": site_base,
         "Origin": f"https://{tenant}.{wd_shard}.myworkdayjobs.com",
     }
+
+
+def make_workday_session():
+    """Some Workday tenants run bot-protection that fingerprints the TLS
+    handshake itself (JA3 fingerprinting) — this can reject a request as
+    non-browser-like regardless of what headers/cookies/payload it carries,
+    since Python's standard requests/urllib3 has a different, recognizably
+    non-browser TLS signature than real Chrome. curl_cffi impersonates an
+    actual Chrome TLS handshake, which gets past this class of protection
+    where no amount of header tweaking can. Falls back to a plain requests
+    session if curl_cffi isn't installed (with reduced success on the most
+    strictly-protected tenants)."""
+    if HAS_CURL_CFFI:
+        return cffi_requests.Session(impersonate="chrome124")
+    return requests.Session()
 
 
 # --- visa sponsorship text signal -------------------------------------
@@ -679,7 +708,126 @@ def normalize_personio_job(company_name, slug, position):
     }
 
 
-PROBE_VERSION = 3  # bump whenever a new ATS platform is added to the probe list
+def try_pinpoint(slug, session):
+    try:
+        resp = session.get(PINPOINT_JOBS_URL.format(slug=slug), headers={
+            **HEADERS, "Accept": "application/json, text/javascript, */*; q=0.01",
+            "X-Requested-With": "XMLHttpRequest",
+        }, timeout=10)
+        if resp.status_code != 200:
+            return None
+        data = resp.json()
+        jobs = data.get("data")
+        return jobs if jobs else None
+    except Exception:
+        return None
+
+
+def normalize_pinpoint_job(company_name, slug, job):
+    """Pinpoint's documented schema examples are inconsistent between their
+    JSON and RSS docs (some snake_case, some camelCase) — checking several
+    likely field-name variants rather than assuming one exact shape."""
+    location = job.get("location") or job.get("location_name") or job.get("locationName") or ""
+    if isinstance(location, dict):
+        location = ", ".join(filter(None, [location.get("city"), location.get("state"),
+                                             location.get("country")]))
+    location = str(location)
+    if not is_ireland_location(location):
+        return None
+
+    description = (job.get("description") or job.get("htmlDescription") or
+                    job.get("html_description") or job.get("benefits") or "")
+    sponsorship, snippet = classify_sponsorship(description)
+
+    posted_text, days_ago = "Unknown", None
+    published = job.get("published_at") or job.get("publishedAt") or job.get("pubDate")
+    if published:
+        try:
+            posted_dt = datetime.fromisoformat(str(published).replace("Z", "+00:00"))
+            days_ago = (datetime.now(timezone.utc) - posted_dt).days
+            posted_text = f"Posted {days_ago} days ago" if days_ago > 0 else "Posted Today"
+        except Exception:
+            pass
+
+    job_id = job.get("id", "")
+    url = job.get("link") or job.get("url") or f"https://{slug}.pinpointhq.com/postings/{job_id}"
+
+    return {
+        "company": company_name,
+        "title": (job.get("title") or "").strip(),
+        "location": location,
+        "posted_text": posted_text,
+        "posted_days_ago": days_ago,
+        "employment_type": job.get("employmentType") or job.get("employment_type") or "Unspecified",
+        "url": url,
+        "source": "pinpoint_api",
+        "visa_sponsorship": sponsorship,
+        "visa_snippet": snippet,
+    }
+
+
+def try_eightfold(slug, session):
+    """Tries domain=slug.com as the most common real-world case (e.g. slug
+    'paypal' -> domain 'paypal.com'). Companies with a different actual
+    domain than their name-derived slug won't match — a known limitation
+    of guessing rather than having a real API to look this up from."""
+    domain_guess = f"{slug}.com"
+    try:
+        resp = session.get(
+            EIGHTFOLD_SMARTAPPLY_URL.format(slug=slug, domain=domain_guess),
+            headers=HEADERS, timeout=10)
+        if resp.status_code != 200:
+            return None
+        data = resp.json()
+        positions = data.get("positions")
+        return positions if positions else None
+    except Exception:
+        return None
+
+
+def normalize_eightfold_job(company_name, slug, job):
+    location = (job.get("location") or job.get("locations") or job.get("city") or "")
+    if isinstance(location, list):
+        location = ", ".join(str(x) for x in location)
+    location = str(location)
+    if not is_ireland_location(location):
+        return None
+
+    description = job.get("job_description") or job.get("description") or job.get("text") or ""
+    sponsorship, snippet = classify_sponsorship(description)
+
+    posted_text, days_ago = "Unknown", None
+    posted = job.get("t_create") or job.get("start_date") or job.get("posted_date")
+    if posted:
+        try:
+            if isinstance(posted, (int, float)):
+                posted_dt = datetime.fromtimestamp(posted, tz=timezone.utc)
+            else:
+                posted_dt = datetime.fromisoformat(str(posted).replace("Z", "+00:00"))
+            days_ago = (datetime.now(timezone.utc) - posted_dt).days
+            posted_text = f"Posted {days_ago} days ago" if days_ago > 0 else "Posted Today"
+        except Exception:
+            pass
+
+    job_id = job.get("id", "")
+    url = job.get("canonicalPositionUrl") or job.get("apply_url") or \
+        f"https://{slug}.eightfold.ai/careers/job/{job_id}"
+
+    return {
+        "company": company_name,
+        "title": (job.get("name") or job.get("title") or "").strip(),
+        "location": location,
+        "posted_text": posted_text,
+        "posted_days_ago": days_ago,
+        "employment_type": job.get("employment_type", "Unspecified") or "Unspecified",
+        "url": url,
+        "source": "eightfold_api",
+        "visa_sponsorship": sponsorship,
+        "visa_snippet": snippet,
+    }
+
+
+PROBE_VERSION = 5  # bump whenever a new ATS platform is added to the probe list
 
 
 def probe_ats_for_manual_companies(manual_companies, session, cache_path, fetch_descriptions=True):
@@ -705,7 +853,7 @@ def probe_ats_for_manual_companies(manual_companies, session, cache_path, fetch_
 
     still_manual = []
     discovered_jobs = []
-    known_platforms = ("greenhouse", "lever", "smartrecruiters", "ashby", "recruitee", "personio")
+    known_platforms = ("greenhouse", "lever", "smartrecruiters", "ashby", "recruitee", "personio", "pinpoint", "eightfold")
 
     for entry in manual_companies:
         name, url = entry["company"], entry["url"]
@@ -736,6 +884,12 @@ def probe_ats_for_manual_companies(manual_companies, session, cache_path, fetch_
                     break
                 if try_personio(candidate, session) is not None:
                     platform, slug = "personio", candidate
+                    break
+                if try_pinpoint(candidate, session) is not None:
+                    platform, slug = "pinpoint", candidate
+                    break
+                if try_eightfold(candidate, session) is not None:
+                    platform, slug = "eightfold", candidate
                     break
             cache[name] = {"platform": platform or "none", "slug": slug}
             if platform is None:
@@ -778,6 +932,18 @@ def probe_ats_for_manual_companies(manual_companies, session, cache_path, fetch_
             jobs = try_personio(slug, session) or []
             for job in jobs:
                 norm = normalize_personio_job(name, slug, job)
+                if norm:
+                    company_jobs.append(norm)
+        elif platform == "pinpoint":
+            jobs = try_pinpoint(slug, session) or []
+            for job in jobs:
+                norm = normalize_pinpoint_job(name, slug, job)
+                if norm:
+                    company_jobs.append(norm)
+        elif platform == "eightfold":
+            jobs = try_eightfold(slug, session) or []
+            for job in jobs:
+                norm = normalize_eightfold_job(name, slug, job)
                 if norm:
                     company_jobs.append(norm)
 
@@ -915,6 +1081,7 @@ def main():
     print(f"Loaded {len(companies)} companies from {args.input}")
 
     session = requests.Session()
+    workday_session = make_workday_session()
     live_jobs, manual_check, errors = [], [], []
 
     for row in companies:
@@ -924,7 +1091,7 @@ def main():
 
         if kind == "workday":
             print(f"  [workday] fetching {name} ...")
-            jobs, err = fetch_workday_jobs(name, url, session, fetch_descriptions=not args.no_descriptions)
+            jobs, err = fetch_workday_jobs(name, url, workday_session, fetch_descriptions=not args.no_descriptions)
             live_jobs.extend(jobs)
             if err:
                 errors.append(err)
