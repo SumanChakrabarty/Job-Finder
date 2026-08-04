@@ -20,7 +20,7 @@ jobs:
           python-version: '3.11'
 
       - name: Install dependencies
-        run: pip install requests openpyxl
+        run: pip install requests openpyxl curl_cffi
 
       - name: Run job pipeline
         env:
