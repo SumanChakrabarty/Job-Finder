@@ -998,7 +998,106 @@ def normalize_eightfold_job(company_name, slug, job):
     }
 
 
-PROBE_VERSION = 5  # bump whenever a new ATS platform is added to the probe list
+# Phenom has no free public API (their real API requires a paid OAuth
+# token). This uses a widely-documented reverse-engineered pattern
+# instead: Phenom career pages embed a company-specific 'refNum' token in
+# their HTML, which their own front-end JS uses to call an internal
+# '/widgets' search endpoint. Less stable than the official public APIs
+# above — Phenom could change this without notice — but real and working.
+PHENOM_REFNUM_RE = re.compile(r'"refNum"\s*:\s*"([A-Za-z0-9_-]+)"')
+
+
+def fetch_phenom_jobs_by_refnum(domain, ref_num, session):
+    """Re-fetches using an already-discovered domain+refnum pair (from
+    cache), skipping the HTML scrape needed to find it the first time."""
+    try:
+        payload = {
+            "lang": "en_global", "deviceType": "desktop", "country": "global",
+            "pageName": "search-results", "size": 20, "from": 0,
+            "jobs": True, "counts": True, "all_fields": ["category", "country", "city", "type"],
+            "clearAll": False, "jdsource": "facets", "isSliderEnable": False,
+            "pageId": "page20", "siteType": "external", "keywords": "", "global": True,
+            "selected_fields": {}, "sort": {"order": "desc", "field": "postedDate"},
+            "locationData": {}, "refNum": ref_num, "ddoKey": "refineSearch",
+        }
+        resp = session.post(f"https://{domain}/widgets", json=payload,
+                             headers={"Content-Type": "application/json"}, timeout=15)
+        if resp.status_code != 200:
+            return []
+        data = resp.json()
+        return (data.get("refineSearch") or {}).get("data", {}).get("jobs", []) or []
+    except Exception:
+        return []
+
+
+def try_phenom(slug, session):
+    """Tries jobs.{slug}.com and careers.{slug}.com — the two most common
+    Phenom domain conventions. Returns (domain, refnum, jobs) or
+    (None, None, None)."""
+    for domain in (f"jobs.{slug}.com", f"careers.{slug}.com"):
+        try:
+            page = session.get(f"https://{domain}/", headers=HEADERS, timeout=10)
+            if page.status_code != 200:
+                continue
+            m = PHENOM_REFNUM_RE.search(page.text)
+            if not m:
+                continue
+            ref_num = m.group(1)
+            payload = {
+                "lang": "en_global", "deviceType": "desktop", "country": "global",
+                "pageName": "search-results", "size": 20, "from": 0,
+                "jobs": True, "counts": True, "all_fields": ["category", "country", "city", "type"],
+                "clearAll": False, "jdsource": "facets", "isSliderEnable": False,
+                "pageId": "page20", "siteType": "external", "keywords": "", "global": True,
+                "selected_fields": {}, "sort": {"order": "desc", "field": "postedDate"},
+                "locationData": {}, "refNum": ref_num, "ddoKey": "refineSearch",
+            }
+            resp = session.post(f"https://{domain}/widgets", json=payload,
+                                 headers={"Content-Type": "application/json"}, timeout=15)
+            if resp.status_code != 200:
+                continue
+            data = resp.json()
+            jobs = (data.get("refineSearch") or {}).get("data", {}).get("jobs", [])
+            if jobs:
+                return domain, ref_num, jobs
+        except Exception:
+            continue
+    return None, None, None
+
+
+def normalize_phenom_job(company_name, domain, job):
+    location = (job.get("locationDisplay") or job.get("cityStateCountry") or
+                job.get("cityCountry") or job.get("city") or "")
+    if not is_ireland_location(str(location)):
+        return None
+    description = job.get("descriptionTeaser") or job.get("description") or ""
+    sponsorship, snippet = classify_sponsorship(description)
+    posted_text, days_ago = "Unknown", None
+    posted = job.get("postedDate")
+    if posted:
+        try:
+            posted_dt = datetime.fromisoformat(str(posted).replace("Z", "+00:00"))
+            days_ago = (datetime.now(timezone.utc) - posted_dt).days
+            posted_text = f"Posted {days_ago} days ago" if days_ago > 0 else "Posted Today"
+        except Exception:
+            pass
+    job_id = job.get("jobId") or job.get("id") or ""
+    url = job.get("applyUrl") or job.get("jdUrl") or f"https://{domain}/job/{job_id}"
+    return {
+        "company": company_name,
+        "title": (job.get("title") or job.get("jobTitle") or "").strip(),
+        "location": str(location),
+        "posted_text": posted_text,
+        "posted_days_ago": days_ago,
+        "employment_type": job.get("type", "Unspecified") or "Unspecified",
+        "url": url,
+        "source": "phenom_widgets",
+        "visa_sponsorship": sponsorship,
+        "visa_snippet": snippet,
+    }
+
+
+PROBE_VERSION = 6  # bump whenever a new ATS platform is added to the probe list
 
 
 def probe_ats_for_manual_companies(manual_companies, session, cache_path, fetch_descriptions=True):
@@ -1024,7 +1123,7 @@ def probe_ats_for_manual_companies(manual_companies, session, cache_path, fetch_
 
     still_manual = []
     discovered_jobs = []
-    known_platforms = ("greenhouse", "lever", "smartrecruiters", "ashby", "recruitee", "personio", "pinpoint", "eightfold")
+    known_platforms = ("greenhouse", "lever", "smartrecruiters", "ashby", "recruitee", "personio", "pinpoint", "eightfold", "phenom")
 
     for entry in manual_companies:
         name, url = entry["company"], entry["url"]
@@ -1061,6 +1160,10 @@ def probe_ats_for_manual_companies(manual_companies, session, cache_path, fetch_
                     break
                 if try_eightfold(candidate, session) is not None:
                     platform, slug = "eightfold", candidate
+                    break
+                phenom_domain, phenom_ref, phenom_jobs = try_phenom(candidate, session)
+                if phenom_jobs:
+                    platform, slug = "phenom", f"{phenom_domain}|{phenom_ref}"
                     break
             cache[name] = {"platform": platform or "none", "slug": slug}
             if platform is None:
@@ -1115,6 +1218,13 @@ def probe_ats_for_manual_companies(manual_companies, session, cache_path, fetch_
             jobs = try_eightfold(slug, session) or []
             for job in jobs:
                 norm = normalize_eightfold_job(name, slug, job)
+                if norm:
+                    company_jobs.append(norm)
+        elif platform == "phenom":
+            domain, ref_num = slug.split("|", 1)
+            jobs = fetch_phenom_jobs_by_refnum(domain, ref_num, session)
+            for job in jobs:
+                norm = normalize_phenom_job(name, domain, job)
                 if norm:
                     company_jobs.append(norm)
 
