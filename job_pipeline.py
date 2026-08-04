@@ -107,8 +107,14 @@ def workday_headers(tenant, wd_shard, site):
     browser visiting the career page always sends these; a bare API script
     without them can get flat-out rejected with a 400, even on a perfectly
     valid endpoint. This makes every request look like it came from the
-    tenant's own career page, which is exactly what it's mimicking."""
-    site_base = f"https://{tenant}.{wd_shard}.myworkdayjobs.com/{site}"
+    tenant's own career page, which is exactly what it's mimicking.
+
+    IMPORTANT: real Workday career pages redirect to a locale-prefixed URL
+    (e.g. '/en-US/AccentureCareers') — some tenants validate the Referer
+    against that canonical, post-redirect form rather than the bare path,
+    so this uses the locale-prefixed version to match what a real browser
+    would actually end up sending."""
+    site_base = f"https://{tenant}.{wd_shard}.myworkdayjobs.com/en-US/{site}"
     return {
         **HEADERS,
         "Referer": site_base,
@@ -279,6 +285,7 @@ def post_workday_variants(session, api_base, headers, applied_facets, limit, off
         {"appliedFacets": applied_facets, "limit": limit, "offset": offset},
         {"searchText": "", "limit": limit, "offset": offset, "appliedFacets": applied_facets},
         {"appliedFacets": applied_facets, "limit": limit, "offset": offset, "searchText": "", "clientRequestID": ""},
+        {"appliedFacets": {}, "limit": limit, "offset": offset, "searchText": "Ireland"},
     ]
     last_error = None
     for payload in variants:
@@ -301,14 +308,18 @@ def fetch_workday_jobs(company_name, url, session, fetch_descriptions=True,
     tenant, wd_shard, site = m.group(1), m.group(2), m.group(3)
     api_base = f"https://{tenant}.{wd_shard}.myworkdayjobs.com/wday/cxs/{tenant}/{site}/jobs"
     site_base = f"https://{tenant}.{wd_shard}.myworkdayjobs.com/{site}"
+    site_base_locale = f"https://{tenant}.{wd_shard}.myworkdayjobs.com/en-US/{site}"
 
     # IMPORTANT: visit the actual career page first, like a real browser
     # would, before calling the API directly. Workday's bot-protection
     # commonly rejects "cold" API calls with no prior page visit (400/422)
     # regardless of headers — this establishes the session cookies it's
-    # checking for. Best-effort: if this fails, still try the API anyway.
+    # checking for. Use the locale-prefixed URL, matching what a real
+    # browser actually lands on after Workday's own redirect, since some
+    # tenants validate the Referer against that canonical form specifically.
+    # Best-effort: if this fails, still try the API anyway.
     try:
-        session.get(site_base, headers=workday_headers(tenant, wd_shard, site), timeout=15)
+        session.get(site_base_locale, headers=workday_headers(tenant, wd_shard, site), timeout=15)
         time.sleep(0.5)
     except Exception:
         pass
