@@ -371,6 +371,12 @@ def fetch_workday_jobs(company_name, url, session, fetch_descriptions=True,
     # name — Workday's URL query param name and the actual API body key
     # aren't always identical, so 'locationCountry' might not be what this
     # specific tenant's API expects even though the ID value is universal.
+    # NOT trusted the same way as Strategy 1: the same ID string reused
+    # under a different facet dimension (e.g. 'locations' instead of
+    # 'locationCountry') has no verified meaning — it could silently match
+    # something other than Ireland. Keep the client-side text safety net
+    # active for this path (this is what let non-Ireland jobs slip through
+    # unfiltered and inflate some companies' counts to hundreds).
     if not applied_facets:
         for alt_key in ("locations", "country", "Location_Country"):
             try:
@@ -380,8 +386,7 @@ def fetch_workday_jobs(company_name, url, session, fetch_descriptions=True,
                 if probe is not None and probe.json().get("total", 0) > 0:
                     applied_facets = alt_facets
                     max_pages = 30
-                    trusted_country_filter = True
-                    strategy1_note += f" | but '{alt_key}' key worked, total={probe.json().get('total')}"
+                    strategy1_note += f" | but '{alt_key}' key worked (untrusted, total={probe.json().get('total')})"
                     break
             except Exception:
                 continue
@@ -417,6 +422,7 @@ def fetch_workday_jobs(company_name, url, session, fetch_descriptions=True,
             max_pages = 60
 
     results = []
+    seen_urls = set()
     offset = 0
     error = probe_error
 
@@ -435,6 +441,7 @@ def fetch_workday_jobs(company_name, url, session, fetch_descriptions=True,
         if not postings:
             break
 
+        new_this_page = 0
         for job in postings:
             location_text = job.get("locationsText", "") or job.get("bulletFields", [""])[0]
             # Only apply the client-side text safety net for the LESS certain
@@ -448,6 +455,17 @@ def fetch_workday_jobs(company_name, url, session, fetch_descriptions=True,
                 location_text = "Ireland"  # server already filtered by country; display fallback only
             posted_text = job.get("postedOn", "")
             external_path = job.get("externalPath", "")
+            job_url = site_base.rstrip("/") + external_path
+
+            # Dedup safety net: if Workday returns the same jobs again on a
+            # later "page" (offset not actually advancing server-side, or
+            # any other pagination quirk), never add the same job twice —
+            # this is what was causing wildly inflated counts (600 for a
+            # company that genuinely has ~3 openings).
+            if job_url in seen_urls:
+                continue
+            seen_urls.add(job_url)
+            new_this_page += 1
 
             sponsorship, snippet = "not_mentioned", None
             if fetch_descriptions and external_path:
@@ -462,11 +480,18 @@ def fetch_workday_jobs(company_name, url, session, fetch_descriptions=True,
                 "posted_text": posted_text,
                 "posted_days_ago": parse_posted_text(posted_text),
                 "employment_type": guess_employment_type(job.get("bulletFields")),
-                "url": site_base.rstrip("/") + external_path,
+                "url": job_url,
                 "source": "workday_api",
                 "visa_sponsorship": sponsorship,
                 "visa_snippet": snippet,
             })
+
+        # Circuit breaker: an entire page with zero genuinely new jobs means
+        # pagination has stalled (server returning the same set repeatedly)
+        # — stop immediately rather than trusting 'total' and looping up to
+        # max_pages re-adding the same postings every time.
+        if new_this_page == 0:
+            break
 
         total = data.get("total", 0)
         offset += page_size
