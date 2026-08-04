@@ -327,13 +327,13 @@ def fetch_workday_jobs(company_name, url, session, fetch_descriptions=True,
     # First, small probe request just to read the facet list (no location
     # filter yet) so we can find Workday's own Ireland location facet IDs.
     applied_facets = {}
-    trusted_country_filter = False  # True once the verified universal Ireland
-    # ID actually matches — server-side country filtering is authoritative
-    # in that case, and re-checking location TEXT client-side turned out to
-    # be actively harmful: some tenants return job objects where the text
-    # field isn't in a form the text-matcher recognizes, silently discarding
-    # every real, correctly-filtered result (confirmed: Accenture returned
-    # total=71 genuine matches server-side, then 0 after the text re-check).
+    # Server-side facet filtering is used purely to reduce how many pages
+    # need scanning — it is never trusted blindly. A client-side location
+    # check always runs on every result regardless of which strategy
+    # found it: some tenants' Workday setup doesn't recognize the shared
+    # Ireland facet ID and silently returns their ENTIRE global job list
+    # instead of erroring (confirmed: PwC and MSD returned 600/591 "Ireland"
+    # postings that were really just their whole global listing).
     max_pages = 10  # fallback cap if we can't find a location facet at all
     probe_error = None
 
@@ -360,7 +360,6 @@ def fetch_workday_jobs(company_name, url, session, fetch_descriptions=True,
             if total > 0:
                 applied_facets = known_facets
                 max_pages = 30
-                trusted_country_filter = True
                 strategy1_note = f"matched, total={total}"
             else:
                 strategy1_note = "request succeeded but total=0 under 'locationCountry' key"
@@ -443,16 +442,29 @@ def fetch_workday_jobs(company_name, url, session, fetch_descriptions=True,
 
         new_this_page = 0
         for job in postings:
-            location_text = job.get("locationsText", "") or job.get("bulletFields", [""])[0]
-            # Only apply the client-side text safety net for the LESS certain
-            # fallback strategies. When the verified universal Ireland
-            # country ID matched server-side, trust it — re-checking text
-            # here was discarding real, correctly-filtered results whenever
-            # a tenant's location text field wasn't in the expected format.
-            if not trusted_country_filter and not is_ireland_location(location_text):
-                continue
+            # Location text can appear under different field names, or
+            # buried among bulletFields at an index other than 0 (e.g. a
+            # requisition ID at [0] and the actual location at [1]) —
+            # check everything plausible rather than assuming one fixed
+            # spot, since guessing wrong was causing genuine Ireland jobs
+            # to be wrongly discarded.
+            candidates = [job.get("locationsText", ""), job.get("location", ""),
+                          job.get("primaryLocation", "")]
+            candidates.extend(job.get("bulletFields", []) or [])
+            location_text = next((c for c in candidates if c and is_ireland_location(c)), "")
             if not location_text:
-                location_text = "Ireland"  # server already filtered by country; display fallback only
+                location_text = candidates[0] if candidates and candidates[0] else ""
+
+            # ALWAYS verify client-side, regardless of which strategy found
+            # this job — trusting the server-side filter unconditionally
+            # was the actual cause of wildly inflated counts for a few
+            # companies (PwC showing 600, MSD showing 591): their Workday
+            # setup doesn't recognize the standard Ireland facet ID, so it
+            # silently ignored the filter and returned their ENTIRE global
+            # job list instead of erroring — the client-side check is the
+            # only thing that catches that.
+            if not is_ireland_location(location_text):
+                continue
             posted_text = job.get("postedOn", "")
             external_path = job.get("externalPath", "")
             job_url = site_base.rstrip("/") + external_path
@@ -501,6 +513,11 @@ def fetch_workday_jobs(company_name, url, session, fetch_descriptions=True,
 
     if not results and not error:
         print(f"      [diagnostic] {company_name}: 0 postings, strategy1={strategy1_note}")
+
+    if len(results) > 100:
+        print(f"      [WARNING] {company_name}: {len(results)} Ireland postings is implausibly high — "
+              f"likely means the location filter didn't actually work for this tenant despite the "
+              f"client-side check passing. Treat this company's numbers with suspicion until verified.")
 
     return results, error
 
@@ -1211,8 +1228,8 @@ def main():
             manual_check.append({"company": name, "url": url, "platform": kind})
 
     print(f"\nProbing remaining {len(manual_check)} companies for Greenhouse/Lever/SmartRecruiters/"
-          f"Ashby/Recruitee/Personio boards "
-          f"boards (cached — only new/changed companies are actually re-probed)...")
+          f"Ashby/Recruitee/Personio/Pinpoint/Eightfold boards "
+          f"(cached — only new/changed companies are actually re-probed)...")
     discovered_jobs, manual_check = probe_ats_for_manual_companies(
         manual_check, session, cache_path="ats_platform_cache.json",
         fetch_descriptions=not args.no_descriptions)
