@@ -340,17 +340,42 @@ def fetch_workday_jobs(company_name, url, session, fetch_descriptions=True,
     # where Ireland postings don't happen to appear in the sample window —
     # this was the actual cause of companies like Accenture showing 0
     # postings despite having dozens of real open Ireland roles.
+    strategy1_note = None
     try:
         known_facets = {"locationCountry": ["04a05835925f45b3a59406a2a6b72c8a"]}
-        probe, _ = post_workday_variants(
+        probe, probe_err = post_workday_variants(
             session, api_base, workday_headers(tenant, wd_shard, site), known_facets, 20, 0)
-        if probe is not None:
+        if probe is None:
+            strategy1_note = f"request failed ({probe_err})"
+        else:
             probe_data = probe.json()
-            if probe_data.get("total", 0) > 0:
+            total = probe_data.get("total", 0)
+            if total > 0:
                 applied_facets = known_facets
                 max_pages = 30
-    except Exception:
-        pass
+                strategy1_note = f"matched, total={total}"
+            else:
+                strategy1_note = "request succeeded but total=0 under 'locationCountry' key"
+    except Exception as e:
+        strategy1_note = f"exception ({e})"
+
+    # Strategy 1b: same universal ID, but under a different facet parameter
+    # name — Workday's URL query param name and the actual API body key
+    # aren't always identical, so 'locationCountry' might not be what this
+    # specific tenant's API expects even though the ID value is universal.
+    if not applied_facets:
+        for alt_key in ("locations", "country", "Location_Country"):
+            try:
+                alt_facets = {alt_key: ["04a05835925f45b3a59406a2a6b72c8a"]}
+                probe, _ = post_workday_variants(
+                    session, api_base, workday_headers(tenant, wd_shard, site), alt_facets, 20, 0)
+                if probe is not None and probe.json().get("total", 0) > 0:
+                    applied_facets = alt_facets
+                    max_pages = 30
+                    strategy1_note += f" | but '{alt_key}' key worked, total={probe.json().get('total')}"
+                    break
+            except Exception:
+                continue
 
     # Strategy 2 (fallback): the universal ID didn't return anything for
     # this tenant (rare — could be a customized/non-standard instance) —
@@ -434,6 +459,9 @@ def fetch_workday_jobs(company_name, url, session, fetch_descriptions=True,
         if offset >= total:
             break
         time.sleep(0.3)
+
+    if not results and not error:
+        print(f"      [diagnostic] {company_name}: 0 postings, strategy1={strategy1_note}")
 
     return results, error
 
