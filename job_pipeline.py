@@ -327,6 +327,13 @@ def fetch_workday_jobs(company_name, url, session, fetch_descriptions=True,
     # First, small probe request just to read the facet list (no location
     # filter yet) so we can find Workday's own Ireland location facet IDs.
     applied_facets = {}
+    trusted_country_filter = False  # True once the verified universal Ireland
+    # ID actually matches — server-side country filtering is authoritative
+    # in that case, and re-checking location TEXT client-side turned out to
+    # be actively harmful: some tenants return job objects where the text
+    # field isn't in a form the text-matcher recognizes, silently discarding
+    # every real, correctly-filtered result (confirmed: Accenture returned
+    # total=71 genuine matches server-side, then 0 after the text re-check).
     max_pages = 10  # fallback cap if we can't find a location facet at all
     probe_error = None
 
@@ -353,6 +360,7 @@ def fetch_workday_jobs(company_name, url, session, fetch_descriptions=True,
             if total > 0:
                 applied_facets = known_facets
                 max_pages = 30
+                trusted_country_filter = True
                 strategy1_note = f"matched, total={total}"
             else:
                 strategy1_note = "request succeeded but total=0 under 'locationCountry' key"
@@ -372,6 +380,7 @@ def fetch_workday_jobs(company_name, url, session, fetch_descriptions=True,
                 if probe is not None and probe.json().get("total", 0) > 0:
                     applied_facets = alt_facets
                     max_pages = 30
+                    trusted_country_filter = True
                     strategy1_note += f" | but '{alt_key}' key worked, total={probe.json().get('total')}"
                     break
             except Exception:
@@ -380,7 +389,8 @@ def fetch_workday_jobs(company_name, url, session, fetch_descriptions=True,
     # Strategy 2 (fallback): the universal ID didn't return anything for
     # this tenant (rare — could be a customized/non-standard instance) —
     # fall back to dynamically discovering whatever facet this specific
-    # tenant does expose for Ireland.
+    # tenant does expose for Ireland. This path is less certain, so the
+    # client-side text safety net stays active for it.
     if not applied_facets:
         try:
             probe, probe_err = post_workday_variants(
@@ -427,11 +437,15 @@ def fetch_workday_jobs(company_name, url, session, fetch_descriptions=True,
 
         for job in postings:
             location_text = job.get("locationsText", "") or job.get("bulletFields", [""])[0]
-            # Keep this client-side check too, even with facet filtering on —
-            # it's a cheap safety net against imprecise facets (e.g. a
-            # "UK & Ireland" combined region matching too broadly).
-            if not is_ireland_location(location_text):
+            # Only apply the client-side text safety net for the LESS certain
+            # fallback strategies. When the verified universal Ireland
+            # country ID matched server-side, trust it — re-checking text
+            # here was discarding real, correctly-filtered results whenever
+            # a tenant's location text field wasn't in the expected format.
+            if not trusted_country_filter and not is_ireland_location(location_text):
                 continue
+            if not location_text:
+                location_text = "Ireland"  # server already filtered by country; display fallback only
             posted_text = job.get("postedOn", "")
             external_path = job.get("externalPath", "")
 
