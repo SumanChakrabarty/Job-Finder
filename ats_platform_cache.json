@@ -451,6 +451,10 @@
     "platform": "phenom",
     "slug": "careers.statestreet.com|STSTGLOBAL"
   },
+  "Thermo Fisher Scientific": {
+    "platform": "phenom",
+    "slug": "jobs.thermofisher.com|TFSCGLOBAL"
+  },
   "Google": {
     "platform": "none",
     "slug": null
@@ -464,8 +468,8 @@
     "slug": null
   },
   "HubSpot": {
-    "platform": "none",
-    "slug": null
+    "platform": "greenhouse",
+    "slug": "hubspotjobs"
   },
   "TikTok": {
     "platform": "none",
@@ -834,10 +838,6 @@
   "Agilent Technologies": {
     "platform": "none",
     "slug": null
-  },
-  "Thermo Fisher Scientific": {
-    "platform": "phenom",
-    "slug": "jobs.thermofisher.com|TFSCGLOBAL"
   },
   "Revvity (PerkinElmer)": {
     "platform": "none",
@@ -1515,5 +1515,5 @@
     "platform": "none",
     "slug": null
   },
-  "__probe_version__": 8
+  "__probe_version__": 9
 }
