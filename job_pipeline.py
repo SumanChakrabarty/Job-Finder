@@ -616,10 +616,11 @@ def candidate_slugs(company_name: str):
     slugs.add("".join(words).lower())
     slugs.add("-".join(words).lower())
     slugs.add(words[0].lower())
+    slugs.add("".join(words).lower() + "jobs")  # e.g. HubSpot's real board token is 'hubspotjobs', not 'hubspot'
     if len(words) >= 2:
         slugs.add("".join(words[:2]).lower())   # first two words joined, e.g. "johnsonjohnson"
         slugs.add("-".join(words[:2]).lower())  # first two words hyphenated
-    return list(slugs)[:5]  # keep probing bounded but a bit wider than before
+    return list(slugs)[:6]  # keep probing bounded but a bit wider than before
 
 
 def try_greenhouse(slug, session):
@@ -1178,7 +1179,7 @@ def normalize_phenom_job(company_name, domain, job):
     }
 
 
-PROBE_VERSION = 8  # bump whenever a new ATS platform is added to the probe list, or slug guessing changes
+PROBE_VERSION = 9  # bump whenever a new ATS platform is added to the probe list, or slug guessing changes
 
 
 def probe_ats_for_manual_companies(manual_companies, session, cache_path, fetch_descriptions=True):
