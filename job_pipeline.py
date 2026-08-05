@@ -472,6 +472,7 @@ def fetch_workday_jobs(company_name, url, session, fetch_descriptions=True,
     offset = 0
     error = probe_error
     wide_scan_search_text = "" if applied_facets else "Ireland"
+    raw_sample_job = None
 
     for _ in range(max_pages):
         try:
@@ -488,6 +489,8 @@ def fetch_workday_jobs(company_name, url, session, fetch_descriptions=True,
         postings = data.get("jobPostings", [])
         if not postings:
             break
+        if raw_sample_job is None:
+            raw_sample_job = postings[0]
 
         new_this_page = 0
         for job in postings:
@@ -562,6 +565,15 @@ def fetch_workday_jobs(company_name, url, session, fetch_descriptions=True,
 
     if not results and not error:
         print(f"      [diagnostic] {company_name}: 0 postings, strategy1={strategy1_note}")
+        if raw_sample_job is not None:
+            raw_fields = {
+                "locationsText": raw_sample_job.get("locationsText"),
+                "location": raw_sample_job.get("location"),
+                "primaryLocation": raw_sample_job.get("primaryLocation"),
+                "bulletFields": raw_sample_job.get("bulletFields"),
+                "all_keys": list(raw_sample_job.keys()),
+            }
+            print(f"      [diagnostic-raw] {company_name}: sample job location fields = {raw_fields}")
 
     if len(results) > 100:
         print(f"      [WARNING] {company_name}: {len(results)} Ireland postings is implausibly high — "
