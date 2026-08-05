@@ -310,7 +310,7 @@ def post_workday_variants(session, api_base, headers, applied_facets, limit, off
 
 
 def fetch_workday_jobs(company_name, url, session, fetch_descriptions=True,
-                        page_size=20, detail_delay=0.25):
+                        page_size=20, detail_delay=0.15):
     m = WORKDAY_URL_RE.search(url)
     if not m:
         return [], f"URL did not match Workday pattern: {url}"
@@ -416,31 +416,9 @@ def fetch_workday_jobs(company_name, url, session, fetch_descriptions=True,
                 continue
             time.sleep(0.4)
 
-    # Strategy 1c: some tenants' Workday integration expects a plain ISO
-    # country code ('IRL') as the facet value instead of the internal hex
-    # ID — confirmed real for PwC (their own site uses '?wdcountry=IRL').
-    # Still untrusted/unverified for the underlying JSON API specifically,
-    # so the client-side check stays active.
-    if not applied_facets and not rate_limited:
-        for key in ("locationCountry", "wdcountry", "country"):
-            for code in ("IRL", "IE"):
-                try:
-                    code_facets = {key: [code]}
-                    probe, code_err = post_workday_variants(
-                        session, api_base, workday_headers(tenant, wd_shard, site), code_facets, 20, 0)
-                    if code_err and "429" in str(code_err):
-                        rate_limited = True
-                        break
-                    if probe is not None and 0 < probe.json().get("total", 0) <= 150:
-                        applied_facets = code_facets
-                        max_pages = 30
-                        strategy1_note += f" | but '{key}={code}' worked (untrusted, total={probe.json().get('total')})"
-                        break
-                except Exception:
-                    continue
-                time.sleep(0.4)
-            if applied_facets or rate_limited:
-                break
+    # Strategy 1c (removed): tried plain ISO country codes ('IRL'/'IE')
+    # under a few facet key name guesses. Never once succeeded in any real
+    # run — pure wasted time, cut for the sake of runtime.
 
     # Strategy 2 (fallback): the universal ID didn't return anything for
     # this tenant (rare — could be a customized/non-standard instance) —
@@ -484,14 +462,14 @@ def fetch_workday_jobs(company_name, url, session, fetch_descriptions=True,
                 # wider unfiltered scan so large global job boards (e.g.
                 # multinationals with thousands of postings) aren't missed just
                 # because Ireland roles weren't in the first couple hundred.
-                max_pages = 60
+                max_pages = 20
         except Exception as e:
             # Don't give up on the whole company over one failed probe request —
             # try the plain unfiltered search below instead. If the tenant is
             # genuinely unreachable, the main loop's own request will fail too
             # and surface a proper error there.
             probe_error = f"{company_name}: facet probe failed, falling back to unfiltered scan ({e})"
-            max_pages = 60
+            max_pages = 20
 
     results = []
     seen_urls = set()
@@ -604,7 +582,7 @@ def fetch_workday_jobs(company_name, url, session, fetch_descriptions=True,
     if not found and applied_facets and not rate_limited:
         strategy1_note = (strategy1_note or "") + " | facet matched but all results were wrong-country; retrying wide Ireland-text search"
         time.sleep(1)
-        run_pagination({}, "Ireland", 60)
+        run_pagination({}, "Ireland", 15)
 
     if not results and not error:
         print(f"      [diagnostic] {company_name}: 0 postings, strategy1={strategy1_note}")
