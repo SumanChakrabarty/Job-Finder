@@ -965,20 +965,44 @@ def normalize_pinpoint_job(company_name, slug, job):
     }
 
 
+EIGHTFOLD_POSITIONS_RE = re.compile(r'"positions"\s*:\s*(\[.*?\])\s*[,}]', re.DOTALL)
+
+
 def try_eightfold(slug, session):
     """Tries domain=slug.com as the most common real-world case (e.g. slug
     'paypal' -> domain 'paypal.com'). Companies with a different actual
     domain than their name-derived slug won't match — a known limitation
-    of guessing rather than having a real API to look this up from."""
+    of guessing rather than having a real API to look this up from.
+
+    Two-pronged: first try the guessed clean API endpoint (cheap, one
+    request); if that returns nothing, fall back to fetching the actual
+    careers page and extracting the job data embedded directly in its
+    HTML — confirmed this is where the real data lives for at least one
+    verified tenant (Eaton), suggesting the clean API guess doesn't work
+    universally."""
     domain_guess = f"{slug}.com"
     try:
         resp = session.get(
             EIGHTFOLD_SMARTAPPLY_URL.format(slug=slug, domain=domain_guess),
             headers=HEADERS, timeout=10)
-        if resp.status_code != 200:
+        if resp.status_code == 200:
+            data = resp.json()
+            positions = data.get("positions")
+            if positions:
+                return positions
+    except Exception:
+        pass
+
+    # Fallback: fetch the real careers page and pull embedded job data
+    # directly out of the page's own script content.
+    try:
+        page = session.get(f"https://{slug}.eightfold.ai/careers", headers=HEADERS, timeout=10)
+        if page.status_code != 200:
             return None
-        data = resp.json()
-        positions = data.get("positions")
+        m = EIGHTFOLD_POSITIONS_RE.search(page.text)
+        if not m:
+            return None
+        positions = json.loads(m.group(1))
         return positions if positions else None
     except Exception:
         return None
@@ -1125,7 +1149,7 @@ def normalize_phenom_job(company_name, domain, job):
     }
 
 
-PROBE_VERSION = 6  # bump whenever a new ATS platform is added to the probe list
+PROBE_VERSION = 7  # bump whenever a new ATS platform is added to the probe list
 
 
 def probe_ats_for_manual_companies(manual_companies, session, cache_path, fetch_descriptions=True):
