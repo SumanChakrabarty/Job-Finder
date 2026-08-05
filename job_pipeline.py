@@ -638,7 +638,10 @@ def candidate_slugs(company_name: str):
     slugs.add("".join(words).lower())
     slugs.add("-".join(words).lower())
     slugs.add(words[0].lower())
-    return list(slugs)[:3]  # keep probing lightweight
+    if len(words) >= 2:
+        slugs.add("".join(words[:2]).lower())   # first two words joined, e.g. "johnsonjohnson"
+        slugs.add("-".join(words[:2]).lower())  # first two words hyphenated
+    return list(slugs)[:5]  # keep probing bounded but a bit wider than before
 
 
 def try_greenhouse(slug, session):
@@ -992,7 +995,28 @@ def normalize_pinpoint_job(company_name, slug, job):
     }
 
 
-EIGHTFOLD_POSITIONS_RE = re.compile(r'"positions"\s*:\s*(\[.*?\])\s*[,}]', re.DOTALL)
+def extract_json_array_after(text, marker):
+    """Finds `marker` (e.g. '"positions":') and extracts the JSON array
+    that follows it by counting bracket depth — a simple regex like
+    \\[.*?\\] breaks here because each job object contains its OWN nested
+    arrays (e.g. "locations": [...]), so a naive 'stop at the first ]'
+    match truncates at the wrong spot every time. This walks character by
+    character and only stops when the brackets are actually balanced."""
+    start = text.find(marker)
+    if start == -1:
+        return None
+    bracket_start = text.find("[", start)
+    if bracket_start == -1:
+        return None
+    depth = 0
+    for i in range(bracket_start, len(text)):
+        if text[i] == "[":
+            depth += 1
+        elif text[i] == "]":
+            depth -= 1
+            if depth == 0:
+                return text[bracket_start:i + 1]
+    return None
 
 
 def try_eightfold(slug, session):
@@ -1026,10 +1050,10 @@ def try_eightfold(slug, session):
         page = session.get(f"https://{slug}.eightfold.ai/careers", headers=HEADERS, timeout=10)
         if page.status_code != 200:
             return None
-        m = EIGHTFOLD_POSITIONS_RE.search(page.text)
+        m = extract_json_array_after(page.text, '"positions"')
         if not m:
             return None
-        positions = json.loads(m.group(1))
+        positions = json.loads(m)
         return positions if positions else None
     except Exception:
         return None
@@ -1176,7 +1200,7 @@ def normalize_phenom_job(company_name, domain, job):
     }
 
 
-PROBE_VERSION = 7  # bump whenever a new ATS platform is added to the probe list
+PROBE_VERSION = 8  # bump whenever a new ATS platform is added to the probe list, or slug guessing changes
 
 
 def probe_ats_for_manual_companies(manual_companies, session, cache_path, fetch_descriptions=True):
@@ -1335,6 +1359,16 @@ def load_official_permit_stats(path="official_permit_stats.json"):
     return {}
 
 
+def load_adzuna_jobs(path="adzuna_jobs.json"):
+    """Loads output of adzuna_fallback.py (aggregator-sourced jobs for
+    companies with no direct ATS integration), if present. Structure:
+    {company_name: [job_dict, ...]}."""
+    if os.path.exists(path):
+        with open(path, encoding="utf-8") as f:
+            return json.load(f)
+    return {}
+
+
 def notify_github_issue(new_jobs):
     """If running inside GitHub Actions, opens a GitHub Issue listing newly
     found jobs — GitHub's own free notification system (email/mobile push
@@ -1479,6 +1513,15 @@ def main():
         print(f"  -> Auto-discovered {len(discovered_jobs)} Ireland postings across "
               f"{len(found_companies)} companies previously in the manual list: {', '.join(found_companies)}")
     live_jobs.extend(discovered_jobs)
+
+    adzuna_jobs = load_adzuna_jobs()
+    if adzuna_jobs:
+        adzuna_flat = [job for jobs in adzuna_jobs.values() for job in jobs]
+        adzuna_companies = set(adzuna_jobs.keys())
+        live_jobs.extend(adzuna_flat)
+        manual_check = [c for c in manual_check if c["company"] not in adzuna_companies]
+        print(f"  -> Merged {len(adzuna_flat)} Adzuna-sourced postings across "
+              f"{len(adzuna_companies)} companies (run adzuna_fallback.py separately, daily, to refresh this).")
 
     history = load_history(args.history)
     history = update_history(history, live_jobs)
