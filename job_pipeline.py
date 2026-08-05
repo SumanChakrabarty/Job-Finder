@@ -288,14 +288,24 @@ def post_workday_variants(session, api_base, headers, applied_facets, limit, off
         {"appliedFacets": {}, "limit": limit, "offset": offset, "searchText": "Ireland"},
     ]
     last_error = None
-    for payload in variants:
+    for i, payload in enumerate(variants):
         try:
             resp = session.post(api_base, headers=headers, json=payload, timeout=15)
             if resp.status_code == 200:
                 return resp, None
+            if resp.status_code == 429:
+                # Rate limited — trying more variants right now will almost
+                # certainly also get 429'd and just makes it worse. Stop
+                # immediately, back off, and surface this clearly rather
+                # than silently hammering through the rest of the list.
+                last_error = f"HTTP 429 rate limited"
+                time.sleep(3)
+                return None, last_error
             last_error = f"HTTP {resp.status_code}: {resp.text[:150]}"
         except Exception as e:
             last_error = str(e)
+        if i < len(variants) - 1:
+            time.sleep(0.4)  # brief pause between attempts, not a rapid-fire burst
     return None, last_error
 
 
@@ -348,12 +358,15 @@ def fetch_workday_jobs(company_name, url, session, fetch_descriptions=True,
     # this was the actual cause of companies like Accenture showing 0
     # postings despite having dozens of real open Ireland roles.
     strategy1_note = None
+    rate_limited = False
     try:
         known_facets = {"locationCountry": ["04a05835925f45b3a59406a2a6b72c8a"]}
         probe, probe_err = post_workday_variants(
             session, api_base, workday_headers(tenant, wd_shard, site), known_facets, 20, 0)
         if probe is None:
             strategy1_note = f"request failed ({probe_err})"
+            if probe_err and "429" in str(probe_err):
+                rate_limited = True
         else:
             probe_data = probe.json()
             total = probe_data.get("total", 0)
@@ -385,12 +398,15 @@ def fetch_workday_jobs(company_name, url, session, fetch_descriptions=True,
     # something other than Ireland. Keep the client-side text safety net
     # active for this path (this is what let non-Ireland jobs slip through
     # unfiltered and inflate some companies' counts to hundreds).
-    if not applied_facets:
+    if not applied_facets and not rate_limited:
         for alt_key in ("locations", "country", "Location_Country"):
             try:
                 alt_facets = {alt_key: ["04a05835925f45b3a59406a2a6b72c8a"]}
-                probe, _ = post_workday_variants(
+                probe, alt_err = post_workday_variants(
                     session, api_base, workday_headers(tenant, wd_shard, site), alt_facets, 20, 0)
+                if alt_err and "429" in str(alt_err):
+                    rate_limited = True
+                    break
                 if probe is not None and 0 < probe.json().get("total", 0) <= 150:
                     applied_facets = alt_facets
                     max_pages = 30
@@ -398,19 +414,23 @@ def fetch_workday_jobs(company_name, url, session, fetch_descriptions=True,
                     break
             except Exception:
                 continue
+            time.sleep(0.4)
 
     # Strategy 1c: some tenants' Workday integration expects a plain ISO
     # country code ('IRL') as the facet value instead of the internal hex
     # ID — confirmed real for PwC (their own site uses '?wdcountry=IRL').
     # Still untrusted/unverified for the underlying JSON API specifically,
     # so the client-side check stays active.
-    if not applied_facets:
+    if not applied_facets and not rate_limited:
         for key in ("locationCountry", "wdcountry", "country"):
             for code in ("IRL", "IE"):
                 try:
                     code_facets = {key: [code]}
-                    probe, _ = post_workday_variants(
+                    probe, code_err = post_workday_variants(
                         session, api_base, workday_headers(tenant, wd_shard, site), code_facets, 20, 0)
+                    if code_err and "429" in str(code_err):
+                        rate_limited = True
+                        break
                     if probe is not None and 0 < probe.json().get("total", 0) <= 150:
                         applied_facets = code_facets
                         max_pages = 30
@@ -418,7 +438,8 @@ def fetch_workday_jobs(company_name, url, session, fetch_descriptions=True,
                         break
                 except Exception:
                     continue
-            if applied_facets:
+                time.sleep(0.4)
+            if applied_facets or rate_limited:
                 break
 
     # Strategy 2 (fallback): the universal ID didn't return anything for
@@ -432,7 +453,7 @@ def fetch_workday_jobs(company_name, url, session, fetch_descriptions=True,
     # Ireland isn't common enough to surface in an unrelated sample. This
     # path is less certain either way, so the client-side text safety net
     # stays active for it.
-    if not applied_facets:
+    if not applied_facets and not rate_limited:
         try:
             probe = None
             for search_text in ("Ireland", ""):
@@ -443,9 +464,14 @@ def fetch_workday_jobs(company_name, url, session, fetch_descriptions=True,
                         timeout=15)
                     if probe.status_code == 200:
                         break
+                    if probe.status_code == 429:
+                        rate_limited = True
+                        probe = None
+                        break
                     probe = None
                 except Exception:
                     probe = None
+                time.sleep(0.4)
             if probe is None:
                 raise RuntimeError("both Ireland-search and empty-search facet probes failed")
             probe_data = probe.json()
@@ -575,8 +601,9 @@ def fetch_workday_jobs(company_name, url, session, fetch_descriptions=True,
     # thought. Rather than accept 0 and give up, retry with a real text
     # search for "Ireland" across the tenant's full job list, same as the
     # last-resort path for tenants where no facet was found at all.
-    if not found and applied_facets:
+    if not found and applied_facets and not rate_limited:
         strategy1_note = (strategy1_note or "") + " | facet matched but all results were wrong-country; retrying wide Ireland-text search"
+        time.sleep(1)
         run_pagination({}, "Ireland", 60)
 
     if not results and not error:
@@ -1429,6 +1456,9 @@ def main():
             if err:
                 errors.append(err)
             print(f"      -> {len(jobs)} Ireland postings")
+            time.sleep(1)  # spread out aggregate request rate across companies —
+            # a shared CDN/WAF across Workday tenants can rate-limit based on
+            # total volume from our IP, not just per-tenant.
             if not jobs:
                 # Never let a company silently disappear — whether it's a
                 # real fetch error or genuinely zero open Ireland roles
