@@ -447,6 +447,10 @@
     "platform": "phenom",
     "slug": "jobs.kuehne-nagel.com|KUNAGLOBAL"
   },
+  "State Street": {
+    "platform": "phenom",
+    "slug": "careers.statestreet.com|STSTGLOBAL"
+  },
   "Google": {
     "platform": "none",
     "slug": null
@@ -832,8 +836,8 @@
     "slug": null
   },
   "Thermo Fisher Scientific": {
-    "platform": "none",
-    "slug": null
+    "platform": "phenom",
+    "slug": "jobs.thermofisher.com|TFSCGLOBAL"
   },
   "Revvity (PerkinElmer)": {
     "platform": "none",
@@ -882,10 +886,6 @@
   "BNY Mellon": {
     "platform": "none",
     "slug": null
-  },
-  "State Street": {
-    "platform": "phenom",
-    "slug": "careers.statestreet.com|STSTGLOBAL"
   },
   "Fidelity Investments": {
     "platform": "none",
@@ -1515,5 +1515,5 @@
     "platform": "none",
     "slug": null
   },
-  "__probe_version__": 7
+  "__probe_version__": 8
 }
