@@ -469,99 +469,115 @@ def fetch_workday_jobs(company_name, url, session, fetch_descriptions=True,
 
     results = []
     seen_urls = set()
-    offset = 0
-    error = probe_error
-    wide_scan_search_text = "" if applied_facets else "Ireland"
     raw_sample_job = None
+    error = probe_error
 
-    for _ in range(max_pages):
-        try:
-            resp, req_err = post_workday_variants(
-                session, api_base, workday_headers(tenant, wd_shard, site), applied_facets, page_size, offset,
-                search_text=wide_scan_search_text)
-            if resp is None:
-                raise RuntimeError(req_err)
-            data = resp.json()
-        except Exception as e:
-            error = f"{company_name}: request failed ({e})"
-            break
+    def run_pagination(facets, search_text, pages):
+        nonlocal raw_sample_job, error
+        found_any = False
+        offset = 0
+        for _ in range(pages):
+            try:
+                resp, req_err = post_workday_variants(
+                    session, api_base, workday_headers(tenant, wd_shard, site), facets, page_size, offset,
+                    search_text=search_text)
+                if resp is None:
+                    raise RuntimeError(req_err)
+                data = resp.json()
+            except Exception as e:
+                error = f"{company_name}: request failed ({e})"
+                break
 
-        postings = data.get("jobPostings", [])
-        if not postings:
-            break
-        if raw_sample_job is None:
-            raw_sample_job = postings[0]
+            postings = data.get("jobPostings", [])
+            if not postings:
+                break
+            if raw_sample_job is None:
+                raw_sample_job = postings[0]
 
-        new_this_page = 0
-        for job in postings:
-            # Location text can appear under different field names, or
-            # buried among bulletFields at an index other than 0 (e.g. a
-            # requisition ID at [0] and the actual location at [1]) —
-            # check everything plausible rather than assuming one fixed
-            # spot, since guessing wrong was causing genuine Ireland jobs
-            # to be wrongly discarded.
-            candidates = [job.get("locationsText", ""), job.get("location", ""),
-                          job.get("primaryLocation", "")]
-            candidates.extend(job.get("bulletFields", []) or [])
-            location_text = next((c for c in candidates if c and is_ireland_location(c)), "")
-            if not location_text:
-                location_text = candidates[0] if candidates and candidates[0] else ""
+            new_this_page = 0
+            for job in postings:
+                # Location text can appear under different field names, or
+                # buried among bulletFields at an index other than 0 (e.g. a
+                # requisition ID at [0] and the actual location at [1]) —
+                # check everything plausible rather than assuming one fixed
+                # spot, since guessing wrong was causing genuine Ireland jobs
+                # to be wrongly discarded.
+                candidates = [job.get("locationsText", ""), job.get("location", ""),
+                              job.get("primaryLocation", "")]
+                candidates.extend(job.get("bulletFields", []) or [])
+                location_text = next((c for c in candidates if c and is_ireland_location(c)), "")
+                if not location_text:
+                    location_text = candidates[0] if candidates and candidates[0] else ""
 
-            # ALWAYS verify client-side, regardless of which strategy found
-            # this job — trusting the server-side filter unconditionally
-            # was the actual cause of wildly inflated counts for a few
-            # companies (PwC showing 600, MSD showing 591): their Workday
-            # setup doesn't recognize the standard Ireland facet ID, so it
-            # silently ignored the filter and returned their ENTIRE global
-            # job list instead of erroring — the client-side check is the
-            # only thing that catches that.
-            if not is_ireland_location(location_text):
-                continue
-            posted_text = job.get("postedOn", "")
-            external_path = job.get("externalPath", "")
-            job_url = site_base.rstrip("/") + external_path
+                # ALWAYS verify client-side, regardless of which strategy found
+                # this job — trusting the server-side filter unconditionally
+                # was the actual cause of wildly inflated counts for a few
+                # companies (PwC showing 600, MSD showing 591), AND of wrong-
+                # country jobs slipping through under a small, plausible-
+                # looking total (Diageo's "2 Ireland jobs" was actually a job
+                # in Gimli, Canada) — the client-side check is the only thing
+                # that catches either failure mode.
+                if not is_ireland_location(location_text):
+                    continue
+                posted_text = job.get("postedOn", "")
+                external_path = job.get("externalPath", "")
+                job_url = site_base.rstrip("/") + external_path
 
-            # Dedup safety net: if Workday returns the same jobs again on a
-            # later "page" (offset not actually advancing server-side, or
-            # any other pagination quirk), never add the same job twice —
-            # this is what was causing wildly inflated counts (600 for a
-            # company that genuinely has ~3 openings).
-            if job_url in seen_urls:
-                continue
-            seen_urls.add(job_url)
-            new_this_page += 1
+                # Dedup safety net: if Workday returns the same jobs again on
+                # a later "page" (offset not actually advancing server-side,
+                # or any other pagination quirk), never add the same job
+                # twice — this is what was causing wildly inflated counts.
+                if job_url in seen_urls:
+                    continue
+                seen_urls.add(job_url)
+                new_this_page += 1
+                found_any = True
 
-            sponsorship, snippet = "not_mentioned", None
-            if fetch_descriptions and external_path:
-                desc = fetch_job_description(tenant, wd_shard, site, external_path, session)
-                sponsorship, snippet = classify_sponsorship(desc)
-                time.sleep(detail_delay)
+                sponsorship, snippet = "not_mentioned", None
+                if fetch_descriptions and external_path:
+                    desc = fetch_job_description(tenant, wd_shard, site, external_path, session)
+                    sponsorship, snippet = classify_sponsorship(desc)
+                    time.sleep(detail_delay)
 
-            results.append({
-                "company": company_name,
-                "title": job.get("title", "").strip(),
-                "location": location_text,
-                "posted_text": posted_text,
-                "posted_days_ago": parse_posted_text(posted_text),
-                "employment_type": guess_employment_type(job.get("bulletFields")),
-                "url": job_url,
-                "source": "workday_api",
-                "visa_sponsorship": sponsorship,
-                "visa_snippet": snippet,
-            })
+                results.append({
+                    "company": company_name,
+                    "title": job.get("title", "").strip(),
+                    "location": location_text,
+                    "posted_text": posted_text,
+                    "posted_days_ago": parse_posted_text(posted_text),
+                    "employment_type": guess_employment_type(job.get("bulletFields")),
+                    "url": job_url,
+                    "source": "workday_api",
+                    "visa_sponsorship": sponsorship,
+                    "visa_snippet": snippet,
+                })
 
-        # Circuit breaker: an entire page with zero genuinely new jobs means
-        # pagination has stalled (server returning the same set repeatedly)
-        # — stop immediately rather than trusting 'total' and looping up to
-        # max_pages re-adding the same postings every time.
-        if new_this_page == 0:
-            break
+            # Circuit breaker: an entire page with zero genuinely new jobs
+            # means pagination has stalled (server returning the same set
+            # repeatedly) — stop immediately rather than trusting 'total'
+            # and looping up to max_pages re-adding the same postings.
+            if new_this_page == 0:
+                break
 
-        total = data.get("total", 0)
-        offset += page_size
-        if offset >= total:
-            break
-        time.sleep(0.3)
+            total = data.get("total", 0)
+            offset += page_size
+            if offset >= total:
+                break
+            time.sleep(0.3)
+        return found_any
+
+    wide_scan_search_text = "" if applied_facets else "Ireland"
+    found = run_pagination(applied_facets, wide_scan_search_text, max_pages)
+
+    # Fallback: the 'smart' filter found SOMETHING (a plausible total), but
+    # every result it returned turned out to be a different country once
+    # actually checked — this tenant's facet ID doesn't mean what we
+    # thought. Rather than accept 0 and give up, retry with a real text
+    # search for "Ireland" across the tenant's full job list, same as the
+    # last-resort path for tenants where no facet was found at all.
+    if not found and applied_facets:
+        strategy1_note = (strategy1_note or "") + " | facet matched but all results were wrong-country; retrying wide Ireland-text search"
+        run_pagination({}, "Ireland", 60)
 
     if not results and not error:
         print(f"      [diagnostic] {company_name}: 0 postings, strategy1={strategy1_note}")
