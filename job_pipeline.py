@@ -705,16 +705,48 @@ def normalize_lever_job(company_name, job):
     }
 
 
-def try_smartrecruiters(slug, session):
+def try_smartrecruiters_probe(slug, session):
+    """Cheap single-page check used only during discovery (does this slug
+    match at all?) — the full paginated fetch in try_smartrecruiters is
+    reserved for once a company is actually confirmed, to avoid paying
+    the multi-page cost twice for every real match."""
     try:
         resp = session.get(SMARTRECRUITERS_JOBS_URL.format(slug=slug), headers=HEADERS, timeout=10)
         if resp.status_code != 200:
             return None
-        data = resp.json()
-        content = data.get("content")
+        content = resp.json().get("content")
         return content if content else None
     except Exception:
         return None
+
+
+def try_smartrecruiters(slug, session):
+    """Paginates through ALL postings, not just the first page — the
+    previous version only fetched page 1 with no offset/total check,
+    which for a company posting globally (hundreds of postings) could
+    easily miss Ireland-specific roles that just weren't in that first
+    batch. Capped at a reasonable number of pages as a safety net."""
+    all_content = []
+    offset = 0
+    page_size = 100
+    for _ in range(10):  # up to 1000 postings, generous for any real company
+        try:
+            resp = session.get(SMARTRECRUITERS_JOBS_URL.format(slug=slug), headers=HEADERS,
+                                params={"offset": offset, "limit": page_size}, timeout=10)
+            if resp.status_code != 200:
+                break
+            data = resp.json()
+            content = data.get("content") or []
+            if not content:
+                break
+            all_content.extend(content)
+            total_found = data.get("totalFound", len(all_content))
+            offset += page_size
+            if offset >= total_found:
+                break
+        except Exception:
+            break
+    return all_content if all_content else None
 
 
 def fetch_smartrecruiters_description(slug, posting_id, session):
@@ -1225,7 +1257,7 @@ def probe_ats_for_manual_companies(manual_companies, session, cache_path, fetch_
                 if try_lever(candidate, session) is not None:
                     platform, slug = "lever", candidate
                     break
-                if try_smartrecruiters(candidate, session) is not None:
+                if try_smartrecruiters_probe(candidate, session) is not None:
                     platform, slug = "smartrecruiters", candidate
                     break
                 if try_ashby(candidate, session) is not None:
