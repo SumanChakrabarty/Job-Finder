@@ -236,6 +236,30 @@ def guess_employment_type(bullet_fields):
     return "Unspecified"
 
 
+def normalize_employment_type(raw):
+    """Every platform describes employment type in its own wording —
+    Ashby uses 'FullTime' (no space), Lever uses 'Full-time', SmartRecruiters
+    nests it under a different field entirely, Personio says 'Permanent'.
+    The dashboard's filter dropdown only matches one of 6 exact strings, so
+    passing any of these through unchanged meant the filter matched almost
+    nothing — this collapses whatever a platform says into one of those 6
+    canonical values."""
+    if not raw:
+        return "Unspecified"
+    r = re.sub(r"[\s_-]+", "", str(raw)).lower()
+    if "intern" in r:
+        return "Internship"
+    if "parttime" in r:
+        return "Part-time"
+    if "temporary" in r:
+        return "Temporary"
+    if "contract" in r or "freelance" in r or "consultant" in r:
+        return "Contract"
+    if "fulltime" in r or "permanent" in r or "regular" in r:
+        return "Full-time"
+    return "Unspecified"
+
+
 def fetch_job_description(tenant, wd_shard, site, external_path, session):
     detail_url = f"https://{tenant}.{wd_shard}.myworkdayjobs.com/wday/cxs/{tenant}/{site}{external_path}"
     try:
@@ -697,7 +721,7 @@ def normalize_lever_job(company_name, job):
         "location": location,
         "posted_text": posted_text,
         "posted_days_ago": days_ago,
-        "employment_type": categories.get("commitment", "Unspecified") or "Unspecified",
+        "employment_type": normalize_employment_type(categories.get("commitment")),
         "url": job.get("hostedUrl", ""),
         "source": "lever_api",
         "visa_sponsorship": sponsorship,
@@ -788,6 +812,9 @@ def normalize_smartrecruiters_job(company_name, job, slug, session, fetch_descri
         except Exception:
             pass
 
+    type_field = job.get("typeOfEmployment") or {}
+    raw_employment_type = type_field.get("label") if isinstance(type_field, dict) else type_field
+
     sponsorship, snippet = "not_mentioned", None
     if fetch_descriptions and posting_id:
         desc = fetch_smartrecruiters_description(slug, posting_id, session)
@@ -799,7 +826,7 @@ def normalize_smartrecruiters_job(company_name, job, slug, session, fetch_descri
         "location": location,
         "posted_text": posted_text,
         "posted_days_ago": days_ago,
-        "employment_type": "Unspecified",
+        "employment_type": normalize_employment_type(raw_employment_type),
         "url": f"https://jobs.smartrecruiters.com/{slug}/{posting_id}",
         "source": "smartrecruiters_api",
         "visa_sponsorship": sponsorship,
@@ -840,7 +867,7 @@ def normalize_ashby_job(company_name, job):
         "location": location,
         "posted_text": posted_text,
         "posted_days_ago": days_ago,
-        "employment_type": job.get("employmentType", "Unspecified") or "Unspecified",
+        "employment_type": normalize_employment_type(job.get("employmentType")),
         "url": job.get("applyUrl", "") or job.get("jobUrl", ""),
         "source": "ashby_api",
         "visa_sponsorship": sponsorship,
@@ -883,7 +910,7 @@ def normalize_recruitee_job(company_name, job):
         "location": location,
         "posted_text": posted_text,
         "posted_days_ago": days_ago,
-        "employment_type": job.get("employment_type_code", "Unspecified") or "Unspecified",
+        "employment_type": normalize_employment_type(job.get("employment_type_code")),
         "url": job.get("careers_url", ""),
         "source": "recruitee_api",
         "visa_sponsorship": sponsorship,
@@ -940,7 +967,7 @@ def normalize_personio_job(company_name, slug, position):
         "location": office,
         "posted_text": posted_text,
         "posted_days_ago": days_ago,
-        "employment_type": field("employmentType") or "Unspecified",
+        "employment_type": normalize_employment_type(field("employmentType")),
         "url": f"https://{slug}.jobs.personio.de/job/{position_id}",
         "source": "personio_xml",
         "visa_sponsorship": sponsorship,
@@ -998,7 +1025,7 @@ def normalize_pinpoint_job(company_name, slug, job):
         "location": location,
         "posted_text": posted_text,
         "posted_days_ago": days_ago,
-        "employment_type": job.get("employmentType") or job.get("employment_type") or "Unspecified",
+        "employment_type": normalize_employment_type(job.get("employmentType") or job.get("employment_type")),
         "url": url,
         "source": "pinpoint_api",
         "visa_sponsorship": sponsorship,
@@ -1097,7 +1124,7 @@ def normalize_eightfold_job(company_name, slug, job):
         "location": location,
         "posted_text": posted_text,
         "posted_days_ago": days_ago,
-        "employment_type": job.get("employment_type", "Unspecified") or "Unspecified",
+        "employment_type": normalize_employment_type(job.get("employment_type")),
         "url": url,
         "source": "eightfold_api",
         "visa_sponsorship": sponsorship,
@@ -1140,7 +1167,10 @@ def fetch_phenom_jobs_by_refnum(domain, ref_num, session):
 def try_phenom(slug, session):
     """Tries jobs.{slug}.com and careers.{slug}.com — the two most common
     Phenom domain conventions. Returns (domain, refnum, jobs) or
-    (None, None, None)."""
+    (None, None, None). Diagnostic prints only fire once we've confirmed a
+    real Phenom domain (page loaded successfully) — this avoids spamming
+    the log for the hundreds of wrong-guess slugs that fail immediately,
+    while still showing exactly where it breaks for genuine matches."""
     for domain in (f"jobs.{slug}.com", f"careers.{slug}.com"):
         try:
             page = session.get(f"https://{domain}/", headers=HEADERS, timeout=10)
@@ -1148,6 +1178,9 @@ def try_phenom(slug, session):
                 continue
             m = PHENOM_REFNUM_RE.search(page.text)
             if not m:
+                print(f"      [phenom-diagnostic] {domain}: page loaded (200) but no refNum "
+                      f"pattern found in the page source — may not actually be Phenom, or uses "
+                      f"a different embedding format than expected.")
                 continue
             ref_num = m.group(1)
             payload = {
@@ -1162,9 +1195,14 @@ def try_phenom(slug, session):
             resp = session.post(f"https://{domain}/widgets", json=payload,
                                  headers={"Content-Type": "application/json"}, timeout=15)
             if resp.status_code != 200:
+                print(f"      [phenom-diagnostic] {domain}: found refNum '{ref_num}' but /widgets "
+                      f"API call failed with HTTP {resp.status_code}")
                 continue
             data = resp.json()
             jobs = (data.get("refineSearch") or {}).get("data", {}).get("jobs", [])
+            if not jobs:
+                print(f"      [phenom-diagnostic] {domain}: /widgets call succeeded (200) but "
+                      f"returned zero jobs — response keys: {list(data.keys())}")
             if jobs:
                 return domain, ref_num, jobs
         except Exception:
@@ -1196,7 +1234,7 @@ def normalize_phenom_job(company_name, domain, job):
         "location": str(location),
         "posted_text": posted_text,
         "posted_days_ago": days_ago,
-        "employment_type": job.get("type", "Unspecified") or "Unspecified",
+        "employment_type": normalize_employment_type(job.get("type")),
         "url": url,
         "source": "phenom_widgets",
         "visa_sponsorship": sponsorship,
