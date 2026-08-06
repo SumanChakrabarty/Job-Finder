@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-06T11:08:12.309249+00:00",
+  "generated_at": "2026-08-06T11:38:48.029753+00:00",
   "live_jobs": [
     {
       "company": "Accenture",
@@ -140,6 +140,20 @@
       "visa_snippet": null,
       "new_since_last_check": false,
       "first_seen_at": "2026-08-04T13:16:04.354572+00:00"
+    },
+    {
+      "company": "Accenture",
+      "title": "Digital Marketing - Account Manager - French Speaker",
+      "location": "Dublin",
+      "posted_text": "Posted Today",
+      "posted_days_ago": 0,
+      "employment_type": "Unspecified",
+      "url": "https://accenture.wd103.myworkdayjobs.com/AccentureCareers/job/Dublin/Digital-Marketing---Account-Manager---French-Speaker_R00274091-1",
+      "source": "workday_api",
+      "visa_sponsorship": "not_mentioned",
+      "visa_snippet": null,
+      "new_since_last_check": true,
+      "first_seen_at": "2026-08-06T11:38:48.029753+00:00"
     },
     {
       "company": "Accenture",
@@ -429,20 +443,6 @@
       "posted_days_ago": 10,
       "employment_type": "Unspecified",
       "url": "https://accenture.wd103.myworkdayjobs.com/AccentureCareers/job/Dublin/Inside-Sales-Account-Rep---German-speaking--CL11-_R00331806",
-      "source": "workday_api",
-      "visa_sponsorship": "not_mentioned",
-      "visa_snippet": null,
-      "new_since_last_check": false,
-      "first_seen_at": "2026-08-04T13:16:04.354572+00:00"
-    },
-    {
-      "company": "Accenture",
-      "title": "Accounting Statutory and Tax Specialist",
-      "location": "Dublin",
-      "posted_text": "Posted 14 Days Ago",
-      "posted_days_ago": 14,
-      "employment_type": "Unspecified",
-      "url": "https://accenture.wd103.myworkdayjobs.com/AccentureCareers/job/Dublin/Accounting-Statutory-and-Tax-Specialist_R00346503",
       "source": "workday_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
@@ -2215,6 +2215,20 @@
     },
     {
       "company": "Analog Devices",
+      "title": "Apprentice, Equipment Maintenance",
+      "location": "Ireland, Limerick",
+      "posted_text": "Posted Today",
+      "posted_days_ago": 0,
+      "employment_type": "Unspecified",
+      "url": "https://analogdevices.wd1.myworkdayjobs.com/External/job/Ireland-Limerick/Apprentice--Equipment-Maintenance_R263974",
+      "source": "workday_api",
+      "visa_sponsorship": "not_mentioned",
+      "visa_snippet": null,
+      "new_since_last_check": true,
+      "first_seen_at": "2026-08-06T11:38:48.029753+00:00"
+    },
+    {
+      "company": "Analog Devices",
       "title": "Design Evaluation Engineer",
       "location": "Ireland, Limerick",
       "posted_text": "Posted Today",
@@ -2557,20 +2571,6 @@
       "posted_days_ago": 22,
       "employment_type": "Unspecified",
       "url": "https://analogdevices.wd1.myworkdayjobs.com/External/job/Ireland-Limerick/PM--Project-Program-Management--Enterprise-Portfolio-Management-Office_R263966",
-      "source": "workday_api",
-      "visa_sponsorship": "not_mentioned",
-      "visa_snippet": null,
-      "new_since_last_check": false,
-      "first_seen_at": "2026-08-04T12:10:25.450944+00:00"
-    },
-    {
-      "company": "Analog Devices",
-      "title": "Manufacturing Operations Supervisor",
-      "location": "Ireland, Limerick",
-      "posted_text": "Posted 24 Days Ago",
-      "posted_days_ago": 24,
-      "employment_type": "Unspecified",
-      "url": "https://analogdevices.wd1.myworkdayjobs.com/External/job/Ireland-Limerick/Manufacturing-Operations-Supervisor_R263995",
       "source": "workday_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
@@ -7484,20 +7484,6 @@
       "posted_text": "Posted 1 days ago",
       "posted_days_ago": 1,
       "employment_type": "Unspecified",
-      "url": "https://www.mongodb.com/careers/job/?gh_jid=7453323",
-      "source": "greenhouse_api",
-      "visa_sponsorship": "not_mentioned",
-      "visa_snippet": null,
-      "new_since_last_check": false,
-      "first_seen_at": "2026-08-03T13:41:34.300846+00:00"
-    },
-    {
-      "company": "MongoDB",
-      "title": "Cloud Operations Engineer",
-      "location": "Cork, Ireland; Dublin, Ireland",
-      "posted_text": "Posted 1 days ago",
-      "posted_days_ago": 1,
-      "employment_type": "Unspecified",
       "url": "https://www.mongodb.com/careers/job/?gh_jid=8025827",
       "source": "greenhouse_api",
       "visa_sponsorship": "not_mentioned",
@@ -7513,6 +7499,20 @@
       "posted_days_ago": 1,
       "employment_type": "Unspecified",
       "url": "https://www.mongodb.com/careers/job/?gh_jid=8025824",
+      "source": "greenhouse_api",
+      "visa_sponsorship": "not_mentioned",
+      "visa_snippet": null,
+      "new_since_last_check": false,
+      "first_seen_at": "2026-08-03T13:41:34.300846+00:00"
+    },
+    {
+      "company": "MongoDB",
+      "title": "Cloud Operations Engineer",
+      "location": "Cork, Ireland; Dublin, Ireland",
+      "posted_text": "Posted 1 days ago",
+      "posted_days_ago": 1,
+      "employment_type": "Unspecified",
+      "url": "https://www.mongodb.com/careers/job/?gh_jid=7453323",
       "source": "greenhouse_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
@@ -7817,8 +7817,8 @@
       "company": "MongoDB",
       "title": "Renewals Manager",
       "location": "Cork, Ireland; Dublin, Ireland",
-      "posted_text": "Posted 1 days ago",
-      "posted_days_ago": 1,
+      "posted_text": "Posted 2 days ago",
+      "posted_days_ago": 2,
       "employment_type": "Unspecified",
       "url": "https://www.mongodb.com/careers/job/?gh_jid=8013315",
       "source": "greenhouse_api",
@@ -7914,11 +7914,11 @@
     {
       "company": "MongoDB",
       "title": "Senior Product Security Engineer, Server",
-      "location": "Cork, Ireland",
+      "location": "Dublin, Ireland",
       "posted_text": "Posted 2 days ago",
       "posted_days_ago": 2,
       "employment_type": "Unspecified",
-      "url": "https://www.mongodb.com/careers/job/?gh_jid=7956226",
+      "url": "https://www.mongodb.com/careers/job/?gh_jid=7484909",
       "source": "greenhouse_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
@@ -7928,11 +7928,11 @@
     {
       "company": "MongoDB",
       "title": "Senior Product Security Engineer, Server",
-      "location": "Dublin, Ireland",
+      "location": "Cork, Ireland",
       "posted_text": "Posted 2 days ago",
       "posted_days_ago": 2,
       "employment_type": "Unspecified",
-      "url": "https://www.mongodb.com/careers/job/?gh_jid=7484909",
+      "url": "https://www.mongodb.com/careers/job/?gh_jid=7956226",
       "source": "greenhouse_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
@@ -7970,11 +7970,11 @@
     {
       "company": "MongoDB",
       "title": "Senior Software Engineer, Forward Deployed AI Engineer",
-      "location": "Cork, Ireland; Dublin, Ireland",
+      "location": "Ireland",
       "posted_text": "Posted 1 days ago",
       "posted_days_ago": 1,
       "employment_type": "Unspecified",
-      "url": "https://www.mongodb.com/careers/job/?gh_jid=7392902",
+      "url": "https://www.mongodb.com/careers/job/?gh_jid=7590735",
       "source": "greenhouse_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
@@ -7984,11 +7984,11 @@
     {
       "company": "MongoDB",
       "title": "Senior Software Engineer, Forward Deployed AI Engineer",
-      "location": "Ireland",
+      "location": "Cork, Ireland; Dublin, Ireland",
       "posted_text": "Posted 1 days ago",
       "posted_days_ago": 1,
       "employment_type": "Unspecified",
-      "url": "https://www.mongodb.com/careers/job/?gh_jid=7590735",
+      "url": "https://www.mongodb.com/careers/job/?gh_jid=7392902",
       "source": "greenhouse_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
@@ -8110,11 +8110,11 @@
     {
       "company": "MongoDB",
       "title": "Software Engineer 3",
-      "location": "Dublin",
-      "posted_text": "Posted 1 days ago",
-      "posted_days_ago": 1,
+      "location": "Cork, Ireland; Dublin, Ireland",
+      "posted_text": "Posted 2 days ago",
+      "posted_days_ago": 2,
       "employment_type": "Unspecified",
-      "url": "https://www.mongodb.com/careers/job/?gh_jid=7939397",
+      "url": "https://www.mongodb.com/careers/job/?gh_jid=7859378",
       "source": "greenhouse_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
@@ -8124,11 +8124,11 @@
     {
       "company": "MongoDB",
       "title": "Software Engineer 3",
-      "location": "Cork, Ireland; Dublin, Ireland",
+      "location": "Dublin",
       "posted_text": "Posted 2 days ago",
       "posted_days_ago": 2,
       "employment_type": "Unspecified",
-      "url": "https://www.mongodb.com/careers/job/?gh_jid=7859378",
+      "url": "https://www.mongodb.com/careers/job/?gh_jid=7939397",
       "source": "greenhouse_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
@@ -8180,6 +8180,20 @@
     {
       "company": "MongoDB",
       "title": "Staff Engineer",
+      "location": "Dublin, Ireland",
+      "posted_text": "Posted 2 days ago",
+      "posted_days_ago": 2,
+      "employment_type": "Unspecified",
+      "url": "https://www.mongodb.com/careers/job/?gh_jid=7613562",
+      "source": "greenhouse_api",
+      "visa_sponsorship": "not_mentioned",
+      "visa_snippet": null,
+      "new_since_last_check": false,
+      "first_seen_at": "2026-08-03T13:41:34.300846+00:00"
+    },
+    {
+      "company": "MongoDB",
+      "title": "Staff Engineer",
       "location": "Dublin",
       "posted_text": "Posted 2 days ago",
       "posted_days_ago": 2,
@@ -8199,20 +8213,6 @@
       "posted_days_ago": 2,
       "employment_type": "Unspecified",
       "url": "https://www.mongodb.com/careers/job/?gh_jid=8045017",
-      "source": "greenhouse_api",
-      "visa_sponsorship": "not_mentioned",
-      "visa_snippet": null,
-      "new_since_last_check": false,
-      "first_seen_at": "2026-08-03T13:41:34.300846+00:00"
-    },
-    {
-      "company": "MongoDB",
-      "title": "Staff Engineer",
-      "location": "Dublin, Ireland",
-      "posted_text": "Posted 2 days ago",
-      "posted_days_ago": 2,
-      "employment_type": "Unspecified",
-      "url": "https://www.mongodb.com/careers/job/?gh_jid=7613562",
       "source": "greenhouse_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
@@ -8306,11 +8306,11 @@
     {
       "company": "MongoDB",
       "title": "Technical Lead Manager",
-      "location": "Dublin, Ireland",
+      "location": "Cork, Ireland",
       "posted_text": "Posted 2 days ago",
       "posted_days_ago": 2,
       "employment_type": "Unspecified",
-      "url": "https://www.mongodb.com/careers/job/?gh_jid=7711876",
+      "url": "https://www.mongodb.com/careers/job/?gh_jid=8045345",
       "source": "greenhouse_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
@@ -8320,11 +8320,11 @@
     {
       "company": "MongoDB",
       "title": "Technical Lead Manager",
-      "location": "Cork, Ireland",
+      "location": "Dublin, Ireland",
       "posted_text": "Posted 2 days ago",
       "posted_days_ago": 2,
       "employment_type": "Unspecified",
-      "url": "https://www.mongodb.com/careers/job/?gh_jid=8045345",
+      "url": "https://www.mongodb.com/careers/job/?gh_jid=7711876",
       "source": "greenhouse_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
@@ -8363,8 +8363,8 @@
       "company": "MongoDB",
       "title": "Technical Services Engineer - Partners",
       "location": "Dublin, Ireland",
-      "posted_text": "Posted 1 days ago",
-      "posted_days_ago": 1,
+      "posted_text": "Posted 2 days ago",
+      "posted_days_ago": 2,
       "employment_type": "Unspecified",
       "url": "https://www.mongodb.com/careers/job/?gh_jid=8053152",
       "source": "greenhouse_api",
@@ -8412,7 +8412,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -8426,7 +8426,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -8671,8 +8671,8 @@
       "company": "Arista Networks",
       "title": "Senior C++ Software Engineer - Ireland, Greece, Spain, Hungary or Romania",
       "location": "Dublin, ie",
-      "posted_text": "Posted 13 days ago",
-      "posted_days_ago": 13,
+      "posted_text": "Posted 14 days ago",
+      "posted_days_ago": 14,
       "employment_type": "Unspecified",
       "url": "https://jobs.smartrecruiters.com/aristanetworks/744000139261039",
       "source": "smartrecruiters_api",
@@ -8699,8 +8699,8 @@
       "company": "Arista Networks",
       "title": "Golang Engineer - SRE Engineering Productivity",
       "location": "Dublin, County Dublin, ie",
-      "posted_text": "Posted 43 days ago",
-      "posted_days_ago": 43,
+      "posted_text": "Posted 44 days ago",
+      "posted_days_ago": 44,
       "employment_type": "Unspecified",
       "url": "https://jobs.smartrecruiters.com/aristanetworks/744000133565197",
       "source": "smartrecruiters_api",
@@ -8713,8 +8713,8 @@
       "company": "Arista Networks",
       "title": "TAC Engineer",
       "location": "Dublin or Shannon, ie",
-      "posted_text": "Posted 48 days ago",
-      "posted_days_ago": 48,
+      "posted_text": "Posted 49 days ago",
+      "posted_days_ago": 49,
       "employment_type": "Unspecified",
       "url": "https://jobs.smartrecruiters.com/aristanetworks/744000132839554",
       "source": "smartrecruiters_api",
@@ -8727,8 +8727,8 @@
       "company": "Arista Networks",
       "title": "Software Engineer, Kernel and BIOS - Dublin, Ireland",
       "location": "...., County Dublin, ro",
-      "posted_text": "Posted 48 days ago",
-      "posted_days_ago": 48,
+      "posted_text": "Posted 49 days ago",
+      "posted_days_ago": 49,
       "employment_type": "Unspecified",
       "url": "https://jobs.smartrecruiters.com/aristanetworks/744000132838949",
       "source": "smartrecruiters_api",
@@ -8741,8 +8741,8 @@
       "company": "Arista Networks",
       "title": "FPGA Design Engineer - Ireland",
       "location": "Dublin, County Dublin, ie",
-      "posted_text": "Posted 50 days ago",
-      "posted_days_ago": 50,
+      "posted_text": "Posted 51 days ago",
+      "posted_days_ago": 51,
       "employment_type": "Unspecified",
       "url": "https://jobs.smartrecruiters.com/aristanetworks/744000132393410",
       "source": "smartrecruiters_api",
@@ -8755,8 +8755,8 @@
       "company": "Arista Networks",
       "title": "Network Engineer - Test",
       "location": "Dublin, County Dublin, ie",
-      "posted_text": "Posted 51 days ago",
-      "posted_days_ago": 51,
+      "posted_text": "Posted 52 days ago",
+      "posted_days_ago": 52,
       "employment_type": "Unspecified",
       "url": "https://jobs.smartrecruiters.com/aristanetworks/744000132175449",
       "source": "smartrecruiters_api",
@@ -8776,7 +8776,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -8790,7 +8790,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -8804,7 +8804,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -8818,7 +8818,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -8832,7 +8832,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -9434,7 +9434,7 @@
       "source": "ashby_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -9448,7 +9448,7 @@
       "source": "ashby_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -9462,7 +9462,7 @@
       "source": "ashby_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -10162,7 +10162,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -10176,7 +10176,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -10190,7 +10190,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -10204,7 +10204,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -10218,7 +10218,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -10232,7 +10232,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -10246,7 +10246,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -10260,7 +10260,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -10274,7 +10274,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -10288,7 +10288,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -10302,7 +10302,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -10316,8 +10316,22 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
+    },
+    {
+      "company": "Zimmer Biomet",
+      "title": "Group Lead - Days/ Nights/ Weekends",
+      "location": "Galway, Connacht, Ireland",
+      "posted_text": "Posted 2 days ago",
+      "posted_days_ago": 2,
+      "employment_type": "External",
+      "url": "https://career8.successfactors.com/careers?company=zimmerin01&loginFlowRequired=true&career_os=job_listing&career_ns=job_application&career_job_req_id=11762&_s.crb=25fvCmbM9Lad2rza%252fxJs%252fNp1mhY1RYUVrVIMdAiM2RI%253d",
+      "source": "phenom_widgets",
+      "visa_sponsorship": "not_mentioned",
+      "visa_snippet": null,
+      "new_since_last_check": false,
+      "first_seen_at": "2026-08-05T00:31:30.010623+00:00"
     },
     {
       "company": "Danaher Corporation",
@@ -10335,16 +10349,30 @@
     },
     {
       "company": "Eurofins Scientific",
+      "title": "Operations Administrator",
+      "location": "Cork, CO, ie",
+      "posted_text": "Posted Today",
+      "posted_days_ago": 0,
+      "employment_type": "Unspecified",
+      "url": "https://jobs.smartrecruiters.com/eurofins/744000141895374",
+      "source": "smartrecruiters_api",
+      "visa_sponsorship": "not_mentioned",
+      "visa_snippet": null,
+      "new_since_last_check": true,
+      "first_seen_at": "2026-08-06T11:38:48.029753+00:00"
+    },
+    {
+      "company": "Eurofins Scientific",
       "title": "Head of Product Management LIMS / LIS Clinical Diagnostics",
       "location": "Dublin, County Dublin, ie",
-      "posted_text": "Posted 5 days ago",
-      "posted_days_ago": 5,
+      "posted_text": "Posted 6 days ago",
+      "posted_days_ago": 6,
       "employment_type": "Unspecified",
       "url": "https://jobs.smartrecruiters.com/eurofins/744000140882779",
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -10358,7 +10386,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -10372,35 +10400,35 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
       "company": "Eurofins Scientific",
       "title": "Medical Scientist / Biomedical Scientist Histology",
       "location": "Dublin 18, ie",
-      "posted_text": "Posted 7 days ago",
-      "posted_days_ago": 7,
+      "posted_text": "Posted 8 days ago",
+      "posted_days_ago": 8,
       "employment_type": "Unspecified",
       "url": "https://jobs.smartrecruiters.com/eurofins/744000140437550",
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
       "company": "Eurofins Scientific",
       "title": "Clerical Officer Histology (Fixed term)",
       "location": "Dublin 18, ie",
-      "posted_text": "Posted 7 days ago",
-      "posted_days_ago": 7,
+      "posted_text": "Posted 8 days ago",
+      "posted_days_ago": 8,
       "employment_type": "Unspecified",
       "url": "https://jobs.smartrecruiters.com/eurofins/744000140437264",
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -10414,7 +10442,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -10428,7 +10456,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -10442,7 +10470,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "no_sponsorship",
       "visa_snippet": "Unfortunately, we are unable to offer visa sponsorship for this role. This is a full time, per",
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -10456,7 +10484,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "no_sponsorship",
       "visa_snippet": "Unfortunately, we are unable to offer visa sponsorship for this role. This is a full time, per",
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -10470,7 +10498,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -10526,7 +10554,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -10925,8 +10953,8 @@
       "company": "Version 1",
       "title": "Head of Procurement",
       "location": "Dublin, County Dublin, ie",
-      "posted_text": "Posted 7 days ago",
-      "posted_days_ago": 7,
+      "posted_text": "Posted 8 days ago",
+      "posted_days_ago": 8,
       "employment_type": "Unspecified",
       "url": "https://jobs.smartrecruiters.com/version1/744000140440441",
       "source": "smartrecruiters_api",
@@ -11457,8 +11485,8 @@
       "company": "Version 1",
       "title": "Full Stack Java Developer",
       "location": "London, Birmingham, Manchester, Newcastle upon Tyne, Edinburgh, Belfast, England, gb",
-      "posted_text": "Posted 26 days ago",
-      "posted_days_ago": 26,
+      "posted_text": "Posted 27 days ago",
+      "posted_days_ago": 27,
       "employment_type": "Unspecified",
       "url": "https://jobs.smartrecruiters.com/version1/744000137108259",
       "source": "smartrecruiters_api",
@@ -11674,7 +11702,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -11688,7 +11716,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -11702,21 +11730,21 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
       "company": "Version 1",
       "title": "Senior Oracle HCM Cloud (Absence & OTL) Consultant",
       "location": "London, Birmingham, Manchester, Newcastle upon Tyne, Edinburgh, Belfast, gb",
-      "posted_text": "Posted 42 days ago",
-      "posted_days_ago": 42,
+      "posted_text": "Posted 43 days ago",
+      "posted_days_ago": 43,
       "employment_type": "Unspecified",
       "url": "https://jobs.smartrecruiters.com/version1/744000133924370",
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -11730,7 +11758,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -11744,7 +11772,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -11758,7 +11786,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -11772,7 +11800,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -11786,7 +11814,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -11800,7 +11828,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -11814,7 +11842,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -11828,7 +11856,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -11842,7 +11870,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -11856,7 +11884,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -11870,7 +11898,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -11884,7 +11912,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -11898,7 +11926,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -11912,7 +11940,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -11926,7 +11954,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -11940,7 +11968,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -11954,7 +11982,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -11968,7 +11996,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -11982,7 +12010,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "sponsors",
       "visa_snippet": "objectives.&#xa0; The account director will sponsor Quarterly Business Reviews. Developing",
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -11996,7 +12024,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -12010,7 +12038,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -12024,7 +12052,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -12038,7 +12066,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -12052,7 +12080,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -12066,7 +12094,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -12080,7 +12108,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -12094,7 +12122,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -12108,7 +12136,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -12122,7 +12150,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -12136,7 +12164,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -12150,7 +12178,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -12164,7 +12192,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -12178,7 +12206,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -12192,7 +12220,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -12206,7 +12234,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -12220,7 +12248,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -12234,15 +12262,15 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
       "company": "Dillon Eustace",
       "title": "Listings and Fund Registration Advisor",
       "location": "Dublin",
-      "posted_text": "Posted 44 days ago",
-      "posted_days_ago": 44,
+      "posted_text": "Posted 45 days ago",
+      "posted_days_ago": 45,
       "employment_type": "permanent",
       "url": "https://dilloneustace.jobs.personio.de/job/2681479",
       "source": "personio_xml",
@@ -12379,6 +12407,20 @@
     },
     {
       "company": "Primark / Penneys",
+      "title": "RFID Analyst",
+      "location": "Dublin, ie",
+      "posted_text": "Posted Today",
+      "posted_days_ago": 0,
+      "employment_type": "Unspecified",
+      "url": "https://jobs.smartrecruiters.com/primark/744000141897459",
+      "source": "smartrecruiters_api",
+      "visa_sponsorship": "not_mentioned",
+      "visa_snippet": null,
+      "new_since_last_check": true,
+      "first_seen_at": "2026-08-06T11:38:48.029753+00:00"
+    },
+    {
+      "company": "Primark / Penneys",
       "title": "RETAIL ASSISTANT",
       "location": "Dublin 15, ie",
       "posted_text": "Posted Today",
@@ -12388,7 +12430,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -12570,7 +12612,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -12584,7 +12626,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -12598,7 +12640,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -12612,7 +12654,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -12626,7 +12668,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -12640,7 +12682,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -12654,7 +12696,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -12668,7 +12710,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -12682,7 +12724,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -12696,21 +12738,21 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
       "company": "Primark / Penneys",
       "title": "Data Platform & Engineering Lead",
       "location": "Dublin, ie",
-      "posted_text": "Posted 8 days ago",
-      "posted_days_ago": 8,
+      "posted_text": "Posted 9 days ago",
+      "posted_days_ago": 9,
       "employment_type": "Unspecified",
       "url": "https://jobs.smartrecruiters.com/primark/744000140212299",
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -12724,7 +12766,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -12738,7 +12780,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -12752,7 +12794,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -12766,7 +12808,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -12780,7 +12822,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -12794,7 +12836,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -12808,21 +12850,21 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
       "company": "Primark / Penneys",
       "title": "Procurement Category Specialist – Professional Services & Marketing",
       "location": "Dublin, ie",
-      "posted_text": "Posted 16 days ago",
-      "posted_days_ago": 16,
+      "posted_text": "Posted 17 days ago",
+      "posted_days_ago": 17,
       "employment_type": "Unspecified",
       "url": "https://jobs.smartrecruiters.com/primark/744000138616526",
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -12836,7 +12878,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -12850,21 +12892,21 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
       "company": "Primark / Penneys",
       "title": "External Communications Manager (12-month FTC)",
       "location": "Dublin, ie",
-      "posted_text": "Posted 19 days ago",
-      "posted_days_ago": 19,
+      "posted_text": "Posted 20 days ago",
+      "posted_days_ago": 20,
       "employment_type": "Unspecified",
       "url": "https://jobs.smartrecruiters.com/primark/744000138305504",
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -12878,7 +12920,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -12892,7 +12934,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -12906,7 +12948,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -12920,7 +12962,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -12934,7 +12976,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -12948,7 +12990,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -12962,7 +13004,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -12976,7 +13018,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -12990,7 +13032,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -13004,7 +13046,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -13018,7 +13060,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -13032,7 +13074,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -13046,7 +13088,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -13060,7 +13102,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -13074,7 +13116,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -13088,7 +13130,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -13102,7 +13144,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -13116,7 +13158,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -13130,7 +13172,7 @@
       "source": "smartrecruiters_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -13144,7 +13186,7 @@
       "source": "phenom_widgets",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
-      "new_since_last_check": true,
+      "new_since_last_check": false,
       "first_seen_at": "2026-08-06T11:08:12.309249+00:00"
     },
     {
@@ -13249,8 +13291,8 @@
       "company": "Wayflyer",
       "title": "Finance Counsel",
       "location": "Dublin",
-      "posted_text": "Posted 41 days ago",
-      "posted_days_ago": 41,
+      "posted_text": "Posted 42 days ago",
+      "posted_days_ago": 42,
       "employment_type": "FullTime",
       "url": "https://jobs.ashbyhq.com/wayflyer/61e74f9e-2f3f-4f9a-b583-d5bcef62b175/application",
       "source": "ashby_api",
@@ -13357,8 +13399,8 @@
     },
     {
       "company": "Slack",
-      "url": "https://slack.com/careers",
-      "platform": "custom"
+      "url": "https://salesforce.wd12.myworkdayjobs.com/Slack",
+      "platform": "workday (no Ireland postings found right now)"
     },
     {
       "company": "DocuSign",
@@ -13819,11 +13861,6 @@
       "company": "Teleflex",
       "url": "https://teleflex.wd1.myworkdayjobs.com/TeleflexCareers",
       "platform": "workday (fetch error, verify manually)"
-    },
-    {
-      "company": "Zimmer Biomet",
-      "url": "https://zimmerbiomet.wd1.myworkdayjobs.com/Zimmer_Biomet_Careers",
-      "platform": "phenom (no Ireland postings found right now)"
     },
     {
       "company": "Viatris",
@@ -14990,92 +15027,84 @@
     "Salesforce": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 2031,
-      "total": 2031,
-      "label": "No sponsorship info found (2031 postings scanned)",
+      "not_mentioned": 2066,
+      "total": 2066,
+      "label": "No sponsorship info found (2066 postings scanned)",
       "category": "no_data"
     },
     "Workday": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 1054,
-      "total": 1054,
-      "label": "No sponsorship info found (1054 postings scanned)",
+      "not_mentioned": 1076,
+      "total": 1076,
+      "label": "No sponsorship info found (1076 postings scanned)",
       "category": "no_data"
     },
     "Autodesk": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 412,
-      "total": 412,
-      "label": "No sponsorship info found (412 postings scanned)",
+      "not_mentioned": 423,
+      "total": 423,
+      "label": "No sponsorship info found (423 postings scanned)",
       "category": "no_data"
     },
     "Analog Devices": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 935,
-      "total": 935,
-      "label": "No sponsorship info found (935 postings scanned)",
+      "not_mentioned": 961,
+      "total": 961,
+      "label": "No sponsorship info found (961 postings scanned)",
       "category": "no_data"
     },
     "Gilead Sciences": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 386,
-      "total": 386,
-      "label": "No sponsorship info found (386 postings scanned)",
+      "not_mentioned": 397,
+      "total": 397,
+      "label": "No sponsorship info found (397 postings scanned)",
       "category": "no_data"
     },
     "Stripe": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 3124,
-      "total": 3124,
-      "label": "No sponsorship info found (3124 postings scanned)",
+      "not_mentioned": 3179,
+      "total": 3179,
+      "label": "No sponsorship info found (3179 postings scanned)",
       "category": "no_data"
     },
     "Intercom": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 2542,
-      "total": 2542,
-      "label": "No sponsorship info found (2542 postings scanned)",
+      "not_mentioned": 2587,
+      "total": 2587,
+      "label": "No sponsorship info found (2587 postings scanned)",
       "category": "no_data"
     },
     "Toast": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 1258,
-      "total": 1258,
-      "label": "No sponsorship info found (1258 postings scanned)",
+      "not_mentioned": 1280,
+      "total": 1280,
+      "label": "No sponsorship info found (1280 postings scanned)",
       "category": "no_data"
     },
     "MongoDB": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 4017,
-      "total": 4017,
-      "label": "No sponsorship info found (4017 postings scanned)",
+      "not_mentioned": 4089,
+      "total": 4089,
+      "label": "No sponsorship info found (4089 postings scanned)",
       "category": "no_data"
     },
     "Qualtrics": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 110,
-      "total": 110,
-      "label": "No sponsorship info found (110 postings scanned)",
+      "not_mentioned": 112,
+      "total": 112,
+      "label": "No sponsorship info found (112 postings scanned)",
       "category": "no_data"
     },
     "Twilio": {
-      "sponsors": 0,
-      "no_sponsorship": 0,
-      "not_mentioned": 663,
-      "total": 663,
-      "label": "No sponsorship info found (663 postings scanned)",
-      "category": "no_data"
-    },
-    "Pinterest": {
       "sponsors": 0,
       "no_sponsorship": 0,
       "not_mentioned": 675,
@@ -15083,79 +15112,79 @@
       "label": "No sponsorship info found (675 postings scanned)",
       "category": "no_data"
     },
+    "Pinterest": {
+      "sponsors": 0,
+      "no_sponsorship": 0,
+      "not_mentioned": 690,
+      "total": 690,
+      "label": "No sponsorship info found (690 postings scanned)",
+      "category": "no_data"
+    },
     "Reddit": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 162,
-      "total": 162,
-      "label": "No sponsorship info found (162 postings scanned)",
+      "not_mentioned": 165,
+      "total": 165,
+      "label": "No sponsorship info found (165 postings scanned)",
       "category": "no_data"
     },
     "Asana": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 432,
-      "total": 432,
-      "label": "No sponsorship info found (432 postings scanned)",
+      "not_mentioned": 440,
+      "total": 440,
+      "label": "No sponsorship info found (440 postings scanned)",
       "category": "no_data"
     },
     "Figma": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 54,
-      "total": 54,
-      "label": "No sponsorship info found (54 postings scanned)",
+      "not_mentioned": 55,
+      "total": 55,
+      "label": "No sponsorship info found (55 postings scanned)",
       "category": "no_data"
     },
     "Dropbox": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 55,
-      "total": 55,
-      "label": "No sponsorship info found (55 postings scanned)",
+      "not_mentioned": 56,
+      "total": 56,
+      "label": "No sponsorship info found (56 postings scanned)",
       "category": "no_data"
     },
     "Datadog": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 1276,
-      "total": 1276,
-      "label": "No sponsorship info found (1276 postings scanned)",
+      "not_mentioned": 1300,
+      "total": 1300,
+      "label": "No sponsorship info found (1300 postings scanned)",
       "category": "no_data"
     },
     "Zscaler": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 55,
-      "total": 55,
-      "label": "No sponsorship info found (55 postings scanned)",
+      "not_mentioned": 56,
+      "total": 56,
+      "label": "No sponsorship info found (56 postings scanned)",
       "category": "no_data"
     },
     "Okta": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 571,
-      "total": 571,
-      "label": "No sponsorship info found (571 postings scanned)",
+      "not_mentioned": 580,
+      "total": 580,
+      "label": "No sponsorship info found (580 postings scanned)",
       "category": "no_data"
     },
     "Pure Storage": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 164,
-      "total": 164,
-      "label": "No sponsorship info found (164 postings scanned)",
+      "not_mentioned": 166,
+      "total": 166,
+      "label": "No sponsorship info found (166 postings scanned)",
       "category": "no_data"
     },
     "JD Sports Ireland": {
-      "sponsors": 0,
-      "no_sponsorship": 0,
-      "not_mentioned": 54,
-      "total": 54,
-      "label": "No sponsorship info found (54 postings scanned)",
-      "category": "no_data"
-    },
-    "Mercury Engineering": {
       "sponsors": 0,
       "no_sponsorship": 0,
       "not_mentioned": 55,
@@ -15163,12 +15192,20 @@
       "label": "No sponsorship info found (55 postings scanned)",
       "category": "no_data"
     },
+    "Mercury Engineering": {
+      "sponsors": 0,
+      "no_sponsorship": 0,
+      "not_mentioned": 56,
+      "total": 56,
+      "label": "No sponsorship info found (56 postings scanned)",
+      "category": "no_data"
+    },
     "Pfizer": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 108,
-      "total": 108,
-      "label": "No sponsorship info found (108 postings scanned)",
+      "not_mentioned": 110,
+      "total": 110,
+      "label": "No sponsorship info found (110 postings scanned)",
       "category": "no_data"
     },
     "VMware (Broadcom)": {
@@ -15182,9 +15219,9 @@
     "Cadence Design Systems": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 480,
-      "total": 480,
-      "label": "No sponsorship info found (480 postings scanned)",
+      "not_mentioned": 489,
+      "total": 489,
+      "label": "No sponsorship info found (489 postings scanned)",
       "category": "no_data"
     },
     "Broadcom": {
@@ -15198,148 +15235,108 @@
     "MSD (Merck Sharp & Dohme)": {
       "sponsors": 0,
       "no_sponsorship": 6,
-      "not_mentioned": 3728,
-      "total": 3734,
-      "label": "Rules out sponsorship in 6 of 3734 postings",
+      "not_mentioned": 3729,
+      "total": 3735,
+      "label": "Rules out sponsorship in 6 of 3735 postings",
       "category": "explicit_negative"
     },
     "State Street": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 1661,
-      "total": 1661,
-      "label": "No sponsorship info found (1661 postings scanned)",
+      "not_mentioned": 1696,
+      "total": 1696,
+      "label": "No sponsorship info found (1696 postings scanned)",
       "category": "no_data"
     },
     "Mercer": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 1048,
-      "total": 1048,
-      "label": "No sponsorship info found (1048 postings scanned)",
+      "not_mentioned": 1068,
+      "total": 1068,
+      "label": "No sponsorship info found (1068 postings scanned)",
       "category": "no_data"
     },
     "Marsh McLennan": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 1048,
-      "total": 1048,
-      "label": "No sponsorship info found (1048 postings scanned)",
+      "not_mentioned": 1068,
+      "total": 1068,
+      "label": "No sponsorship info found (1068 postings scanned)",
       "category": "no_data"
     },
     "PwC Ireland": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 4808,
-      "total": 4808,
-      "label": "No sponsorship info found (4808 postings scanned)",
+      "not_mentioned": 4856,
+      "total": 4856,
+      "label": "No sponsorship info found (4856 postings scanned)",
       "category": "no_data"
     },
     "Arista Networks": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 435,
-      "total": 435,
-      "label": "No sponsorship info found (435 postings scanned)",
+      "not_mentioned": 450,
+      "total": 450,
+      "label": "No sponsorship info found (450 postings scanned)",
       "category": "no_data"
     },
     "ClickUp": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 217,
-      "total": 217,
-      "label": "No sponsorship info found (217 postings scanned)",
+      "not_mentioned": 222,
+      "total": 222,
+      "label": "No sponsorship info found (222 postings scanned)",
       "category": "no_data"
     },
     "Notion": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 349,
-      "total": 349,
-      "label": "No sponsorship info found (349 postings scanned)",
+      "not_mentioned": 362,
+      "total": 362,
+      "label": "No sponsorship info found (362 postings scanned)",
       "category": "no_data"
     },
     "Snowflake": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 366,
-      "total": 366,
-      "label": "No sponsorship info found (366 postings scanned)",
+      "not_mentioned": 374,
+      "total": 374,
+      "label": "No sponsorship info found (374 postings scanned)",
       "category": "no_data"
     },
     "AbbVie": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 63,
-      "total": 63,
-      "label": "No sponsorship info found (63 postings scanned)",
+      "not_mentioned": 78,
+      "total": 78,
+      "label": "No sponsorship info found (78 postings scanned)",
       "category": "no_data"
     },
     "Version 1": {
-      "sponsors": 1,
+      "sponsors": 2,
       "no_sponsorship": 0,
-      "not_mentioned": 3512,
-      "total": 3513,
-      "label": "Rarely mentions sponsorship (1 of 3513)",
+      "not_mentioned": 3634,
+      "total": 3636,
+      "label": "Rarely mentions sponsorship (2 of 3636)",
       "category": "rare_positive"
     },
     "Harvey Nash Ireland": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 334,
-      "total": 334,
-      "label": "No sponsorship info found (334 postings scanned)",
+      "not_mentioned": 342,
+      "total": 342,
+      "label": "No sponsorship info found (342 postings scanned)",
       "category": "no_data"
     },
     "Primark / Penneys": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 305,
-      "total": 305,
-      "label": "No sponsorship info found (305 postings scanned)",
+      "not_mentioned": 360,
+      "total": 360,
+      "label": "No sponsorship info found (360 postings scanned)",
       "category": "no_data"
     },
     "Wayflyer": {
-      "sponsors": 0,
-      "no_sponsorship": 0,
-      "not_mentioned": 276,
-      "total": 276,
-      "label": "No sponsorship info found (276 postings scanned)",
-      "category": "no_data"
-    },
-    "Dillon Eustace": {
-      "sponsors": 0,
-      "no_sponsorship": 0,
-      "not_mentioned": 82,
-      "total": 82,
-      "label": "No sponsorship info found (82 postings scanned)",
-      "category": "no_data"
-    },
-    "Ericsson": {
-      "sponsors": 0,
-      "no_sponsorship": 0,
-      "not_mentioned": 39,
-      "total": 39,
-      "label": "No sponsorship info found (39 postings scanned)",
-      "category": "no_data"
-    },
-    "PTSB (Permanent TSB)": {
-      "sponsors": 0,
-      "no_sponsorship": 0,
-      "not_mentioned": 117,
-      "total": 117,
-      "label": "No sponsorship info found (117 postings scanned)",
-      "category": "no_data"
-    },
-    "Eurofins Scientific": {
-      "sponsors": 0,
-      "no_sponsorship": 2,
-      "not_mentioned": 9,
-      "total": 11,
-      "label": "Rules out sponsorship in 2 of 11 postings",
-      "category": "explicit_negative"
-    },
-    "Genesys": {
       "sponsors": 0,
       "no_sponsorship": 0,
       "not_mentioned": 282,
@@ -15347,39 +15344,55 @@
       "label": "No sponsorship info found (282 postings scanned)",
       "category": "no_data"
     },
+    "Dillon Eustace": {
+      "sponsors": 0,
+      "no_sponsorship": 0,
+      "not_mentioned": 84,
+      "total": 84,
+      "label": "No sponsorship info found (84 postings scanned)",
+      "category": "no_data"
+    },
+    "Ericsson": {
+      "sponsors": 0,
+      "no_sponsorship": 0,
+      "not_mentioned": 40,
+      "total": 40,
+      "label": "No sponsorship info found (40 postings scanned)",
+      "category": "no_data"
+    },
+    "PTSB (Permanent TSB)": {
+      "sponsors": 0,
+      "no_sponsorship": 0,
+      "not_mentioned": 120,
+      "total": 120,
+      "label": "No sponsorship info found (120 postings scanned)",
+      "category": "no_data"
+    },
+    "Eurofins Scientific": {
+      "sponsors": 0,
+      "no_sponsorship": 4,
+      "not_mentioned": 18,
+      "total": 22,
+      "label": "Rules out sponsorship in 4 of 22 postings",
+      "category": "explicit_negative"
+    },
+    "Genesys": {
+      "sponsors": 0,
+      "no_sponsorship": 0,
+      "not_mentioned": 291,
+      "total": 291,
+      "label": "No sponsorship info found (291 postings scanned)",
+      "category": "no_data"
+    },
     "Mastercard": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 1186,
-      "total": 1186,
-      "label": "No sponsorship info found (1186 postings scanned)",
+      "not_mentioned": 1222,
+      "total": 1222,
+      "label": "No sponsorship info found (1222 postings scanned)",
       "category": "no_data"
     },
     "PayPal": {
-      "sponsors": 0,
-      "no_sponsorship": 0,
-      "not_mentioned": 135,
-      "total": 135,
-      "label": "No sponsorship info found (135 postings scanned)",
-      "category": "no_data"
-    },
-    "Adobe": {
-      "sponsors": 0,
-      "no_sponsorship": 0,
-      "not_mentioned": 45,
-      "total": 45,
-      "label": "No sponsorship info found (45 postings scanned)",
-      "category": "no_data"
-    },
-    "Sanofi": {
-      "sponsors": 0,
-      "no_sponsorship": 0,
-      "not_mentioned": 184,
-      "total": 184,
-      "label": "No sponsorship info found (184 postings scanned)",
-      "category": "no_data"
-    },
-    "Elavon": {
       "sponsors": 0,
       "no_sponsorship": 0,
       "not_mentioned": 138,
@@ -15387,20 +15400,44 @@
       "label": "No sponsorship info found (138 postings scanned)",
       "category": "no_data"
     },
+    "Adobe": {
+      "sponsors": 0,
+      "no_sponsorship": 0,
+      "not_mentioned": 46,
+      "total": 46,
+      "label": "No sponsorship info found (46 postings scanned)",
+      "category": "no_data"
+    },
+    "Sanofi": {
+      "sponsors": 0,
+      "no_sponsorship": 0,
+      "not_mentioned": 189,
+      "total": 189,
+      "label": "No sponsorship info found (189 postings scanned)",
+      "category": "no_data"
+    },
+    "Elavon": {
+      "sponsors": 0,
+      "no_sponsorship": 0,
+      "not_mentioned": 142,
+      "total": 142,
+      "label": "No sponsorship info found (142 postings scanned)",
+      "category": "no_data"
+    },
     "Deloitte Ireland": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 1106,
-      "total": 1106,
-      "label": "No sponsorship info found (1106 postings scanned)",
+      "not_mentioned": 1138,
+      "total": 1138,
+      "label": "No sponsorship info found (1138 postings scanned)",
       "category": "no_data"
     },
     "Accenture": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 1016,
-      "total": 1016,
-      "label": "No sponsorship info found (1016 postings scanned)",
+      "not_mentioned": 1048,
+      "total": 1048,
+      "label": "No sponsorship info found (1048 postings scanned)",
       "category": "no_data"
     },
     "Rockwell Automation": {
@@ -15446,9 +15483,9 @@
     "Zimmer Biomet": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 21,
-      "total": 21,
-      "label": "No sponsorship info found (21 postings scanned)",
+      "not_mentioned": 22,
+      "total": 22,
+      "label": "No sponsorship info found (22 postings scanned)",
       "category": "no_data"
     },
     "Labcorp": {
@@ -15462,17 +15499,17 @@
     "Danaher Corporation": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 16,
-      "total": 16,
-      "label": "No sponsorship info found (16 postings scanned)",
+      "not_mentioned": 17,
+      "total": 17,
+      "label": "No sponsorship info found (17 postings scanned)",
       "category": "no_data"
     },
     "Kerry Group": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 26,
-      "total": 26,
-      "label": "No sponsorship info found (26 postings scanned)",
+      "not_mentioned": 28,
+      "total": 28,
+      "label": "No sponsorship info found (28 postings scanned)",
       "category": "no_data"
     },
     "Kuehne+Nagel Ireland": {
@@ -15486,25 +15523,25 @@
     "HubSpot": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 410,
-      "total": 410,
-      "label": "No sponsorship info found (410 postings scanned)",
+      "not_mentioned": 451,
+      "total": 451,
+      "label": "No sponsorship info found (451 postings scanned)",
       "category": "no_data"
     },
     "Cisco": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 26,
-      "total": 26,
-      "label": "No sponsorship info found (26 postings scanned)",
+      "not_mentioned": 28,
+      "total": 28,
+      "label": "No sponsorship info found (28 postings scanned)",
       "category": "no_data"
     },
     "ServiceNow": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 4,
-      "total": 4,
-      "label": "Not enough data yet (4 scanned)",
+      "not_mentioned": 7,
+      "total": 7,
+      "label": "No sponsorship info found (7 postings scanned)",
       "category": "no_data"
     },
     "DHL Ireland": {
@@ -18443,27 +18480,27 @@
     }
   },
   "errors": [
-    "Eaton: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"7A330DMSHEHU86\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
-    "Bausch + Lomb: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"BF2F5CMSHEIZ0C\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
-    "Takeda: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"19901DMSHEJC5O\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
-    "Edwards Lifesciences: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"0DAD38MSHEK3F3\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
-    "Teleflex: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"03973DMSHEKEEY\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
-    "Zimmer Biomet: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"1D54ECMSHEKOT4\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
-    "Viatris: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"1DFC11MSHEKZ3C\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
-    "Teva Pharmaceuticals: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"63A858MSHEL9B4\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
-    "Jazz Pharmaceuticals: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"0CBEC8MSHELL13\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
-    "ResMed: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"1546D1MSHELVHF\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
-    "Becton Dickinson (BD): request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"EBBF97MSHEM5SX\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
-    "Northern Trust: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"2E58ABMSHEOW8G\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
-    "DXC Technology: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"63A858MSHEQZ9V\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
-    "Aon: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"A96573MSHERAVM\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
-    "Willis Towers Watson (WTW): request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"2D6DA0MSHERLZ3\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})"
+    "Eaton: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"9F5343MSHFL7SH\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
+    "Bausch + Lomb: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"C06F14MSHFMA4U\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
+    "Takeda: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"DB7CC1MSHFMNJN\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
+    "Edwards Lifesciences: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"C06F14MSHFNI9S\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
+    "Teleflex: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"2D6DA0MSHFNSS8\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
+    "Zimmer Biomet: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"1B6E8BMSHFO37O\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
+    "Viatris: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"DFB531MSHFODNT\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
+    "Teva Pharmaceuticals: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"721BAAMSHFOOC3\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
+    "Jazz Pharmaceuticals: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"89CDA1MSHFP0K9\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
+    "ResMed: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"6627ADMSHFPB74\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
+    "Becton Dickinson (BD): request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"AD143FMSHFPLNU\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
+    "Northern Trust: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"2E58ABMSHFS61B\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
+    "DXC Technology: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"B4449DMSHFUFVA\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
+    "Aon: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"1B6E8BMSHFUQH7\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
+    "Willis Towers Watson (WTW): request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"D92469MSHFV10K\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})"
   ],
   "stats": {
     "total_companies": 397,
-    "automated_companies": 55,
-    "manual_companies": 342,
-    "live_jobs_found": 948,
-    "new_since_last_check": 117
+    "automated_companies": 56,
+    "manual_companies": 341,
+    "live_jobs_found": 951,
+    "new_since_last_check": 4
   }
 }
