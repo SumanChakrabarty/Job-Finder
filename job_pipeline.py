@@ -1030,41 +1030,34 @@ def extract_json_array_after(text, marker):
     return None
 
 
+EF_GROUP_ID_RE = re.compile(r'_EF_GROUP_ID[\'"]?\]?\s*[=:]\s*[\'"]([^\'"]+)[\'"]')
+
+
 def try_eightfold(slug, session):
-    """Tries domain=slug.com as the most common real-world case (e.g. slug
-    'paypal' -> domain 'paypal.com'). Companies with a different actual
-    domain than their name-derived slug won't match — a known limitation
-    of guessing rather than having a real API to look this up from.
-
-    Two-pronged: first try the guessed clean API endpoint (cheap, one
-    request); if that returns nothing, fall back to fetching the actual
-    careers page and extracting the job data embedded directly in its
-    HTML — confirmed this is where the real data lives for at least one
-    verified tenant (Eaton), suggesting the clean API guess doesn't work
-    universally."""
-    domain_guess = f"{slug}.com"
-    try:
-        resp = session.get(
-            EIGHTFOLD_SMARTAPPLY_URL.format(slug=slug, domain=domain_guess),
-            headers=HEADERS, timeout=10)
-        if resp.status_code == 200:
-            data = resp.json()
-            positions = data.get("positions")
-            if positions:
-                return positions
-    except Exception:
-        pass
-
-    # Fallback: fetch the real careers page and pull embedded job data
-    # directly out of the page's own script content.
+    """The correct, documented Eightfold pattern (confirmed via a public
+    open-source ATS-scraping reference, not guessed): fetch the real
+    careers page, pull the company's internal '_EF_GROUP_ID' token out of
+    its embedded JS, then call the actual search API with that ID. My
+    earlier attempts guessed a plausible-looking but wrong endpoint and a
+    wrong ID value (the domain name instead of this internal token) —
+    that's why real, confirmed Eightfold tenants (Eaton) weren't matching
+    despite genuinely being on this platform."""
     try:
         page = session.get(f"https://{slug}.eightfold.ai/careers", headers=HEADERS, timeout=10)
         if page.status_code != 200:
             return None
-        m = extract_json_array_after(page.text, '"positions"')
+        m = EF_GROUP_ID_RE.search(page.text)
         if not m:
             return None
-        positions = json.loads(m)
+        group_id = m.group(1)
+        resp = session.get(
+            f"https://{slug}.eightfold.ai/api/pcsx/search",
+            params={"domain": group_id, "query": "", "location": "", "start": 0},
+            headers=HEADERS, timeout=10)
+        if resp.status_code != 200:
+            return None
+        data = resp.json()
+        positions = data.get("positions") or data.get("results")
         return positions if positions else None
     except Exception:
         return None
@@ -1211,7 +1204,7 @@ def normalize_phenom_job(company_name, domain, job):
     }
 
 
-PROBE_VERSION = 9  # bump whenever a new ATS platform is added to the probe list, or slug guessing changes
+PROBE_VERSION = 10  # bump whenever a new ATS platform is added to the probe list, or slug guessing changes
 
 
 def probe_ats_for_manual_companies(manual_companies, session, cache_path, fetch_descriptions=True):
