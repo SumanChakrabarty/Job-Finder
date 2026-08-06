@@ -455,6 +455,10 @@
     "platform": "phenom",
     "slug": "jobs.thermofisher.com|TFSCGLOBAL"
   },
+  "HubSpot": {
+    "platform": "greenhouse",
+    "slug": "hubspotjobs"
+  },
   "Google": {
     "platform": "none",
     "slug": null
@@ -466,10 +470,6 @@
   "Apple": {
     "platform": "none",
     "slug": null
-  },
-  "HubSpot": {
-    "platform": "greenhouse",
-    "slug": "hubspotjobs"
   },
   "TikTok": {
     "platform": "none",
@@ -1515,5 +1515,5 @@
     "platform": "none",
     "slug": null
   },
-  "__probe_version__": 9
+  "__probe_version__": 10
 }
