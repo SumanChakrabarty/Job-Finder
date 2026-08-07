@@ -46,6 +46,7 @@ import os
 import re
 import sys
 import time
+import uuid
 import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
 
@@ -98,6 +99,18 @@ HEADERS = {
     "Accept": "application/json",
     "User-Agent": ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
                     "(KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"),
+    # Modern Chrome sends these "client hint" and fetch-metadata headers on
+    # every real request automatically — a bare requests-style header dict
+    # never includes them. Some stricter bot-detection configs specifically
+    # check for their presence (not just User-Agent), which curl_cffi's TLS
+    # impersonation alone doesn't add unless set explicitly. Genuinely
+    # untested angle, not a repeat of prior header attempts.
+    "sec-ch-ua": '"Chromium";v="125", "Not.A/Brand";v="24", "Google Chrome";v="125"',
+    "sec-ch-ua-mobile": "?0",
+    "sec-ch-ua-platform": '"Windows"',
+    "Sec-Fetch-Dest": "empty",
+    "Sec-Fetch-Mode": "cors",
+    "Sec-Fetch-Site": "same-origin",
 }
 
 
@@ -119,6 +132,7 @@ def workday_headers(tenant, wd_shard, site):
         **HEADERS,
         "Referer": site_base,
         "Origin": f"https://{tenant}.{wd_shard}.myworkdayjobs.com",
+        "X-Requested-With": "XMLHttpRequest",
     }
 
 
@@ -335,8 +349,23 @@ def post_workday_variants(session, api_base, headers, applied_facets, limit, off
         {"appliedFacets": applied_facets, "limit": limit, "offset": offset},
         {"searchText": search_text, "limit": limit, "offset": offset, "appliedFacets": applied_facets},
         {"appliedFacets": applied_facets, "limit": limit, "offset": offset, "searchText": search_text, "clientRequestID": ""},
+        # Genuinely new attempt: a real UUID, not an empty string — real
+        # Workday frontend JS always generates one for this field.
+        {"appliedFacets": applied_facets, "limit": limit, "offset": offset, "searchText": search_text,
+         "clientRequestID": str(uuid.uuid4())},
         {"appliedFacets": {}, "limit": limit, "offset": offset, "searchText": "Ireland"},
     ]
+    # One more low-cost shape: omit empty keys entirely instead of sending
+    # them as {} / "". Low confidence this is the actual fix (Strategy 1
+    # already sends a genuinely non-empty facet and still gets rejected for
+    # the same stuck tenants, which argues against "empty fields" being the
+    # real cause) — but cheap enough to include as one more attempt.
+    clean_variant = {"limit": limit, "offset": offset}
+    if applied_facets:
+        clean_variant["appliedFacets"] = applied_facets
+    if search_text:
+        clean_variant["searchText"] = search_text
+    variants.append(clean_variant)
     last_error = None
     for i, payload in enumerate(variants):
         try:
