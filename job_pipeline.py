@@ -1330,7 +1330,7 @@ def probe_ats_for_manual_companies(manual_companies, session, cache_path, fetch_
             platform, slug = None, None
             if name in KNOWN_PHENOM_DOMAINS:
                 known_domain, known_path = KNOWN_PHENOM_DOMAINS[name]
-                ref_num, jobs_found = try_phenom_domain(known_domain, session, exact_path=known_path)
+                ref_num, jobs_found = try_phenom_domain(known_domain, session, exact_path=known_path, verbose=False)
                 if jobs_found:
                     platform, slug = "phenom", f"{known_domain}|{ref_num}"
             if platform is None:
@@ -1359,10 +1359,16 @@ def probe_ats_for_manual_companies(manual_companies, session, cache_path, fetch_
                     if try_eightfold(candidate, session) is not None:
                         platform, slug = "eightfold", candidate
                         break
-                    phenom_domain, phenom_ref, phenom_jobs = try_phenom(candidate, session)
-                    if phenom_jobs:
-                        platform, slug = "phenom", f"{phenom_domain}|{phenom_ref}"
-                        break
+                    # NOTE: generic Phenom guessing removed from this loop —
+                    # across the entire session it never once succeeded,
+                    # including on a URL confirmed to be genuine Phenom,
+                    # while costing thousands of wasted requests per run
+                    # (a major cause of a 2-hour runtime). The technique
+                    # itself doesn't work via static fetch here, not just
+                    # the slug guessing — not worth running on every
+                    # candidate for every company anymore. Still checked,
+                    # cheaply, via the exact-URL override above for the
+                    # handful of companies verified by hand.
             cache[name] = {"platform": platform or "none", "slug": slug}
             if platform is None:
                 still_manual.append(entry)
