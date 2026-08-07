@@ -1140,15 +1140,15 @@ def normalize_eightfold_job(company_name, slug, job):
 # above — Phenom could change this without notice — but real and working.
 PHENOM_REFNUM_RE = re.compile(r'"refNum"\s*:\s*"([A-Za-z0-9_-]+)"')
 
-# Companies whose real Phenom domain was confirmed by direct research
-# (blind slug-guessing was failing for these — e.g. the bare domain root
-# doesn't return 200, only a specific sub-path does). Checked before the
-# generic candidate-slug loop so these always try the verified address
-# first, instead of depending on a guess that's known not to work.
+# Companies whose EXACT real Phenom page was confirmed by direct research —
+# generic sub-path guessing (/,/en,/search-jobs,/careers) never matched any
+# of these, meaning their real search page lives at a more specific path
+# than any short generic list would guess. Storing the precise confirmed
+# path removes the guessing entirely for these.
 KNOWN_PHENOM_DOMAINS = {
-    "Baxter International": "jobs.baxter.com",
-    "Applied Materials": "jobs.appliedmaterials.com",
-    "Palo Alto Networks": "jobs.paloaltonetworks.com",
+    "Baxter International": ("jobs.baxter.com", "/search-jobs/Ireland"),
+    "Applied Materials": ("jobs.appliedmaterials.com", "/location/ireland-jobs/95/2963597/2"),
+    "Palo Alto Networks": ("jobs.paloaltonetworks.com", "/en/location/dublin-jobs/47263/2963597-7521314-2964574/4"),
 }
 
 
@@ -1175,15 +1175,20 @@ def fetch_phenom_jobs_by_refnum(domain, ref_num, session):
         return []
 
 
-def try_phenom_domain(domain, session, verbose=True):
-    """Tries a specific known Phenom domain — checks the bare root AND a
-    couple of common sub-paths, since some tenants (confirmed: Baxter)
-    don't return anything usable at the bare domain root, only at a
-    specific page like /en or /search-jobs."""
-    for path in ("/", "/en", "/search-jobs", "/careers"):
+def try_phenom_domain(domain, session, verbose=True, exact_path=None):
+    """Tries a specific known Phenom domain — an exact confirmed path first
+    if provided (most reliable), then the bare root and a couple of common
+    sub-paths as a fallback guess. Some tenants (confirmed: Baxter, Applied
+    Materials, Palo Alto Networks) don't return anything usable at any
+    generic path — only their specific real search-results URL works."""
+    paths_to_try = ([exact_path] if exact_path else []) + ["/", "/en", "/search-jobs", "/careers"]
+    for path in paths_to_try:
         try:
             page = session.get(f"https://{domain}{path}", headers=HEADERS, timeout=10)
             if page.status_code != 200:
+                if verbose and path == exact_path:
+                    print(f"      [phenom-diagnostic] {domain}{path}: exact confirmed path "
+                          f"returned HTTP {page.status_code}, not 200")
                 continue
             m = PHENOM_REFNUM_RE.search(page.text)
             if not m:
@@ -1307,8 +1312,8 @@ def probe_ats_for_manual_companies(manual_companies, session, cache_path, fetch_
         else:
             platform, slug = None, None
             if name in KNOWN_PHENOM_DOMAINS:
-                known_domain = KNOWN_PHENOM_DOMAINS[name]
-                ref_num, jobs_found = try_phenom_domain(known_domain, session)
+                known_domain, known_path = KNOWN_PHENOM_DOMAINS[name]
+                ref_num, jobs_found = try_phenom_domain(known_domain, session, exact_path=known_path)
                 if jobs_found:
                     platform, slug = "phenom", f"{known_domain}|{ref_num}"
             if platform is None:
