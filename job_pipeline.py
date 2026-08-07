@@ -1140,6 +1140,17 @@ def normalize_eightfold_job(company_name, slug, job):
 # above — Phenom could change this without notice — but real and working.
 PHENOM_REFNUM_RE = re.compile(r'"refNum"\s*:\s*"([A-Za-z0-9_-]+)"')
 
+# Companies whose real Phenom domain was confirmed by direct research
+# (blind slug-guessing was failing for these — e.g. the bare domain root
+# doesn't return 200, only a specific sub-path does). Checked before the
+# generic candidate-slug loop so these always try the verified address
+# first, instead of depending on a guess that's known not to work.
+KNOWN_PHENOM_DOMAINS = {
+    "Baxter International": "jobs.baxter.com",
+    "Applied Materials": "jobs.appliedmaterials.com",
+    "Palo Alto Networks": "jobs.paloaltonetworks.com",
+}
+
 
 def fetch_phenom_jobs_by_refnum(domain, ref_num, session):
     """Re-fetches using an already-discovered domain+refnum pair (from
@@ -1164,23 +1175,22 @@ def fetch_phenom_jobs_by_refnum(domain, ref_num, session):
         return []
 
 
-def try_phenom(slug, session):
-    """Tries jobs.{slug}.com and careers.{slug}.com — the two most common
-    Phenom domain conventions. Returns (domain, refnum, jobs) or
-    (None, None, None). Diagnostic prints only fire once we've confirmed a
-    real Phenom domain (page loaded successfully) — this avoids spamming
-    the log for the hundreds of wrong-guess slugs that fail immediately,
-    while still showing exactly where it breaks for genuine matches."""
-    for domain in (f"jobs.{slug}.com", f"careers.{slug}.com"):
+def try_phenom_domain(domain, session, verbose=True):
+    """Tries a specific known Phenom domain — checks the bare root AND a
+    couple of common sub-paths, since some tenants (confirmed: Baxter)
+    don't return anything usable at the bare domain root, only at a
+    specific page like /en or /search-jobs."""
+    for path in ("/", "/en", "/search-jobs", "/careers"):
         try:
-            page = session.get(f"https://{domain}/", headers=HEADERS, timeout=10)
+            page = session.get(f"https://{domain}{path}", headers=HEADERS, timeout=10)
             if page.status_code != 200:
                 continue
             m = PHENOM_REFNUM_RE.search(page.text)
             if not m:
-                print(f"      [phenom-diagnostic] {domain}: page loaded (200) but no refNum "
-                      f"pattern found in the page source — may not actually be Phenom, or uses "
-                      f"a different embedding format than expected.")
+                if verbose:
+                    print(f"      [phenom-diagnostic] {domain}{path}: page loaded (200) but no "
+                          f"refNum pattern found — may not actually be Phenom, or uses a "
+                          f"different embedding format than expected.")
                 continue
             ref_num = m.group(1)
             payload = {
@@ -1195,18 +1205,33 @@ def try_phenom(slug, session):
             resp = session.post(f"https://{domain}/widgets", json=payload,
                                  headers={"Content-Type": "application/json"}, timeout=15)
             if resp.status_code != 200:
-                print(f"      [phenom-diagnostic] {domain}: found refNum '{ref_num}' but /widgets "
-                      f"API call failed with HTTP {resp.status_code}")
+                if verbose:
+                    print(f"      [phenom-diagnostic] {domain}{path}: found refNum '{ref_num}' but "
+                          f"/widgets API call failed with HTTP {resp.status_code}")
                 continue
             data = resp.json()
             jobs = (data.get("refineSearch") or {}).get("data", {}).get("jobs", [])
-            if not jobs:
-                print(f"      [phenom-diagnostic] {domain}: /widgets call succeeded (200) but "
-                      f"returned zero jobs — response keys: {list(data.keys())}")
+            if not jobs and verbose:
+                print(f"      [phenom-diagnostic] {domain}{path}: /widgets call succeeded (200) "
+                      f"but returned zero jobs — response keys: {list(data.keys())}")
             if jobs:
-                return domain, ref_num, jobs
+                return ref_num, jobs
         except Exception:
             continue
+    return None, None
+
+
+def try_phenom(slug, session):
+    """Tries jobs.{slug}.com and careers.{slug}.com — the two most common
+    Phenom domain conventions. Returns (domain, refnum, jobs) or
+    (None, None, None). Diagnostic prints only fire once we've confirmed a
+    real Phenom domain (page loaded successfully) — this avoids spamming
+    the log for the hundreds of wrong-guess slugs that fail immediately,
+    while still showing exactly where it breaks for genuine matches."""
+    for domain in (f"jobs.{slug}.com", f"careers.{slug}.com"):
+        ref_num, jobs = try_phenom_domain(domain, session)
+        if jobs:
+            return domain, ref_num, jobs
     return None, None, None
 
 
@@ -1281,35 +1306,41 @@ def probe_ats_for_manual_companies(manual_companies, session, cache_path, fetch_
             continue
         else:
             platform, slug = None, None
-            for candidate in candidate_slugs(name):
-                if try_greenhouse(candidate, session) is not None:
-                    platform, slug = "greenhouse", candidate
-                    break
-                if try_lever(candidate, session) is not None:
-                    platform, slug = "lever", candidate
-                    break
-                if try_smartrecruiters_probe(candidate, session) is not None:
-                    platform, slug = "smartrecruiters", candidate
-                    break
-                if try_ashby(candidate, session) is not None:
-                    platform, slug = "ashby", candidate
-                    break
-                if try_recruitee(candidate, session) is not None:
-                    platform, slug = "recruitee", candidate
-                    break
-                if try_personio(candidate, session) is not None:
-                    platform, slug = "personio", candidate
-                    break
-                if try_pinpoint(candidate, session) is not None:
-                    platform, slug = "pinpoint", candidate
-                    break
-                if try_eightfold(candidate, session) is not None:
-                    platform, slug = "eightfold", candidate
-                    break
-                phenom_domain, phenom_ref, phenom_jobs = try_phenom(candidate, session)
-                if phenom_jobs:
-                    platform, slug = "phenom", f"{phenom_domain}|{phenom_ref}"
-                    break
+            if name in KNOWN_PHENOM_DOMAINS:
+                known_domain = KNOWN_PHENOM_DOMAINS[name]
+                ref_num, jobs_found = try_phenom_domain(known_domain, session)
+                if jobs_found:
+                    platform, slug = "phenom", f"{known_domain}|{ref_num}"
+            if platform is None:
+                for candidate in candidate_slugs(name):
+                    if try_greenhouse(candidate, session) is not None:
+                        platform, slug = "greenhouse", candidate
+                        break
+                    if try_lever(candidate, session) is not None:
+                        platform, slug = "lever", candidate
+                        break
+                    if try_smartrecruiters_probe(candidate, session) is not None:
+                        platform, slug = "smartrecruiters", candidate
+                        break
+                    if try_ashby(candidate, session) is not None:
+                        platform, slug = "ashby", candidate
+                        break
+                    if try_recruitee(candidate, session) is not None:
+                        platform, slug = "recruitee", candidate
+                        break
+                    if try_personio(candidate, session) is not None:
+                        platform, slug = "personio", candidate
+                        break
+                    if try_pinpoint(candidate, session) is not None:
+                        platform, slug = "pinpoint", candidate
+                        break
+                    if try_eightfold(candidate, session) is not None:
+                        platform, slug = "eightfold", candidate
+                        break
+                    phenom_domain, phenom_ref, phenom_jobs = try_phenom(candidate, session)
+                    if phenom_jobs:
+                        platform, slug = "phenom", f"{phenom_domain}|{phenom_ref}"
+                        break
             cache[name] = {"platform": platform or "none", "slug": slug}
             if platform is None:
                 still_manual.append(entry)
