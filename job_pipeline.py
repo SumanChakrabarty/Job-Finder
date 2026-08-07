@@ -1289,7 +1289,7 @@ def normalize_phenom_job(company_name, domain, job):
     }
 
 
-PROBE_VERSION = 10  # bump whenever a new ATS platform is added to the probe list, or slug guessing changes
+PROBE_VERSION = 11  # bump whenever a new ATS platform is added to the probe list, or slug guessing changes
 
 
 def probe_ats_for_manual_companies(manual_companies, session, cache_path, fetch_descriptions=True):
