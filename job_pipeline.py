@@ -647,7 +647,14 @@ def fetch_workday_jobs(company_name, url, session, fetch_descriptions=True,
 
 def candidate_slugs(company_name: str):
     """Guesses a small set of plausible ATS board slugs from a company name.
-    e.g. 'VMware (Broadcom)' -> ['vmware', 'broadcom']; 'HubSpot' -> ['hubspot']"""
+    e.g. 'VMware (Broadcom)' -> ['vmware', 'broadcom']; 'HubSpot' -> ['hubspot']
+
+    Kept deliberately short (4, not 6+) — every extra candidate multiplies
+    cost across all 8 platforms for every one of ~340 manual companies,
+    most of which match nothing at all. Trimmed to the 4 patterns that
+    actually found real companies this session (bare join, hyphenated,
+    'jobs' suffix, first-two-words) and dropped the two that never once
+    produced a real hit (bare first word alone, two-words-hyphenated)."""
     base = re.sub(r"\([^)]*\)", " ", company_name)  # drop "(Broadcom)" etc.
     base = CORP_SUFFIX_RE.sub(" ", base)
     words = re.findall(r"[a-zA-Z0-9]+", base)
@@ -656,12 +663,10 @@ def candidate_slugs(company_name: str):
     slugs = set()
     slugs.add("".join(words).lower())
     slugs.add("-".join(words).lower())
-    slugs.add(words[0].lower())
     slugs.add("".join(words).lower() + "jobs")  # e.g. HubSpot's real board token is 'hubspotjobs', not 'hubspot'
     if len(words) >= 2:
         slugs.add("".join(words[:2]).lower())   # first two words joined, e.g. "johnsonjohnson"
-        slugs.add("-".join(words[:2]).lower())  # first two words hyphenated
-    return list(slugs)[:6]  # keep probing bounded but a bit wider than before
+    return list(slugs)[:4]  # trimmed for runtime — see docstring
 
 
 def try_greenhouse(slug, session):
@@ -1316,6 +1321,7 @@ def probe_ats_for_manual_companies(manual_companies, session, cache_path, fetch_
     still_manual = []
     discovered_jobs = []
     known_platforms = ("greenhouse", "lever", "smartrecruiters", "ashby", "recruitee", "personio", "pinpoint", "eightfold", "phenom")
+    cache_hits_matched, cache_hits_none, freshly_probed = 0, 0, 0
 
     for entry in manual_companies:
         name, url = entry["company"], entry["url"]
@@ -1323,10 +1329,13 @@ def probe_ats_for_manual_companies(manual_companies, session, cache_path, fetch_
 
         if cached and cached.get("platform") in known_platforms:
             platform, slug = cached["platform"], cached["slug"]
+            cache_hits_matched += 1
         elif cached and cached.get("platform") == "none":
             still_manual.append(entry)
+            cache_hits_none += 1
             continue
         else:
+            freshly_probed += 1
             platform, slug = None, None
             if name in KNOWN_PHENOM_DOMAINS:
                 known_domain, known_path = KNOWN_PHENOM_DOMAINS[name]
@@ -1443,6 +1452,14 @@ def probe_ats_for_manual_companies(manual_companies, session, cache_path, fetch_
     cache["__probe_version__"] = PROBE_VERSION
     with open(cache_path, "w", encoding="utf-8") as f:
         json.dump(cache, f, indent=2)
+
+    print(f"  Cache summary: {cache_hits_matched} companies served from cache (confirmed platform), "
+          f"{cache_hits_none} served from cache (confirmed no match), "
+          f"{freshly_probed} freshly probed this run.")
+    if freshly_probed > 50:
+        print(f"  NOTE: {freshly_probed} freshly-probed companies is high — if this number stays "
+              f"high on your NEXT run too (not just this one), the cache isn't persisting between "
+              f"runs and that's the real runtime problem to chase next.")
 
     return discovered_jobs, still_manual
 
