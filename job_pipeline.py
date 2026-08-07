@@ -260,7 +260,16 @@ def normalize_employment_type(raw):
     def word(pattern):
         return re.search(pattern, original) is not None
 
-    if word(r"\bintern(?:ship)?\b"):
+    # Only the full word 'internship' counts — the bare abbreviation
+    # 'intern' turned out to be genuinely ambiguous in practice: besides
+    # colliding with 'international', a real Version 1 posting for a
+    # *Senior* Data Engineer (EUR 65-75k) was tagged just 'Intern', which
+    # almost certainly meant something like 'Internal' (an internal-
+    # transfer flag) rather than actual internship status. Requiring the
+    # unambiguous full word trades a little recall (missing postings that
+    # only ever say bare 'Intern') for no longer mislabeling real
+    # experienced roles as internships.
+    if word(r"\binternship\b"):
         return "Internship"
     if word(r"\bpart[\s-]?time\b"):
         return "Part-time"
