@@ -243,19 +243,36 @@ def normalize_employment_type(raw):
     The dashboard's filter dropdown only matches one of 6 exact strings, so
     passing any of these through unchanged meant the filter matched almost
     nothing — this collapses whatever a platform says into one of those 6
-    canonical values."""
+    canonical values.
+
+    Every check below uses word-boundary regex on the ORIGINAL (space-
+    preserved) string, not a naive substring test on a space-stripped
+    blob — a naive check is exactly what caused a real bug: 'International'
+    was wrongly tagged 'Internship' because it contains 'intern' as a bare
+    substring. The same class of mistake exists for several other words
+    (contemporary/temporary, irregular/regular, impermanent/permanent),
+    so every category gets the same word-boundary treatment, not just the
+    one that happened to get caught."""
     if not raw:
         return "Unspecified"
-    r = re.sub(r"[\s_-]+", "", str(raw)).lower()
-    if "intern" in r:
+    original = str(raw).lower()
+
+    def word(pattern):
+        return re.search(pattern, original) is not None
+
+    if word(r"\bintern(?:ship)?\b"):
         return "Internship"
-    if "parttime" in r:
+    if word(r"\bpart[\s-]?time\b"):
         return "Part-time"
-    if "temporary" in r:
+    if word(r"\btemp(?:orary)?\b"):  # 'temp' alone should count too, not just 'temporary'
         return "Temporary"
-    if "contract" in r or "freelance" in r or "consultant" in r:
+    if word(r"\b(?:contract(?:or)?|freelance)\b"):
+        # NOTE: 'consultant' deliberately excluded — it's commonly a
+        # permanent full-time JOB TITLE at many companies (Accenture,
+        # Deloitte, etc.), not a genuine employment-type signal. Treating
+        # it as Contract would misclassify real full-time consultants.
         return "Contract"
-    if "fulltime" in r or "permanent" in r or "regular" in r:
+    if word(r"\b(?:full[\s-]?time|permanent|regular)\b"):
         return "Full-time"
     return "Unspecified"
 
