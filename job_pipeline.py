@@ -1210,6 +1210,14 @@ KNOWN_PHENOM_DOMAINS = {
     "Palo Alto Networks": ("jobs.paloaltonetworks.com", "/en/location/dublin-jobs/47263/2963597-7521314-2964574/4"),
 }
 
+# Companies confirmed on Workable by direct research. Checked once each,
+# not via the generic per-candidate loop — that loop was removed after
+# real trace evidence showed Workable rate-limits us into uselessness
+# when checking many companies' guessed slugs in sequence.
+KNOWN_WORKABLE_SLUGS = {
+    "Fenergo": "fenergocareers",
+}
+
 
 def fetch_phenom_jobs_by_refnum(domain, ref_num, session):
     """Re-fetches using an already-discovered domain+refnum pair (from
@@ -1475,21 +1483,34 @@ def _extract_html_blocks_for_links(page, href_pattern):
     return blocks
 
 
-def scrape_google_ireland(session, fetch_descriptions=True, max_pages=10):
+def scrape_google_ireland(session, fetch_descriptions=True, max_pages=5):
     """Google's careers search page has no public API and no shared ATS —
     but real evidence (content independently crawled from this exact URL
     pattern, showing actual job requirement text rather than generic
     marketing copy) suggests it may be server-rendered similarly to Apple.
     Confidence here is real but lower than Apple's — untested end-to-end,
     so this fails gracefully (returns nothing, company stays in manual)
-    rather than risking bad data if the page structure doesn't match."""
+    rather than risking bad data if the page structure doesn't match.
+
+    Hard time budget and request cap included deliberately: this was
+    shipped without being able to test end-to-end first, and a prior
+    unbounded loop elsewhere in this project (Phenom) caused a real
+    multi-hour runtime regression when its assumptions turned out wrong.
+    This cannot repeat that — worst case here is now bounded no matter
+    what Google's actual page structure turns out to be."""
     base = "https://www.google.com"
     seen, results = set(), []
+    start_time = time.time()
+    TIME_BUDGET_SECONDS = 45
+    MAX_DETAIL_FETCHES = 25
+    detail_fetches = 0
     for page_no in range(1, max_pages + 1):
+        if time.time() - start_time > TIME_BUDGET_SECONDS:
+            break
         url = base + "/about/careers/applications/jobs/results?" + urllib.parse.urlencode(
             {"hl": "en_US", "location": "Ireland", "page": page_no})
         try:
-            resp = session.get(url, headers={**HEADERS, "Accept": "text/html,application/xhtml+xml"}, timeout=15)
+            resp = session.get(url, headers={**HEADERS, "Accept": "text/html,application/xhtml+xml"}, timeout=8)
             if resp.status_code != 200:
                 break
             page = resp.text
@@ -1498,6 +1519,8 @@ def scrape_google_ireland(session, fetch_descriptions=True, max_pages=10):
         blocks = _extract_html_blocks_for_links(page, r"/about/careers/applications/jobs/results/\d+")
         page_new = 0
         for block in blocks:
+            if time.time() - start_time > TIME_BUDGET_SECONDS:
+                break
             m = re.search(r'href=["\']([^"\']*/about/careers/applications/jobs/results/(\d+)(?:-[^"\']*)?)["\']',
                            block, re.I)
             if not m:
@@ -1515,9 +1538,10 @@ def scrape_google_ireland(session, fetch_descriptions=True, max_pages=10):
             if not is_ireland_location(location):
                 continue
             description, posted_text = "", "Unknown"
-            if fetch_descriptions:
+            if fetch_descriptions and detail_fetches < MAX_DETAIL_FETCHES:
                 try:
-                    d = session.get(href, headers={**HEADERS, "Accept": "text/html,application/xhtml+xml"}, timeout=15)
+                    d = session.get(href, headers={**HEADERS, "Accept": "text/html,application/xhtml+xml"}, timeout=8)
+                    detail_fetches += 1
                     if d.status_code == 200:
                         description = _html_to_text(d.text[:700000])
                 except Exception:
@@ -1628,7 +1652,7 @@ def scrape_jsonld_jobpostings(url, company_name, session):
     return results
 
 
-PROBE_VERSION = 15  # bump whenever a new ATS platform is added to the probe list, or slug guessing changes
+PROBE_VERSION = 16  # bump whenever a new ATS platform is added to the probe list, or slug guessing changes
 
 
 def probe_ats_for_manual_companies(manual_companies, session, cache_path, fetch_descriptions=True):
@@ -1684,15 +1708,12 @@ def probe_ats_for_manual_companies(manual_companies, session, cache_path, fetch_
                 ref_num, jobs_found = try_phenom_domain(known_domain, session, exact_path=known_path, verbose=False)
                 if jobs_found:
                     platform, slug = "phenom", f"{known_domain}|{ref_num}"
+            if platform is None and name in KNOWN_WORKABLE_SLUGS:
+                known_slug = KNOWN_WORKABLE_SLUGS[name]
+                if try_workable(known_slug, session) is not None:
+                    platform, slug = "workable", known_slug
             if platform is None:
                 for candidate in candidate_slugs(name):
-                    if name == "Fenergo":
-                        try:
-                            raw_resp = session.get(WORKABLE_JOBS_URL.format(slug=candidate), headers=HEADERS, timeout=10)
-                            print(f"=== FENERGO TRACE: trying candidate slug '{candidate}' against Workable "
-                                  f"directly -> HTTP {raw_resp.status_code}, body starts: {raw_resp.text[:200]!r} ===")
-                        except Exception as e:
-                            print(f"=== FENERGO TRACE: candidate '{candidate}' request raised exception: {e} ===")
                     if try_greenhouse(candidate, session) is not None:
                         platform, slug = "greenhouse", candidate
                         break
@@ -1717,12 +1738,14 @@ def probe_ats_for_manual_companies(manual_companies, session, cache_path, fetch_
                     if try_eightfold(candidate, session) is not None:
                         platform, slug = "eightfold", candidate
                         break
-                    if try_workable(candidate, session) is not None:
-                        platform, slug = "workable", candidate
-                        break
-                    time.sleep(0.15)  # Workable is a single shared host across all companies —
-                    # confirmed via real evidence (429 responses) that hitting it back-to-back
-                    # across hundreds of candidate slugs was triggering their rate limit
+                    # NOTE: generic Workable guessing removed from this loop —
+                    # confirmed via real trace evidence (Fenergo: 429 on every
+                    # single candidate slug, every time) that Workable's shared
+                    # API rate-limits us into uselessness at the scale of
+                    # checking hundreds of companies. The retry-and-backoff
+                    # was costing real time on every attempt without a single
+                    # real success anywhere this session. Same treatment as
+                    # Phenom: not worth running generically anymore.
                     # NOTE: generic Phenom guessing removed from this loop —
                     # across the entire session it never once succeeded,
                     # including on a URL confirmed to be genuine Phenom,
