@@ -1,1792 +1,4011 @@
 #!/usr/bin/env python3
 """
-Ireland Job Hunt Pipeline (v2)
-================================
-Reads Job_Automation.csv (company_name, career_url) and produces jobs.json —
-a normalized, filterable dataset for the dashboard (dashboard.html).
-
-WHAT IT DOES AUTOMATICALLY:
-  - Detects which companies run on Workday (a platform with a public JSON
-    search API) and pulls their LIVE current openings for Ireland, with
-    title / location / date posted / employment type / direct apply link.
-  - Fetches each job's full description text and scans it for visa
-    sponsorship language, tagging each posting as:
-        "sponsors"        - description explicitly says sponsorship is offered
-        "no_sponsorship"  - description explicitly rules it out
-        "not_mentioned"   - sponsorship isn't discussed in the text
-  - Keeps a running history file (sponsorship_history.json) across every
-    run, so each company builds up a real sample size over time and the
-    dashboard can show "mentions sponsorship in 3 of 40 postings scanned"
-    instead of a one-off guess.
-
-IMPORTANT HONESTY NOTE ON VISA SPONSORSHIP:
-  This is a TEXT SIGNAL from job descriptions, not a legal or HR record.
-  Many postings say nothing either way (that's "not_mentioned", the most
-  common case) and companies change policy per-role. Treat the rarity
-  score as "how often this company has said something about it in the
-  postings we've scanned so far" — a helpful heuristic, not a guarantee.
-
-WHAT IT CANNOT FULLY AUTOMATE (and why):
-  - The other ~90% of companies on your list run bespoke career sites
-    with no shared API and often JS-rendered content or bot protection.
-    They're included in the dashboard's directory tab as direct links.
-    See README.md for how to extend coverage.
-
-USAGE:
-    pip install requests
-    python job_pipeline.py --input Job_Automation.csv --output jobs.json
-
-SCHEDULING: see README.md (cron / Task Scheduler / GitHub Actions).
+General Ireland job-search scraper.
+Hits public ATS JSON APIs (Greenhouse, Lever, Ashby, …) and JSON-LD career pages.
+Run by GitHub Actions hourly. Writes data.json for index.html.
 """
 
-import argparse
-import csv
 import json
-import os
 import re
-import sys
 import time
-import uuid
-import xml.etree.ElementTree as ET
-from datetime import datetime, timezone
+import os
+import html
+import urllib.request
+import urllib.error
+import urllib.parse
+from datetime import datetime, timezone, timedelta
 
 try:
     import requests
 except ImportError:
-    print("This script needs the 'requests' library: pip install requests")
-    sys.exit(1)
+    requests = None
 
-try:
-    from curl_cffi import requests as cffi_requests
-    HAS_CURL_CFFI = True
-except ImportError:
-    HAS_CURL_CFFI = False
-    print("Note: 'curl_cffi' not installed — some strictly-protected Workday tenants "
-          "may fail with 400/422 errors that curl_cffi's browser-TLS impersonation "
-          "can get past. Install with: pip install curl_cffi")
+# ---------------------------------------------------------------------------
+# Company list: (slug, ats) -- expand this over time as we confirm more boards
+# ---------------------------------------------------------------------------
 
-IRELAND_LOCATION_HINTS = [
-    "ireland", "dublin", "cork", "galway", "limerick", "waterford",
-    "kilkenny", "kildare", "leinster", "munster", "belfast", "shannon",
-    "sligo", "athlone", "drogheda", "wicklow", "meath",
+GREENHOUSE_COMPANIES = [
+    "stripe", "airbnb", "doordash", "pinterest", "squarespace", "dropbox",
+    "twilio", "docusign", "robinhood", "reddit", "coinbase", "gitlab",
+    "github", "hubspot", "indeed", "zendesk", "trustpilot", "workhuman",
+    "wayflyer", "intercom", "wise", "asana", "cloudflare", "datadog",
+    "snowflake", "databricks", "instacart", "lyft", "fenergo", "affirm",
+    "airtable", "algolia", "amplitude", "betterup", "box", "buffer",
+    "calendly", "carta", "chime", "classpass", "coursera", "discord",
+    "doximity", "elastic", "envoy", "faire", "figma", "flexport", "gusto",
+    "handshake", "hashicorp", "honeycomb", "justworks", "klaviyo", "lattice",
+    "mixpanel", "mongodb", "mural", "okta", "opendoor", "patreon", "peloton",
+    "pilot", "postman", "procore", "quora", "rippling", "samsara", "segment",
+    "sendgrid", "sourcegraph", "sprinklr", "strava", "tanium", "thumbtack",
+    "toast", "turo", "udemy", "verkada", "webflow", "wework", "yelp",
+    "zapier", "zoominfo", "getyourguide", "trivago", "deliveryhero",
+    "babbel", "contentful", "celonis", "flixbus", "tiermobility", "gorillas",
+    "typeform", "glovo", "cabify", "blablacar", "backmarket", "doctolib",
+    "qonto", "alan", "payfit", "gocardless", "truelayer", "thoughtmachine",
+    "cazoo", "octopusenergy", "farfetch", "starlingbank", "revolut",
+    "darktrace", "graphcore", "onfido", "fundingcircle", "tines", "flipdish",
+    "letsgetchecked", "genesys", "grab", "sea", "carousell", "razer",
+    "lazada", "careem", "noon", "talabat", "propertyfinder", "razorpay",
+    "swiggy", "freshworks", "browserstack", "meesho", "cred", "groww",
+    "urbancompany", "chargebee", "clevertap",
+    # Australia / New Zealand
+    "canva", "cultureamp", "safetyculture", "employmenthero", "airwallex",
+    "deputy", "linktree", "go1", "halter", "judobank",
 ]
 
-WORKDAY_URL_RE = re.compile(
-    r"https?://([\w-]+)\.(wd\d+)\.myworkdayjobs\.com/(?:[\w-]+/)?([\w-]+)"
-)
+LEVER_COMPANIES = [
+    "netflix", "spotify", "plaid", "brex", "checkout", "deliveroo", "monzo",
+    "wolt", "bolt", "pipedrive", "zopa", "gojek", "traveloka",
+]
 
-GREENHOUSE_JOBS_URL = "https://boards-api.greenhouse.io/v1/boards/{slug}/jobs?content=true"
-LEVER_JOBS_URL = "https://api.lever.co/v0/postings/{slug}?mode=json"
-SMARTRECRUITERS_JOBS_URL = "https://api.smartrecruiters.com/v1/companies/{slug}/postings"
-SMARTRECRUITERS_DETAIL_URL = "https://api.smartrecruiters.com/v1/companies/{slug}/postings/{posting_id}"
-ASHBY_JOBS_URL = "https://api.ashbyhq.com/posting-api/job-board/{slug}"
-RECRUITEE_JOBS_URL = "https://{slug}.recruitee.com/api/offers/"
-PERSONIO_XML_URL = "https://{slug}.jobs.personio.de/xml"
-PINPOINT_JOBS_URL = "https://{slug}.pinpointhq.com/postings.json"
-# Eightfold has no officially documented public API — this is a widely-used
-# reverse-engineered endpoint. Less stable than the others; could change
-# without notice since it's not a supported public contract.
-EIGHTFOLD_SMARTAPPLY_URL = "https://{slug}.eightfold.ai/api/apply/v2/jobs?domain={domain}&hl=en&start=0"
+ASHBY_COMPANIES = [
+    "notion", "linear", "ramp", "elevenlabs", "openai", "anthropic",
+    "vercel", "scale", "deel", "partly", "clickup", "snowflake",
+    "wayflyer", "harveynash",
+]
 
-CORP_SUFFIX_RE = re.compile(
-    r"\b(limited|ltd|plc|unlimited company|uc|inc|incorporated|group|holdings|"
-    r"ireland|international|corporation|corp|company|co|technologies|technology)\b",
-    re.IGNORECASE,
-)
+# ---------------------------------------------------------------------------
+# Workday-hosted career sites (*.myworkdayjobs.com). Workday has no official
+# public jobs API, but every tenant's own career-site JSON endpoint --
+# https://{tenant}.{wd_host}.myworkdayjobs.com/wday/cxs/{tenant}/{site}/jobs --
+# is unauthenticated and freely queryable via POST, the same class of access
+# already used for Greenhouse/Lever/Ashby above. Workday hard-caps each page
+# at 20 results, so this paginates.
+#
+# (tenant, wd_host, site) -- verified working as of this build. Find more by
+# opening any company's careers.<company>.com page, opening browser dev tools
+# -> Network tab, and looking for a request to a "/wday/cxs/.../jobs" URL --
+# the tenant/wd_host/site values are all in that URL.
+# ---------------------------------------------------------------------------
 
-HEADERS = {
-    "Content-Type": "application/json",
-    "Accept": "application/json",
-    "User-Agent": ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
-                    "(KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"),
-    # Modern Chrome sends these "client hint" and fetch-metadata headers on
-    # every real request automatically — a bare requests-style header dict
-    # never includes them. Some stricter bot-detection configs specifically
-    # check for their presence (not just User-Agent), which curl_cffi's TLS
-    # impersonation alone doesn't add unless set explicitly. Genuinely
-    # untested angle, not a repeat of prior header attempts.
-    "sec-ch-ua": '"Chromium";v="125", "Not.A/Brand";v="24", "Google Chrome";v="125"',
-    "sec-ch-ua-mobile": "?0",
-    "sec-ch-ua-platform": '"Windows"',
-    "Sec-Fetch-Dest": "empty",
-    "Sec-Fetch-Mode": "cors",
-    "Sec-Fetch-Site": "same-origin",
+WORKDAY_COMPANIES = [
+    ('Accenture', 'accenture', 'wd103', 'AccentureCareers'),
+    ('Salesforce', 'salesforce', 'wd12', 'External_Career_Site'),
+    ('Workday', 'workday', 'wd5', 'Workday'),
+    ('VMware (Broadcom)', 'broadcom', 'wd1', 'External_Career'),
+    ('Genesys', 'genesys', 'wd1', 'Genesys'),
+    ('Slack', 'salesforce', 'wd12', 'Slack'),
+    ('Mastercard', 'mastercard', 'wd1', 'CorporateCareers'),
+    ('PayPal', 'paypal', 'wd1', 'jobs'),
+    ('Adobe', 'adobe', 'wd5', 'external_experienced'),
+    ('Autodesk', 'autodesk', 'wd1', 'Ext'),
+    ('Cadence Design Systems', 'cadence', 'wd1', 'External_Careers'),
+    ('Analog Devices', 'analogdevices', 'wd1', 'External'),
+    ('NVIDIA', 'nvidia', 'wd5', 'NVIDIAExternalCareerSite'),
+    ('Broadcom', 'broadcom', 'wd1', 'External_Career'),
+    ('NXP Semiconductors', 'nxp', 'wd3', 'careers'),
+    ('Rockwell Automation', 'rockwellautomation', 'wd1', 'External_Rockwell_Automation'),
+    ('Eaton', 'eaton', 'wd5', 'Eaton'),
+    ('Pfizer', 'pfizer', 'wd1', 'PfizerCareers'),
+    ('Sanofi', 'sanofi', 'wd3', 'SanofiCareers'),
+    ('MSD (Merck Sharp & Dohme)', 'msd', 'wd5', 'SearchJobs'),
+    ('Bausch + Lomb', 'bauschhealth', 'wd1', 'BauschHealthCareers'),
+    ('Takeda', 'takeda', 'wd3', 'External'),
+    ('Gilead Sciences', 'gilead', 'wd1', 'gileadcareers'),
+    ('Edwards Lifesciences', 'edwards', 'wd1', 'EdwardsCareers'),
+    ('Teleflex', 'teleflex', 'wd1', 'TeleflexCareers'),
+    ('Zimmer Biomet', 'zimmerbiomet', 'wd1', 'Zimmer_Biomet_Careers'),
+    ('Viatris', 'viatris', 'wd1', 'ViatrisCareers'),
+    ('Teva Pharmaceuticals', 'teva', 'wd1', 'Teva_Careers'),
+    ('Jazz Pharmaceuticals', 'jazzpharma', 'wd5', 'Jazz_Careers'),
+    ('ResMed', 'resmed', 'wd1', 'ResMed_External_Careers'),
+    ('Becton Dickinson (BD)', 'bd', 'wd1', 'BD_External'),
+    ('Illumina', 'illumina', 'wd1', 'illumina-careers'),
+    ('Catalent', 'catalent', 'wd1', 'External'),
+    ('State Street', 'statestreet', 'wd1', 'Global'),
+    ('Elavon', 'usbank', 'wd1', 'Elavon_Careers'),
+    ('Northern Trust', 'northerntrust', 'wd1', 'External_Careers'),
+    ('Deloitte Ireland', 'deloitteie', 'wd3', 'experienced_professionals'),
+    ('PwC Ireland', 'pwc', 'wd3', 'Global_Experienced_Careers'),
+    ('Grant Thornton Ireland', 'iegt', 'wd3', 'GTI_External_Careers_Experienced_Hires_ROI'),
+    ('DXC Technology', 'dxc', 'wd1', 'DXC_Jobs'),
+    ('Aon', 'aon', 'wd1', 'AonCareers'),
+    ('Willis Towers Watson (WTW)', 'wtw', 'wd1', 'WTWCareers'),
+    ('Mercer', 'mmc', 'wd1', 'MMC'),
+    ('Marsh McLennan', 'mmc', 'wd1', 'MMC'),
+    ('Diageo Ireland', 'diageo', 'wd3', 'Diageo_Careers'),
+]
+
+# ---------------------------------------------------------------------------
+# SmartRecruiters has a genuinely documented public Postings API --
+# https://api.smartrecruiters.com/v1/companies/{companyId}/postings -- but
+# it's a per-customer toggle, so not every SmartRecruiters customer has it
+# switched on. "smartrecruiters" itself (their own careers page) is
+# SmartRecruiters' own documented example and confirmed working. Add more by
+# checking https://api.smartrecruiters.com/v1/companies/{guess}/postings
+# directly in a browser -- a 200 with JSON means it's enabled for that company.
+# ---------------------------------------------------------------------------
+
+SMARTRECRUITERS_COMPANIES = [
+    "smartrecruiters", "servicenow", "aristanetworks", "abbvie",
+    "eurofins", "version1", "primark",
+]
+
+# ---------------------------------------------------------------------------
+# Three more genuinely free, unauthenticated ATS APIs. These skew toward
+# SMB/mid-market and European scale-ups rather than Fortune-500-scale firms
+# (that's who tends to run them) -- useful breadth, but don't expect them to
+# unlock the big banks/telcos/national champions still marked "manual" in the
+# company list. Ceiling for those: most run either a fully custom in-house
+# platform (confirmed for Deutsche Bank -- careers.db.com has no ATS
+# fingerprint at all) or an enterprise ATS (SAP SuccessFactors, Oracle
+# Taleo/Recruiting Cloud, Phenom, Eightfold) that requires signed/session-
+# based requests -- the same class of difficulty as Google/Apple/Meta, which
+# is exactly why those three stayed on Apify instead of being reverse-
+# engineered. For that remaining bucket the realistic options are: manual
+# checking, an Apify actor per company (pay-per-result, browser automation
+# handles the hard cases), or a paid cross-ATS aggregator (e.g. fantastic.jobs,
+# jobspipe.dev) -- there is no free universal answer for them.
+# ---------------------------------------------------------------------------
+
+WORKABLE_COMPANIES = [
+    # https://apply.workable.com/api/v1/widget/accounts/{slug} -- add slugs here
+]
+
+RECRUITEE_COMPANIES = [
+    # https://{slug}.recruitee.com/api/offers/ -- add slugs here
+]
+
+PERSONIO_COMPANIES = [
+    "dilloneustace",
+]
+
+PINPOINT_COMPANIES = [
+    "ericsson", "ptsb", "kpmg", "morganmckinley", "greencore",
+    "arcadis", "zendesk", "synopsys", "nutanix", "virgin", "terumo",
+    "smith", "waterstones", "next",
+]
+
+# ---------------------------------------------------------------------------
+# JSON-LD structured-data scraper -- universal fallback for the ~500-company
+# "manual-check" bucket (big banks, telcos, national champions, most Big 4
+# outside Accenture) that don't run any of the ATS platforms above.
+#
+# Most large-company career pages, regardless of ATS, embed a
+# schema.org/JobPosting block as JSON-LD in their HTML specifically so
+# Google for Jobs can index them -- this includes Workday, SuccessFactors,
+# Taleo, and even fully custom sites. Instead of reverse-engineering each
+# platform's internal API, this fetches the plain HTML of each career page
+# and pulls the embedded structured job data straight out.
+#
+# This is genuinely free (just an HTTP GET) but NOT guaranteed coverage --
+# it only works if the site bothered to add the markup. Expect a mixed hit
+# rate: some companies will return real results, many will return zero.
+# That's still strictly better than "manual-check only" at zero extra cost.
+# List sourced from the "Career Page URL" column of company_shortlist_by_
+# region.xlsx, limited to companies not already covered by a dedicated
+# scraper above.
+# ---------------------------------------------------------------------------
+
+JSONLD_CAREER_PAGES = [
+        ("Google (Ireland)", "https://www.google.com/about/careers/applications/jobs/results/?location=Dublin%2C%20Ireland"),
+    ("Meta (Ireland)", "https://www.metacareers.com/locations/dublin"),
+    ("Amazon (Ireland)", "https://www.amazon.jobs/en/locations/dublin-ireland"),
+    ("Microsoft (Ireland)", "https://jobs.careers.microsoft.com/global/en/search?lc=Dublin%2C%20Ireland"),
+    ("LinkedIn (Ireland)", "https://careers.linkedin.com/"),
+    ("Workday (Ireland)", "https://workday.wd5.myworkdayjobs.com/Workday"),
+    ("Salesforce (Ireland)", "https://careers.salesforce.com/en/"),
+    ("Indeed (Ireland)", "https://www.indeed.jobs/"),
+    ("TikTok (Ireland)", "https://careers.tiktok.com/"),
+    ("Mastercard (Ireland)", "https://careers.mastercard.com/"),
+    ("AIB", "https://aib.ie/careers"),
+    ("Bank of Ireland", "https://careers.bankofireland.com/"),
+    ("Deloitte Ireland", "https://www2.deloitte.com/ie/en/careers.html"),
+    ("PwC Ireland", "https://www.pwc.ie/careers.html"),
+    ("KPMG Ireland", "https://home.kpmg/ie/en/home/careers.html"),
+    ("EY Ireland", "https://careers.ey.com/ey"),
+    ("IBM Ireland", "https://www.ibm.com/ie-en/employment"),
+    ("SAP Ireland", "https://jobs.sap.com/"),
+    ("Version 1", "https://www.version1.com/careers/"),
+    ("eBay/PayPal Ireland ops", "https://www.paypal.com/us/webapps/mpp/jobs"),
+    ("Citi (Ireland)", "https://jobs.citi.com/"),
+    ("State Street (Ireland)", "https://careers.statestreet.com/"),
+    ("J.P. Morgan (Ireland)", "https://careers.jpmorgan.com/"),
+    ("Three Ireland", "https://careers.three.ie/"),
+    ("eir", "https://www.eir.ie/careers/"),
+    ("Tesco Ireland", "https://www.tesco.ie/careers/"),
+    ("Dunnes Stores", "https://www.dunnesstoresjobs.ie/"),
+    ("SuperValu / Musgrave", "https://careers.musgravegroup.com/"),
+    ("Ryanair", "https://careers.ryanair.com/"),
+    ("Aer Lingus", "https://careers.aerlingus.com/"),
+    ("Concentrix (Ireland)", "https://www.concentrix.com/careers/"),
+    ("Teleperformance (Ireland)", "https://www.teleperformance.com/en-us/careers/"),
+    ("Apple (Ireland)", "https://jobs.apple.com/en-ie/search"),
+    ("Oracle (Ireland)", "https://www.oracle.com/careers/"),
+    ("Emirates Group", "https://www.emiratesgroupcareers.com/"),
+    ("Emaar Properties", "https://www.emaar.com/en/careers/"),
+    ("ADNOC", "https://careers.adnoc.ae/"),
+    ("e& (Etisalat)", "https://www.eand.com/en/careers.html"),
+    ("DP World", "https://www.dpworld.com/careers"),
+    ("Emirates NBD", "https://www.emiratesnbd.com/en/careers"),
+    ("First Abu Dhabi Bank (FAB)", "https://www.bankfab.com/en-ae/careers"),
+    ("Careem", "https://www.careem.com/careers/"),
+    ("noon", "https://careers.noon.com/"),
+    ("Mashreq Bank", "https://www.mashreq.com/en/uae/careers/"),
+    ("Majid Al Futtaim", "https://careers.majidalfuttaim.com/"),
+    ("Chalhoub Group", "https://www.chalhoubgroup.com/careers"),
+    ("Deloitte UAE", "https://www2.deloitte.com/xe/en/careers.html"),
+    ("PwC UAE", "https://www.pwc.com/m1/en/careers.html"),
+    ("Amazon UAE", "https://www.amazon.jobs/en/locations/united-arab-emirates"),
+    ("Microsoft UAE", "https://jobs.careers.microsoft.com/global/en/search?lc=United%20Arab%20Emirates"),
+    ("Dubai Duty Free", "https://www.dubaidutyfree.com/en/careers"),
+    ("LuLu Group (UAE)", "https://www.lulugroupinternational.com/careers"),
+    ("Etihad Airways", "https://careers.etihad.com/"),
+    ("du (EITC)", "https://www.du.ae/about-us/careers"),
+    ("EY UAE", "https://www.ey.com/en_ae/careers"),
+    ("KPMG UAE", "https://home.kpmg/ae/en/home/careers.html"),
+    ("Google (UAE)", "https://www.google.com/about/careers/applications/jobs/results/?location=United%20Arab%20Emirates"),
+    ("Meta (UAE)", "https://www.metacareers.com/locations/dubai"),
+    ("Salesforce (UAE)", "https://careers.salesforce.com/en/"),
+    ("Allegro", "https://about.allegro.eu/careers"),
+    ("InPost", "https://grupainpost.pl/en/careers/"),
+    ("CD Projekt", "https://www.cdprojekt.com/en/careers/"),
+    ("mBank", "https://www.mbank.pl/kariera/"),
+    ("PKO Bank Polski", "https://www.pkobp.pl/kariera/"),
+    ("Santander Bank Polska", "https://www.santander.pl/kariera"),
+    ("ING Poland", "https://www.ing.pl/kariera"),
+    ("State Street (Krakow GBS)", "https://careers.statestreet.com/"),
+    ("Capgemini Poland", "https://www.capgemini.com/pl-en/careers/"),
+    ("IBM Poland", "https://www.ibm.com/pl-pl/employment"),
+    ("HSBC GSC Krakow", "https://www.hsbc.com/careers"),
+    ("Shell Business Operations Krakow", "https://www.shell.pl/careers.html"),
+    ("Google Poland", "https://www.google.com/about/careers/applications/jobs/results/?location=Warsaw%2C%20Poland"),
+    ("Amazon Poland", "https://www.amazon.jobs/en/locations/poland"),
+    ("Luxoft (DXC)", "https://www.dxc.com/us/en/careers"),
+    ("Comarch", "https://www.comarch.pl/kariera/"),
+    ("Nordea Poland (GBS)", "https://www.nordea.com/en/careers"),
+    ("Credit Suisse/UBS (Krakow GBS)", "https://www.ubs.com/careers"),
+    ("Cisco Poland", "https://jobs.cisco.com/"),
+    ("PZU", "https://kariera.pzu.pl/"),
+    ("Orange Polska", "https://kariera.orange.pl/"),
+    ("Zabka", "https://zabkagroup.com/en/careers/"),
+    ("Deloitte Poland", "https://www2.deloitte.com/pl/en/careers.html"),
+    ("PwC Poland", "https://www.pwc.pl/en/careers.html"),
+    ("EY Poland", "https://www.ey.com/pl_pl/careers"),
+    ("KPMG Poland", "https://home.kpmg/pl/en/home/careers.html"),
+    ("Microsoft Poland", "https://jobs.careers.microsoft.com/global/en/search?lc=Warsaw%2C%20Poland"),
+    ("Critical TechWorks (BMW)", "https://www.criticaltechworks.com/careers/"),
+    ("Talkdesk", "https://www.talkdesk.com/careers/"),
+    ("OutSystems", "https://www.outsystems.com/careers/"),
+    ("Natixis (Porto GBS)", "https://www.natixis.com/natixis/en/careers"),
+    ("Mercedes-Benz.io", "https://www.mercedes-benz.io/careers"),
+    ("Cisco Portugal", "https://jobs.cisco.com/"),
+    ("Deloitte Portugal", "https://www2.deloitte.com/pt/en/careers.html"),
+    ("Vodafone Portugal", "https://careers.vodafone.com/"),
+    ("EDP", "https://www.edp.com/en/careers"),
+    ("Jeronimo Martins", "https://www.jeronimomartins.com/careers/"),
+    ("Feedzai", "https://feedzai.com/careers/"),
+    ("Teleperformance Portugal", "https://www.teleperformance.com/en-us/careers/"),
+    ("Concentrix Portugal", "https://www.concentrix.com/careers/"),
+    ("Sonae", "https://www.sonae.pt/en/careers/"),
+    ("PwC Portugal", "https://www.pwc.pt/en/careers.html"),
+    ("EY Portugal", "https://www.ey.com/pt_pt/careers"),
+    ("KPMG Portugal", "https://home.kpmg/pt/en/home/careers.html"),
+    ("Capgemini Portugal", "https://www.capgemini.com/pt-en/careers/"),
+    ("HSBC (Hong Kong)", "https://www.hsbc.com/careers"),
+    ("Standard Chartered (HK)", "https://www.sc.com/en/careers/"),
+    ("Bank of China (Hong Kong)", "https://www.bochk.com/en/aboutus/careeropp.html"),
+    ("AIA Group", "https://careers.aia.com/"),
+    ("Prudential Hong Kong", "https://www.prudential.com.hk/en/careers/"),
+    ("Jardine Matheson", "https://www.jardines.com/en/careers"),
+    ("CLP Group", "https://www.clpgroup.com/en/careers"),
+    ("Cathay Pacific", "https://careers.cathaypacific.com/"),
+    ("PCCW", "https://www.pccw.com/en/careers.html"),
+    ("Hang Seng Bank", "https://www.hangseng.com/en-hk/about-hang-seng/careers/"),
+    ("DBS (Hong Kong)", "https://www.dbs.com/careers/"),
+    ("Deloitte Hong Kong", "https://www2.deloitte.com/hk/en/careers.html"),
+    ("PwC Hong Kong", "https://www.pwchk.com/en/careers.html"),
+    ("Manulife Hong Kong", "https://careers.manulife.com/"),
+    ("PARKnSHOP / AS Watson Group", "https://careers.aswatson.com/"),
+    ("EY Hong Kong", "https://www.ey.com/en_hk/careers"),
+    ("KPMG Hong Kong", "https://home.kpmg/cn/en/home/careers.html"),
+    ("Google (Hong Kong)", "https://www.google.com/about/careers/applications/jobs/results/?location=Hong%20Kong"),
+    ("Microsoft (Hong Kong)", "https://jobs.careers.microsoft.com/global/en/search?lc=Hong%20Kong"),
+    ("Amazon (Hong Kong)", "https://www.amazon.jobs/en/locations/hong-kong"),
+    ("Maybank", "https://www.maybank.com/en/careers.page"),
+    ("CIMB Group", "https://www.cimb.com/en/careers.html"),
+    ("Public Bank", "https://www.pbebank.com/careers.html"),
+    ("AirAsia", "https://careers.airasia.com/"),
+    ("Petronas", "https://www.petronas.com/careers"),
+    ("Grab Malaysia", "https://grab.careers/"),
+    ("Shopee Malaysia", "https://careers.shopee.com/"),
+    ("DXC Technology Malaysia", "https://dxc.com/my/en/careers"),
+    ("IBM Malaysia", "https://www.ibm.com/my-en/employment"),
+    ("HSBC Electronic Data Processing (Malaysia)", "https://www.hsbc.com/careers"),
+    ("AIA Malaysia", "https://careers.aia.com/"),
+    ("Genting Group", "https://www.genting.com/careers/"),
+    ("AEON Malaysia", "https://www.aeonretail.com.my/careers/"),
+    ("Deloitte Malaysia", "https://www2.deloitte.com/my/en/careers.html"),
+    ("PwC Malaysia", "https://www.pwc.com/my/en/careers.html"),
+    ("EY Malaysia", "https://www.ey.com/en_my/careers"),
+    ("KPMG Malaysia", "https://home.kpmg/my/en/home/careers.html"),
+    ("Microsoft Malaysia", "https://jobs.careers.microsoft.com/global/en/search?lc=Malaysia"),
+    ("Google Malaysia", "https://www.google.com/about/careers/applications/jobs/results/?location=Malaysia"),
+    ("ASML", "https://www.asml.com/en/careers"),
+    ("Philips", "https://www.careers.philips.com/"),
+    ("ING", "https://www.ing.jobs/"),
+    ("Booking.com", "https://careers.booking.com/"),
+    ("Adyen", "https://www.adyen.com/careers"),
+    ("Shell (NL)", "https://www.shell.com/careers.html"),
+    ("Ahold Delhaize", "https://www.aholddelhaize.com/en/careers/"),
+    ("Heineken", "https://www.theheinekencompany.com/careers"),
+    ("KLM", "https://werkenbijklm.com/en/"),
+    ("Rabobank", "https://www.rabobank.jobs/en/"),
+    ("ABN AMRO", "https://www.abnamro.com/en/careers"),
+    ("Randstad", "https://www.randstad.com/careers/"),
+    ("Wolters Kluwer", "https://www.wolterskluwer.com/en/careers"),
+    ("Mollie", "https://jobs.mollie.com/"),
+    ("Bol.com", "https://werkenbij.bol.com/"),
+    ("Coolblue", "https://werkenbij.coolblue.nl/"),
+    ("Uber (Netherlands ops)", "https://www.uber.com/us/en/careers/"),
+    ("Deloitte Netherlands", "https://www2.deloitte.com/nl/en/careers.html"),
+    ("Capgemini Netherlands", "https://www.capgemini.com/nl-en/careers/"),
+    ("KPN", "https://www.werkenbijkpn.com/"),
+    ("Jumbo Supermarkten", "https://werkenbijjumbo.nl/"),
+    ("TomTom", "https://www.tomtom.com/careers/"),
+    ("PwC Netherlands", "https://www.pwc.nl/en/careers.html"),
+    ("EY Netherlands", "https://www.ey.com/nl_nl/careers"),
+    ("KPMG Netherlands", "https://home.kpmg/nl/en/home/careers.html"),
+    ("Microsoft Netherlands", "https://jobs.careers.microsoft.com/global/en/search?lc=Netherlands"),
+    ("SAP", "https://jobs.sap.com/"),
+    ("Siemens", "https://jobs.siemens.com/"),
+    ("Bosch", "https://careers.bosch.com/"),
+    ("BMW Group", "https://www.bmwgroup.jobs/"),
+    ("Mercedes-Benz Group", "https://career.mercedes-benz.com/"),
+    ("Volkswagen Group", "https://www.volkswagenag.com/en/career.html"),
+    ("Deutsche Bank", "https://careers.db.com/"),
+    ("Allianz", "https://careers.allianz.com/"),
+    ("Deutsche Telekom", "https://www.telekom.com/en/careers"),
+    ("N26", "https://n26.com/en/careers"),
+    ("Personio", "https://www.personio.com/career/"),
+    ("HelloFresh", "https://careers.hellofresh.com/"),
+    ("Trade Republic", "https://traderepublic.com/en-de/careers"),
+    ("DHL / Deutsche Post", "https://careers.dhl.com/"),
+    ("BASF", "https://www.basf.com/global/en/careers.html"),
+    ("Continental", "https://www.continental.com/en/career/"),
+    ("Commerzbank", "https://www.commerzbank.de/en/karriere/"),
+    ("Lufthansa", "https://www.lufthansagroup.careers/"),
+    ("Munich Re", "https://careers.munichre.com/"),
+    ("E.ON", "https://careers.eon.com/"),
+    ("Infineon", "https://www.infineon.com/cms/en/careers/"),
+    ("Software AG", "https://www.softwareag.com/en_corporate/company/careers.html"),
+    ("Deloitte Germany", "https://www2.deloitte.com/de/en/careers.html"),
+    ("Capgemini Germany", "https://www.capgemini.com/de-en/careers/"),
+    ("REWE Group", "https://karriere.rewe-group.com/"),
+    ("Lidl / Schwarz Group", "https://jobs.lidl.com/"),
+    ("Aldi", "https://karriere.aldi-sued.de/"),
+    ("Deutsche Bahn", "https://www.deutschebahn.com/en/career"),
+    ("Apple (Germany)", "https://jobs.apple.com/en-de"),
+    ("PwC Germany", "https://www.pwc.de/en/careers.html"),
+    ("EY Germany", "https://www.ey.com/de_de/careers"),
+    ("KPMG Germany", "https://home.kpmg/de/en/home/careers.html"),
+    ("Google (Germany)", "https://www.google.com/about/careers/applications/jobs/results/?location=Munich%2C%20Germany"),
+    ("Microsoft Germany", "https://jobs.careers.microsoft.com/global/en/search?lc=Germany"),
+    ("Amazon (Germany)", "https://www.amazon.jobs/en/locations/germany"),
+    ("Salesforce Germany", "https://careers.salesforce.com/en/"),
+    ("Erste Group", "https://www.erstegroup.com/en/about-us/careers"),
+    ("Raiffeisen Bank International", "https://www.rbinternational.com/en/careers.html"),
+    ("OMV", "https://www.omv.com/en/careers"),
+    ("Voestalpine", "https://www.voestalpine.com/group/en/careers/"),
+    ("Red Bull", "https://jobs.redbull.com/"),
+    ("A1 Telekom Austria", "https://a1.jobs/"),
+    ("Andritz", "https://www.andritz.com/careers-en/"),
+    ("BAWAG Group", "https://www.bawaggroup.com/BAWAGGROUP/BG/EN/Careers"),
+    ("Verbund", "https://www.verbund.com/en-at/about-verbund/career"),
+    ("Spar Austria", "https://www.spar.at/karriere"),
+    ("Rewe Austria (Billa/Merkur)", "https://karriere.rewe-group.at/"),
+    ("Deloitte Austria", "https://www2.deloitte.com/at/en/careers.html"),
+    ("PwC Austria", "https://www.pwc.at/en/careers.html"),
+    ("EY Austria", "https://www.ey.com/de_at/careers"),
+    ("KPMG Austria", "https://home.kpmg/at/en/home/careers.html"),
+    ("Saudi Aramco", "https://careers.aramco.com/"),
+    ("STC (Saudi Telecom)", "https://www.stc.com.sa/wps/wcm/connect/english/individual/aboutus/careers"),
+    ("SABIC", "https://www.sabic.com/en/careers"),
+    ("Al Rajhi Bank", "https://www.alrajhibank.com.sa/en/careers"),
+    ("NEOM", "https://www.neom.com/en-us/careers"),
+    ("Riyad Bank", "https://www.riyadbank.com/en/careers"),
+    ("Saudi National Bank (SNB)", "https://www.alahli.com/en-us/about-us/careers"),
+    ("Almarai", "https://www.almarai.com/en/careers/"),
+    ("Jahez", "https://www.jahez.net/en/careers/"),
+    ("Deloitte Saudi Arabia", "https://www2.deloitte.com/xe/en/careers.html"),
+    ("PwC Saudi Arabia", "https://www.pwc.com/m1/en/careers.html"),
+    ("Red Sea Global", "https://www.redseaglobal.com/en/careers"),
+    ("Qiddiya", "https://www.qiddiya.com/careers"),
+    ("Panda Retail Company", "https://www.pandaretailcompany.com/careers/"),
+    ("Extra (United Electronics)", "https://www.extra.com/en-sa/careers"),
+    ("Saudia (airline)", "https://www.saudia.com/about-saudia/careers"),
+    ("flynas", "https://www.flynas.com/en/about-flynas/careers"),
+    ("EY Saudi Arabia", "https://www.ey.com/en_sa/careers"),
+    ("KPMG Saudi Arabia", "https://home.kpmg/sa/en/home/careers.html"),
+    ("Microsoft Saudi Arabia", "https://jobs.careers.microsoft.com/global/en/search?lc=Saudi%20Arabia"),
+    ("Amazon (Saudi Arabia)", "https://www.amazon.jobs/en/locations/saudi-arabia"),
+    ("Nokia", "https://www.nokia.com/careers/"),
+    ("KONE", "https://www.kone.com/en/careers/"),
+    ("Wartsila", "https://www.wartsila.com/careers"),
+    ("Nordea (Finland)", "https://www.nordea.com/en/careers"),
+    ("OP Financial Group", "https://www.op.fi/en/careers"),
+    ("Fortum", "https://www.fortum.com/about-us/careers"),
+    ("Kesko", "https://www.kesko.fi/en/careers/"),
+    ("Neste", "https://www.neste.com/careers"),
+    ("Supercell", "https://supercell.com/en/careers/"),
+    ("Wolt (DoorDash)", "https://careers.wolt.com/"),
+    ("S Group (S-ryhma)", "https://www.s-kanava.fi/web/s/tyopaikat"),
+    ("Finnair", "https://careers.finnair.com/"),
+    ("Accenture Finland", "https://accenture.wd103.myworkdayjobs.com/AccentureCareers"),
+    ("Deloitte Finland", "https://www2.deloitte.com/fi/en/careers.html"),
+    ("PwC Finland", "https://www.pwc.fi/en/careers.html"),
+    ("EY Finland", "https://www.ey.com/fi_fi/careers"),
+    ("KPMG Finland", "https://home.kpmg/fi/en/home/careers.html"),
+    ("KBC Group", "https://www.kbc.com/en/careers.html"),
+    ("ING Belgium", "https://www.ing.jobs/belgium"),
+    ("Belfius", "https://www.belfius.be/about-us/en/careers"),
+    ("Proximus", "https://jobs.proximus.com/"),
+    ("Colruyt Group", "https://www.jobat.be/en/employers/colruyt-group"),
+    ("AB InBev", "https://www.ab-inbev.com/careers/"),
+    ("Solvay", "https://www.solvay.com/en/careers"),
+    ("UCB", "https://www.ucb.com/careers"),
+    ("bpost", "https://career.bpost.be/"),
+    ("Deloitte Belgium", "https://www2.deloitte.com/be/en/careers.html"),
+    ("PwC Belgium", "https://www.pwc.be/en/careers.html"),
+    ("EY Belgium", "https://www.ey.com/en_be/careers"),
+    ("KPMG Belgium", "https://home.kpmg/be/en/home/careers.html"),
+    ("Euroclear", "https://www.euroclear.com/careers/"),
+    ("SWIFT", "https://www.swift.com/careers"),
+    ("Delhaize Belgium", "https://www.delhaizegroup.com/en/careers"),
+    ("Infosys", "https://www.infosys.com/careers.html"),
+    ("Amazon (India)", "https://www.amazon.jobs/en/locations/india"),
+    ("JPMorgan Chase (India)", "https://careers.jpmorgan.com/"),
+    ("SAP Labs India", "https://jobs.sap.com/"),
+    ("TCS", "https://www.tcs.com/careers"),
+    ("Wipro", "https://careers.wipro.com/"),
+    ("HCLTech", "https://www.hcltech.com/careers"),
+    ("Cognizant (India)", "https://careers.cognizant.com/"),
+    ("Capgemini India", "https://www.capgemini.com/in-en/careers/"),
+    ("IBM India", "https://www.ibm.com/in-en/employment"),
+    ("Deloitte India", "https://www2.deloitte.com/in/en/careers.html"),
+    ("EY India", "https://www.ey.com/en_in/careers"),
+    ("PwC India", "https://www.pwc.in/careers.html"),
+    ("KPMG India", "https://home.kpmg/in/en/home/careers.html"),
+    ("Flipkart", "https://www.flipkartcareers.com/"),
+    ("Zomato", "https://www.zomato.com/careers"),
+    ("Myntra", "https://careers.myntra.com/"),
+    ("Zoho", "https://www.zoho.com/careers/"),
+    ("Microsoft (India)", "https://jobs.careers.microsoft.com/global/en/search?lc=India"),
+    ("HDFC Bank", "https://www.hdfcbank.com/personal/about-us/careers"),
+    ("ICICI Bank", "https://www.icicicareers.com/"),
+    ("Reliance Retail", "https://www.ril.com/careers"),
+    ("Genpact", "https://www.genpact.com/careers"),
+    ("Concentrix India", "https://www.concentrix.com/careers/"),
+    ("Teleperformance India", "https://www.teleperformance.com/en-us/careers/"),
+    ("Byju's", "https://byjus.com/careers/"),
+    ("Ola", "https://www.olacabs.com/careers"),
+    ("PhonePe", "https://www.phonepe.com/careers/"),
+    ("Google (India)", "https://www.google.com/about/careers/applications/jobs/results/?location=India"),
+    ("Apple (India)", "https://jobs.apple.com/en-in"),
+    ("Salesforce (India)", "https://careers.salesforce.com/en/"),
+    ("Oracle (India)", "https://www.oracle.com/careers/"),
+    ("Barclays", "https://search.jobs.barclays/"),
+    ("HSBC", "https://www.hsbc.com/careers"),
+    ("Lloyds Banking Group", "https://www.lloydsbankinggroup.com/careers.html"),
+    ("NatWest Group", "https://jobs.natwestgroup.com/"),
+    ("Mastercard (UK)", "https://careers.mastercard.com/"),
+    ("Amadeus", "https://amadeus.com/en/careers"),
+    ("Softcat", "https://careers.softcat.com/"),
+    ("Bloomberg (London)", "https://careers.bloomberg.com/"),
+    ("Amazon (UK)", "https://www.amazon.jobs/en/locations/uk"),
+    ("Google (UK)", "https://www.google.com/about/careers/applications/jobs/results/?location=United%20Kingdom"),
+    ("Microsoft (UK)", "https://jobs.careers.microsoft.com/global/en/search?lc=United%20Kingdom"),
+    ("Apple (UK)", "https://jobs.apple.com/en-gb"),
+    ("Meta (UK)", "https://www.metacareers.com/locations/london"),
+    ("Deloitte UK", "https://www2.deloitte.com/uk/en/careers.html"),
+    ("PwC UK", "https://www.pwc.co.uk/careers.html"),
+    ("EY UK", "https://www.ey.com/en_uk/careers"),
+    ("KPMG UK", "https://home.kpmg/uk/en/home/careers.html"),
+    ("Capgemini UK", "https://www.capgemini.com/gb-en/careers/"),
+    ("IBM UK", "https://www.ibm.com/uk-en/employment"),
+    ("BT Group", "https://www.bt.com/careers"),
+    ("Vodafone UK", "https://careers.vodafone.com/"),
+    ("Tesco", "https://www.tesco-careers.com/"),
+    ("Sainsbury's", "https://www.sainsburys.jobs/"),
+    ("Asda", "https://www.asda.jobs/"),
+    ("Morrisons", "https://www.morrisons.jobs/"),
+    ("Ocado", "https://www.ocadogroup.com/careers"),
+    ("Experian", "https://www.experianplc.com/careers"),
+    ("JPMorgan Chase (UK)", "https://careers.jpmorgan.com/"),
+    ("Goldman Sachs (UK)", "https://www.goldmansachs.com/careers/"),
+    ("BAE Systems", "https://www.baesystems.com/en/careers"),
+    ("Rolls-Royce", "https://careers.rolls-royce.com/"),
+    ("AstraZeneca", "https://careers.astrazeneca.com/"),
+    ("GSK", "https://jobs.gsk.com/"),
+    ("BT Openreach", "https://www.openreach.co.uk/careers"),
+    ("Centrica / British Gas", "https://www.centrica.com/careers/"),
+    ("National Grid", "https://www.nationalgrid.com/careers"),
+    ("Marks & Spencer", "https://careers.marksandspencer.com/"),
+    ("John Lewis Partnership", "https://www.jlpjobs.com/"),
+    ("Capita", "https://careers.capita.com/"),
+    ("Teleperformance UK", "https://www.teleperformance.com/en-us/careers/"),
+    ("Salesforce (UK)", "https://careers.salesforce.com/en/"),
+    ("Oracle (UK)", "https://www.oracle.com/careers/"),
+    ("Inditex (Zara)", "https://www.inditexcareers.com/"),
+    ("Santander", "https://www.santandercareers.com/"),
+    ("BBVA", "https://www.bbva.com/en/careers/"),
+    ("Telefonica", "https://www.telefonica.com/en/careers/"),
+    ("Iberdrola", "https://www.iberdrola.com/careers"),
+    ("CaixaBank", "https://www.caixabank.com/en/careers.html"),
+    ("Repsol", "https://www.repsol.com/en/careers/"),
+    ("Amadeus (Spain)", "https://amadeus.com/en/careers"),
+    ("Indra", "https://www.indracompany.com/en/careers"),
+    ("Mercadona", "https://empleo.mercadona.es/"),
+    ("Grifols", "https://www.grifols.com/en/careers"),
+    ("Deloitte Spain", "https://www2.deloitte.com/es/en/careers.html"),
+    ("Capgemini Spain", "https://www.capgemini.com/es-en/careers/"),
+    ("El Corte Ingles", "https://www.elcorteingles.es/empleo/"),
+    ("Teleperformance Spain", "https://www.teleperformance.com/en-us/careers/"),
+    ("PwC Spain", "https://www.pwc.es/en/careers.html"),
+    ("EY Spain", "https://www.ey.com/es_es/careers"),
+    ("KPMG Spain", "https://home.kpmg/es/en/home/careers.html"),
+    ("Amazon (Spain)", "https://www.amazon.jobs/en/locations/spain"),
+    ("Klarna", "https://www.klarna.com/careers/"),
+    ("Ericsson", "https://www.ericsson.com/en/careers"),
+    ("Volvo Group", "https://www.volvogroup.com/en/careers.html"),
+    ("H&M Group", "https://hmgroup.com/careers/"),
+    ("IKEA (Sweden)", "https://www.ikea.com/careers"),
+    ("SEB", "https://sebgroup.com/careers"),
+    ("Swedbank", "https://www.swedbank.com/about-swedbank/careers.html"),
+    ("Nordea (Sweden)", "https://www.nordea.com/en/careers"),
+    ("Sinch", "https://www.sinch.com/careers/"),
+    ("King (Activision Blizzard)", "https://king.com/jobs"),
+    ("ICA Gruppen", "https://www.icagruppen.se/en/career/"),
+    ("Telia Company", "https://www.teliacompany.com/en/careers/"),
+    ("Accenture Sweden", "https://accenture.wd103.myworkdayjobs.com/AccentureCareers"),
+    ("Deloitte Sweden", "https://www2.deloitte.com/se/en/careers.html"),
+    ("PwC Sweden", "https://www.pwc.se/en/careers.html"),
+    ("EY Sweden", "https://www.ey.com/sv_se/careers"),
+    ("KPMG Sweden", "https://home.kpmg/se/en/home/careers.html"),
+    ("Amazon (Sweden)", "https://www.amazon.jobs/en/locations/sweden"),
+    ("Qatar Airways", "https://careers.qatarairways.com/"),
+    ("QNB Group", "https://www.qnb.com/sites/qnb/qnbcareers"),
+    ("Ooredoo", "https://careers.ooredoo.qa/"),
+    ("QatarEnergy", "https://qatarenergy.qa/en/Careers/"),
+    ("Commercial Bank of Qatar", "https://www.cbq.qa/en/personal/pages/careers.aspx"),
+    ("Doha Bank", "https://www.dohabank.com.qa/careers"),
+    ("Vodafone Qatar", "https://careers.vodafone.com/"),
+    ("Msheireb Properties", "https://www.msheireb.com/careers/"),
+    ("Hamad International Airport (MATAR)", "https://www.dohahamadairport.com/corporate/careers"),
+    ("LuLu Hypermarket Qatar", "https://www.luluhypermarket.com/en-qa/careers"),
+    ("Accenture Qatar", "https://accenture.wd103.myworkdayjobs.com/AccentureCareers"),
+    ("Deloitte Qatar", "https://www2.deloitte.com/qa/en/careers.html"),
+    ("PwC Qatar", "https://www.pwc.com/m1/en/careers.html"),
+    ("EY Qatar", "https://www.ey.com/en_qa/careers"),
+    ("KPMG Qatar", "https://home.kpmg/qa/en/home/careers.html"),
+    ("Shopify", "https://www.shopify.com/careers"),
+    ("RBC (Royal Bank of Canada)", "https://jobs.rbc.com/"),
+    ("TD Bank Group", "https://jobs.td.com/"),
+    ("Scotiabank", "https://jobs.scotiabank.com/"),
+    ("BMO Financial Group", "https://jobs.bmo.com/"),
+    ("CIBC", "https://jobs.cibc.com/"),
+    ("Manulife", "https://careers.manulife.com/"),
+    ("Sun Life", "https://jobs.sunlife.com/"),
+    ("Telus", "https://www.telus.com/en/careers"),
+    ("Bell Canada", "https://jobs.bell.ca/"),
+    ("Rogers Communications", "https://jobs.rogers.com/"),
+    ("CGI Group", "https://www.cgi.com/en/careers"),
+    ("Loblaw Companies", "https://www.loblaw.ca/en/careers.html"),
+    ("Deloitte Canada", "https://www2.deloitte.com/ca/en/careers.html"),
+    ("Amazon Canada", "https://www.amazon.jobs/en/locations/canada"),
+    ("Wealthsimple", "https://www.wealthsimple.com/en-ca/careers"),
+    ("Lightspeed Commerce", "https://www.lightspeedhq.com/careers/"),
+    ("Air Canada", "https://careers.aircanada.com/"),
+    ("Canadian Tire", "https://corp.canadiantire.ca/English/careers/default.aspx"),
+    ("Metro Inc.", "https://carrieres.metro.ca/en"),
+    ("CN Rail", "https://www.cn.ca/en/careers/"),
+    ("Sobeys / Empire Company", "https://www.empireco.ca/careers/"),
+    ("PwC Canada", "https://www.pwc.com/ca/en/careers.html"),
+    ("EY Canada", "https://www.ey.com/en_ca/careers"),
+    ("KPMG Canada", "https://home.kpmg/ca/en/home/careers.html"),
+    ("IBM Canada", "https://www.ibm.com/ca-en/employment"),
+    ("Google (Canada)", "https://www.google.com/about/careers/applications/jobs/results/?location=Canada"),
+    ("Microsoft Canada", "https://jobs.careers.microsoft.com/global/en/search?lc=Canada"),
+    ("Salesforce Canada", "https://careers.salesforce.com/en/"),
+    ("Commonwealth Bank", "https://www.commbank.com.au/careers.html"),
+    ("Westpac", "https://www.westpac.com.au/about-westpac/careers/"),
+    ("NAB", "https://www.nab.com.au/about-us/careers"),
+    ("ANZ Bank", "https://www.anz.com.au/about-us/careers/"),
+    ("Telstra", "https://careers.telstra.com/"),
+    ("Woolworths Group", "https://www.wowcareers.com.au/"),
+    ("Coles Group", "https://www.colescareers.com.au/"),
+    ("Atlassian", "https://www.atlassian.com/company/careers"),
+    ("Qantas", "https://www.qantas.com/careers/"),
+    ("BHP", "https://www.bhp.com/careers"),
+    ("Wesfarmers", "https://www.wesfarmers.com.au/careers"),
+    ("Deloitte Australia", "https://www2.deloitte.com/au/en/careers.html"),
+    ("Amazon Australia", "https://www.amazon.jobs/en/locations/australia"),
+    ("Rio Tinto", "https://www.riotinto.com/careers"),
+    ("Bunnings (Wesfarmers)", "https://www.bunnings.com.au/careers"),
+    ("Optus", "https://www.optus.com.au/about/careers"),
+    ("Australia Post", "https://auspost.com.au/about-us/careers"),
+    ("PwC Australia", "https://www.pwc.com.au/careers.html"),
+    ("EY Australia", "https://www.ey.com/en_au/careers"),
+    ("KPMG Australia", "https://home.kpmg/au/en/home/careers.html"),
+    ("Google (Australia)", "https://www.google.com/about/careers/applications/jobs/results/?location=Australia"),
+    ("Microsoft Australia", "https://jobs.careers.microsoft.com/global/en/search?lc=Australia"),
+    ("Salesforce Australia", "https://careers.salesforce.com/en/"),
+    ("DBS Bank", "https://www.dbs.com/careers/"),
+    ("OCBC Bank", "https://www.ocbc.com/group/careers/"),
+    ("UOB", "https://www.uobgroup.com/careers/"),
+    ("Sea Limited (Shopee/Garena)", "https://www.sea.com/career"),
+    ("Grab", "https://grab.careers/"),
+    ("Singtel", "https://www.singtel.com/about-us/careers"),
+    ("ByteDance / TikTok (APAC)", "https://careers.tiktok.com/"),
+    ("Google (APAC HQ)", "https://www.google.com/about/careers/applications/jobs/results/?location=Singapore"),
+    ("Microsoft (APAC HQ)", "https://jobs.careers.microsoft.com/global/en/search?lc=Singapore"),
+    ("Goldman Sachs (Singapore)", "https://www.goldmansachs.com/careers/"),
+    ("Barclays (Singapore)", "https://search.jobs.barclays/"),
+    ("PropertyGuru", "https://www.propertygurugroup.com/careers/"),
+    ("NTUC FairPrice", "https://careers.fairprice.com.sg/"),
+    ("Deloitte Singapore", "https://www2.deloitte.com/sg/en/careers.html"),
+    ("Apple (Singapore)", "https://jobs.apple.com/en-sg"),
+    ("Meta (Singapore)", "https://www.metacareers.com/locations/singapore"),
+    ("Amazon (Singapore)", "https://www.amazon.jobs/en/locations/singapore"),
+    ("PwC Singapore", "https://www.pwc.com/sg/en/careers.html"),
+    ("EY Singapore", "https://www.ey.com/en_sg/careers"),
+    ("KPMG Singapore", "https://home.kpmg/sg/en/home/careers.html"),
+    ("Salesforce Singapore", "https://careers.salesforce.com/en/"),
+    ("Xero", "https://www.xero.com/careers/"),
+    ("Fisher & Paykel Healthcare", "https://careers.fphcare.com/"),
+    ("Air New Zealand", "https://careers.airnewzealand.co.nz/"),
+    ("ANZ New Zealand", "https://www.anz.co.nz/about-us/careers/"),
+    ("ASB Bank", "https://careers.asb.co.nz/"),
+    ("Spark New Zealand", "https://careers.sparknz.co.nz/"),
+    ("Trade Me", "https://www.trademe.co.nz/careers"),
+    ("Datacom", "https://careers.datacom.com/"),
+    ("Fonterra", "https://www.fonterra.com/careers"),
+    ("Foodstuffs NZ", "https://careers.foodstuffs.co.nz/"),
+    ("Countdown/Woolworths NZ", "https://careers.woolworths.co.nz/"),
+    ("Accenture New Zealand", "https://accenture.wd103.myworkdayjobs.com/AccentureCareers"),
+    ("Deloitte New Zealand", "https://www2.deloitte.com/nz/en/careers.html"),
+    ("PwC New Zealand", "https://www.pwc.co.nz/careers.html"),
+    ("EY New Zealand", "https://www.ey.com/en_nz/careers"),
+    ("KPMG New Zealand", "https://home.kpmg/nz/en/home/careers.html"),
+    ("Automattic (WordPress.com)", "https://automattic.com/work-with-us/"),
+    ("Toptal", "https://www.toptal.com/careers"),
+    ("Doist", "https://doist.com/careers"),
+]
+
+# ---------------------------------------------------------------------------
+# Ireland company registry
+#
+# This is separate from the ATS connector lists. Every employer in this
+# registry remains visible even when its ATS returns zero jobs or errors.
+# Registry expanded with the uploaded 100-company Ireland career-page list.
+# ireland_companies.csv is the runtime source of truth; this embedded list is the fallback.
+
+# This gives the dashboard the same "live matches + manual-check companies"
+# behaviour as the reference Job Radar.
+# ---------------------------------------------------------------------------
+
+IRELAND_COMPANY_REGISTRY = [
+    'A&L Goodbody',
+    'ABB',
+    'Abbott',
+    'AbbVie',
+    'ABP Food Group',
+    'Accenture',
+    'Adecco Ireland',
+    'Adobe',
+    'Advanced Micro Devices (AMD)',
+    'AECOM',
+    'Aer Lingus',
+    'AerCap',
+    'Agilent Technologies',
+    'AIB (Allied Irish Banks)',
+    'Akamai',
+    'Aldi Ireland',
+    'Alexion Pharmaceuticals',
+    'Alkermes',
+    'Alvarez & Marsal',
+    'Amazon',
+    'American Express',
+    'Amgen',
+    'An Post',
+    'Analog Devices',
+    'Aon',
+    'Apple',
+    'Applied Materials',
+    'Approach People Recruitment',
+    'Arcadis',
+    'Arista Networks',
+    'Arthur Cox',
+    'Arup',
+    'Asana',
+    'ASML',
+    'AstraZeneca',
+    'AtkinsRéalis',
+    'Atlantic Technological University (ATU)',
+    'Atlassian',
+    'Autodesk',
+    'Aviva Ireland',
+    'Avolon',
+    'AXA Ireland',
+    'B&Q Ireland',
+    'Bain & Company',
+    'Baker Tilly Ireland',
+    'BAM Ireland',
+    'Bank of America',
+    'Bank of Ireland',
+    'Barclays',
+    'Bausch + Lomb',
+    'Baxter International',
+    'Bayer',
+    'BDO Ireland',
+    'BearingPoint',
+    'Becton Dickinson (BD)',
+    'Bio-Rad Laboratories',
+    'Biotronik',
+    'BlackRock',
+    'Bloomberg',
+    'BNP Paribas Ireland',
+    'BNY',
+    'BNY Mellon',
+    'Boehringer Ingelheim',
+    'Boots Ireland',
+    'Bord Gáis Energy',
+    'Bord na Móna',
+    'Boston Consulting Group (BCG)',
+    'Boston Scientific',
+    'Box',
+    'Brightwater',
+    'Bristol Myers Squibb',
+    'Broadcom',
+    'Brown Thomas Arnotts',
+    'Bruker',
+    'Bus Éireann',
+    'ByrneWallace',
+    'C&C Group',
+    'Cadence Design Systems',
+    'Cairn Homes',
+    'Cantor Fitzgerald Ireland',
+    'Canva',
+    'Capgemini',
+    'Carbery Group',
+    'Carrier',
+    'Catalent',
+    'CDB Aviation',
+    'Central Bank of Ireland',
+    'CGI',
+    'Charles River Laboratories',
+    'Check Point Software',
+    'Cisco',
+    'Citi',
+    'Citrix',
+    'Clayton Hotels',
+    'ClickUp',
+    'Cloudflare',
+    'Coca-Cola HBC Ireland',
+    'Cognizant',
+    'Cohesity',
+    'Coillte',
+    'Coinbase',
+    'Coloplast',
+    'Concentrix (Ireland)',
+    'Convatec',
+    'Cook Medical',
+    'Cpl',
+    'CPL Resources',
+    'CRH',
+    'CrowdStrike',
+    'Currys Ireland',
+    'CyberArk',
+    'daa (Dublin Airport Authority)',
+    'DAE Capital',
+    'Dairygold',
+    'Dalata Hotel Group',
+    'Danaher Corporation',
+    'Databricks',
+    'Datadog',
+    'Datalex',
+    'Davy',
+    'Dawn Meats',
+    'Decathlon Ireland',
+    'Dell Technologies',
+    'Deloitte Ireland',
+    'DePuy Synthes',
+    'Deutsche Bank',
+    'Dexcom',
+    'DHL Ireland',
+    'Diageo Ireland',
+    'Dillon Eustace',
+    'DocuSign',
+    'DPS Group (Arcadis)',
+    'DraftKings',
+    'Dropbox',
+    'DSV Ireland',
+    'Dublin Bus',
+    'Dublin City University (DCU)',
+    'Dunnes Stores',
+    'DXC Technology',
+    'Dynatrace',
+    'Eason',
+    'Eaton',
+    'Edwards Lifesciences',
+    'Eir',
+    'EirGrid',
+    'EirGrid Group',
+    'Elavon',
+    'Eli Lilly',
+    'Emerson',
+    'Energia Group',
+    'Enterprise Ireland',
+    'Ergo',
+    'Ericsson',
+    'ESB',
+    'ESB (Electricity Supply Board)',
+    'Etsy',
+    'Eurofins Scientific',
+    'Eversheds Sutherland Ireland',
+    'EY Ireland',
+    'FactSet',
+    'Fastly',
+    'Fastway Couriers Ireland',
+    'FBD Insurance',
+    'FedEx Express Ireland',
+    'Fenergo',
+    'Fidelity Investments',
+    'Figma',
+    'Fiserv',
+    'Fitch Ratings',
+    'Flutter Entertainment',
+    'Fortinet',
+    'Forvis Mazars Ireland',
+    'FRS Recruitment',
+    'FTI Consulting',
+    'Fujitsu',
+    'Fáilte Ireland',
+    'Gartner',
+    'Gas Networks Ireland',
+    'Genesis (formerly GECAS)',
+    'Genesys',
+    'Gilead Sciences',
+    'Glanbia',
+    'Glanbia / Tirlán',
+    'GlaxoSmithKline (GSK)',
+    'Glenveagh Properties',
+    'Goldman Sachs',
+    'Goodbody',
+    'Google',
+    'Grant Thornton Ireland',
+    'Greencore',
+    'Guidewire',
+    'H&M Ireland',
+    'Haleon',
+    'Halfords Ireland',
+    'Harvey Nash Ireland',
+    'Hays Ireland',
+    'Heineken Ireland',
+    'Hewlett Packard Enterprise (HPE)',
+    'HIQA',
+    'Holland & Barrett Ireland',
+    'Hollister Incorporated',
+    'Honeywell',
+    'Horizon Therapeutics (Amgen)',
+    'HP (Hewlett-Packard)',
+    'HSBC Ireland',
+    'HSE (Health Service Executive)',
+    'HubSpot',
+    'IBM',
+    'ICON plc',
+    'IDA Ireland',
+    'Illumina',
+    'Indeed',
+    'Indeed (Ireland)',
+    'Infineon Technologies',
+    'Infosys',
+    'Insulet Corporation',
+    'Integra LifeSciences',
+    'Intel',
+    'Intercom',
+    'Intersport Elverys',
+    'IQVIA',
+    'Irish Distillers (Pernod Ricard)',
+    'Irish Ferries',
+    'Irish Life',
+    'Irish Rail (Iarnród Éireann)',
+    'Jacobs',
+    'Jamf',
+    'Jazz Pharmaceuticals',
+    'JD Sports Ireland',
+    'John Sisk & Son (Sisk Group)',
+    'Johnson & Johnson',
+    'Johnson Controls',
+    'Jones Engineering',
+    'JPMorgan Chase',
+    'Kepak Group',
+    'Kerry Group',
+    'Keysight Technologies',
+    'Kingspan Group',
+    'Kirby Group Engineering',
+    'KLA Corporation',
+    'KPMG Ireland',
+    'Kuehne+Nagel Ireland',
+    'Labcorp',
+    'Lam Research',
+    'Laya Healthcare',
+    'Lidl Ireland',
+    'Life Style Sports',
+    'Linesight',
+    'LinkedIn',
+    'LK Shields',
+    'LloydsPharmacy Ireland',
+    'Logitech',
+    'Lonza',
+    'Macquarie Group',
+    'Maldron Hotels',
+    'Manpower Ireland',
+    'Maples Group Ireland',
+    'Marks & Spencer Ireland',
+    'Marsh McLennan',
+    'Marvell Technology',
+    'Mason Hayes & Curran',
+    'Mastercard',
+    'Matheson',
+    'Maynooth University',
+    'McCann FitzGerald',
+    'McKinsey & Company',
+    'Mediahuis Ireland',
+    'Medpace',
+    'Medtronic',
+    'Mercer',
+    'Merck Group',
+    'Mercury Engineering',
+    'Merit Medical',
+    'Meta',
+    'Microchip Technology',
+    'Micron Technology',
+    'Microsoft',
+    'Microsoft Dynamics Partners',
+    'Monday.com',
+    'MongoDB',
+    "Moody's",
+    'Morgan McKinley',
+    'Morgan Stanley',
+    'Morningstar',
+    'Mott MacDonald',
+    'MSCI',
+    'MSD (Merck Sharp & Dohme)',
+    'Munster Technological University (MTU)',
+    'Musgrave Group (SuperValu / Centra)',
+    'NetApp',
+    'Next Ireland',
+    'Nokia',
+    'Nordic Aviation Capital',
+    'Northern Trust',
+    'Notion',
+    'Novartis',
+    'NTMA',
+    'Nutanix',
+    'NVIDIA',
+    'NXP Semiconductors',
+    'Okta',
+    'Oliver Wyman',
+    'Oracle',
+    'Ornua',
+    'Palo Alto Networks',
+    'PayPal',
+    'Personio',
+    'Pfizer',
+    'Philip Lee',
+    'Ping Identity',
+    'Pinterest',
+    'PM Group',
+    'Press Up Hospitality Group',
+    'Primark / Penneys',
+    'Proofpoint',
+    'Protiviti',
+    'PTSB (Permanent TSB)',
+    'Public Jobs / Civil Service',
+    'PublicJobs.ie (PAS)',
+    'Pure Storage',
+    'PwC Ireland',
+    'QIAGEN',
+    'Qorvo',
+    'Qualcomm',
+    'Qualtrics',
+    'Rapid7',
+    'Reddit',
+    'Refinitiv (LSEG)',
+    'Regeneron',
+    'Renesas Electronics',
+    'Reperio Human Capital',
+    'ResMed',
+    'Revenue',
+    'Revvity (PerkinElmer)',
+    'Riot Games',
+    'Roche',
+    'Rockwell Automation',
+    'RTÉ (Raidió Teilifís Éireann)',
+    'Rubrik',
+    'Ryanair',
+    'S&P Global',
+    'Sage',
+    'Salesforce',
+    'Sanofi',
+    'SAP',
+    'Schneider Electric',
+    'Science Foundation Ireland (SFI)',
+    'Seagate',
+    'SentinelOne',
+    'ServiceNow',
+    'Shannon Airport Group',
+    'Sigmar Recruitment',
+    'Sky Ireland',
+    'Slack',
+    'Slalom',
+    'SMBC Aviation Capital',
+    'Smith & Nephew',
+    'Smurfit Kappa',
+    'Smurfit Westrock',
+    'Smyths Toys Superstores',
+    'Snowflake',
+    'Societe Generale',
+    'Sophos',
+    'South East Technological University (SETU)',
+    'Splunk',
+    'Squarespace',
+    'SSE Airtricity / SSE',
+    'Stantec',
+    'State Street',
+    'Stena Line Ireland',
+    'STMicroelectronics',
+    'Storm3',
+    'Stripe',
+    'Stryker',
+    'Superdrug Ireland',
+    'SuperValu / Musgrave',
+    'Susquehanna International Group (SIG)',
+    'Syneos Health',
+    'Synopsys',
+    'Takeda',
+    'Tandem Diabetes Care',
+    'Tata Consultancy Services (TCS)',
+    'Teagasc',
+    'Technological University Dublin (TU Dublin)',
+    'Teleflex',
+    'Teleperformance (Ireland)',
+    'Tenable',
+    'Terumo',
+    'Tesco Ireland',
+    'Tetra Tech',
+    'Teva Pharmaceuticals',
+    'Texas Instruments',
+    'The Doyle Collection',
+    'The Irish Times',
+    'Thermo Fisher Scientific',
+    'Three Ireland',
+    'TikTok',
+    'TK Maxx Ireland',
+    'Toast',
+    'Tourism Ireland',
+    'Trane Technologies',
+    'Transport Infrastructure Ireland',
+    'Trend Micro',
+    'Trinity College Dublin (TCD)',
+    'Twilio',
+    'UBS',
+    'Uisce Éireann (Irish Water)',
+    'Uisce Éireann / Irish Water',
+    'Uniphar Group',
+    'University College Cork (UCC)',
+    'University College Dublin (UCD)',
+    'University of Galway',
+    'University of Limerick (UL)',
+    'UPS Ireland',
+    'Veeam',
+    'Version 1',
+    'VHI Healthcare',
+    'Viatris',
+    'Virgin Media Ireland',
+    'Visa',
+    'VMware (Broadcom)',
+    'Vodafone Ireland',
+    'Walkers Ireland',
+    'Waters Corporation',
+    'Waterstones Ireland',
+    'Wayflyer',
+    'Western Digital',
+    'William Fry',
+    'Willis Towers Watson (WTW)',
+    'Wipro',
+    "Woodie's",
+    'Workday',
+    'Workhuman',
+    'Workvivo',
+    'WSP',
+    'WTW',
+    'WuXi Biologics',
+    'Zara / Inditex Ireland',
+    'Zendesk',
+    'Zimmer Biomet',
+    'Zscaler',
+    'Zurich Insurance',
+]
+
+CAREERS_URL_OVERRIDES = {
+    "Apple": "https://jobs.apple.com/en-ie/search",
+    "EY Ireland": "https://careers.ey.com/ey",
 }
 
+def _company_key(value: str) -> str:
+    value = (value or "").lower().replace("&", "and")
+    return re.sub(r"[^a-z0-9]+", "", value)
 
-def workday_headers(tenant, wd_shard, site):
-    """Many Workday tenants sit behind bot-protection that blocks requests
-    without a Referer/Origin matching the tenant's own domain — a real
-    browser visiting the career page always sends these; a bare API script
-    without them can get flat-out rejected with a 400, even on a perfectly
-    valid endpoint. This makes every request look like it came from the
-    tenant's own career page, which is exactly what it's mimicking.
+def _registry_url_map():
+    out = {}
+    for company, url in JSONLD_CAREER_PAGES:
+        key = _company_key(company)
+        if key:
+            out[key] = url
+    for company, url in CAREERS_URL_OVERRIDES.items():
+        out[_company_key(company)] = url
+    return out
 
-    IMPORTANT: real Workday career pages redirect to a locale-prefixed URL
-    (e.g. '/en-US/AccentureCareers') — some tenants validate the Referer
-    against that canonical, post-redirect form rather than the bare path,
-    so this uses the locale-prefixed version to match what a real browser
-    would actually end up sending."""
-    site_base = f"https://{tenant}.{wd_shard}.myworkdayjobs.com/en-US/{site}"
-    return {
-        **HEADERS,
-        "Referer": site_base,
-        "Origin": f"https://{tenant}.{wd_shard}.myworkdayjobs.com",
-        "X-Requested-With": "XMLHttpRequest",
+def _load_company_master():
+    """Load the Ireland master registry. CSV is intentionally editable without touching Python."""
+    try:
+        import csv
+        with open("ireland_companies.csv", encoding="utf-8-sig", newline="") as f:
+            rows = list(csv.DictReader(f))
+        if rows:
+            return [
+                (
+                    (r.get("company_name") or "").strip(),
+                    (r.get("career_url") or "").strip(),
+                    (r.get("source_type") or "employer").strip() or "employer",
+                    (r.get("category") or "").strip(),
+                )
+                for r in rows
+            ]
+    except Exception as exc:
+        print(f"  ! ireland_companies.csv unavailable, using embedded registry: {exc}")
+    return [(name, None, "employer", "") for name in IRELAND_COMPANY_REGISTRY]
+
+def build_company_registry(include_cache: bool = False):
+    url_map = _registry_url_map()
+    connector_maps = [
+        ({_company_key(x): "greenhouse" for x in GREENHOUSE_COMPANIES}),
+        ({_company_key(x): "lever" for x in LEVER_COMPANIES}),
+        ({_company_key(x): "ashby" for x in ASHBY_COMPANIES}),
+        ({_company_key(x[0]): "workday" for x in WORKDAY_COMPANIES}),
+        ({_company_key(x): "smartrecruiters" for x in SMARTRECRUITERS_COMPANIES}),
+        ({_company_key(x): "workable" for x in WORKABLE_COMPANIES}),
+        ({_company_key(x): "recruitee" for x in RECRUITEE_COMPANIES}),
+        ({_company_key(x): "personio" for x in PERSONIO_COMPANIES}),
+        ({_company_key(x): "pinpoint" for x in PINPOINT_COMPANIES}),
+        ({_company_key(x): "direct" for x in DIRECT_COMPANY_CONNECTORS}),
+        ({_company_key(x): "phenom" for x in KNOWN_PHENOM_MAPPINGS}),
+        ({_company_key(x): "eightfold" for x in KNOWN_EIGHTFOLD_MAPPINGS}),
+    ]
+    status_by_key = {}
+    for mapping in connector_maps:
+        status_by_key.update(mapping)
+
+    # Confirmed dynamic ATS mappings discovered in previous runs. Hard-coded
+    # mappings remain authoritative; cache only fills companies that otherwise
+    # would be manual-check.
+    if include_cache:
+        try:
+            with open("ats_platform_cache.json", encoding="utf-8") as f:
+                ats_cache = json.load(f)
+            for company_name, info in ats_cache.items():
+                if company_name.startswith("__") or not isinstance(info, dict):
+                    continue
+                platform = info.get("platform")
+                key = _company_key(company_name)
+                if platform and platform != "none" and key not in status_by_key:
+                    status_by_key[key] = platform
+        except Exception:
+            pass
+
+    registry = []
+    for name, master_url, source_type, category in _load_company_master():
+        if not name:
+            continue
+        key = _company_key(name)
+        platform = status_by_key.get(key, "manual-check")
+        url = CAREERS_URL_OVERRIDES.get(name) or master_url or url_map.get(key)
+
+        # IMPORTANT: do not use substring matching here.
+        # "Ergo" must not inherit Fenergo's connector, "Eir" must not inherit
+        # another company containing "eir", etc. Dynamic ATS discovery below
+        # validates real career-page/ATS endpoints instead.
+        registry.append({
+            "company": name,
+            "country": "Ireland",
+            "platform": platform,
+            "careers_url": url,
+            "automatic": platform != "manual-check",
+            "source_type": source_type,
+            "category": category,
+        })
+    return registry
+
+def company_display_name(raw: str) -> str:
+    key = _company_key(raw)
+    for name in IRELAND_COMPANY_REGISTRY:
+        if _company_key(name) == key:
+            return name
+    aliases = {
+        "nvidia": "NVIDIA",
+        "docusign": "DocuSign",
+        "microsoft": "Microsoft",
+        "linkedin": "LinkedIn",
+        "meta": "Meta",
+        "google": "Google",
+        "apple": "Apple",
+        "ey": "EY Ireland",
+        "kpmg": "KPMG Ireland",
+        "aib": "AIB (Allied Irish Banks)",
     }
+    return aliases.get(key, raw)
 
 
-def make_workday_session():
-    """Some Workday tenants run bot-protection that fingerprints the TLS
-    handshake itself (JA3 fingerprinting) — this can reject a request as
-    non-browser-like regardless of what headers/cookies/payload it carries,
-    since Python's standard requests/urllib3 has a different, recognizably
-    non-browser TLS signature than real Chrome. curl_cffi impersonates an
-    actual Chrome TLS handshake, which gets past this class of protection
-    where no amount of header tweaking can. Falls back to a plain requests
-    session if curl_cffi isn't installed (with reduced success on the most
-    strictly-protected tenants)."""
-    if HAS_CURL_CFFI:
-        return cffi_requests.Session(impersonate="chrome124")
-    return requests.Session()
+# ---------------------------------------------------------------------------
+# External job aggregator APIs -- optional, free, but need YOUR OWN key
+# (I can't sign up on your behalf). These cover the "other well-known job
+# posting websites" ground -- Indeed and LinkedIn don't offer free public
+# search APIs anymore (Indeed closed its Publisher program to new
+# applicants; LinkedIn requires a partnership), and scraping their HTML
+# directly violates their terms of service and is aggressively bot-blocked,
+# so they're not legitimate free options. These three are the real
+# free equivalent: documented APIs, free tiers, no ToS violation.
+#
+# Important honest caveat from earlier: these aggregators crawl the same
+# primary ATS sources this scraper already hits, just later -- they add
+# BREADTH (companies/regions we don't otherwise cover), not SPEED. Left
+# empty/inactive by default; each function is a no-op until you fill in a key.
+#
+#   Adzuna:    developer.adzuna.com            -- ADZUNA_APP_ID / ADZUNA_APP_KEY
+#   Careerjet: careerjet.com/partners           -- CAREERJET_AFFID
+#   Jooble:    jooble.org/api/about             -- JOOBLE_API_KEY
+# ---------------------------------------------------------------------------
+
+ADZUNA_APP_ID = os.environ.get("ADZUNA_APP_ID", "").strip()
+ADZUNA_APP_KEY = os.environ.get("ADZUNA_APP_KEY", "").strip()
+
+# Careerjet's API calls this value "affid". Keep both environment names for compatibility.
+CAREERJET_AFFID = (
+    os.environ.get("CAREERJET_API_KEY", "").strip()
+    or os.environ.get("CAREERJET_AFFID", "").strip()
+)
+
+JOOBLE_API_KEY = os.environ.get("JOOBLE_API_KEY", "").strip()
+
+# ---------------------------------------------------------------------------
+# Direct-from-company-site sources, attempted with plain HTTP (no proxy).
+# These use each company's own internal search API -- the same ones the
+# Apify FAANG actor calls. GitHub Actions runners have full outbound internet
+# access (unlike a restricted sandbox), so plain requests may well succeed
+# here even though they failed when tested from a locked-down environment.
+#
+# Amazon and Netflix have simple, well-documented JSON search APIs and are
+# implemented below. Google, Apple and Meta use heavier client-side
+# rendering / GraphQL / session-signed requests that are genuinely fragile
+# to reverse-engineer -- they are intentionally NOT attempted here. Keep
+# pulling those three from the Apify FAANG actor (still free) rather than
+# risk silently-wrong or empty data from a guessed integration.
+# ---------------------------------------------------------------------------
 
 
-# --- visa sponsorship text signal -------------------------------------
+# Direct company career-site connectors. These are intentionally separate from
+# ATS discovery because the sites use proprietary/public search surfaces rather
+# than a reusable third-party ATS board. A connector is allowed to return zero
+# without failing the whole run; the dashboard then exposes it under
+# "Zero jobs scraped" for diagnosis.
+DIRECT_COMPANY_CONNECTORS = {
+    "Apple": "apple",
+    "Google": "google",
+    "Microsoft": "microsoft",
+    "Meta": "meta",
+    "TikTok": "tiktok",
+    "Oracle": "oracle",
+    "Amazon": "amazon",
+    "Netflix": "netflix",
+}
 
-SPONSOR_POSITIVE_PATTERNS = [
-    r"visa sponsorship (is |will be )?available",
-    r"will sponsor",
-    r"we (can|do|are able to) sponsor",
-    r"eligible for (visa |work permit )?sponsorship",
-    r"sponsorship (is )?available for (this|eligible) (role|candidates)",
-    r"provide(s)? immigration sponsorship",
-    r"support (a |an )?(critical skills )?employment permit",
-    r"open to sponsoring",
-    r"sponsor(ship)? (work permit|visa)s? for (this|the) role",
+# Exact enterprise-platform mappings learned from validated public career-site
+# hosts. Unlike guessed ATS slugs, these are revalidated at runtime before use.
+KNOWN_EIGHTFOLD_MAPPINGS = {
+    "NetApp": "netapp",
+    "STMicroelectronics": "stmicroelectronics",
+    "Bayer": "bayer",
+    "HSBC Ireland": "hsbc",
+}
+
+KNOWN_PHENOM_MAPPINGS = {
+    "Cisco": "careers.cisco.com|CISCISGLOBAL",
+    "Fiserv": "careers.fiserv.com|FFFYJUS",
+    "Roche": "careers.roche.com|ROCHGLOBAL",
+    "Merck Group": "jobs.merck.com|MERCUS",
+    "Zimmer Biomet": "careers.zimmerbiomet.com|ZBUZBRUS",
+    "Convatec": "careers.convatec.com|CONVGLOBAL",
+    "Labcorp": "careers.labcorp.com|COVAGLOBAL",
+    "Danaher Corporation": "jobs.danaher.com|DANAGLOBAL",
+    "Catalent": "careers.catalent.com|CATAUS",
+    "Kerry Group": "jobs.kerry.com|KGUKGRGLOBAL",
+    "DHL Ireland": "careers.dhl.com|DPDHGLOBAL",
+    "Kuehne+Nagel Ireland": "jobs.kuehne-nagel.com|KUNAGLOBAL",
+    "State Street": "careers.statestreet.com|STSTGLOBAL",
+    "Thermo Fisher Scientific": "jobs.thermofisher.com|TFSCGLOBAL",
+}
+
+DIRECT_QUERIES = [""]  # general search engine: retrieve all jobs; filter in the dashboard
+
+# ---------------------------------------------------------------------------
+# Role keyword filter (title must contain at least one of these)
+# ---------------------------------------------------------------------------
+
+TITLE_KEYWORDS = [
+    "data analyst", "data scientist", "business intelligence",
+    "business analyst", "consultant", "erp", "retail sales",
+    "customer service", "store assistant",
+    # Part-time / internship track, matching the Part Time CV's 3 target
+    # categories (retail sales / customer service / store & stock assistant,
+    # already covered above) plus general part-time and internship phrasing
+    # so genuinely part-time or intern postings get caught even when the
+    # title doesn't literally say "retail" or "customer service".
+    "intern", "internship", "working student", "student job", "placement",
+    "part time", "part-time", "sales assistant", "stock assistant",
+    "seasonal", "temporary staff", "christmas temp", "weekend staff",
 ]
-SPONSOR_NEGATIVE_PATTERNS = [
-    r"unable to (offer|provide) (visa )?sponsorship",
-    r"(does not|do not|won't|will not|no) (currently )?(offer|provide) (visa )?sponsorship",
-    r"cannot sponsor",
-    r"without (the need for )?(visa )?sponsorship",
-    r"must (be|already be) (legally )?eligible to work .{0,40}without sponsorship",
-    r"no visa sponsorship (is )?available",
-    r"not able to sponsor",
-    r"sponsorship (is )?not (available|offered|provided)",
+
+# Used to tag each matched job's employment_type after scraping (see main()).
+# Order matters: internship is checked before part-time so "part-time
+# internship" style titles land as "internship".
+INTERNSHIP_KEYWORDS = ["intern", "internship", "working student", "student job", "placement", "co-op", "co op"]
+PART_TIME_KEYWORDS = ["part time", "part-time", "seasonal", "temporary staff", "christmas temp", "weekend staff"]
+
+
+def employment_type(title: str) -> str:
+    t = (title or "").lower()
+    if any(k in t for k in INTERNSHIP_KEYWORDS):
+        return "internship"
+    if any(k in t for k in PART_TIME_KEYWORDS):
+        return "part_time"
+    return "full_time"
+
+
+# ---------------------------------------------------------------------------
+# Location filter — Ireland-only pipeline (roles in IE or IE-remote/hybrid).
+# ---------------------------------------------------------------------------
+
+IRELAND_ONLY = True
+
+IRELAND_LOCATION_KEYWORDS = [
+    "ireland", "éire", "eire", "dublin", "cork", "galway", "limerick",
+    "waterford", "kildare", "kilkenny", "wexford", "sligo", "mayo",
+    "donegal", "kerry", "tipperary", "meath", "louth", "wicklow", "carlow",
+    "laois", "offaly", "westmeath", "longford", "roscommon", "cavan",
+    "monaghan", "clare", "ennis", "shannon", "athlone", "dundalk", "bray",
+    "naas", "tralee", "letterkenny", "drogheda", "swords", "blanchardstown",
+    "dún laoghaire", "dun laoghaire", "tallaght", "cork city", "dublin city",
+    "irL",  # typo guard — removed below via normalized check
 ]
-SPONSOR_POS_RE = re.compile("|".join(SPONSOR_POSITIVE_PATTERNS), re.IGNORECASE)
-SPONSOR_NEG_RE = re.compile("|".join(SPONSOR_NEGATIVE_PATTERNS), re.IGNORECASE)
-HTML_TAG_RE = re.compile(r"<[^>]+>")
+# Drop accidental typo token
+IRELAND_LOCATION_KEYWORDS = [k for k in IRELAND_LOCATION_KEYWORDS if k != "irL"]
+
+IRELAND_REMOTE_HINTS = [
+    "remote, ireland", "remote ireland", "ireland remote", "remote (ireland)",
+    "remote - ireland", "remote/hybrid ireland", "hybrid ireland",
+    "ireland (remote", "ireland - remote", "based in ireland",
+]
+
+# Canonical county/city bucket for the dashboard location filter.
+IRELAND_AREA_KEYWORDS = [
+    ("dublin", "Dublin"),
+    ("cork", "Cork"),
+    ("galway", "Galway"),
+    ("limerick", "Limerick"),
+    ("waterford", "Waterford"),
+    ("kildare", "Kildare"),
+    ("remote", "Remote / Hybrid"),
+    ("hybrid", "Remote / Hybrid"),
+]
+
+_REGION_TAG_RE = re.compile(r"\(([^)]+)\)")
+
+IRISH_DOMESTIC_CAREER_PAGES = {
+    "aib", "an post", "ryanair", "aer lingus", "eir", "version 1",
+    "dunnes stores", "supervalu / musgrave", "musgrave",
+    "penneys / primark ireland", "bank of ireland", "ibm ireland", "sap ireland",
+}
+
+VISA_SPONSOR_KEYWORDS = [
+    "visa sponsorship", "sponsor visa", "will sponsor", "sponsorship available",
+    "employment permit", "work permit sponsorship", "stamp 1g", "stamp 1",
+]
+VISA_NO_SPONSOR_KEYWORDS = [
+    "no visa sponsorship", "no sponsorship", "unable to sponsor",
+    "will not sponsor", "cannot sponsor", "without sponsorship",
+    "must have the right to work", "right to work in ireland without restriction",
+    "eligible to work in ireland without",
+]
+
+ADZUNA_COUNTRIES = ["ie"] if IRELAND_ONLY else ["gb", "ie", "de", "nl", "at", "es", "pl", "in", "sg", "au", "nz", "ca"]
+CAREERJET_LOCALES = ["en_IE"] if IRELAND_ONLY else ["en_GB", "en_IE", "en_US", "en_AU", "en_CA", "en_SG", "en_IN"]
+
+# ---------------------------------------------------------------------------
+# Recency filter. Aggregators (Adzuna/Careerjet/Jooble) mostly buy you
+# breadth, not speed -- they crawl the same primary ATS sources we do, just
+# later. The actual lever for "earliest" is how often THIS scrapes (see
+# scrape.yml's cron) plus being able to see, at a glance, how fresh each
+# listing is. MAX_AGE_DAYS optionally drops stale postings entirely at
+# scrape time; set to None to keep everything and just rely on the
+# recency tag + dashboard filter instead.
+# ---------------------------------------------------------------------------
+
+MAX_AGE_DAYS = None  # e.g. 30 to auto-drop postings older than a month; None = keep all
 
 
-def classify_sponsorship(description_text: str):
-    """Returns (label, snippet). label in {'sponsors','no_sponsorship','not_mentioned'}."""
-    if not description_text:
-        return "not_mentioned", None
-    plain = HTML_TAG_RE.sub(" ", description_text)
-    plain = re.sub(r"\s+", " ", plain).strip()
-
-    neg = SPONSOR_NEG_RE.search(plain)
-    if neg:
-        start = max(0, neg.start() - 40)
-        return "no_sponsorship", plain[start:neg.end() + 40].strip()
-
-    pos = SPONSOR_POS_RE.search(plain)
-    if pos:
-        start = max(0, pos.start() - 40)
-        return "sponsors", plain[start:pos.end() + 40].strip()
-
-    return "not_mentioned", None
-
-
-def classify_url(url: str) -> str:
-    if WORKDAY_URL_RE.search(url):
-        return "workday"
-    if "oraclecloud.com" in url or ".fa." in url:
-        return "oracle_cloud"
-    if "greenhouse.io" in url:
-        return "greenhouse"
-    if "lever.co" in url:
-        return "lever"
-    return "custom"
-
-
-def parse_posted_text(posted_text: str):
-    if not posted_text:
+def parse_posted_date(value):
+    """Best-effort parse of a posting date/recency string into a UTC datetime.
+    Handles ISO8601 (Greenhouse/Lever/Ashby/SmartRecruiters/Workable/Recruitee/
+    Personio/Amazon/Netflix all return this) and Workday's human-readable
+    relative strings ("Posted Today", "Posted 3 Days Ago", "Posted 30+ Days Ago").
+    """
+    if not value:
         return None
-    t = posted_text.lower()
-    if "today" in t:
-        return 0
-    if "yesterday" in t:
-        return 1
-    m = re.search(r"(\d+)\+?\s*day", t)
+    s = str(value).strip()
+
+    try:
+        iso = s.replace("Z", "+00:00")
+        dt = datetime.fromisoformat(iso)
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=timezone.utc)
+        return dt.astimezone(timezone.utc)
+    except ValueError:
+        pass
+
+    sl = s.lower()
+    now = datetime.now(timezone.utc)
+    if "today" in sl:
+        return now
+    if "yesterday" in sl:
+        return now - timedelta(days=1)
+    m = re.search(r"(\d+)\+?\s*day", sl)
     if m:
-        return int(m.group(1))
+        return now - timedelta(days=int(m.group(1)))
     return None
 
 
-def is_ireland_location(location_text: str) -> bool:
-    if not location_text:
-        return False
-    lt = location_text.lower()
-    return any(hint in lt for hint in IRELAND_LOCATION_HINTS)
+def recency_bucket(posted_dt):
+    if not posted_dt:
+        return "unknown"
+    age = datetime.now(timezone.utc) - posted_dt
+    if age <= timedelta(hours=24):
+        return "24h"
+    if age <= timedelta(days=7):
+        return "7d"
+    if age <= timedelta(days=30):
+        return "30d"
+    return "older"
 
 
-def normalize_employment_type(raw, title=""):
-    """Every platform describes employment type in its own wording —
-    Ashby uses 'FullTime' (no space), Lever uses 'Full-time', SmartRecruiters
-    nests it under a different field entirely, Personio says 'Permanent'.
-    The dashboard's filter dropdown only matches one of 6 exact strings, so
-    passing any of these through unchanged meant the filter matched almost
-    nothing — this collapses whatever a platform says into one of those 6
-    canonical values.
-
-    Every check below uses word-boundary regex on the ORIGINAL (space-
-    preserved) string, not a naive substring test on a space-stripped
-    blob — a naive check is exactly what caused a real bug: 'International'
-    was wrongly tagged 'Internship' because it contains 'intern' as a bare
-    substring. The same class of mistake exists for several other words
-    (contemporary/temporary, irregular/regular, impermanent/permanent),
-    so every category gets the same word-boundary treatment, not just the
-    one that happened to get caught."""
-    original = str(raw).lower() if raw else ""
-    title_lower = str(title).lower() if title else ""
-
-    def word(pattern, text):
-        return re.search(pattern, text) is not None
-
-    # The bare word 'intern' in the METADATA field is genuinely ambiguous
-    # (a real Version 1 posting used it to mean something like 'Internal',
-    # not internship) — only the full word 'internship' counts there.
-    # But the same bare word in the actual public-facing TITLE is a much
-    # more trustworthy signal: no employer titles a real senior role
-    # "Intern" by mistake. 'Work placement' is another real, common phrase
-    # for the same thing (e.g. Deloitte's Aspire Programme postings).
-    if word(r"\binternship\b", original):
-        return "Internship"
-    if word(r"\bintern(?:ship)?\b", title_lower) or word(r"\bwork\s?placement\b", title_lower):
-        return "Internship"
-    if word(r"\bpart[\s-]?time\b", original):
-        return "Part-time"
-    if word(r"\bpart[\s-]?time\b", title_lower):
-        return "Part-time"
-    if word(r"\btemp(?:orary)?\b", original):  # 'temp' alone should count too, not just 'temporary'
-        return "Temporary"
-    if word(r"\btemp(?:orary)?\b", title_lower):
-        return "Temporary"
-    if word(r"\b(?:contract(?:or)?|freelance)\b", original):
-        # NOTE: 'consultant' deliberately excluded — it's commonly a
-        # permanent full-time JOB TITLE at many companies (Accenture,
-        # Deloitte, etc.), not a genuine employment-type signal. Treating
-        # it as Contract would misclassify real full-time consultants.
-        return "Contract"
-    # Title-based Contract check is deliberately NARROWER than Part-time/
-    # Temporary above — "Contract Manager", "Contract Administrator", and
-    # "Contract Specialist" are real, common PERMANENT job titles about
-    # managing contracts, not contract-type roles themselves. A bare
-    # "contract" match in the title would recreate the same class of bug
-    # already fixed elsewhere. Only specific, unambiguous phrasing counts.
-    if word(r"\b(?:fixed[\s-]?term|contract\s+(?:role|position|basis)|\d+[\s-]?(?:month|week|year)s?\s+contract|contractor)\b", title_lower):
-        return "Contract"
-    if word(r"\b(?:full[\s-]?time|permanent|regular)\b", original):
-        return "Full-time"
-    return "Unspecified"
+def title_matches(title: str) -> bool:
+    """Preference tag only. Never use this to decide whether a job is ingested."""
+    t = (title or "").lower()
+    return any(k in t for k in TITLE_KEYWORDS)
 
 
-def fetch_job_description(tenant, wd_shard, site, external_path, session):
-    detail_url = f"https://{tenant}.{wd_shard}.myworkdayjobs.com/wday/cxs/{tenant}/{site}{external_path}"
-    try:
-        resp = session.get(detail_url, headers=workday_headers(tenant, wd_shard, site), timeout=15)
-        resp.raise_for_status()
-        data = resp.json()
-        return (data.get("jobPostingInfo") or {}).get("jobDescription", "")
-    except Exception:
+def _strip_html(text: str) -> str:
+    if not text:
         return ""
+    return re.sub(r"<[^>]+>", " ", str(text))
 
 
-def find_ireland_facet_values(facets):
-    """Workday exposes a 'locations' facet (sometimes hierarchical: country ->
-    city). Recursively search it for anything Ireland-related and return the
-    facet parameter name + matching value IDs, so we can ask Workday's API to
-    filter server-side instead of guessing from a few hundred results."""
-    def walk(values):
-        matched = []
-        for v in values or []:
-            descriptor = str(v.get("descriptor", ""))
-            if any(hint in descriptor.lower() for hint in IRELAND_LOCATION_HINTS):
-                matched.append(v.get("id"))
-            # Don't descend into a matched country node's children — including
-            # the parent id already covers them in Workday's filter semantics.
-            elif v.get("values"):
-                matched.extend(walk(v["values"]))
-        return matched
-
-    for facet in facets or []:
-        param = facet.get("facetParameter", "")
-        if "location" not in param.lower():
-            continue
-        ids = walk(facet.get("values"))
-        if ids:
-            return param, ids
-    return None, []
+def ireland_area(location: str) -> str:
+    loc = (location or "").lower()
+    for keyword, label in IRELAND_AREA_KEYWORDS:
+        if keyword in loc:
+            return label
+    if any(k in loc for k in IRELAND_LOCATION_KEYWORDS):
+        return "Ireland (other)"
+    return "Ireland (other)"
 
 
-def post_workday_variants(session, api_base, headers, applied_facets, limit, offset, search_text=""):
-    """Different Workday tenants (depending on their CXS API version) can
-    reject a payload shape that others accept fine — e.g. some reject an
-    empty 'searchText' string, others want 'appliedFacets' omitted when
-    empty. Try a few known-real variants in order and use whichever the
-    tenant actually accepts, instead of assuming one shape works everywhere."""
-    variants = [
-        {"appliedFacets": applied_facets, "limit": limit, "offset": offset, "searchText": search_text},
-        {"appliedFacets": applied_facets, "limit": limit, "offset": offset},
-        {"searchText": search_text, "limit": limit, "offset": offset, "appliedFacets": applied_facets},
-        {"appliedFacets": applied_facets, "limit": limit, "offset": offset, "searchText": search_text, "clientRequestID": ""},
-        # Genuinely new attempt: a real UUID, not an empty string — real
-        # Workday frontend JS always generates one for this field.
-        {"appliedFacets": applied_facets, "limit": limit, "offset": offset, "searchText": search_text,
-         "clientRequestID": str(uuid.uuid4())},
-        {"appliedFacets": {}, "limit": limit, "offset": offset, "searchText": "Ireland"},
+def visa_sponsorship_from_text(*parts: str) -> str:
+    text = " ".join(_strip_html(p) for p in parts if p).lower()
+    if not text.strip():
+        return "not_mentioned"
+    if any(k in text for k in VISA_NO_SPONSOR_KEYWORDS):
+        return "no_sponsorship"
+    if any(k in text for k in VISA_SPONSOR_KEYWORDS):
+        return "sponsors"
+    return "not_mentioned"
+
+
+def jsonld_page_is_ireland(company: str, url: str) -> bool:
+    """Keep JSON-LD career pages that target Ireland (skip other regions)."""
+    u = (url or "").lower()
+    c = (company or "").lower()
+    if ".ie/" in u or "/ie/" in u or "en-ie" in u or "en_ie" in u:
+        return True
+    if "bankofireland" in u or "dublin-ireland" in u:
+        return True
+    if " ireland" in c or c.endswith(" ireland"):
+        return True
+    tags = [t.lower() for t in _REGION_TAG_RE.findall(company or "")]
+    if tags:
+        return any("ireland" in t for t in tags)
+    if c in IRISH_DOMESTIC_CAREER_PAGES:
+        return True
+    return False
+
+
+def region_ok(location: str) -> bool:
+    loc = (location or "").lower()
+    if IRELAND_ONLY:
+        if any(h in loc for h in IRELAND_REMOTE_HINTS):
+            return True
+        if any(k in loc for k in IRELAND_LOCATION_KEYWORDS):
+            return True
+        if "remote" in loc or "hybrid" in loc:
+            # Generic remote with no country — too broad for an Ireland-only board.
+            return False
+        return False
+
+    # Legacy multi-region mode (set IRELAND_ONLY = False to re-enable).
+    REGION_KEYWORDS = [
+        "ireland", "dublin", "cork", "uk", "united kingdom", "london", "europe",
+        "eu", "germany", "berlin", "france", "paris", "netherlands", "amsterdam",
+        "spain", "madrid", "barcelona", "italy", "milan", "sweden", "stockholm",
+        "denmark", "copenhagen", "finland", "helsinki", "norway", "oslo",
+        "poland", "warsaw", "portugal", "lisbon", "belgium", "brussels",
+        "austria", "vienna", "switzerland", "zurich", "singapore", "dubai",
+        "uae", "united arab emirates", "india", "bangalore", "bengaluru",
+        "mumbai", "delhi", "hyderabad", "pune", "chennai", "gurgaon", "gurugram",
+        "australia", "sydney", "melbourne", "brisbane", "nsw", "queensland",
+        "victoria", "new zealand", "auckland", "wellington", "nz",
+        "saudi arabia", "riyadh", "jeddah", "qatar", "doha",
     ]
-    # One more low-cost shape: omit empty keys entirely instead of sending
-    # them as {} / "". Low confidence this is the actual fix (Strategy 1
-    # already sends a genuinely non-empty facet and still gets rejected for
-    # the same stuck tenants, which argues against "empty fields" being the
-    # real cause) — but cheap enough to include as one more attempt.
-    clean_variant = {"limit": limit, "offset": offset}
-    if applied_facets:
-        clean_variant["appliedFacets"] = applied_facets
-    if search_text:
-        clean_variant["searchText"] = search_text
-    variants.append(clean_variant)
-    last_error = None
-    for i, payload in enumerate(variants):
-        try:
-            resp = session.post(api_base, headers=headers, json=payload, timeout=15)
-            if resp.status_code == 200:
-                return resp, None
-            if resp.status_code == 429:
-                # Rate limited — trying more variants right now will almost
-                # certainly also get 429'd and just makes it worse. Stop
-                # immediately, back off, and surface this clearly rather
-                # than silently hammering through the rest of the list.
-                last_error = f"HTTP 429 rate limited"
-                time.sleep(3)
-                return None, last_error
-            last_error = f"HTTP {resp.status_code}: {resp.text[:150]}"
-        except Exception as e:
-            last_error = str(e)
-        if i < len(variants) - 1:
-            time.sleep(0.4)  # brief pause between attempts, not a rapid-fire burst
-    return None, last_error
+    US_KEYWORDS = ["usa", "united states", "u.s.a", "u.s."]
+    if any(k in loc for k in REGION_KEYWORDS):
+        return True
+    if any(k in loc for k in US_KEYWORDS):
+        return "remote" in loc
+    if "remote" in loc:
+        return True
+    return False
 
 
-def fetch_workday_jobs(company_name, url, session, fetch_descriptions=True,
-                        page_size=20, detail_delay=0.15):
-    m = WORKDAY_URL_RE.search(url)
-    if not m:
-        return [], f"URL did not match Workday pattern: {url}"
+# ---------------------------------------------------------------------------
+# Sector + country tagging. SECTOR_BY_COMPANY is built from the 'Sector'
+# column of company_shortlist_by_region.xlsx (704 companies) so the dashboard
+# can filter by industry. Keys are lowercase company names as they appear in
+# that spreadsheet -- JSON-LD entries carry a '(Region)' suffix (e.g.
+# 'google (ireland)') which matches the ATS-scraper 'company' field for those
+# rows exactly; bare-slug entries (greenhouse/lever/ashby/etc., e.g. 'stripe')
+# match directly too. sector_for() falls back to stripping any '(...)' suffix
+# so a company can still resolve even if the two names drift slightly.
+# ---------------------------------------------------------------------------
 
-    tenant, wd_shard, site = m.group(1), m.group(2), m.group(3)
-    api_base = f"https://{tenant}.{wd_shard}.myworkdayjobs.com/wday/cxs/{tenant}/{site}/jobs"
-    site_base = f"https://{tenant}.{wd_shard}.myworkdayjobs.com/{site}"
-    site_base_locale = f"https://{tenant}.{wd_shard}.myworkdayjobs.com/en-US/{site}"
+SECTOR_BY_COMPANY = {
+    "a1 telekom austria": "Telecom",
+    "ab inbev": "Consumer",
+    "abn amro": "Bank",
+    "accenture (india)": "Consulting",
+    "accenture australia": "Consulting",
+    "accenture austria": "Consulting",
+    "accenture belgium": "Consulting",
+    "accenture canada": "Consulting",
+    "accenture finland": "Consulting",
+    "accenture germany": "Consulting",
+    "accenture hong kong": "Consulting",
+    "accenture ireland": "Consulting",
+    "accenture malaysia": "Consulting/GBS",
+    "accenture netherlands": "Consulting",
+    "accenture new zealand": "Consulting",
+    "accenture poland": "Consulting/GBS",
+    "accenture portugal": "Consulting/GBS",
+    "accenture qatar": "Consulting",
+    "accenture saudi arabia": "Consulting",
+    "accenture singapore": "Consulting",
+    "accenture spain": "Consulting",
+    "accenture sweden": "Consulting",
+    "accenture uae": "Consulting",
+    "accenture uk": "Consulting",
+    "acs group": "Construction",
+    "adani group": "Conglomerate",
+    "adidas": "Sports Apparel",
+    "adnoc": "Energy",
+    "adyen": "Fintech",
+    "aegon": "Insurance",
+    "aeon malaysia": "Retail",
+    "aer lingus": "Airline",
+    "ahold delhaize": "Retail",
+    "aia group": "Insurance",
+    "aia malaysia": "Insurance",
+    "aib": "Bank",
+    "air canada": "Airline",
+    "air india": "Airline",
+    "air new zealand": "Airline",
+    "airasia": "Airline",
+    "airwallex": "Fintech",
+    "al meera": "Retail",
+    "al othaim": "Retail",
+    "al rajhi bank": "Bank",
+    "aldar properties": "Real Estate",
+    "aldi": "Retail",
+    "aldi ireland": "Retail",
+    "allegro": "E-commerce",
+    "allianz": "Insurance",
+    "almarai": "Consumer/FMCG",
+    "amadeus": "Travel Tech",
+    "amadeus (spain)": "Travel Tech",
+    "amazon (germany)": "Tech/Retail/Logistics",
+    "amazon (hong kong)": "Tech/Retail",
+    "amazon (india)": "Tech/Retail",
+    "amazon (ireland)": "Tech/Retail",
+    "amazon (saudi arabia)": "Tech/AWS",
+    "amazon (singapore)": "Tech/Retail",
+    "amazon (spain)": "Tech/Retail/Logistics",
+    "amazon (sweden)": "Tech/Retail",
+    "amazon (uk)": "Tech/Retail",
+    "amazon australia": "Tech/Retail",
+    "amazon canada": "Tech/Retail",
+    "amazon poland": "Tech/Retail/Logistics",
+    "amazon uae": "Tech/Retail",
+    "an post": "Postal/Semi-state",
+    "andritz": "Industrial/Engineering",
+    "anz bank": "Bank",
+    "anz new zealand": "Bank",
+    "apple (germany)": "Tech",
+    "apple (india)": "Tech",
+    "apple (ireland)": "Tech",
+    "apple (singapore)": "Tech",
+    "apple (uk)": "Tech",
+    "applegreen": "Retail/Convenience",
+    "articulate": "Tech",
+    "asb bank": "Bank",
+    "asda": "Retail",
+    "ashghal (public works authority)": "Government/Semi-state",
+    "asml": "Tech/Semiconductor",
+    "astrazeneca": "Pharma",
+    "atlassian": "Tech",
+    "auckland airport": "Aviation/Semi-state",
+    "australia post": "Logistics",
+    "automattic (wordpress.com)": "Tech",
+    "aviva": "Insurance",
+    "axel springer": "Media",
+    "bae systems": "Defence",
+    "bajaj auto": "Automotive",
+    "bam group": "Construction",
+    "bank of china (hong kong)": "Bank",
+    "bank of ireland": "Bank",
+    "barclays": "Bank",
+    "barclays (singapore)": "Bank",
+    "barratt developments": "Construction",
+    "base company": "Telecom",
+    "basecamp": "Tech",
+    "basf": "Chemicals",
+    "bawag group": "Bank",
+    "bayer": "Pharma",
+    "bbc": "Media",
+    "bbva": "Bank",
+    "belfius": "Bank",
+    "bell canada": "Telecom",
+    "bhp": "Mining",
+    "bloomberg (london)": "Fintech/Data",
+    "bmo financial group": "Bank",
+    "bmw group": "Automotive",
+    "bol.com": "E-commerce",
+    "booking.com": "Travel Tech",
+    "boots ireland": "Retail",
+    "bosch": "Industrial",
+    "bpost": "Logistics",
+    "brookfield": "Real Estate/Infrastructure",
+    "bt group": "Telecom",
+    "bt openreach": "Telecom",
+    "budimex": "Construction",
+    "buffer": "Tech",
+    "bunnings (wesfarmers)": "Retail",
+    "byju's": "Edtech",
+    "bytedance / tiktok (apac)": "Tech",
+    "cabify": "Tech",
+    "caixabank": "Bank",
+    "canada post": "Postal/Semi-state",
+    "canadian tire": "Retail",
+    "canva": "Tech",
+    "capgemini germany": "Consulting/ERP",
+    "capgemini india": "Consulting/GBS",
+    "capgemini netherlands": "Consulting/ERP",
+    "capgemini poland": "Consulting/GBS",
+    "capgemini portugal": "Consulting/GBS",
+    "capgemini spain": "Consulting/ERP",
+    "capgemini uk": "Consulting/ERP",
+    "capita": "BPO/Outsourcing",
+    "capitaland": "Real Estate",
+    "careem": "Tech",
+    "cathay pacific": "Airline",
+    "ccc": "Shoe Retail",
+    "cd projekt": "Gaming",
+    "celonis": "Tech/Process Mining",
+    "centra / spar (bwg foods)": "Retail/Convenience",
+    "centrica / british gas": "Energy",
+    "cgi group": "IT Consulting",
+    "chalhoub group": "Retail",
+    "cibc": "Bank",
+    "cimb group": "Bank",
+    "cipla": "Pharma",
+    "circle k ireland": "Retail/Convenience",
+    "cisco poland": "Tech",
+    "cisco portugal": "Tech",
+    "citi (ireland)": "Bank",
+    "city developments limited (cdl)": "Real Estate",
+    "close": "Tech",
+    "clp group": "Energy",
+    "cn rail": "Transport",
+    "cofinimmo": "Real Estate",
+    "cognizant (india)": "IT Services",
+    "coles group": "Retail",
+    "colruyt group": "Retail",
+    "comarch": "IT/ERP",
+    "commercial bank of qatar": "Bank",
+    "commerzbank": "Bank",
+    "commonwealth bank": "Bank",
+    "concentrix (ireland)": "BPO/Call Centre",
+    "concentrix india": "BPO/Call Centre",
+    "concentrix portugal": "BPO/Call Centre",
+    "continental": "Automotive",
+    "coolblue": "E-commerce",
+    "correos": "Postal",
+    "costa coffee": "Hospitality/Food Service",
+    "countdown/woolworths nz": "Retail",
+    "cred": "Fintech",
+    "credit suisse/ubs (krakow gbs)": "Bank/GBS",
+    "crh": "Construction Materials",
+    "critical techworks (bmw)": "Automotive/Tech",
+    "crown resorts": "Hospitality",
+    "ctt correios": "Postal",
+    "culture amp": "Tech",
+    "daa (dublin airport authority)": "Aviation/Semi-state",
+    "dalata hotel group": "Hospitality",
+    "damac properties": "Real Estate",
+    "datacom": "IT Services",
+    "dbs (hong kong)": "Bank",
+    "dbs bank": "Bank",
+    "deel": "HR Tech/EOR",
+    "delhaize belgium": "Retail",
+    "deliveroo": "Tech",
+    "delivery hero": "Tech",
+    "deloitte australia": "Consulting",
+    "deloitte austria": "Consulting",
+    "deloitte belgium": "Consulting",
+    "deloitte canada": "Consulting",
+    "deloitte finland": "Consulting",
+    "deloitte germany": "Consulting",
+    "deloitte hong kong": "Consulting",
+    "deloitte india": "Consulting",
+    "deloitte ireland": "Consulting",
+    "deloitte malaysia": "Consulting",
+    "deloitte netherlands": "Consulting",
+    "deloitte new zealand": "Consulting",
+    "deloitte poland": "Consulting",
+    "deloitte portugal": "Consulting",
+    "deloitte qatar": "Consulting",
+    "deloitte saudi arabia": "Consulting",
+    "deloitte singapore": "Consulting",
+    "deloitte spain": "Consulting",
+    "deloitte sweden": "Consulting",
+    "deloitte uae": "Consulting",
+    "deloitte uk": "Consulting",
+    "deutsche bahn": "Transport",
+    "deutsche bank": "Bank",
+    "deutsche telekom": "Telecom",
+    "dhl / deutsche post": "Logistics",
+    "dino polska": "Retail",
+    "dlf": "Real Estate",
+    "doha bank": "Bank",
+    "doist": "Tech",
+    "dp world": "Logistics",
+    "dr. reddy's laboratories": "Pharma",
+    "dropbox": "Tech",
+    "du (eitc)": "Telecom",
+    "dubai duty free": "Retail",
+    "dunnes stores": "Retail",
+    "dxc technology malaysia": "IT/GBS",
+    "e& (etisalat)": "Telecom",
+    "e.on": "Energy",
+    "ebay/paypal ireland ops": "Tech/Retail",
+    "edp": "Energy",
+    "eir": "Telecom",
+    "el corte ingles": "Retail",
+    "elastic": "Tech",
+    "ellisdon": "Construction",
+    "emaar properties": "Real Estate",
+    "emirates group": "Airline",
+    "emirates nbd": "Bank",
+    "employment hero": "Tech",
+    "ericsson": "Telecom/Tech",
+    "erste group": "Bank",
+    "esb": "Energy/Semi-state",
+    "etihad airways": "Airline",
+    "etihad rail": "Transport/Semi-state",
+    "euroclear": "Fintech",
+    "experian": "Data/Analytics",
+    "extra (united electronics)": "Retail",
+    "ey australia": "Consulting",
+    "ey austria": "Consulting",
+    "ey belgium": "Consulting",
+    "ey canada": "Consulting",
+    "ey finland": "Consulting",
+    "ey germany": "Consulting",
+    "ey hong kong": "Consulting",
+    "ey india": "Consulting",
+    "ey ireland": "Consulting",
+    "ey malaysia": "Consulting",
+    "ey netherlands": "Consulting",
+    "ey new zealand": "Consulting",
+    "ey poland": "Consulting",
+    "ey portugal": "Consulting",
+    "ey qatar": "Consulting",
+    "ey saudi arabia": "Consulting",
+    "ey singapore": "Consulting",
+    "ey spain": "Consulting",
+    "ey sweden": "Consulting",
+    "ey uae": "Consulting",
+    "ey uk": "Consulting",
+    "farfetch": "E-commerce",
+    "feedzai": "Fintech",
+    "fenergo": "Fintech",
+    "ferrovial": "Construction/Infrastructure",
+    "finnair": "Airline",
+    "first abu dhabi bank (fab)": "Bank",
+    "fisher & paykel healthcare": "Health Tech",
+    "fletcher building": "Construction",
+    "flipkart": "E-commerce",
+    "flynas": "Airline",
+    "fonterra": "Consumer/FMCG",
+    "foodstuffs nz": "Retail",
+    "fortum": "Energy",
+    "fresenius": "Healthcare",
+    "freshworks": "Tech",
+    "galp energia": "Energy",
+    "genpact": "BPO/GBS",
+    "genting group": "Conglomerate/Hospitality",
+    "gitlab": "Tech",
+    "glanbia": "FMCG",
+    "glenveagh properties": "Real Estate",
+    "glovo": "Tech",
+    "goldman sachs (singapore)": "Bank",
+    "goldman sachs (uk)": "Bank",
+    "google (apac hq)": "Tech",
+    "google (australia)": "Tech",
+    "google (canada)": "Tech",
+    "google (germany)": "Tech",
+    "google (hong kong)": "Tech",
+    "google (india)": "Tech",
+    "google (ireland)": "Tech",
+    "google (uae)": "Tech",
+    "google (uk)": "Tech",
+    "google malaysia": "Tech",
+    "google poland": "Tech",
+    "grab": "Tech",
+    "grab malaysia": "Tech",
+    "great eastern": "Insurance",
+    "great-west lifeco": "Insurance",
+    "greggs": "Food Retail",
+    "grifols": "Pharma",
+    "groww": "Fintech",
+    "gsk": "Pharma",
+    "h&m group": "Retail",
+    "halter": "Tech",
+    "hamad international airport (matar)": "Aviation/Ops",
+    "hang seng bank": "Bank",
+    "hashicorp": "Tech",
+    "hcltech": "IT Services",
+    "hdfc bank": "Bank",
+    "heineken": "Consumer",
+    "hellofresh": "Consumer/Tech",
+    "help scout": "Tech",
+    "hema": "Retail",
+    "hindustan unilever": "FMCG",
+    "hsbc": "Bank",
+    "hsbc (hong kong)": "Bank",
+    "hsbc electronic data processing (malaysia)": "Bank/GBS",
+    "hsbc gsc krakow": "Bank/GBS",
+    "hugo boss": "Fashion Retail",
+    "iag insurance": "Insurance",
+    "iberdrola": "Energy",
+    "ibm canada": "Tech",
+    "ibm india": "Tech",
+    "ibm ireland": "Tech",
+    "ibm malaysia": "Tech/GBS",
+    "ibm poland": "Tech/GBS",
+    "ibm uk": "Tech",
+    "ica gruppen": "Retail",
+    "icici bank": "Bank",
+    "ihg hotels & resorts": "Hospitality",
+    "ijm corporation": "Construction",
+    "ikea (sweden)": "Retail",
+    "indeed (ireland)": "Tech",
+    "indian hotels company (taj hotels)": "Hospitality",
+    "indigo": "Airline",
+    "inditex (zara)": "Retail",
+    "indra": "IT/Defense",
+    "infineon": "Semiconductor",
+    "infosys": "IT Services",
+    "ing": "Bank",
+    "ing belgium": "Bank",
+    "ing poland": "Bank",
+    "inpost": "Logistics",
+    "intact financial": "Insurance",
+    "intercom": "Tech",
+    "irish life": "Insurance",
+    "irish rail (iarnrod eireann)": "Transport/Semi-state",
+    "itc limited": "FMCG",
+    "itv": "Media",
+    "j.p. morgan (ireland)": "Bank",
+    "jahez": "Tech",
+    "jardine matheson": "Conglomerate",
+    "jarir bookstore": "Retail",
+    "jd sports": "Sports Retail",
+    "jeronimo martins": "Retail",
+    "john lewis partnership": "Retail",
+    "jpmorgan chase (india)": "Bank",
+    "jpmorgan chase (uk)": "Bank",
+    "judo bank": "Bank",
+    "jumbo supermarkten": "Retail",
+    "kbc group": "Bank",
+    "keppel corporation": "Conglomerate",
+    "kerry group": "FMCG",
+    "kesko": "Retail",
+    "king (activision blizzard)": "Gaming",
+    "kingspan group": "Construction",
+    "klarna": "Fintech",
+    "klm": "Airline",
+    "kone": "Industrial",
+    "kpmg australia": "Consulting",
+    "kpmg austria": "Consulting",
+    "kpmg belgium": "Consulting",
+    "kpmg canada": "Consulting",
+    "kpmg finland": "Consulting",
+    "kpmg germany": "Consulting",
+    "kpmg hong kong": "Consulting",
+    "kpmg india": "Consulting",
+    "kpmg ireland": "Consulting",
+    "kpmg malaysia": "Consulting",
+    "kpmg netherlands": "Consulting",
+    "kpmg new zealand": "Consulting",
+    "kpmg poland": "Consulting",
+    "kpmg portugal": "Consulting",
+    "kpmg qatar": "Consulting",
+    "kpmg saudi arabia": "Consulting",
+    "kpmg singapore": "Consulting",
+    "kpmg spain": "Consulting",
+    "kpmg sweden": "Consulting",
+    "kpmg uae": "Consulting",
+    "kpmg uk": "Consulting",
+    "kpn": "Telecom",
+    "larsen & toubro": "Construction/Engineering",
+    "legal & general": "Insurance",
+    "lendlease": "Construction/Real Estate",
+    "lidl / schwarz group": "Retail",
+    "lidl ireland": "Retail",
+    "lightspeed commerce": "Tech",
+    "linkedin (ireland)": "Tech",
+    "lloyds banking group": "Bank",
+    "loblaw companies": "Retail",
+    "lpp (reserved)": "Fashion Retail",
+    "lufthansa": "Airline",
+    "lulu group (uae)": "Retail",
+    "lulu hypermarket qatar": "Retail",
+    "luxoft (dxc)": "IT/GBS",
+    "mahindra group": "Automotive/Conglomerate",
+    "mahle": "Automotive",
+    "majid al futtaim": "Retail/Real Estate",
+    "manulife": "Insurance",
+    "manulife hong kong": "Insurance",
+    "mapfre": "Insurance",
+    "marina bay sands": "Hospitality",
+    "marks & spencer": "Retail",
+    "mashreq bank": "Bank",
+    "mastercard (ireland)": "Fintech",
+    "mastercard (uk)": "Fintech",
+    "maybank": "Bank",
+    "mbank": "Bank",
+    "mcdonald's ireland": "Hospitality/Food Service",
+    "mcdonald's uk": "Hospitality/Food Service",
+    "meesho": "E-commerce",
+    "melia hotels international": "Hospitality",
+    "mercadona": "Retail",
+    "mercedes-benz group": "Automotive",
+    "mercedes-benz.io": "Automotive/Tech",
+    "merck kgaa": "Pharma",
+    "meta (ireland)": "Tech",
+    "meta (singapore)": "Tech",
+    "meta (uae)": "Tech",
+    "meta (uk)": "Tech",
+    "metro ag": "Retail/Wholesale",
+    "metro inc.": "Retail",
+    "microsoft (apac hq)": "Tech",
+    "microsoft (hong kong)": "Tech",
+    "microsoft (india)": "Tech",
+    "microsoft (ireland)": "Tech",
+    "microsoft (uk)": "Tech",
+    "microsoft australia": "Tech",
+    "microsoft canada": "Tech",
+    "microsoft germany": "Tech",
+    "microsoft malaysia": "Tech",
+    "microsoft netherlands": "Tech",
+    "microsoft poland": "Tech",
+    "microsoft saudi arabia": "Tech",
+    "microsoft uae": "Tech",
+    "mirvac": "Real Estate",
+    "mollie": "Fintech",
+    "monzo": "Fintech",
+    "morrisons": "Retail",
+    "mota-engil": "Construction",
+    "msheireb properties": "Real Estate",
+    "mtr corporation": "Transport/Semi-state",
+    "munich re": "Insurance",
+    "myntra": "E-commerce",
+    "n26": "Fintech",
+    "nab": "Bank",
+    "national grid": "Energy",
+    "natixis (porto gbs)": "Bank/GBS",
+    "natwest group": "Bank",
+    "ncc": "Construction",
+    "neom": "Giga-project",
+    "neste": "Energy",
+    "new world development": "Real Estate",
+    "next plc": "Retail",
+    "nh hotel group": "Hospitality",
+    "nn group": "Insurance",
+    "nokia": "Tech/Telecom",
+    "noon": "E-commerce",
+    "nordea (finland)": "Bank",
+    "nordea (sweden)": "Bank",
+    "nordea poland (gbs)": "Bank/GBS",
+    "ntuc fairprice": "Retail",
+    "nvidia (india)": "Tech",
+    "nz post": "Postal/Semi-state",
+    "obb (austrian federal railways)": "Transport/Semi-state",
+    "ocado": "Retail/Tech",
+    "ocbc bank": "Bank",
+    "ola": "Tech",
+    "omv": "Energy",
+    "ooredoo": "Telecom",
+    "op financial group": "Bank/Insurance",
+    "optus": "Telecom",
+    "oracle (india)": "Tech/ERP",
+    "oracle (ireland)": "Tech/ERP",
+    "oracle (uk)": "Tech/ERP",
+    "orange polska": "Telecom",
+    "outsystems": "Tech",
+    "panda retail company": "Retail",
+    "parknshop / as watson group": "Retail",
+    "paypal (ireland)": "Fintech",
+    "pccw": "Telecom",
+    "pcl construction": "Construction",
+    "penneys / primark ireland": "Retail",
+    "permanent tsb": "Bank",
+    "persimmon homes": "Construction",
+    "personio": "HR Tech",
+    "pestana hotel group": "Hospitality",
+    "petronas": "Energy",
+    "pge polska grupa energetyczna": "Energy",
+    "philips": "Tech/Health",
+    "phonepe": "Fintech",
+    "pkn orlen": "Energy",
+    "pko bank polski": "Bank",
+    "poczta polska": "Postal",
+    "porr": "Construction",
+    "pos malaysia": "Postal",
+    "posti group": "Postal",
+    "postnl": "Postal/Logistics",
+    "postnord": "Postal/Logistics",
+    "primark": "Retail",
+    "propertyguru": "Tech",
+    "proximus": "Telecom",
+    "prudential hong kong": "Insurance",
+    "public bank": "Bank",
+    "puma": "Sports Apparel",
+    "pwc australia": "Consulting",
+    "pwc austria": "Consulting",
+    "pwc belgium": "Consulting",
+    "pwc canada": "Consulting",
+    "pwc finland": "Consulting",
+    "pwc germany": "Consulting",
+    "pwc hong kong": "Consulting",
+    "pwc india": "Consulting",
+    "pwc ireland": "Consulting",
+    "pwc malaysia": "Consulting",
+    "pwc netherlands": "Consulting",
+    "pwc new zealand": "Consulting",
+    "pwc poland": "Consulting",
+    "pwc portugal": "Consulting",
+    "pwc qatar": "Consulting",
+    "pwc saudi arabia": "Consulting",
+    "pwc singapore": "Consulting",
+    "pwc spain": "Consulting",
+    "pwc sweden": "Consulting",
+    "pwc uae": "Consulting",
+    "pwc uk": "Consulting",
+    "pzu": "Insurance",
+    "qantas": "Airline",
+    "qatar airways": "Airline",
+    "qatar islamic bank": "Bank",
+    "qatarenergy": "Energy",
+    "qiddiya": "Giga-project",
+    "qnb group": "Bank",
+    "rabobank": "Bank",
+    "radisson hotel group (ireland)": "Hospitality",
+    "raiffeisen bank international": "Bank",
+    "randstad": "Staffing/HR",
+    "razorpay": "Fintech",
+    "rbc (royal bank of canada)": "Bank",
+    "red bull": "Consumer",
+    "red sea global": "Giga-project",
+    "reliance retail": "Retail",
+    "repsol": "Energy",
+    "revolut": "Fintech",
+    "rewe austria (billa/merkur)": "Retail",
+    "rewe group": "Retail",
+    "rio tinto": "Mining",
+    "riyad bank": "Bank",
+    "rogers communications": "Telecom",
+    "rolls-royce": "Industrial",
+    "roshn": "Real Estate/Giga-project",
+    "royal mail": "Postal/Logistics",
+    "ryanair": "Airline",
+    "s group (s-ryhma)": "Retail",
+    "sabic": "Chemicals",
+    "safetyculture": "Tech",
+    "sainsbury's": "Retail",
+    "salesforce (india)": "Tech",
+    "salesforce (ireland)": "Tech",
+    "salesforce (uae)": "Tech",
+    "salesforce (uk)": "Tech",
+    "salesforce australia": "Tech",
+    "salesforce canada": "Tech",
+    "salesforce germany": "Tech",
+    "salesforce singapore": "Tech",
+    "santander": "Bank",
+    "santander bank polska": "Bank",
+    "sap": "Tech/ERP",
+    "sap ireland": "Tech/ERP",
+    "sap labs india": "Tech/ERP",
+    "sas airlines": "Airline",
+    "saudi aramco": "Energy",
+    "saudi electricity company": "Utility/Semi-state",
+    "saudi national bank (snb)": "Bank",
+    "saudia (airline)": "Airline",
+    "scandic hotels": "Hospitality",
+    "schiphol group": "Aviation/Semi-state",
+    "scotiabank": "Bank",
+    "sea limited (shopee/garena)": "Tech",
+    "seb": "Bank",
+    "shell (nl)": "Energy",
+    "shell business operations krakow": "Energy/GBS",
+    "shopee malaysia": "E-commerce",
+    "shopify": "Tech/E-commerce",
+    "siemens": "Industrial/Tech",
+    "sime darby": "Conglomerate",
+    "sinch": "Tech",
+    "singtel": "Telecom",
+    "skanska": "Construction",
+    "sky city": "Hospitality",
+    "sobeys / empire company": "Retail",
+    "softcat": "IT Reseller",
+    "software ag": "Tech/ERP",
+    "solvay": "Chemicals",
+    "sonae": "Retail/Conglomerate",
+    "spar austria": "Retail",
+    "spark new zealand": "Telecom",
+    "spotify": "Tech",
+    "standard chartered (hk)": "Bank",
+    "starbucks ireland": "Hospitality/Food Service",
+    "state street (ireland)": "Fintech/GBS",
+    "state street (krakow gbs)": "GBS/Fintech",
+    "stc (saudi telecom)": "Telecom",
+    "stockland": "Real Estate",
+    "stora enso": "Forestry/Materials",
+    "strabag": "Construction",
+    "stripe": "Fintech",
+    "sun hung kai properties": "Real Estate",
+    "sun life": "Insurance",
+    "sun pharma": "Pharma",
+    "suncorp": "Insurance/Bank",
+    "sunway group": "Construction/Property",
+    "supercell": "Gaming",
+    "supervalu / musgrave": "Retail",
+    "swedbank": "Bank",
+    "swift": "Fintech",
+    "swiggy": "Tech",
+    "talabat": "Tech",
+    "talkdesk": "Tech",
+    "tap air portugal": "Airline",
+    "tata motors": "Automotive",
+    "tata steel": "Manufacturing",
+    "taylor wimpey": "Construction",
+    "tcs": "IT Services",
+    "td bank group": "Bank",
+    "telefonica": "Telecom",
+    "teleperformance (ireland)": "BPO/Call Centre",
+    "teleperformance india": "BPO/Call Centre",
+    "teleperformance portugal": "BPO/Call Centre",
+    "teleperformance spain": "BPO/Call Centre",
+    "teleperformance uk": "BPO/Call Centre",
+    "telia company": "Telecom",
+    "telstra": "Telecom",
+    "telus": "Telecom",
+    "tesco": "Retail",
+    "tesco ireland": "Retail",
+    "three ireland": "Telecom",
+    "tiktok (ireland)": "Tech",
+    "titan company": "Retail/Consumer",
+    "tomtom": "Tech",
+    "toptal": "Tech/Staffing",
+    "trade me": "Tech",
+    "trade republic": "Fintech",
+    "tui group": "Travel/Hospitality",
+    "twilio": "Tech",
+    "uber (netherlands ops)": "Tech",
+    "ucb": "Pharma",
+    "umicore": "Materials",
+    "union coop": "Retail",
+    "uniqa insurance group": "Insurance",
+    "uob": "Bank",
+    "upm": "Forestry/Materials",
+    "van der valk": "Hospitality",
+    "verbund": "Energy",
+    "version 1": "IT Consulting/ERP",
+    "vienna insurance group": "Insurance",
+    "vodafone portugal": "Telecom",
+    "vodafone qatar": "Telecom",
+    "vodafone uk": "Telecom",
+    "voestalpine": "Industrial",
+    "volkerwessels": "Construction",
+    "volkswagen group": "Automotive",
+    "volvo group": "Automotive/Industrial",
+    "vonovia": "Real Estate",
+    "wartsila": "Industrial",
+    "wayflyer": "Fintech",
+    "wealthsimple": "Fintech",
+    "wesfarmers": "Retail/Conglomerate",
+    "westpac": "Bank",
+    "whitbread / premier inn": "Hospitality",
+    "wipro": "IT Services",
+    "wise": "Fintech",
+    "wolt (doordash)": "Tech",
+    "wolters kluwer": "Info Services",
+    "woolworths group": "Retail",
+    "workday (ireland)": "Tech/ERP",
+    "xero": "Tech/ERP",
+    "yit": "Construction",
+    "zabka": "Retail",
+    "zalando": "E-commerce",
+    "zapier": "Tech",
+    "zendesk (ireland)": "Tech",
+    "zf friedrichshafen": "Automotive",
+    "zoho": "Tech/ERP",
+    "zomato": "Tech",
+    "zurich insurance ireland": "Insurance"
+}
 
-    # IMPORTANT: visit the actual career page first, like a real browser
-    # would, before calling the API directly. Workday's bot-protection
-    # commonly rejects "cold" API calls with no prior page visit (400/422)
-    # regardless of headers — this establishes the session cookies it's
-    # checking for. Use the locale-prefixed URL, matching what a real
-    # browser actually lands on after Workday's own redirect, since some
-    # tenants validate the Referer against that canonical form specifically.
-    # Best-effort: if this fails, still try the API anyway.
+# Secondary lookup keyed by company name with any trailing "(Region)" suffix
+# stripped, e.g. "google (ireland)" -> "google". Built once at import time.
+_SUFFIX_RE = re.compile(r"\s*\([^)]*\)\s*$")
+BASE_SECTOR_BY_COMPANY = {}
+for _k, _v in SECTOR_BY_COMPANY.items():
+    _base = _SUFFIX_RE.sub("", _k).strip()
+    BASE_SECTOR_BY_COMPANY.setdefault(_base, _v)
+
+
+def sector_for(company: str) -> str:
+    """Best-effort industry sector for a company, used to tag/filter jobs."""
+    if not company:
+        return "Other"
+    key = company.strip().lower()
+    if key in SECTOR_BY_COMPANY:
+        return SECTOR_BY_COMPANY[key]
+    base = _SUFFIX_RE.sub("", key).strip()
+    if base in BASE_SECTOR_BY_COMPANY:
+        return BASE_SECTOR_BY_COMPANY[base]
+    return "Other"
+
+
+# ISO alpha-3 country codes some ATSs (mostly Workday) append after a comma,
+# e.g. "Dubai, ARE" -- checked before the keyword scan below since it's exact.
+ISO3_TO_COUNTRY = {
+    "ARE": "UAE", "GBR": "UK", "DEU": "Germany", "IRL": "Ireland",
+    "IND": "India", "SGP": "Singapore", "AUS": "Australia", "NZL": "New Zealand",
+    "CAN": "Canada", "USA": "United States", "SAU": "Saudi Arabia", "QAT": "Qatar",
+    "MYS": "Malaysia", "HKG": "Hong Kong", "POL": "Poland", "PRT": "Portugal",
+    "NLD": "Netherlands", "AUT": "Austria", "BEL": "Belgium", "ESP": "Spain",
+    "SWE": "Sweden", "FIN": "Finland", "FRA": "France", "ITA": "Italy",
+    "DNK": "Denmark", "NOR": "Norway", "CHE": "Switzerland",
+}
+
+# Keyword -> canonical country name, checked in order (first match wins) if
+# the ISO3 check above doesn't hit. Mirrors REGION_KEYWORDS but resolves to a
+# single display name per country instead of a yes/no.
+COUNTRY_KEYWORDS = [
+    ("ireland", "Ireland"), ("dublin", "Ireland"), ("cork", "Ireland"),
+    ("united kingdom", "UK"), ("london", "UK"), ("england", "UK"),
+    ("scotland", "UK"), ("wales", "UK"), ("uk", "UK"),
+    ("germany", "Germany"), ("berlin", "Germany"), ("munich", "Germany"),
+    ("frankfurt", "Germany"), ("hamburg", "Germany"), ("cologne", "Germany"),
+    ("netherlands", "Netherlands"), ("amsterdam", "Netherlands"),
+    ("france", "France"), ("paris", "France"),
+    ("spain", "Spain"), ("madrid", "Spain"), ("barcelona", "Spain"),
+    ("italy", "Italy"), ("milan", "Italy"), ("milano", "Italy"), ("rome", "Italy"),
+    ("roma", "Italy"), ("florence", "Italy"), ("firenze", "Italy"),
+    ("sweden", "Sweden"), ("stockholm", "Sweden"),
+    ("denmark", "Denmark"), ("copenhagen", "Denmark"),
+    ("finland", "Finland"), ("helsinki", "Finland"),
+    ("norway", "Norway"), ("oslo", "Norway"),
+    ("poland", "Poland"), ("warsaw", "Poland"), ("krakow", "Poland"), ("kraków", "Poland"),
+    ("portugal", "Portugal"), ("lisbon", "Portugal"), ("lisboa", "Portugal"), ("porto", "Portugal"),
+    ("belgium", "Belgium"), ("brussels", "Belgium"),
+    ("austria", "Austria"), ("vienna", "Austria"),
+    ("switzerland", "Switzerland"), ("zurich", "Switzerland"), ("zürich", "Switzerland"),
+    ("singapore", "Singapore"),
+    ("united arab emirates", "UAE"), ("dubai", "UAE"), ("abu dhabi", "UAE"), ("uae", "UAE"),
+    ("saudi arabia", "Saudi Arabia"), ("riyadh", "Saudi Arabia"), ("jeddah", "Saudi Arabia"),
+    ("qatar", "Qatar"), ("doha", "Qatar"),
+    ("india", "India"), ("bangalore", "India"), ("bengaluru", "India"), ("mumbai", "India"),
+    ("delhi", "India"), ("hyderabad", "India"), ("pune", "India"), ("chennai", "India"),
+    ("gurgaon", "India"), ("gurugram", "India"),
+    ("hong kong", "Hong Kong"),
+    ("malaysia", "Malaysia"), ("kuala lumpur", "Malaysia"),
+    ("australia", "Australia"), ("sydney", "Australia"), ("melbourne", "Australia"),
+    ("brisbane", "Australia"), ("perth", "Australia"),
+    ("new zealand", "New Zealand"), ("auckland", "New Zealand"), ("wellington", "New Zealand"),
+    ("canada", "Canada"), ("toronto", "Canada"), ("ontario", "Canada"),
+    ("vancouver", "Canada"), ("montreal", "Canada"),
+    ("united states", "United States"), ("usa", "United States"), ("u.s.a", "United States"),
+    ("u.s.", "United States"),
+]
+
+
+def country_from_location(location: str) -> str:
+    """Best-effort country name for a job, parsed from its location string
+    (not the company) since one company posts across many countries."""
+    if not location:
+        return "Other"
+    loc = location.strip()
+    loc_lower = loc.lower()
+
+    last_part = loc.split(",")[-1].strip().upper()
+    if last_part in ISO3_TO_COUNTRY:
+        return ISO3_TO_COUNTRY[last_part]
+
+    for keyword, country in COUNTRY_KEYWORDS:
+        if keyword in loc_lower:
+            return country
+
+    if "remote" in loc_lower:
+        return "Remote / Other"
+
+    return "Other"
+
+
+def fetch_json(url: str, timeout: int = 20):
+    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (job-dashboard-bot)"})
     try:
-        session.get(site_base_locale, headers=workday_headers(tenant, wd_shard, site), timeout=15)
-        time.sleep(0.5)
-    except Exception:
-        pass
+        with urllib.request.urlopen(req, timeout=timeout) as resp:
+            return json.loads(resp.read().decode("utf-8"))
+    except (urllib.error.URLError, urllib.error.HTTPError, TimeoutError, ValueError) as e:
+        print(f"  ! fetch failed for {url}: {e}")
+        return None
 
-    # First, small probe request just to read the facet list (no location
-    # filter yet) so we can find Workday's own Ireland location facet IDs.
-    applied_facets = {}
-    # Server-side facet filtering is used purely to reduce how many pages
-    # need scanning — it is never trusted blindly. A client-side location
-    # check always runs on every result regardless of which strategy
-    # found it: some tenants' Workday setup doesn't recognize the shared
-    # Ireland facet ID and silently returns their ENTIRE global job list
-    # instead of erroring (confirmed: PwC and MSD returned 600/591 "Ireland"
-    # postings that were really just their whole global listing).
-    max_pages = 10  # fallback cap if we can't find a location facet at all
-    probe_error = None
 
-    # Strategy 1 (primary): Workday ships the SAME internal ID for "Ireland"
-    # as a country to every customer who uses its standard country
-    # reference data — confirmed identical across completely unrelated
-    # tenants (Sky, Motorola Solutions, BDR Thermea, even Workday's own
-    # careers site all use this exact value). Trying it directly is far
-    # more reliable than *discovering* the right facet by sampling search
-    # results, which can miss Ireland entirely for large multinationals
-    # where Ireland postings don't happen to appear in the sample window —
-    # this was the actual cause of companies like Accenture showing 0
-    # postings despite having dozens of real open Ireland roles.
-    strategy1_note = None
-    rate_limited = False
-    try:
-        known_facets = {"locationCountry": ["04a05835925f45b3a59406a2a6b72c8a"]}
-        probe, probe_err = post_workday_variants(
-            session, api_base, workday_headers(tenant, wd_shard, site), known_facets, 20, 0)
-        if probe is None:
-            strategy1_note = f"request failed ({probe_err})"
-            if probe_err and "429" in str(probe_err):
-                rate_limited = True
-        else:
-            probe_data = probe.json()
-            total = probe_data.get("total", 0)
-            # Sanity ceiling: no real company has hundreds of simultaneous
-            # open Ireland roles. A "filtered" total this high (we've seen
-            # PwC report 4586, MSD 882) is proof the facet ID wasn't
-            # actually recognized by that tenant and the filter silently
-            # no-op'd, returning their entire global job list instead —
-            # treat that as a non-match rather than trusting it, and let
-            # it fall through to the next strategy.
-            if 0 < total <= 150:
-                applied_facets = known_facets
-                max_pages = 30
-                strategy1_note = f"matched, total={total}"
-            elif total > 150:
-                strategy1_note = f"rejected — total={total} is implausibly high, filter likely didn't apply"
-            else:
-                strategy1_note = "request succeeded but total=0 under 'locationCountry' key"
-    except Exception as e:
-        strategy1_note = f"exception ({e})"
+def scrape_greenhouse(slug: str):
+    data = fetch_json(f"https://boards-api.greenhouse.io/v1/boards/{slug}/jobs?content=true")
+    if not data or "jobs" not in data:
+        return []
+    out = []
+    for j in data["jobs"]:
+        title = j.get("title", "")
+        location = (j.get("location") or {}).get("name", "")
+        if region_ok(location):
+            content_html = j.get("content") or ""
+            out.append({
+                "company": slug,
+                "ats": "greenhouse",
+                "title": title,
+                "location": location,
+                "url": j.get("absolute_url"),
+                "updated_at": j.get("updated_at"),
+                "description_text": _strip_html(content_html),
+            })
+    return out
 
-    # Strategy 1b: same universal ID, but under a different facet parameter
-    # name — Workday's URL query param name and the actual API body key
-    # aren't always identical, so 'locationCountry' might not be what this
-    # specific tenant's API expects even though the ID value is universal.
-    # NOT trusted the same way as Strategy 1: the same ID string reused
-    # under a different facet dimension (e.g. 'locations' instead of
-    # 'locationCountry') has no verified meaning — it could silently match
-    # something other than Ireland. Keep the client-side text safety net
-    # active for this path (this is what let non-Ireland jobs slip through
-    # unfiltered and inflate some companies' counts to hundreds).
-    if not applied_facets and not rate_limited:
-        for alt_key in ("locations", "country", "Location_Country"):
-            try:
-                alt_facets = {alt_key: ["04a05835925f45b3a59406a2a6b72c8a"]}
-                probe, alt_err = post_workday_variants(
-                    session, api_base, workday_headers(tenant, wd_shard, site), alt_facets, 20, 0)
-                if alt_err and "429" in str(alt_err):
-                    rate_limited = True
-                    break
-                if probe is not None and 0 < probe.json().get("total", 0) <= 150:
-                    applied_facets = alt_facets
-                    max_pages = 30
-                    strategy1_note += f" | but '{alt_key}' key worked (untrusted, total={probe.json().get('total')})"
-                    break
-            except Exception:
-                continue
-            time.sleep(0.4)
 
-    # Strategy 1c (removed): tried plain ISO country codes ('IRL'/'IE')
-    # under a few facet key name guesses. Never once succeeded in any real
-    # run — pure wasted time, cut for the sake of runtime.
-
-    # Strategy 2 (fallback): the universal ID didn't return anything for
-    # this tenant (rare — could be a customized/non-standard instance) —
-    # fall back to dynamically discovering whatever facet this specific
-    # tenant does expose for Ireland. Search WITH "Ireland" as the search
-    # text while discovering facets (not an empty/unrelated search) — the
-    # facet counts Workday returns are computed from the CURRENT result
-    # set, so an empty search on a huge global company can completely miss
-    # Ireland as a facet option, even though it exists, simply because
-    # Ireland isn't common enough to surface in an unrelated sample. This
-    # path is less certain either way, so the client-side text safety net
-    # stays active for it.
-    if not applied_facets and not rate_limited:
-        try:
-            probe = None
-            for search_text in ("Ireland", ""):
+def scrape_lever(slug: str):
+    data = fetch_json(f"https://api.lever.co/v0/postings/{slug}?mode=json")
+    if not data or not isinstance(data, list):
+        return []
+    out = []
+    for j in data:
+        title = j.get("text", "")
+        cats = j.get("categories") or {}
+        location = cats.get("location", "")
+        if region_ok(location):
+            created = j.get("createdAt")
+            created_iso = None
+            if created:
                 try:
-                    probe = session.post(
-                        api_base, headers=workday_headers(tenant, wd_shard, site),
-                        json={"appliedFacets": {}, "limit": 20, "offset": 0, "searchText": search_text},
-                        timeout=15)
-                    if probe.status_code == 200:
-                        break
-                    if probe.status_code == 429:
-                        rate_limited = True
-                        probe = None
-                        break
-                    probe = None
+                    created_iso = datetime.fromtimestamp(created / 1000, tz=timezone.utc).isoformat()
                 except Exception:
-                    probe = None
-                time.sleep(0.4)
-            if probe is None:
-                raise RuntimeError("both Ireland-search and empty-search facet probes failed")
-            probe_data = probe.json()
-            facet_param, facet_ids = find_ireland_facet_values(probe_data.get("facets"))
-            if facet_param and facet_ids:
-                applied_facets = {facet_param: facet_ids}
-                max_pages = 30  # server-side filtered results should be a small, complete set
-            else:
-                # No usable location facet for this tenant — fall back to a much
-                # wider unfiltered scan so large global job boards (e.g.
-                # multinationals with thousands of postings) aren't missed just
-                # because Ireland roles weren't in the first couple hundred.
-                max_pages = 20
-        except Exception as e:
-            # Don't give up on the whole company over one failed probe request —
-            # try the plain unfiltered search below instead. If the tenant is
-            # genuinely unreachable, the main loop's own request will fail too
-            # and surface a proper error there.
-            probe_error = f"{company_name}: facet probe failed, falling back to unfiltered scan ({e})"
-            max_pages = 20
+                    pass
+            out.append({
+                "company": slug,
+                "ats": "lever",
+                "title": title,
+                "location": location,
+                "url": j.get("hostedUrl"),
+                "updated_at": created_iso,
+            })
+    return out
 
-    results = []
-    seen_urls = set()
-    raw_sample_job = None
-    error = probe_error
 
-    def run_pagination(facets, search_text, pages):
-        nonlocal raw_sample_job, error
-        found_any = False
-        offset = 0
-        for _ in range(pages):
-            try:
-                resp, req_err = post_workday_variants(
-                    session, api_base, workday_headers(tenant, wd_shard, site), facets, page_size, offset,
-                    search_text=search_text)
-                if resp is None:
-                    raise RuntimeError(req_err)
-                data = resp.json()
-            except Exception as e:
-                error = f"{company_name}: request failed ({e})"
-                break
+def scrape_ashby(slug: str):
+    data = fetch_json(f"https://api.ashbyhq.com/posting-api/job-board/{slug}")
+    if not data:
+        return []
+    jobs = data.get("jobs") or data.get("jobPostings") or []
+    out = []
+    for j in jobs:
+        title = j.get("title", "")
+        location = j.get("location", "") or j.get("locationName", "")
+        if j.get("isRemote") and "remote" not in (location or "").lower():
+            location = f"{location} (Remote)".strip()
+        if region_ok(location):
+            out.append({
+                "company": slug,
+                "ats": "ashby",
+                "title": title,
+                "location": location,
+                "url": j.get("jobUrl") or j.get("applyUrl"),
+                "updated_at": j.get("publishedAt"),
+            })
+    return out
 
-            postings = data.get("jobPostings", [])
-            if not postings:
-                break
-            if raw_sample_job is None:
-                raw_sample_job = postings[0]
 
-            new_this_page = 0
-            for job in postings:
-                # Location text can appear under different field names, or
-                # buried among bulletFields at an index other than 0 (e.g. a
-                # requisition ID at [0] and the actual location at [1]) —
-                # check everything plausible rather than assuming one fixed
-                # spot, since guessing wrong was causing genuine Ireland jobs
-                # to be wrongly discarded.
-                candidates = [job.get("locationsText", ""), job.get("location", ""),
-                              job.get("primaryLocation", "")]
-                candidates.extend(job.get("bulletFields", []) or [])
-                location_text = next((c for c in candidates if c and is_ireland_location(c)), "")
-                if not location_text:
-                    location_text = candidates[0] if candidates and candidates[0] else ""
+def scrape_workday(company: str, tenant: str, wd_host: str, site: str, max_pages: int = 25):
+    base = f"https://{tenant}.{wd_host}.myworkdayjobs.com/wday/cxs/{tenant}/{site}/jobs"
+    out = []
+    offset = 0
+    page_size = 20  # Workday hard-caps at 20 per page
+    for _ in range(max_pages):
+        payload = json.dumps({
+            "appliedFacets": {},
+            "limit": page_size,
+            "offset": offset,
+            "searchText": "",
+        }).encode("utf-8")
+        req = urllib.request.Request(
+            base,
+            data=payload,
+            method="POST",
+            headers={
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "User-Agent": "Mozilla/5.0 (job-dashboard-bot)",
+            },
+        )
+        try:
+            with urllib.request.urlopen(req, timeout=20) as resp:
+                data = json.loads(resp.read().decode("utf-8"))
+        except (urllib.error.URLError, urllib.error.HTTPError, TimeoutError, ValueError) as e:
+            print(f"  ! fetch failed for {base} (offset {offset}): {e}")
+            break
 
-                # ALWAYS verify client-side, regardless of which strategy found
-                # this job — trusting the server-side filter unconditionally
-                # was the actual cause of wildly inflated counts for a few
-                # companies (PwC showing 600, MSD showing 591), AND of wrong-
-                # country jobs slipping through under a small, plausible-
-                # looking total (Diageo's "2 Ireland jobs" was actually a job
-                # in Gimli, Canada) — the client-side check is the only thing
-                # that catches either failure mode.
-                if not is_ireland_location(location_text):
-                    continue
-                posted_text = job.get("postedOn", "")
-                external_path = job.get("externalPath", "")
-                job_url = site_base.rstrip("/") + external_path
+        postings = (data or {}).get("jobPostings") or []
+        if not postings:
+            break
 
-                # Dedup safety net: if Workday returns the same jobs again on
-                # a later "page" (offset not actually advancing server-side,
-                # or any other pagination quirk), never add the same job
-                # twice — this is what was causing wildly inflated counts.
-                if job_url in seen_urls:
-                    continue
-                seen_urls.add(job_url)
-                new_this_page += 1
-                found_any = True
-
-                sponsorship, snippet = "not_mentioned", None
-                if fetch_descriptions and external_path:
-                    desc = fetch_job_description(tenant, wd_shard, site, external_path, session)
-                    sponsorship, snippet = classify_sponsorship(desc)
-                    time.sleep(detail_delay)
-
-                results.append({
-                    "company": company_name,
-                    "title": job.get("title", "").strip(),
-                    "location": location_text,
-                    "posted_text": posted_text,
-                    "posted_days_ago": parse_posted_text(posted_text),
-                    "employment_type": normalize_employment_type(
-                        " ".join(str(b) for b in (job.get("bulletFields") or [])),
-                        job.get("title", "")),
-                    "url": job_url,
-                    "source": "workday_api",
-                    "visa_sponsorship": sponsorship,
-                    "visa_snippet": snippet,
+        for j in postings:
+            title = j.get("title", "")
+            location = j.get("locationsText", "") or j.get("bulletFields", [""])[0]
+            if region_ok(location):
+                path = j.get("externalPath", "")
+                out.append({
+                    "company": company,
+                    "ats": "workday",
+                    "title": title,
+                    "location": location,
+                    "url": f"https://{tenant}.{wd_host}.myworkdayjobs.com/{site}{path}" if path else None,
+                    "updated_at": j.get("postedOn"),
                 })
 
-            # Circuit breaker: an entire page with zero genuinely new jobs
-            # means pagination has stalled (server returning the same set
-            # repeatedly) — stop immediately rather than trusting 'total'
-            # and looping up to max_pages re-adding the same postings.
-            if new_this_page == 0:
-                break
+        if len(postings) < page_size:
+            break
+        offset += page_size
+        time.sleep(0.3)
 
-            total = data.get("total", 0)
-            offset += page_size
-            if offset >= total:
-                break
-            time.sleep(0.3)
-        return found_any
+    return out
 
-    wide_scan_search_text = "" if applied_facets else "Ireland"
-    found = run_pagination(applied_facets, wide_scan_search_text, max_pages)
 
-    # Fallback: the 'smart' filter found SOMETHING (a plausible total), but
-    # every result it returned turned out to be a different country once
-    # actually checked — this tenant's facet ID doesn't mean what we
-    # thought. Rather than accept 0 and give up, retry with a real text
-    # search for "Ireland" across the tenant's full job list, same as the
-    # last-resort path for tenants where no facet was found at all.
-    if not found and applied_facets and not rate_limited:
-        strategy1_note = (strategy1_note or "") + " | facet matched but all results were wrong-country; retrying wide Ireland-text search"
-        time.sleep(1)
-        run_pagination({}, "Ireland", 15)
+def scrape_smartrecruiters(company_id: str, max_pages: int = 15):
+    out = []
+    offset = 0
+    page_size = 100
+    for _ in range(max_pages):
+        url = (
+            f"https://api.smartrecruiters.com/v1/companies/{company_id}/postings"
+            f"?limit={page_size}&offset={offset}"
+        )
+        data = fetch_json(url)
+        if not data or "content" not in data:
+            break
 
-    if not results and not error:
-        print(f"      [diagnostic] {company_name}: 0 postings, strategy1={strategy1_note}")
-        if raw_sample_job is not None:
-            raw_fields = {
-                "locationsText": raw_sample_job.get("locationsText"),
-                "location": raw_sample_job.get("location"),
-                "primaryLocation": raw_sample_job.get("primaryLocation"),
-                "bulletFields": raw_sample_job.get("bulletFields"),
-                "all_keys": list(raw_sample_job.keys()),
-            }
-            print(f"      [diagnostic-raw] {company_name}: sample job location fields = {raw_fields}")
+        postings = data.get("content") or []
+        for j in postings:
+            title = j.get("name", "")
+            loc = j.get("location") or {}
+            location = ", ".join(filter(None, [loc.get("city"), loc.get("region"), loc.get("country")]))
+            if loc.get("remote"):
+                location = f"{location} (Remote)".strip(", ")
+            if region_ok(location):
+                out.append({
+                    "company": company_id,
+                    "ats": "smartrecruiters",
+                    "title": title,
+                    "location": location,
+                    "url": (j.get("applyUrl") or (j.get("ref", {}) or {}).get("jobAd")),
+                    "updated_at": j.get("releasedDate"),
+                })
 
-    if len(results) > 100:
-        print(f"      [WARNING] {company_name}: {len(results)} Ireland postings is implausibly high — "
-              f"likely means the location filter didn't actually work for this tenant despite the "
-              f"client-side check passing. Treat this company's numbers with suspicion until verified.")
+        if len(postings) < page_size:
+            break
+        offset += page_size
+        time.sleep(0.3)
 
-    return results, error
+    return out
+
+
+def scrape_workable(slug: str):
+    data = fetch_json(f"https://apply.workable.com/api/v1/widget/accounts/{slug}")
+    if not data or "jobs" not in data:
+        return []
+    out = []
+    for j in data["jobs"]:
+        title = j.get("title", "")
+        location = j.get("location", {}) or {}
+        loc_str = ", ".join(filter(None, [
+            location.get("city"), location.get("region"), location.get("country"),
+        ]))
+        if location.get("telecommuting"):
+            loc_str = f"{loc_str} (Remote)".strip(", ")
+        if region_ok(loc_str):
+            out.append({
+                "company": slug,
+                "ats": "workable",
+                "title": title,
+                "location": loc_str,
+                "url": j.get("url") or j.get("shortlink"),
+                "updated_at": j.get("published_on") or j.get("created_at"),
+            })
+    return out
+
+
+def scrape_recruitee(slug: str):
+    data = fetch_json(f"https://{slug}.recruitee.com/api/offers/")
+    if not data or "offers" not in data:
+        return []
+    out = []
+    for j in data["offers"]:
+        title = j.get("title", "")
+        location = j.get("location", "") or j.get("city", "")
+        if j.get("remote"):
+            location = f"{location} (Remote)".strip(", ")
+        if region_ok(location):
+            out.append({
+                "company": slug,
+                "ats": "recruitee",
+                "title": title,
+                "location": location,
+                "url": j.get("careers_url"),
+                "updated_at": j.get("created_at"),
+            })
+    return out
+
+
+def scrape_personio(slug: str):
+    url = f"https://{slug}.jobs.personio.de/xml?language=en"
+    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (job-dashboard-bot)"})
+    try:
+        with urllib.request.urlopen(req, timeout=20) as resp:
+            xml_text = resp.read().decode("utf-8")
+    except (urllib.error.URLError, urllib.error.HTTPError, TimeoutError) as e:
+        print(f"  ! fetch failed for {url}: {e}")
+        return []
+
+    out = []
+    for m in re.finditer(r"<position>(.*?)</position>", xml_text, re.DOTALL):
+        block = m.group(1)
+
+        def field(name):
+            fm = re.search(rf"<{name}><!\[CDATA\[(.*?)\]\]></{name}>", block, re.DOTALL) \
+                 or re.search(rf"<{name}>(.*?)</{name}>", block, re.DOTALL)
+            return fm.group(1).strip() if fm else ""
+
+        title = field("name")
+        location = ", ".join(filter(None, [field("office"), field("city")]))
+        if region_ok(location):
+            out.append({
+                "company": slug,
+                "ats": "personio",
+                "title": title,
+                "location": location,
+                "url": field("careerSiteUrl") or None,
+                "updated_at": field("createdAt"),
+            })
+    return out
+
+
+
+def scrape_pinpoint(slug: str):
+    data = fetch_json(f"https://{slug}.pinpointhq.com/postings.json")
+    if not data:
+        return []
+    postings = data if isinstance(data, list) else (data.get("data") or data.get("jobs") or data.get("postings") or [])
+    out = []
+    for j in postings:
+        if not isinstance(j, dict):
+            continue
+        title = j.get("title") or j.get("name") or ""
+        location = j.get("location") or j.get("location_name") or ""
+        if isinstance(location, dict):
+            location = ", ".join(filter(None, [location.get("city"), location.get("region"), location.get("country")]))
+        if region_ok(str(location)):
+            out.append({
+                "company": slug,
+                "ats": "pinpoint",
+                "title": title,
+                "location": str(location),
+                "url": j.get("url") or j.get("apply_url") or j.get("external_url"),
+                "updated_at": j.get("published_at") or j.get("created_at") or j.get("updated_at"),
+                "description_text": _strip_html(j.get("description") or ""),
+            })
+    return out
+
+def _jsonld_location(job_location):
+    """jobLocation can be a dict, a list of dicts, or absent entirely."""
+    def one(loc):
+        if not isinstance(loc, dict):
+            return ""
+        addr = loc.get("address")
+        if isinstance(addr, dict):
+            return ", ".join(filter(None, [
+                addr.get("addressLocality"), addr.get("addressRegion"), addr.get("addressCountry"),
+            ]))
+        if isinstance(addr, str):
+            return addr
+        return ""
+
+    if isinstance(job_location, list):
+        parts = [one(l) for l in job_location]
+        return " / ".join(p for p in parts if p)
+    return one(job_location)
+
+
+
+# ---------------------------------------------------------------------------
+# Dynamic ATS discovery + cached coverage expansion
+# ---------------------------------------------------------------------------
+
+ATS_PROBE_VERSION = 31
+ATS_PROBE_LIMIT = int(os.environ.get("ATS_PROBE_LIMIT", "60"))
+ATS_CACHE_PATH = "ats_platform_cache.json"
+
+_CORP_WORDS = re.compile(r"\b(?:limited|ltd|plc|inc|incorporated|corporation|corp|company|group|holdings|ireland|international)\b", re.I)
+_EF_GROUP_ID_RE = re.compile(r'_EF_GROUP_ID[\'\"]?\]?\s*[=:]\s*[\'\"]([^\'\"]+)[\'\"]')
+_PHENOM_REFNUM_RE = re.compile(r'"refNum"\s*:\s*"([A-Za-z0-9_-]+)"')
 
 
 def candidate_slugs(company_name: str):
-    """Guesses a small set of plausible ATS board slugs from a company name.
-    e.g. 'VMware (Broadcom)' -> ['vmware', 'broadcom']; 'HubSpot' -> ['hubspot']
-
-    Kept deliberately bounded — every extra candidate multiplies cost
-    across all 8 platforms for every one of ~340 manual companies, most
-    of which match nothing at all. The 'jobs' suffix pattern (found
-    HubSpot's real token 'hubspotjobs') proved this kind of suffix
-    convention is real and common, so 'careers' gets the same treatment —
-    genuinely new, not a repeat of the bare-first-word guess that was
-    tried and dropped for never producing a single real hit."""
-    base = re.sub(r"\([^)]*\)", " ", company_name)  # drop "(Broadcom)" etc.
-    base = CORP_SUFFIX_RE.sub(" ", base)
-    words = re.findall(r"[a-zA-Z0-9]+", base)
+    """Bounded ATS-board slug guesses. Exact cached mappings are tried first."""
+    base = re.sub(r"\([^)]*\)", " ", company_name or "")
+    base = _CORP_WORDS.sub(" ", base)
+    words = re.findall(r"[a-zA-Z0-9]+", base.lower())
     if not words:
         return []
-    slugs = set()
-    slugs.add("".join(words).lower())
-    slugs.add("-".join(words).lower())
-    slugs.add("".join(words).lower() + "jobs")  # e.g. HubSpot's real board token is 'hubspotjobs', not 'hubspot'
-    slugs.add("".join(words).lower() + "careers")  # same convention, different common suffix
-    if len(words) >= 2:
-        slugs.add("".join(words[:2]).lower())   # first two words joined, e.g. "johnsonjohnson"
-    return list(slugs)[:5]  # bounded — see docstring
+    cands = []
+    joined = "".join(words)
+    dashed = "-".join(words)
+    for x in (joined, dashed, words[0], joined + "jobs", joined + "careers"):
+        # Very short guesses create false-positive boards (e.g. "abb", "eir").
+        # Require 4+ characters unless the full normalized company name itself is short.
+        min_len = 2 if len(joined) <= 3 and x == joined else 4
+        if x and x not in cands and len(x) >= min_len:
+            cands.append(x)
+    # Parenthetical brand is often the actual ATS slug, e.g. VMware (Broadcom).
+    for paren in re.findall(r"\(([^)]*)\)", company_name or ""):
+        pwords = re.findall(r"[a-zA-Z0-9]+", paren.lower())
+        if pwords:
+            x = "".join(pwords)
+            if x not in cands:
+                cands.append(x)
+    return cands[:6]
 
 
-def try_greenhouse(slug, session):
+
+def _careers_page_ats_candidates(company: str, careers_url: str, sess):
+    """Discover ATS identifiers from the employer's actual careers page.
+
+    This is deliberately preferred over guessed slugs. It follows redirects and
+    scans public HTML for known ATS hosts, then validates every candidate.
+    """
+    if not sess or not careers_url:
+        return []
     try:
-        resp = session.get(GREENHOUSE_JOBS_URL.format(slug=slug), headers=HEADERS, timeout=10)
-        if resp.status_code != 200:
-            return None
-        data = resp.json()
-        jobs = data.get("jobs")
-        return jobs if jobs else None
+        r = sess.get(careers_url, timeout=15, allow_redirects=True)
+        if r.status_code >= 400:
+            return []
+        text = (r.text or "") + "\n" + str(r.url or "")
     except Exception:
+        return []
+
+    patterns = [
+        ("greenhouse", r"(?:boards|job-boards)\.greenhouse\.io/([A-Za-z0-9_-]+)"),
+        ("lever", r"jobs\.lever\.co/([A-Za-z0-9_-]+)"),
+        ("ashby", r"jobs\.ashbyhq\.com/([A-Za-z0-9_-]+)"),
+        ("smartrecruiters", r"(?:jobs\.)?smartrecruiters\.com/([A-Za-z0-9_-]+)"),
+        ("workable", r"apply\.workable\.com/([A-Za-z0-9_-]+)"),
+        ("recruitee", r"https?://([A-Za-z0-9-]+)\.recruitee\.com"),
+        ("personio", r"https?://([A-Za-z0-9-]+)\.jobs\.personio\.(?:de|com)"),
+        ("pinpoint", r"https?://([A-Za-z0-9-]+)\.pinpointhq\.com"),
+        ("eightfold", r"https?://([A-Za-z0-9-]+)\.eightfold\.ai"),
+    ]
+
+    out = []
+    seen = set()
+    for platform, pattern in patterns:
+        for m in re.finditer(pattern, text, re.I):
+            slug = m.group(1).strip()
+            key = (platform, slug.lower())
+            if not slug or key in seen:
+                continue
+            seen.add(key)
+            out.append((platform, slug))
+    return out
+
+
+def _session():
+    if requests is None:
         return None
+    sess = requests.Session()
+    sess.headers.update({"User-Agent": "Mozilla/5.0 (compatible; IrelandJobRadar/2.0)"})
+    return sess
 
 
-def try_lever(slug, session):
+def _probe_platform(platform: str, slug: str, sess) -> bool:
+    """Validate that a slug really resolves to an ATS board. Does NOT require an Ireland vacancy."""
+    if not sess or not slug:
+        return False
     try:
-        resp = session.get(LEVER_JOBS_URL.format(slug=slug), headers=HEADERS, timeout=10)
-        if resp.status_code != 200:
-            return None
-        data = resp.json()
-        return data if isinstance(data, list) and data else None
+        if platform == "greenhouse":
+            r=sess.get(f"https://boards-api.greenhouse.io/v1/boards/{slug}/jobs", timeout=10)
+            return r.status_code == 200 and isinstance(r.json().get("jobs"), list)
+        if platform == "lever":
+            r=sess.get(f"https://api.lever.co/v0/postings/{slug}?mode=json", timeout=10)
+            return r.status_code == 200 and isinstance(r.json(), list)
+        if platform == "smartrecruiters":
+            r=sess.get(f"https://api.smartrecruiters.com/v1/companies/{slug}/postings?limit=1", timeout=10)
+            return r.status_code == 200 and isinstance(r.json(), dict) and "content" in r.json()
+        if platform == "ashby":
+            r=sess.get(f"https://api.ashbyhq.com/posting-api/job-board/{slug}", timeout=10)
+            d=r.json() if r.status_code == 200 else {}
+            return r.status_code == 200 and isinstance(d, dict) and ("jobs" in d or "jobPostings" in d)
+        if platform == "recruitee":
+            r=sess.get(f"https://{slug}.recruitee.com/api/offers/", timeout=10)
+            d=r.json() if r.status_code == 200 else {}
+            return r.status_code == 200 and isinstance(d, dict) and "offers" in d
+        if platform == "personio":
+            r=sess.get(f"https://{slug}.jobs.personio.de/xml?language=en", timeout=10)
+            return r.status_code == 200 and ("<position" in r.text or "<workzag-jobs" in r.text)
+        if platform == "pinpoint":
+            r=sess.get(f"https://{slug}.pinpointhq.com/postings.json", timeout=10)
+            if r.status_code != 200: return False
+            d=r.json()
+            return isinstance(d, (list, dict))
+        if platform == "eightfold":
+            r=sess.get(f"https://{slug}.eightfold.ai/careers", timeout=10)
+            if r.status_code != 200: return False
+            m=_EF_GROUP_ID_RE.search(r.text)
+            if not m: return False
+            rr=sess.get(f"https://{slug}.eightfold.ai/api/pcsx/search", params={"domain":m.group(1),"query":"","location":"","start":0}, timeout=10)
+            return rr.status_code == 200 and isinstance(rr.json(), dict)
+        if platform == "phenom":
+            if "|" not in slug: return False
+            domain, refnum = slug.split("|",1)
+            payload={"lang":"en_global","deviceType":"desktop","country":"global","pageName":"search-results","size":1,"from":0,"jobs":True,"counts":True,"all_fields":["category","country","city","type"],"clearAll":False,"jdsource":"facets","isSliderEnable":False,"pageId":"page20","siteType":"external","keywords":"","global":True,"selected_fields":{},"sort":{"order":"desc","field":"postedDate"},"locationData":{},"refNum":refnum,"ddoKey":"refineSearch"}
+            rr=sess.post(f"https://{domain}/widgets",json=payload,timeout=15)
+            return rr.status_code == 200 and isinstance(rr.json(), dict)
     except Exception:
-        return None
+        return False
+    return False
 
 
-def normalize_greenhouse_job(company_name, job):
-    location = (job.get("location") or {}).get("name", "")
-    if not is_ireland_location(location):
-        return None
-    description = job.get("content", "") or ""
-    sponsorship, snippet = classify_sponsorship(description)
-    posted_text, days_ago = "Unknown", None
-    updated = job.get("updated_at") or job.get("first_published")
-    if updated:
-        try:
-            posted_dt = datetime.fromisoformat(updated.replace("Z", "+00:00"))
-            days_ago = (datetime.now(timezone.utc) - posted_dt).days
-            posted_text = f"Posted {days_ago} days ago" if days_ago > 0 else "Posted Today"
-        except Exception:
-            pass
-    return {
-        "company": company_name,
-        "title": job.get("title", "").strip(),
-        "location": location,
-        "posted_text": posted_text,
-        "posted_days_ago": days_ago,
-        "employment_type": normalize_employment_type(None, job.get("title", "")),
-        "url": job.get("absolute_url", ""),
-        "source": "greenhouse_api",
-        "visa_sponsorship": sponsorship,
-        "visa_snippet": snippet,
-    }
-
-
-def normalize_lever_job(company_name, job):
-    categories = job.get("categories") or {}
-    location = categories.get("location", "") or ""
-    if not is_ireland_location(location):
-        return None
-    description = (job.get("descriptionPlain") or job.get("description") or "")
-    sponsorship, snippet = classify_sponsorship(description)
-    posted_text, days_ago = "Unknown", None
-    created_ms = job.get("createdAt")
-    if created_ms:
-        try:
-            posted_dt = datetime.fromtimestamp(created_ms / 1000, tz=timezone.utc)
-            days_ago = (datetime.now(timezone.utc) - posted_dt).days
-            posted_text = f"Posted {days_ago} days ago" if days_ago > 0 else "Posted Today"
-        except Exception:
-            pass
-    return {
-        "company": company_name,
-        "title": job.get("text", "").strip(),
-        "location": location,
-        "posted_text": posted_text,
-        "posted_days_ago": days_ago,
-        "employment_type": normalize_employment_type(categories.get("commitment"), job.get("text", "")),
-        "url": job.get("hostedUrl", ""),
-        "source": "lever_api",
-        "visa_sponsorship": sponsorship,
-        "visa_snippet": snippet,
-    }
-
-
-def try_smartrecruiters_probe(slug, session):
-    """Cheap single-page check used only during discovery (does this slug
-    match at all?) — the full paginated fetch in try_smartrecruiters is
-    reserved for once a company is actually confirmed, to avoid paying
-    the multi-page cost twice for every real match."""
+def _scrape_eightfold(company: str, slug: str, sess):
+    out=[]
     try:
-        resp = session.get(SMARTRECRUITERS_JOBS_URL.format(slug=slug), headers=HEADERS, timeout=10)
-        if resp.status_code != 200:
-            return None
-        content = resp.json().get("content")
-        return content if content else None
+        page=sess.get(f"https://{slug}.eightfold.ai/careers",timeout=10)
+        m=_EF_GROUP_ID_RE.search(page.text)
+        if not m: return out
+        start=0
+        seen_ids=set()
+        for _ in range(20):
+            r=sess.get(f"https://{slug}.eightfold.ai/api/pcsx/search",params={"domain":m.group(1),"query":"","location":"","start":start},timeout=15)
+            if r.status_code!=200: break
+            d=r.json(); jobs=d.get("positions") or d.get("results") or []
+            if not jobs: break
+            new=0
+            for j in jobs:
+                jid=str(j.get("id") or j.get("position_id") or j.get("canonicalPositionUrl") or "")
+                if jid and jid in seen_ids: continue
+                if jid: seen_ids.add(jid)
+                new+=1
+                loc=j.get("location") or j.get("locations") or j.get("city") or ""
+                if isinstance(loc,list): loc=", ".join(str(x) for x in loc)
+                loc=str(loc)
+                if not region_ok(loc): continue
+                posted=j.get("t_create") or j.get("start_date") or j.get("posted_date")
+                updated=None
+                if posted:
+                    try:
+                        updated=datetime.fromtimestamp(posted,timezone.utc).isoformat() if isinstance(posted,(int,float)) else str(posted)
+                    except Exception: updated=str(posted)
+                out.append({"company":company,"ats":"eightfold","title":j.get("name") or j.get("title") or "","location":loc,"url":j.get("canonicalPositionUrl") or j.get("apply_url") or f"https://{slug}.eightfold.ai/careers/job/{jid}","updated_at":updated,"description_text":_strip_html(j.get("job_description") or j.get("description") or "")})
+            if new==0: break
+            start += len(jobs)
+            if len(jobs)<10: break
+    except Exception as e:
+        print(f"  ! eightfold/{slug}: {e}")
+    return out
+
+
+def _scrape_phenom(company: str, slug: str, sess):
+    if "|" not in slug: return []
+    domain, refnum=slug.split("|",1)
+    out=[]; offset=0
+    for _ in range(25):
+        payload={"lang":"en_global","deviceType":"desktop","country":"global","pageName":"search-results","size":20,"from":offset,"jobs":True,"counts":True,"all_fields":["category","country","city","type"],"clearAll":False,"jdsource":"facets","isSliderEnable":False,"pageId":"page20","siteType":"external","keywords":"","global":True,"selected_fields":{},"sort":{"order":"desc","field":"postedDate"},"locationData":{},"refNum":refnum,"ddoKey":"refineSearch"}
+        try:
+            r=sess.post(f"https://{domain}/widgets",json=payload,timeout=15)
+            if r.status_code!=200: break
+            jobs=((r.json().get("refineSearch") or {}).get("data") or {}).get("jobs") or []
+        except Exception: break
+        if not jobs: break
+        for j in jobs:
+            loc=j.get("locationDisplay") or j.get("cityStateCountry") or j.get("cityCountry") or j.get("city") or ""
+            if not region_ok(str(loc)): continue
+            jid=j.get("jobId") or j.get("id") or ""
+            url=j.get("applyUrl") or j.get("jdUrl") or f"https://{domain}/job/{jid}"
+            out.append({"company":company,"ats":"phenom","title":j.get("title") or j.get("jobTitle") or "","location":str(loc),"url":url,"updated_at":j.get("postedDate"),"description_text":_strip_html(j.get("descriptionTeaser") or j.get("description") or "")})
+        if len(jobs)<20: break
+        offset += len(jobs)
+    return out
+
+
+def _scrape_cached_mapping(company: str, platform: str, slug: str, sess):
+    try:
+        if platform == "greenhouse": jobs=scrape_greenhouse(slug)
+        elif platform == "lever": jobs=scrape_lever(slug)
+        elif platform == "smartrecruiters": jobs=scrape_smartrecruiters(slug)
+        elif platform == "ashby": jobs=scrape_ashby(slug)
+        elif platform == "recruitee": jobs=scrape_recruitee(slug)
+        elif platform == "personio": jobs=scrape_personio(slug)
+        elif platform == "pinpoint": jobs=scrape_pinpoint(slug)
+        elif platform == "workable": jobs=scrape_workable(slug)
+        elif platform == "eightfold": jobs=_scrape_eightfold(company,slug,sess)
+        elif platform == "phenom": jobs=_scrape_phenom(company,slug,sess)
+        else: return []
+        for j in jobs:
+            j["company"] = company
+        return jobs
+    except Exception as e:
+        print(f"  ! cached {platform}/{company}: {e}")
+        return []
+
+
+def discover_and_scrape_manual(company_registry):
+    """Convert unresolved companies to automatic ATS coverage over time.
+
+    Cached confirmed mappings are reused every run. Cached misses are retained,
+    but a probe-version bump automatically rechecks them after discovery logic
+    changes. A bounded number of never-probed companies is attempted per run so
+    the GitHub Action remains predictable rather than turning into a multi-hour crawl.
+    """
+    sess=_session()
+    if not sess:
+        print("  ! requests not installed; dynamic ATS discovery skipped")
+        return [], {}
+    try:
+        with open(ATS_CACHE_PATH,encoding="utf-8") as f: raw=json.load(f)
+        stored_version=raw.pop("__probe_version__",0)
+        cache=raw
+        if stored_version != ATS_PROBE_VERSION:
+            cache={k:v for k,v in cache.items() if isinstance(v,dict) and v.get("platform") not in (None,"none")}
     except Exception:
-        return None
+        cache={}
 
+    # Seed exact enterprise mappings, but still validate each endpoint before use.
+    for company, slug in KNOWN_EIGHTFOLD_MAPPINGS.items():
+        cache.setdefault(company, {"platform": "eightfold", "slug": slug})
+    for company, slug in KNOWN_PHENOM_MAPPINGS.items():
+        cache.setdefault(company, {"platform": "phenom", "slug": slug})
 
-def try_smartrecruiters(slug, session):
-    """Paginates through ALL postings, not just the first page — the
-    previous version only fetched page 1 with no offset/total check,
-    which for a company posting globally (hundreds of postings) could
-    easily miss Ireland-specific roles that just weren't in that first
-    batch. Capped at a reasonable number of pages as a safety net."""
-    all_content = []
-    offset = 0
-    page_size = 100
-    for _ in range(10):  # up to 1000 postings, generous for any real company
-        try:
-            resp = session.get(SMARTRECRUITERS_JOBS_URL.format(slug=slug), headers=HEADERS,
-                                params={"offset": offset, "limit": page_size}, timeout=10)
-            if resp.status_code != 200:
-                break
-            data = resp.json()
-            content = data.get("content") or []
-            if not content:
-                break
-            all_content.extend(content)
-            total_found = data.get("totalFound", len(all_content))
-            offset += page_size
-            if offset >= total_found:
-                break
-        except Exception:
-            break
-    return all_content if all_content else None
+    dynamic_jobs=[]; confirmed={}; fresh=0
+    platforms=("greenhouse","lever","smartrecruiters","ashby","workable","recruitee","personio","pinpoint","eightfold")
 
+    for entry in company_registry:
+        company=entry["company"]
+        info=cache.get(company) if isinstance(cache.get(company),dict) else None
+        platform=info.get("platform") if info else None
+        slug=info.get("slug") if info else None
 
-def fetch_smartrecruiters_description(slug, posting_id, session):
-    """SmartRecruiters' list endpoint doesn't include the full description —
-    a separate detail call is needed, same pattern as the Workday detail
-    fetch. Only called for postings that already passed the Ireland filter,
-    to keep the extra request count down."""
+        if platform and platform != "none":
+            # Never trust a stale/guessed cache entry without validating its endpoint.
+            if not _probe_platform(platform,slug,sess):
+                cache.pop(company,None); platform=slug=None
+            else:
+                confirmed[company]={"platform":platform,"slug":slug}
+        elif platform == "none":
+            continue
+
+        if not platform:
+            if fresh >= ATS_PROBE_LIMIT:
+                continue
+            fresh += 1
+
+            # First inspect the company's real careers page. This is much more
+            # reliable than guessing ATS board names from company strings.
+            for plat, cand in _careers_page_ats_candidates(
+                company, entry.get("careers_url") or "", sess
+            ):
+                if plat in platforms and _probe_platform(plat, cand, sess):
+                    platform, slug = plat, cand
+                    break
+
+            # Only fall back to bounded slug guesses if the careers page did not
+            # expose a recognizable ATS link.
+            if not platform:
+                for cand in candidate_slugs(company):
+                    for plat in platforms:
+                        if _probe_platform(plat,cand,sess):
+                            platform,slug=plat,cand
+                            break
+                    if platform:
+                        break
+
+            cache[company]={"platform":platform or "none","slug":slug}
+            if platform:
+                confirmed[company]={"platform":platform,"slug":slug}
+                print(f"  + discovered {company}: {platform}/{slug}")
+
+        if platform:
+            jobs=_scrape_cached_mapping(company,platform,slug,sess)
+            dynamic_jobs.extend(jobs)
+            print(f"dynamic/{company} [{platform}]: {len(jobs)} Ireland jobs")
+
+    cache["__probe_version__"]=ATS_PROBE_VERSION
+    with open(ATS_CACHE_PATH,"w",encoding="utf-8") as f:
+        json.dump(cache,f,indent=2)
+    print(f"Dynamic ATS discovery: {len(confirmed)} confirmed cached/discovered platforms; {fresh} new companies probed this run")
+    return dynamic_jobs, confirmed
+
+def scrape_jsonld(company: str, url: str):
+    if not url:
+        return []
+    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (job-dashboard-bot)"})
     try:
-        url = SMARTRECRUITERS_DETAIL_URL.format(slug=slug, posting_id=posting_id)
-        resp = session.get(url, headers=HEADERS, timeout=10)
-        resp.raise_for_status()
-        data = resp.json()
-        sections = (data.get("jobAd") or {}).get("sections") or {}
-        parts = []
-        for key in ("jobDescription", "qualifications", "additionalInformation"):
-            text = (sections.get(key) or {}).get("text", "")
-            if text:
-                parts.append(text)
-        return " ".join(parts)
+        with urllib.request.urlopen(req, timeout=20) as resp:
+            html_text = resp.read().decode("utf-8", errors="ignore")
+    except (urllib.error.URLError, urllib.error.HTTPError, TimeoutError) as e:
+        print(f"  ! fetch failed for {url}: {e}")
+        return []
+
+    out = []
+    for m in re.finditer(
+        r'<script[^>]+type=["\']application/ld\+json["\'][^>]*>(.*?)</script>',
+        html_text, re.DOTALL | re.IGNORECASE,
+    ):
+        block = m.group(1).strip()
+        try:
+            data = json.loads(block)
+        except ValueError:
+            continue
+
+        candidates = data if isinstance(data, list) else [data]
+        expanded = []
+        for c in candidates:
+            if isinstance(c, dict) and isinstance(c.get("@graph"), list):
+                expanded.extend(c["@graph"])
+            else:
+                expanded.append(c)
+
+        for c in expanded:
+            if not isinstance(c, dict):
+                continue
+            t = c.get("@type")
+            is_job = t == "JobPosting" or (isinstance(t, list) and "JobPosting" in t)
+            if not is_job:
+                continue
+
+            title = c.get("title", "")
+            location = _jsonld_location(c.get("jobLocation"))
+            if c.get("jobLocationType") == "TELECOMMUTE" or c.get("applicantLocationRequirements"):
+                location = f"{location} (Remote)".strip(", ")
+
+            if region_ok(location):
+                desc = c.get("description") or ""
+                out.append({
+                    "company": company,
+                    "ats": "jsonld",
+                    "title": title,
+                    "location": location,
+                    "url": c.get("url") or url,
+                    "updated_at": c.get("datePosted"),
+                    "description_text": _strip_html(desc) if isinstance(desc, str) else "",
+                })
+    return out
+
+
+def scrape_adzuna(country: str, query: str):
+    if not ADZUNA_APP_ID or not ADZUNA_APP_KEY:
+        return []
+    url = (
+        f"https://api.adzuna.com/v1/api/jobs/{country}/search/1"
+        f"?app_id={ADZUNA_APP_ID}&app_key={ADZUNA_APP_KEY}"
+        f"&what={urllib.parse.quote(query)}&results_per_page=50&content-type=application/json"
+    )
+    data = fetch_json(url)
+    if not data or "results" not in data:
+        return []
+    out = []
+    for j in data["results"]:
+        title = j.get("title", "")
+        location = (j.get("location") or {}).get("display_name", "")
+        if region_ok(location):
+            out.append({
+                "company": (j.get("company") or {}).get("display_name", "unknown"),
+                "ats": "adzuna",
+                "title": title,
+                "location": location,
+                "url": j.get("redirect_url"),
+                "updated_at": j.get("created"),
+                "description_text": j.get("description") or "",
+                "source_type": "aggregator",
+            })
+    return out
+
+
+def scrape_careerjet(locale: str, query: str):
+    if not CAREERJET_AFFID:
+        return []
+    url = (
+        "https://public-api.careerjet.net/search"
+        f"?locale_code={locale}&keywords={urllib.parse.quote(query)}"
+        f"&affid={CAREERJET_AFFID}&pagesize=50&user_ip=127.0.0.1&user_agent=job-dashboard-bot"
+    )
+    data = fetch_json(url)
+    if not data or "jobs" not in data:
+        return []
+    out = []
+    for j in data["jobs"]:
+        title = j.get("title", "")
+        location = j.get("locations", "")
+        if region_ok(location):
+            out.append({
+                "company": j.get("company", "unknown"),
+                "ats": "careerjet",
+                "title": title,
+                "location": location,
+                "url": j.get("url"),
+                "updated_at": j.get("date"),
+                "description_text": j.get("description") or j.get("snippet") or "",
+                "source_type": "aggregator",
+            })
+    return out
+
+
+def scrape_jooble(keywords: str, location: str = ""):
+    if not JOOBLE_API_KEY:
+        return []
+    url = f"https://jooble.org/api/{JOOBLE_API_KEY}"
+    payload = json.dumps({"keywords": keywords, "location": location}).encode("utf-8")
+    req = urllib.request.Request(
+        url, data=payload, method="POST",
+        headers={"Content-Type": "application/json", "User-Agent": "Mozilla/5.0 (job-dashboard-bot)"},
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=20) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+    except (urllib.error.URLError, urllib.error.HTTPError, TimeoutError, ValueError) as e:
+        print(f"  ! fetch failed for jooble ({keywords}): {e}")
+        return []
+    out = []
+    for j in (data or {}).get("jobs", []):
+        title = j.get("title", "")
+        loc = j.get("location", "")
+        if region_ok(loc):
+            out.append({
+                "company": j.get("company", "unknown"),
+                "ats": "jooble",
+                "title": title,
+                "location": loc,
+                "url": j.get("link"),
+                "updated_at": j.get("updated"),
+                "description_text": j.get("snippet") or j.get("description") or "",
+                "source_type": "aggregator",
+            })
+    return out
+
+
+def scrape_amazon(query: str):
+    url = f"https://www.amazon.jobs/en/search.json?base_query={urllib.parse.quote(query)}&result_limit=50&offset=0"
+    data = fetch_json(url)
+    if not data or "jobs" not in data:
+        return []
+    out = []
+    for j in data["jobs"]:
+        title = j.get("title", "")
+        location = j.get("normalized_location", "") or j.get("location", "")
+        if region_ok(location):
+            path = j.get("job_path", "")
+            out.append({
+                "company": "amazon",
+                "ats": "direct",
+                "title": title,
+                "location": location,
+                "url": f"https://www.amazon.jobs{path}" if path else None,
+                "updated_at": j.get("posted_date"),
+            })
+    return out
+
+
+def scrape_netflix(query: str):
+    url = (
+        "https://explore.jobs.netflix.net/api/apply/v2/jobs"
+        f"?domain=netflix.com&start=0&num=50&query={urllib.parse.quote(query)}"
+    )
+    data = fetch_json(url)
+    if not data:
+        return []
+    positions = data.get("positions") or []
+    out = []
+    for j in positions:
+        title = j.get("name", "")
+        location = j.get("location", "")
+        if region_ok(location):
+            t_update = j.get("t_update")
+            updated_iso = None
+            if t_update:
+                try:
+                    updated_iso = datetime.fromtimestamp(t_update, tz=timezone.utc).isoformat()
+                except Exception:
+                    pass
+            out.append({
+                "company": "netflix",
+                "ats": "direct",
+                "title": title,
+                "location": location,
+                "url": j.get("canonicalPositionUrl"),
+                "updated_at": updated_iso,
+            })
+    return out
+
+
+
+def _fetch_html(url: str, timeout: int = 25):
+    if requests is None:
+        return ""
+    try:
+        r = requests.get(url, headers={"User-Agent": "Mozilla/5.0 (compatible; IrelandJobSearch/3.0)"}, timeout=timeout)
+        if r.status_code != 200:
+            return ""
+        return r.text
     except Exception:
         return ""
 
 
-def normalize_smartrecruiters_job(company_name, job, slug, session, fetch_descriptions):
-    location_obj = job.get("location") or {}
-    location = ", ".join(filter(None, [location_obj.get("city"), location_obj.get("region"),
-                                        location_obj.get("country")]))
-    if not is_ireland_location(location):
-        return None
-
-    posting_id = job.get("id", "")
-    posted_text, days_ago = "Unknown", None
-    released = job.get("releasedDate")
-    if released:
-        try:
-            posted_dt = datetime.fromisoformat(released.replace("Z", "+00:00"))
-            days_ago = (datetime.now(timezone.utc) - posted_dt).days
-            posted_text = f"Posted {days_ago} days ago" if days_ago > 0 else "Posted Today"
-        except Exception:
-            pass
-
-    type_field = job.get("typeOfEmployment") or {}
-    raw_employment_type = type_field.get("label") if isinstance(type_field, dict) else type_field
-
-    sponsorship, snippet = "not_mentioned", None
-    if fetch_descriptions and posting_id:
-        desc = fetch_smartrecruiters_description(slug, posting_id, session)
-        sponsorship, snippet = classify_sponsorship(desc)
-
-    return {
-        "company": company_name,
-        "title": job.get("name", "").strip(),
-        "location": location,
-        "posted_text": posted_text,
-        "posted_days_ago": days_ago,
-        "employment_type": normalize_employment_type(raw_employment_type, job.get("name", "")),
-        "url": f"https://jobs.smartrecruiters.com/{slug}/{posting_id}",
-        "source": "smartrecruiters_api",
-        "visa_sponsorship": sponsorship,
-        "visa_snippet": snippet,
-    }
+def _html_text(fragment: str) -> str:
+    return re.sub(r"\\s+", " ", html.unescape(_strip_html(fragment or ""))).strip()
 
 
-def try_ashby(slug, session):
-    try:
-        resp = session.get(ASHBY_JOBS_URL.format(slug=slug), headers=HEADERS, timeout=10)
-        if resp.status_code != 200:
-            return None
-        data = resp.json()
-        jobs = data.get("jobs")
-        return jobs if jobs else None
-    except Exception:
-        return None
+def _absolute_url(base: str, href: str) -> str:
+    return urllib.parse.urljoin(base, href or "")
 
 
-def normalize_ashby_job(company_name, job):
-    location = job.get("location", "") or job.get("locationName", "") or ""
-    if not is_ireland_location(location):
-        return None
-    description = job.get("descriptionHtml", "") or job.get("descriptionPlain", "")
-    sponsorship, snippet = classify_sponsorship(description)
-    posted_text, days_ago = "Unknown", None
-    published = job.get("publishedAt")
-    if published:
-        try:
-            posted_dt = datetime.fromisoformat(published.replace("Z", "+00:00"))
-            days_ago = (datetime.now(timezone.utc) - posted_dt).days
-            posted_text = f"Posted {days_ago} days ago" if days_ago > 0 else "Posted Today"
-        except Exception:
-            pass
-    return {
-        "company": company_name,
-        "title": job.get("title", "").strip(),
-        "location": location,
-        "posted_text": posted_text,
-        "posted_days_ago": days_ago,
-        "employment_type": normalize_employment_type(job.get("employmentType"), job.get("title", "")),
-        "url": job.get("applyUrl", "") or job.get("jobUrl", ""),
-        "source": "ashby_api",
-        "visa_sponsorship": sponsorship,
-        "visa_snippet": snippet,
-    }
-
-
-def try_recruitee(slug, session):
-    try:
-        resp = session.get(RECRUITEE_JOBS_URL.format(slug=slug), headers=HEADERS, timeout=10)
-        if resp.status_code != 200:
-            return None
-        data = resp.json()
-        offers = data.get("offers")
-        return offers if offers else None
-    except Exception:
-        return None
-
-
-def normalize_recruitee_job(company_name, job):
-    location = ", ".join(filter(None, [job.get("city"), job.get("country_code")]))
-    if job.get("remote"):
-        location = (location + " (Remote)").strip()
-    if not is_ireland_location(location):
-        return None
-    description = job.get("description", "") or job.get("requirements", "")
-    sponsorship, snippet = classify_sponsorship(description)
-    posted_text, days_ago = "Unknown", None
-    published = job.get("published_at")
-    if published:
-        try:
-            posted_dt = datetime.fromisoformat(published.replace("Z", "+00:00"))
-            days_ago = (datetime.now(timezone.utc) - posted_dt).days
-            posted_text = f"Posted {days_ago} days ago" if days_ago > 0 else "Posted Today"
-        except Exception:
-            pass
-    return {
-        "company": company_name,
-        "title": job.get("title", "").strip(),
-        "location": location,
-        "posted_text": posted_text,
-        "posted_days_ago": days_ago,
-        "employment_type": normalize_employment_type(job.get("employment_type_code"), job.get("title", "")),
-        "url": job.get("careers_url", ""),
-        "source": "recruitee_api",
-        "visa_sponsorship": sponsorship,
-        "visa_snippet": snippet,
-    }
-
-
-def try_personio(slug, session):
-    """Personio exposes an unauthenticated XML job feed rather than JSON —
-    same public-data idea as the others, different format. Returns a list
-    of parsed <position> elements, or None if this isn't a real Personio
-    board for this slug."""
-    try:
-        resp = session.get(PERSONIO_XML_URL.format(slug=slug), headers=HEADERS, timeout=10)
-        if resp.status_code != 200 or not resp.text.strip():
-            return None
-        root = ET.fromstring(resp.text)
-        positions = root.findall("position")
-        return positions if positions else None
-    except Exception:
-        return None
-
-
-def normalize_personio_job(company_name, slug, position):
-    def field(tag):
-        el = position.find(tag)
-        return el.text.strip() if el is not None and el.text else ""
-
-    office = field("office")
-    if not is_ireland_location(office):
-        return None
-
-    description_parts = []
-    for jd in position.findall("./jobDescriptions/jobDescription"):
-        value = jd.find("jobDescriptionValue")
-        if value is not None and value.text:
-            description_parts.append(value.text)
-    sponsorship, snippet = classify_sponsorship(" ".join(description_parts))
-
-    posted_text, days_ago = "Unknown", None
-    created = field("createdAt")
-    if created:
-        try:
-            posted_dt = datetime.fromisoformat(created.replace("Z", "+00:00"))
-            days_ago = (datetime.now(timezone.utc) - posted_dt).days
-            posted_text = f"Posted {days_ago} days ago" if days_ago > 0 else "Posted Today"
-        except Exception:
-            pass
-
-    position_id = field("id")
-    return {
-        "company": company_name,
-        "title": field("name"),
-        "location": office,
-        "posted_text": posted_text,
-        "posted_days_ago": days_ago,
-        "employment_type": normalize_employment_type(field("employmentType"), field("name")),
-        "url": f"https://{slug}.jobs.personio.de/job/{position_id}",
-        "source": "personio_xml",
-        "visa_sponsorship": sponsorship,
-        "visa_snippet": snippet,
-    }
-
-
-def try_pinpoint(slug, session):
-    try:
-        resp = session.get(PINPOINT_JOBS_URL.format(slug=slug), headers={
-            **HEADERS, "Accept": "application/json, text/javascript, */*; q=0.01",
-            "X-Requested-With": "XMLHttpRequest",
-        }, timeout=10)
-        if resp.status_code != 200:
-            return None
-        data = resp.json()
-        jobs = data.get("data")
-        return jobs if jobs else None
-    except Exception:
-        return None
-
-
-def normalize_pinpoint_job(company_name, slug, job):
-    """Pinpoint's documented schema examples are inconsistent between their
-    JSON and RSS docs (some snake_case, some camelCase) — checking several
-    likely field-name variants rather than assuming one exact shape."""
-    location = job.get("location") or job.get("location_name") or job.get("locationName") or ""
-    if isinstance(location, dict):
-        location = ", ".join(filter(None, [location.get("city"), location.get("state"),
-                                             location.get("country")]))
-    location = str(location)
-    if not is_ireland_location(location):
-        return None
-
-    description = (job.get("description") or job.get("htmlDescription") or
-                    job.get("html_description") or job.get("benefits") or "")
-    sponsorship, snippet = classify_sponsorship(description)
-
-    posted_text, days_ago = "Unknown", None
-    published = job.get("published_at") or job.get("publishedAt") or job.get("pubDate")
-    if published:
-        try:
-            posted_dt = datetime.fromisoformat(str(published).replace("Z", "+00:00"))
-            days_ago = (datetime.now(timezone.utc) - posted_dt).days
-            posted_text = f"Posted {days_ago} days ago" if days_ago > 0 else "Posted Today"
-        except Exception:
-            pass
-
-    job_id = job.get("id", "")
-    url = job.get("link") or job.get("url") or f"https://{slug}.pinpointhq.com/postings/{job_id}"
-
-    return {
-        "company": company_name,
-        "title": (job.get("title") or "").strip(),
-        "location": location,
-        "posted_text": posted_text,
-        "posted_days_ago": days_ago,
-        "employment_type": normalize_employment_type(job.get("employmentType") or job.get("employment_type"), job.get("title") or ""),
-        "url": url,
-        "source": "pinpoint_api",
-        "visa_sponsorship": sponsorship,
-        "visa_snippet": snippet,
-    }
-
-
-def extract_json_array_after(text, marker):
-    """Finds `marker` (e.g. '"positions":') and extracts the JSON array
-    that follows it by counting bracket depth — a simple regex like
-    \\[.*?\\] breaks here because each job object contains its OWN nested
-    arrays (e.g. "locations": [...]), so a naive 'stop at the first ]'
-    match truncates at the wrong spot every time. This walks character by
-    character and only stops when the brackets are actually balanced."""
-    start = text.find(marker)
-    if start == -1:
-        return None
-    bracket_start = text.find("[", start)
-    if bracket_start == -1:
-        return None
-    depth = 0
-    for i in range(bracket_start, len(text)):
-        if text[i] == "[":
-            depth += 1
-        elif text[i] == "]":
-            depth -= 1
-            if depth == 0:
-                return text[bracket_start:i + 1]
-    return None
-
-
-EF_GROUP_ID_RE = re.compile(r'_EF_GROUP_ID[\'"]?\]?\s*[=:]\s*[\'"]([^\'"]+)[\'"]')
-
-
-def try_eightfold(slug, session):
-    """The correct, documented Eightfold pattern (confirmed via a public
-    open-source ATS-scraping reference, not guessed): fetch the real
-    careers page, pull the company's internal '_EF_GROUP_ID' token out of
-    its embedded JS, then call the actual search API with that ID. My
-    earlier attempts guessed a plausible-looking but wrong endpoint and a
-    wrong ID value (the domain name instead of this internal token) —
-    that's why real, confirmed Eightfold tenants (Eaton) weren't matching
-    despite genuinely being on this platform."""
-    try:
-        page = session.get(f"https://{slug}.eightfold.ai/careers", headers=HEADERS, timeout=10)
-        if page.status_code != 200:
-            return None
-        m = EF_GROUP_ID_RE.search(page.text)
+def scrape_apple():
+    """Apple's Ireland search is server-rendered enough to parse without login/API keys."""
+    base = "https://jobs.apple.com"
+    url = base + "/en-ie/search?location=ireland-IRL"
+    page = _fetch_html(url)
+    if not page:
+        return []
+    out=[]
+    # Each result links to /en-ie/details/<role-number>/<slug>. Capture the
+    # surrounding list-item/card so location/date/description can be extracted.
+    blocks = re.findall(r"(<li[^>]*>.*?/en-ie/details/.*?</li>)", page, flags=re.I|re.S)
+    if not blocks:
+        blocks = re.split(r'(?=<a[^>]+href=["\\\']/en-ie/details/)', page, flags=re.I)
+    seen=set()
+    for block in blocks:
+        m=re.search(r'href=["\\\']([^"\\\']*/en-ie/details/[^"\\\']+)["\\\'][^>]*>(.*?)</a>', block, flags=re.I|re.S)
         if not m:
-            return None
-        group_id = m.group(1)
-        resp = session.get(
-            f"https://{slug}.eightfold.ai/api/pcsx/search",
-            params={"domain": group_id, "query": "", "location": "", "start": 0},
-            headers=HEADERS, timeout=10)
-        if resp.status_code != 200:
-            return None
-        data = resp.json()
-        positions = data.get("positions") or data.get("results")
-        return positions if positions else None
-    except Exception:
-        return None
+            continue
+        href=_absolute_url(base,m.group(1)); title=_html_text(m.group(2))
+        if not title or href in seen:
+            continue
+        seen.add(href)
+        txt=_html_text(block)
+        lm=re.search(r'Location\\s+([^|•]+?)(?:Actions|Role Number|Weekly Hours|$)', txt, flags=re.I)
+        location=(lm.group(1).strip() if lm else "Ireland")
+        if not region_ok(location):
+            continue
+        dm=re.search(r'\\b(\\d{1,2}\\s+[A-Za-z]{3}\\s+20\\d{2}|[A-Za-z]{3}\\s+\\d{1,2},?\\s+20\\d{2})\\b', txt)
+        out.append({"company":"Apple","ats":"direct","title":title,"location":location,"url":href,"updated_at":dm.group(1) if dm else None,"description_text":txt[:5000]})
+    return out
 
 
-def normalize_eightfold_job(company_name, slug, job):
-    location = (job.get("location") or job.get("locations") or job.get("city") or "")
-    if isinstance(location, list):
-        location = ", ".join(str(x) for x in location)
-    location = str(location)
-    if not is_ireland_location(location):
-        return None
+def _scrape_public_careers_page(company: str, url: str, href_hints, default_location="Ireland"):
+    """Conservative server-rendered careers-page parser for proprietary sites.
 
-    description = job.get("job_description") or job.get("description") or job.get("text") or ""
-    sponsorship, snippet = classify_sponsorship(description)
-
-    posted_text, days_ago = "Unknown", None
-    posted = job.get("t_create") or job.get("start_date") or job.get("posted_date")
-    if posted:
-        try:
-            if isinstance(posted, (int, float)):
-                posted_dt = datetime.fromtimestamp(posted, tz=timezone.utc)
-            else:
-                posted_dt = datetime.fromisoformat(str(posted).replace("Z", "+00:00"))
-            days_ago = (datetime.now(timezone.utc) - posted_dt).days
-            posted_text = f"Posted {days_ago} days ago" if days_ago > 0 else "Posted Today"
-        except Exception:
-            pass
-
-    job_id = job.get("id", "")
-    url = job.get("canonicalPositionUrl") or job.get("apply_url") or \
-        f"https://{slug}.eightfold.ai/careers/job/{job_id}"
-
-    return {
-        "company": company_name,
-        "title": (job.get("name") or job.get("title") or "").strip(),
-        "location": location,
-        "posted_text": posted_text,
-        "posted_days_ago": days_ago,
-        "employment_type": normalize_employment_type(job.get("employment_type"), job.get("name") or job.get("title") or ""),
-        "url": url,
-        "source": "eightfold_api",
-        "visa_sponsorship": sponsorship,
-        "visa_snippet": snippet,
-    }
+    Only emits cards whose surrounding text clearly contains an Irish location.
+    It is a fallback, not a claim that every JS-only site is fully covered.
+    """
+    page=_fetch_html(url)
+    if not page:
+        return []
+    out=[]; seen=set()
+    # Work with bounded chunks around anchors so one Ireland mention elsewhere on
+    # the page cannot incorrectly tag a non-Ireland role.
+    for m in re.finditer(r'<a\\b[^>]*href=["\\\']([^"\\\']+)["\\\'][^>]*>(.*?)</a>', page, flags=re.I|re.S):
+        href=m.group(1); label=_html_text(m.group(2))
+        if not label or len(label)<3 or len(label)>220:
+            continue
+        full=_absolute_url(url,href)
+        low=full.lower()
+        if not any(h in low for h in href_hints):
+            continue
+        start=max(0,m.start()-1800); end=min(len(page),m.end()+2600)
+        chunk=_html_text(page[start:end])
+        if not region_ok(chunk):
+            continue
+        # Prefer a compact location phrase if visible.
+        lm=re.search(r'((?:Dublin|Cork|Galway|Limerick|Waterford|Kilkenny|Athlone|Ireland)(?:[^|•<>]{0,80}))', chunk, flags=re.I)
+        location=lm.group(1).strip()[:140] if lm else default_location
+        key=(label.lower(),full.split('?')[0])
+        if key in seen:
+            continue
+        seen.add(key)
+        dm=re.search(r'\\b(20\\d{2}-\\d{2}-\\d{2}|\\d{1,2}\\s+[A-Za-z]{3,9}\\s+20\\d{2}|[A-Za-z]{3,9}\\s+\\d{1,2},?\\s+20\\d{2})\\b', chunk)
+        out.append({"company":company,"ats":"direct","title":label,"location":location,"url":full,"updated_at":dm.group(1) if dm else None,"description_text":chunk[:5000]})
+    return out
 
 
-# Phenom has no free public API (their real API requires a paid OAuth
-# token). This uses a widely-documented reverse-engineered pattern
-# instead: Phenom career pages embed a company-specific 'refNum' token in
-# their HTML, which their own front-end JS uses to call an internal
-# '/widgets' search endpoint. Less stable than the official public APIs
-# above — Phenom could change this without notice — but real and working.
-PHENOM_REFNUM_RE = re.compile(r'"refNum"\s*:\s*"([A-Za-z0-9_-]+)"')
+def scrape_google():
+    return _scrape_public_careers_page(
+        "Google",
+        "https://www.google.com/about/careers/applications/jobs/results/?location=Ireland",
+        ("/about/careers/applications/jobs/results/", "/jobs/results/"),
+    )
 
-# Companies whose EXACT real Phenom page was confirmed by direct research —
-# generic sub-path guessing (/,/en,/search-jobs,/careers) never matched any
-# of these, meaning their real search page lives at a more specific path
-# than any short generic list would guess. Storing the precise confirmed
-# path removes the guessing entirely for these.
-KNOWN_PHENOM_DOMAINS = {
-    "Baxter International": ("jobs.baxter.com", "/search-jobs/Ireland"),
-    "Applied Materials": ("jobs.appliedmaterials.com", "/location/ireland-jobs/95/2963597/2"),
-    "Palo Alto Networks": ("jobs.paloaltonetworks.com", "/en/location/dublin-jobs/47263/2963597-7521314-2964574/4"),
+
+def scrape_microsoft():
+    # The Dublin location page is server-rendered and currently exposes the
+    # Ireland vacancies plus their dates/descriptions.
+    return _scrape_public_careers_page(
+        "Microsoft",
+        "https://careers.microsoft.com/v2/global/en/locations/dublin.html",
+        ("/job/", "/jobs/", "jobid", "job-id"),
+    )
+
+
+def scrape_meta():
+    return _scrape_public_careers_page(
+        "Meta",
+        "https://www.metacareers.com/jobs?offices[0]=Dublin%2C%20Ireland",
+        ("/jobs/",),
+    )
+
+
+def scrape_tiktok():
+    return _scrape_public_careers_page(
+        "TikTok",
+        "https://careers.tiktok.com/position?keyword=&location=Dublin%2C+Ireland",
+        ("/position/", "position/detail", "/jobs/"),
+    )
+
+
+def scrape_oracle():
+    # Oracle Recruiting Cloud pages vary by tenant/site. This conservative
+    # parser follows publicly rendered requisition links and requires Ireland
+    # context in the same local card/chunk.
+    return _scrape_public_careers_page(
+        "Oracle",
+        "https://eeho.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1/requisitions?location=Ireland",
+        ("/job/", "/requisitions/", "candidateexperience"),
+    )
+
+
+def scrape_direct_company(company: str):
+    fn={
+        "Apple": scrape_apple,
+        "Google": scrape_google,
+        "Microsoft": scrape_microsoft,
+        "Meta": scrape_meta,
+        "TikTok": scrape_tiktok,
+        "Oracle": scrape_oracle,
+    }.get(company)
+    return fn() if fn else []
+
+
+RESUME_MATCH_STOPWORDS = {
+    "the","and","for","with","that","this","from","your","you","our","are","will","have","has","job","role","work","team","company","candidate","candidates","skills","skill","experience","years","year","including","within","across","using","into","about","more","their","they","them","who","what","when","where","which","while","also","all","any","but","not","can","may","must","should","would","could","a","an","as","at","be","by","in","is","it","of","on","or","to","we","i","us"
 }
 
-
-def fetch_phenom_jobs_by_refnum(domain, ref_num, session):
-    """Re-fetches using an already-discovered domain+refnum pair (from
-    cache), skipping the HTML scrape needed to find it the first time."""
-    try:
-        payload = {
-            "lang": "en_global", "deviceType": "desktop", "country": "global",
-            "pageName": "search-results", "size": 20, "from": 0,
-            "jobs": True, "counts": True, "all_fields": ["category", "country", "city", "type"],
-            "clearAll": False, "jdsource": "facets", "isSliderEnable": False,
-            "pageId": "page20", "siteType": "external", "keywords": "", "global": True,
-            "selected_fields": {}, "sort": {"order": "desc", "field": "postedDate"},
-            "locationData": {}, "refNum": ref_num, "ddoKey": "refineSearch",
-        }
-        resp = session.post(f"https://{domain}/widgets", json=payload,
-                             headers={"Content-Type": "application/json"}, timeout=15)
-        if resp.status_code != 200:
-            return []
-        data = resp.json()
-        return (data.get("refineSearch") or {}).get("data", {}).get("jobs", []) or []
-    except Exception:
-        return []
-
-
-def try_phenom_domain(domain, session, verbose=True, exact_path=None):
-    """Tries a specific known Phenom domain — an exact confirmed path first
-    if provided (most reliable), then the bare root and a couple of common
-    sub-paths as a fallback guess. Some tenants (confirmed: Baxter, Applied
-    Materials, Palo Alto Networks) don't return anything usable at any
-    generic path — only their specific real search-results URL works."""
-    paths_to_try = ([exact_path] if exact_path else []) + ["/", "/en", "/search-jobs", "/careers"]
-    for path in paths_to_try:
-        try:
-            page = session.get(f"https://{domain}{path}", headers=HEADERS, timeout=10)
-            if page.status_code != 200:
-                if verbose and path == exact_path:
-                    print(f"      [phenom-diagnostic] {domain}{path}: exact confirmed path "
-                          f"returned HTTP {page.status_code}, not 200")
-                continue
-            m = PHENOM_REFNUM_RE.search(page.text)
-            if not m:
-                if verbose:
-                    print(f"      [phenom-diagnostic] {domain}{path}: page loaded (200) but no "
-                          f"refNum pattern found — may not actually be Phenom, or uses a "
-                          f"different embedding format than expected.")
-                continue
-            ref_num = m.group(1)
-            payload = {
-                "lang": "en_global", "deviceType": "desktop", "country": "global",
-                "pageName": "search-results", "size": 20, "from": 0,
-                "jobs": True, "counts": True, "all_fields": ["category", "country", "city", "type"],
-                "clearAll": False, "jdsource": "facets", "isSliderEnable": False,
-                "pageId": "page20", "siteType": "external", "keywords": "", "global": True,
-                "selected_fields": {}, "sort": {"order": "desc", "field": "postedDate"},
-                "locationData": {}, "refNum": ref_num, "ddoKey": "refineSearch",
-            }
-            resp = session.post(f"https://{domain}/widgets", json=payload,
-                                 headers={"Content-Type": "application/json"}, timeout=15)
-            if resp.status_code != 200:
-                if verbose:
-                    print(f"      [phenom-diagnostic] {domain}{path}: found refNum '{ref_num}' but "
-                          f"/widgets API call failed with HTTP {resp.status_code}")
-                continue
-            data = resp.json()
-            jobs = (data.get("refineSearch") or {}).get("data", {}).get("jobs", [])
-            if not jobs and verbose:
-                print(f"      [phenom-diagnostic] {domain}{path}: /widgets call succeeded (200) "
-                      f"but returned zero jobs — response keys: {list(data.keys())}")
-            if jobs:
-                return ref_num, jobs
-        except Exception:
+def resume_match_keywords(*parts, limit=60):
+    """Return compact, generic searchable terms for browser-side CV/job matching.
+    Descriptions are intentionally not shipped wholesale to keep data.json smaller.
+    """
+    text = " ".join(str(p or "") for p in parts).lower()
+    tokens = re.findall(r"[a-z][a-z0-9+#.\-]{2,}", text)
+    counts = {}
+    for token in tokens:
+        token = token.strip(".-")
+        if len(token) < 3 or token in RESUME_MATCH_STOPWORDS or token.isdigit():
             continue
-    return None, None
+        counts[token] = counts.get(token, 0) + 1
+    # Stable weighting: repeated description terms first, then alphabetically.
+    return [t for t, _ in sorted(counts.items(), key=lambda kv: (-kv[1], kv[0]))[:limit]]
 
 
-def try_phenom(slug, session):
-    """Tries jobs.{slug}.com and careers.{slug}.com — the two most common
-    Phenom domain conventions. Returns (domain, refnum, jobs) or
-    (None, None, None). Diagnostic prints only fire once we've confirmed a
-    real Phenom domain (page loaded successfully) — this avoids spamming
-    the log for the hundreds of wrong-guess slugs that fail immediately,
-    while still showing exactly where it breaks for genuine matches."""
-    for domain in (f"jobs.{slug}.com", f"careers.{slug}.com"):
-        ref_num, jobs = try_phenom_domain(domain, session)
-        if jobs:
-            return domain, ref_num, jobs
-    return None, None, None
-
-
-def normalize_phenom_job(company_name, domain, job):
-    location = (job.get("locationDisplay") or job.get("cityStateCountry") or
-                job.get("cityCountry") or job.get("city") or "")
-    if not is_ireland_location(str(location)):
-        return None
-    description = job.get("descriptionTeaser") or job.get("description") or ""
-    sponsorship, snippet = classify_sponsorship(description)
-    posted_text, days_ago = "Unknown", None
-    posted = job.get("postedDate")
-    if posted:
-        try:
-            posted_dt = datetime.fromisoformat(str(posted).replace("Z", "+00:00"))
-            days_ago = (datetime.now(timezone.utc) - posted_dt).days
-            posted_text = f"Posted {days_ago} days ago" if days_ago > 0 else "Posted Today"
-        except Exception:
-            pass
-    job_id = job.get("jobId") or job.get("id") or ""
-    url = job.get("applyUrl") or job.get("jdUrl") or f"https://{domain}/job/{job_id}"
-    return {
-        "company": company_name,
-        "title": (job.get("title") or job.get("jobTitle") or "").strip(),
-        "location": str(location),
-        "posted_text": posted_text,
-        "posted_days_ago": days_ago,
-        "employment_type": normalize_employment_type(job.get("type"), job.get("title") or job.get("jobTitle") or ""),
-        "url": url,
-        "source": "phenom_widgets",
-        "visa_sponsorship": sponsorship,
-        "visa_snippet": snippet,
-    }
-
-
-WORKABLE_JOBS_URL = "https://apply.workable.com/api/v1/widget/accounts/{slug}"
-
-
-def try_workable(slug, session):
+def load_candidate_profile(path="profile.json"):
+    """Load optional ranking profile. Collection remains profile-agnostic."""
     try:
-        resp = session.get(WORKABLE_JOBS_URL.format(slug=slug), headers=HEADERS, timeout=10)
-        if resp.status_code != 200:
-            return None
-        data = resp.json()
-        jobs = data.get("jobs")
-        return jobs if jobs else None
-    except Exception:
-        return None
-
-
-def normalize_workable_job(company_name, job):
-    location_obj = job.get("location") or {}
-    if isinstance(location_obj, dict):
-        location = (location_obj.get("location_str") or
-                    ", ".join(filter(None, [location_obj.get("city"), location_obj.get("country")])))
-    else:
-        location = str(location_obj)
-    if not is_ireland_location(location):
-        return None
-
-    description = job.get("description") or ""
-    sponsorship, snippet = classify_sponsorship(description)
-
-    posted_text, days_ago = "Unknown", None
-    published = job.get("published_on") or job.get("created_at")
-    if published:
-        try:
-            posted_dt = datetime.fromisoformat(str(published).replace("Z", "+00:00"))
-            days_ago = (datetime.now(timezone.utc) - posted_dt).days
-            posted_text = f"Posted {days_ago} days ago" if days_ago > 0 else "Posted Today"
-        except Exception:
-            pass
-
-    return {
-        "company": company_name,
-        "title": (job.get("title") or "").strip(),
-        "location": location,
-        "posted_text": posted_text,
-        "posted_days_ago": days_ago,
-        "employment_type": normalize_employment_type(job.get("employment_type") or job.get("type"), job.get("title") or ""),
-        "url": job.get("url") or job.get("shortlink") or "",
-        "source": "workable_api",
-        "visa_sponsorship": sponsorship,
-        "visa_snippet": snippet,
-    }
-
-
-PROBE_VERSION = 13  # bump whenever a new ATS platform is added to the probe list, or slug guessing changes
-
-
-def probe_ats_for_manual_companies(manual_companies, session, cache_path, fetch_descriptions=True):
-    """For companies with no known API (custom sites), try a few likely
-    Greenhouse / Lever / SmartRecruiters / Ashby board slugs. If one hits,
-    that company's Ireland jobs get pulled automatically from then on
-    instead of needing a manual visit. Results (including 'no match found')
-    are cached so repeat runs don't re-probe the same misses every 15 min.
-
-    The cache is versioned: whenever a new platform is added to the probe
-    list, companies previously cached as 'none' get automatically
-    re-probed against the new platform too — otherwise they'd be stuck
-    permanently skipped just because an older run tried fewer platforms.
-    Confirmed real matches are never discarded, only re-checked misses."""
-    cache = {}
-    if os.path.exists(cache_path):
-        with open(cache_path, encoding="utf-8") as f:
-            raw = json.load(f)
-        stored_version = raw.pop("__probe_version__", 1)
-        cache = raw
-        if stored_version != PROBE_VERSION:
-            cache = {name: c for name, c in cache.items() if c.get("platform") != "none"}
-
-    still_manual = []
-    discovered_jobs = []
-    known_platforms = ("greenhouse", "lever", "smartrecruiters", "ashby", "recruitee", "personio", "pinpoint", "eightfold", "phenom", "workable")
-    cache_hits_matched, cache_hits_none, freshly_probed = 0, 0, 0
-
-    for entry in manual_companies:
-        name, url = entry["company"], entry["url"]
-        cached = cache.get(name)
-
-        if cached and cached.get("platform") in known_platforms:
-            platform, slug = cached["platform"], cached["slug"]
-            cache_hits_matched += 1
-        elif cached and cached.get("platform") == "none":
-            still_manual.append(entry)
-            cache_hits_none += 1
-            continue
-        else:
-            freshly_probed += 1
-            platform, slug = None, None
-            if name in KNOWN_PHENOM_DOMAINS:
-                known_domain, known_path = KNOWN_PHENOM_DOMAINS[name]
-                ref_num, jobs_found = try_phenom_domain(known_domain, session, exact_path=known_path, verbose=False)
-                if jobs_found:
-                    platform, slug = "phenom", f"{known_domain}|{ref_num}"
-            if platform is None:
-                for candidate in candidate_slugs(name):
-                    if try_greenhouse(candidate, session) is not None:
-                        platform, slug = "greenhouse", candidate
-                        break
-                    if try_lever(candidate, session) is not None:
-                        platform, slug = "lever", candidate
-                        break
-                    if try_smartrecruiters_probe(candidate, session) is not None:
-                        platform, slug = "smartrecruiters", candidate
-                        break
-                    if try_ashby(candidate, session) is not None:
-                        platform, slug = "ashby", candidate
-                        break
-                    if try_recruitee(candidate, session) is not None:
-                        platform, slug = "recruitee", candidate
-                        break
-                    if try_personio(candidate, session) is not None:
-                        platform, slug = "personio", candidate
-                        break
-                    if try_pinpoint(candidate, session) is not None:
-                        platform, slug = "pinpoint", candidate
-                        break
-                    if try_eightfold(candidate, session) is not None:
-                        platform, slug = "eightfold", candidate
-                        break
-                    if try_workable(candidate, session) is not None:
-                        platform, slug = "workable", candidate
-                        break
-                    # NOTE: generic Phenom guessing removed from this loop —
-                    # across the entire session it never once succeeded,
-                    # including on a URL confirmed to be genuine Phenom,
-                    # while costing thousands of wasted requests per run
-                    # (a major cause of a 2-hour runtime). The technique
-                    # itself doesn't work via static fetch here, not just
-                    # the slug guessing — not worth running on every
-                    # candidate for every company anymore. Still checked,
-                    # cheaply, via the exact-URL override above for the
-                    # handful of companies verified by hand.
-            cache[name] = {"platform": platform or "none", "slug": slug}
-            if platform is None:
-                still_manual.append(entry)
-                continue
-
-        # Fetch (or re-fetch) this company's postings.
-        company_jobs = []
-        if platform == "greenhouse":
-            jobs = try_greenhouse(slug, session) or []
-            for job in jobs:
-                norm = normalize_greenhouse_job(name, job)
-                if norm:
-                    company_jobs.append(norm)
-        elif platform == "lever":
-            jobs = try_lever(slug, session) or []
-            for job in jobs:
-                norm = normalize_lever_job(name, job)
-                if norm:
-                    company_jobs.append(norm)
-        elif platform == "smartrecruiters":
-            jobs = try_smartrecruiters(slug, session) or []
-            for job in jobs:
-                norm = normalize_smartrecruiters_job(name, job, slug, session, fetch_descriptions)
-                if norm:
-                    company_jobs.append(norm)
-        elif platform == "ashby":
-            jobs = try_ashby(slug, session) or []
-            for job in jobs:
-                norm = normalize_ashby_job(name, job)
-                if norm:
-                    company_jobs.append(norm)
-        elif platform == "recruitee":
-            jobs = try_recruitee(slug, session) or []
-            for job in jobs:
-                norm = normalize_recruitee_job(name, job)
-                if norm:
-                    company_jobs.append(norm)
-        elif platform == "personio":
-            jobs = try_personio(slug, session) or []
-            for job in jobs:
-                norm = normalize_personio_job(name, slug, job)
-                if norm:
-                    company_jobs.append(norm)
-        elif platform == "pinpoint":
-            jobs = try_pinpoint(slug, session) or []
-            for job in jobs:
-                norm = normalize_pinpoint_job(name, slug, job)
-                if norm:
-                    company_jobs.append(norm)
-        elif platform == "eightfold":
-            jobs = try_eightfold(slug, session) or []
-            for job in jobs:
-                norm = normalize_eightfold_job(name, slug, job)
-                if norm:
-                    company_jobs.append(norm)
-        elif platform == "phenom":
-            domain, ref_num = slug.split("|", 1)
-            jobs = fetch_phenom_jobs_by_refnum(domain, ref_num, session)
-            for job in jobs:
-                norm = normalize_phenom_job(name, domain, job)
-                if norm:
-                    company_jobs.append(norm)
-        elif platform == "workable":
-            jobs = try_workable(slug, session) or []
-            for job in jobs:
-                norm = normalize_workable_job(name, job)
-                if norm:
-                    company_jobs.append(norm)
-
-        if company_jobs:
-            discovered_jobs.extend(company_jobs)
-        else:
-            # Matched a platform, but no Ireland postings on it right now —
-            # still needs to show up somewhere clickable, not vanish.
-            still_manual.append({"company": name, "url": url,
-                                  "platform": f"{platform} (no Ireland postings found right now)"})
-
-    cache["__probe_version__"] = PROBE_VERSION
-    with open(cache_path, "w", encoding="utf-8") as f:
-        json.dump(cache, f, indent=2)
-
-    print(f"  Cache summary: {cache_hits_matched} companies served from cache (confirmed platform), "
-          f"{cache_hits_none} served from cache (confirmed no match), "
-          f"{freshly_probed} freshly probed this run.")
-    if freshly_probed > 50:
-        print(f"  NOTE: {freshly_probed} freshly-probed companies is high — if this number stays "
-              f"high on your NEXT run too (not just this one), the cache isn't persisting between "
-              f"runs and that's the real runtime problem to chase next.")
-
-    return discovered_jobs, still_manual
-
-
-def load_companies(csv_path):
-    with open(csv_path, newline="", encoding="utf-8-sig") as f:
-        return list(csv.DictReader(f))
-
-
-def load_official_permit_stats(path="official_permit_stats.json"):
-    """Loads output of visa_stats.py (real DETE government data), if present."""
-    if os.path.exists(path):
         with open(path, encoding="utf-8") as f:
-            return json.load(f)
-    return {}
-
-
-def load_adzuna_jobs(path="adzuna_jobs.json"):
-    """Loads output of adzuna_fallback.py (aggregator-sourced jobs for
-    companies with no direct ATS integration), if present. Structure:
-    {company_name: [job_dict, ...]}."""
-    if os.path.exists(path):
-        with open(path, encoding="utf-8") as f:
-            return json.load(f)
-    return {}
-
-
-def notify_github_issue(new_jobs):
-    """If running inside GitHub Actions, opens a GitHub Issue listing newly
-    found jobs — GitHub's own free notification system (email/mobile push
-    via your existing GitHub notification settings) then alerts you. No
-    external service or API key needed beyond the Action's built-in token."""
-    token = os.environ.get("GITHUB_TOKEN")
-    repo = os.environ.get("GITHUB_REPOSITORY")  # "owner/repo", auto-set by Actions
-    if not token or not repo or not new_jobs:
-        return
-
-    lines = [f"- **{j['company']}** — [{j['title']}]({j['url']}) ({j['location']})" for j in new_jobs]
-    body = "New Ireland job postings found this run:\n\n" + "\n".join(lines)
-    title = f"New job posting(s) - {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')} ({len(new_jobs)})"
-
-    try:
-        resp = requests.post(
-            f"https://api.github.com/repos/{repo}/issues",
-            headers={"Authorization": f"Bearer {token}", "Accept": "application/vnd.github+json"},
-            json={"title": title, "body": body, "labels": ["new-jobs"]},
-            timeout=15,
-        )
-        if resp.status_code >= 300:
-            print(f"  GitHub issue notification failed: {resp.status_code} {resp.text[:200]}")
+            profile = json.load(f)
+        return profile if isinstance(profile, dict) else {}
     except Exception as e:
-        print(f"  GitHub issue notification failed: {e}")
+        print(f"profile: unavailable ({e}); candidate ranking disabled")
+        return {}
 
 
-def load_history(path):
-    if os.path.exists(path):
-        with open(path, encoding="utf-8") as f:
-            return json.load(f)
-    return {}
+def _norm_phrase(text):
+    return re.sub(r"[^a-z0-9+#]+", " ", str(text or "").lower()).strip()
 
 
-def load_seen_jobs(path):
-    """Tracks every job URL ever seen + when it was first seen, so we can
-    flag which postings are new since the previous run."""
-    if os.path.exists(path):
-        with open(path, encoding="utf-8") as f:
-            return json.load(f)
-    return {}
+def normalized_title(title):
+    text = _norm_phrase(title)
+    replacements = {
+        "business intelligence": "bi",
+        "jr ": "junior ",
+        "graduate programme": "graduate",
+        "graduate program": "graduate",
+    }
+    for a, b in replacements.items():
+        text = text.replace(a, b)
+    return re.sub(r"\s+", " ", text).strip()
 
 
-def mark_new_jobs(live_jobs, seen_jobs, now_iso):
-    for job in live_jobs:
-        url = job["url"]
-        if url not in seen_jobs:
-            seen_jobs[url] = now_iso
-            job["new_since_last_check"] = True
-            job["first_seen_at"] = now_iso
-        else:
-            job["new_since_last_check"] = False
-            job["first_seen_at"] = seen_jobs[url]
-    return seen_jobs
+def classify_role_family(title, description, profile):
+    title_n = normalized_title(title)
+    text = f"{title_n} {_norm_phrase(description)}"
+    best = ("Other", "None", 0, [])
+    for family, cfg in (profile.get("role_families") or {}).items():
+        hits = []
+        for phrase in cfg.get("titles", []):
+            p = _norm_phrase(phrase)
+            if p and (p in title_n or (len(p.split()) >= 2 and p in text)):
+                hits.append(phrase)
+        score = cfg.get("weight", 0) + min(8, len(hits) * 2) if hits else 0
+        if score > best[2]:
+            best = (family, cfg.get("tier", "C"), score, hits)
+    return {"family": best[0], "tier": best[1], "role_score": best[2], "role_hits": best[3]}
 
 
-def update_history(history, live_jobs):
-    for job in live_jobs:
-        h = history.setdefault(job["company"], {"sponsors": 0, "no_sponsorship": 0, "not_mentioned": 0, "total": 0})
-        h[job["visa_sponsorship"]] = h.get(job["visa_sponsorship"], 0) + 1
-        h["total"] += 1
-    return history
+def extract_profile_skills(text, profile):
+    text_n = _norm_phrase(text)
+    aliases = profile.get("skill_aliases") or {}
+    canonical = {}
+    for group, skills in (profile.get("skills") or {}).items():
+        for skill in skills:
+            canonical[_norm_phrase(skill)] = skill
+    for alias, target in aliases.items():
+        canonical[_norm_phrase(alias)] = target
+
+    found = []
+    for token, label in canonical.items():
+        if token and re.search(r"(?<![a-z0-9])" + re.escape(token) + r"(?![a-z0-9])", text_n):
+            if label not in found:
+                found.append(label)
+    return found
 
 
-def sponsorship_rarity_label(h):
-    """Returns {'label': str, 'category': str}. Crucially: silence is NOT the
-    same as a 'no'. Most job postings never mention sponsorship either way —
-    that's the default, expected, neutral case ('no_data'), and should never
-    be shown to look like bad news. Only an postings that EXPLICITLY rule out
-    sponsorship should read as a negative signal."""
-    total = h.get("total", 0)
-    sponsors = h.get("sponsors", 0)
-    no_sponsorship = h.get("no_sponsorship", 0)
+def parse_experience_range(text):
+    text_n = str(text or "").lower()
+    ranges = []
+    patterns = [
+        r"(\d+)\s*(?:-|–|to)\s*(\d+)\s*\+?\s*years?",
+        r"(\d+)\s*\+\s*years?",
+        r"(?:minimum of |at least )(\d+)\s*years?",
+        r"(\d+)\s*years?\s+(?:of )?experience",
+    ]
+    for pat in patterns:
+        for m in re.finditer(pat, text_n):
+            nums = [int(x) for x in m.groups() if x is not None]
+            if len(nums) == 2:
+                ranges.append((nums[0], nums[1]))
+            elif nums:
+                ranges.append((nums[0], nums[0] + 2))
+    if not ranges:
+        return (None, None)
+    # Prefer the lowest plausible requirement, since descriptions often mention multiple unrelated ranges.
+    ranges.sort(key=lambda x: (x[0], x[1]))
+    return ranges[0]
 
-    if total < 5:
-        return {"label": f"Not enough data yet ({total} scanned)", "category": "no_data"}
 
-    if sponsors == 0 and no_sponsorship == 0:
-        return {"label": f"No sponsorship info found ({total} postings scanned)", "category": "no_data"}
+def experience_fit(title, description, candidate_years):
+    title_n = normalized_title(title)
+    minimum, maximum = parse_experience_range(description)
+    senior_terms = ["director", "vice president", "vp", "head of", "principal", "staff", "senior manager"]
+    if any(term in title_n for term in senior_terms):
+        return "Too Senior", minimum, maximum
+    if any(term in title_n for term in ["graduate", "entry", "junior", "associate", "analyst"]):
+        if candidate_years >= 5 and "graduate" in title_n:
+            return "Overqualified", minimum, maximum
+        return "Strong", minimum, maximum
+    if minimum is None:
+        return "Possible", minimum, maximum
+    if minimum <= candidate_years <= (maximum or candidate_years + 2):
+        return "Strong", minimum, maximum
+    if minimum <= candidate_years + 2:
+        return "Possible", minimum, maximum
+    if minimum <= candidate_years + 4:
+        return "Stretch", minimum, maximum
+    return "Too Senior", minimum, maximum
 
-    if sponsors == 0 and no_sponsorship > 0:
-        return {"label": f"Rules out sponsorship in {no_sponsorship} of {total} postings",
-                "category": "explicit_negative"}
 
-    ratio = sponsors / total
-    if ratio < 0.10:
-        return {"label": f"Rarely mentions sponsorship ({sponsors} of {total})", "category": "rare_positive"}
-    if ratio < 0.40:
-        return {"label": f"Occasionally mentions sponsorship ({sponsors} of {total})", "category": "occasional_positive"}
-    return {"label": f"Frequently mentions sponsorship ({sponsors} of {total})", "category": "frequent_positive"}
+def candidate_match(job, description, profile):
+    if not profile:
+        return {
+            "candidate_match_score": None, "match_reasons": [], "missing_skills": [],
+            "matched_skills": [], "experience_fit": "Unknown"
+        }
 
+    title = job.get("title") or ""
+    role = classify_role_family(title, description, profile)
+    skills = extract_profile_skills(f"{title} {description}", profile)
+    candidate_skills = []
+    for values in (profile.get("skills") or {}).values():
+        candidate_skills.extend(values)
+    candidate_skill_set = set(candidate_skills)
+
+    matched = [s for s in skills if s in candidate_skill_set]
+    years = int(profile.get("experience_years") or 0)
+    exp_fit, exp_min, exp_max = experience_fit(title, description, years)
+
+    score = role["role_score"]
+    score += min(34, len(matched) * 4)
+    score += {"Strong": 16, "Possible": 9, "Stretch": 3, "Overqualified": -5, "Too Senior": -25, "Unknown": 0}.get(exp_fit, 0)
+
+    loc_text = _norm_phrase(job.get("location"))
+    if any(_norm_phrase(x) in loc_text for x in profile.get("preferred_locations", []) if x != "Ireland"):
+        score += 5
+    elif "ireland" in loc_text or job.get("country") == "Ireland":
+        score += 3
+
+    title_n = normalized_title(title)
+    for term, penalty in (profile.get("seniority_penalties") or {}).items():
+        if _norm_phrase(term) in title_n:
+            score -= int(penalty)
+            break
+
+    # Noise penalty for clearly irrelevant job families, without deleting the job from the broad engine.
+    for term in profile.get("negative_title_terms", []):
+        if _norm_phrase(term) in title_n:
+            score -= 18
+            break
+
+    score = max(0, min(100, int(round(score))))
+    reasons = []
+    if role["family"] != "Other":
+        reasons.append(f"{role['family']} role family")
+    reasons.extend(matched[:7])
+    if exp_fit in {"Strong", "Possible"}:
+        reasons.append(f"Experience fit: {exp_fit}")
+
+    # Missing skills are candidate skills commonly referenced in the same role family but not present in this ad.
+    priority_missing = ["SQL", "Power BI", "Python", "ERP", "UAT", "Requirements Gathering", "ETL", "Stakeholder Management"]
+    missing = [x for x in priority_missing if x in candidate_skill_set and x not in matched][:4]
+
+    return {
+        "candidate_match_score": score,
+        "match_reasons": reasons[:10],
+        "missing_skills": missing,
+        "matched_skills": matched[:15],
+        "experience_fit": exp_fit,
+        "experience_min": exp_min,
+        "experience_max": exp_max,
+        "role_family": role["family"],
+        "role_tier": role["tier"],
+        "normalized_title": normalized_title(title),
+    }
+
+
+def discovery_value(job, now_dt=None):
+    """Value of discovering the listing, independent of candidate fit."""
+    now_dt = now_dt or datetime.now(timezone.utc)
+    score = 25
+    source = (job.get("ats") or "").lower()
+    directish = {"direct", "workday", "greenhouse", "lever", "ashby", "smartrecruiters",
+                 "workable", "recruitee", "personio", "pinpoint", "phenom", "eightfold"}
+    if source in directish:
+        score += 20
+    first_seen = job.get("first_seen_at")
+    try:
+        dt = datetime.fromisoformat(first_seen.replace("Z", "+00:00")) if first_seen else None
+    except Exception:
+        dt = None
+    if dt:
+        hours = max(0, (now_dt - dt).total_seconds() / 3600)
+        if hours <= 24:
+            score += 25
+        elif hours <= 72:
+            score += 15
+        elif hours <= 168:
+            score += 7
+    if job.get("new_since_last_check"):
+        score += 12
+    if job.get("closing_date"):
+        try:
+            close_dt = datetime.fromisoformat(str(job["closing_date"]).replace("Z", "+00:00"))
+            days = (close_dt - now_dt).total_seconds() / 86400
+            if 0 <= days <= 7:
+                score += 15
+        except Exception:
+            pass
+    return max(0, min(100, int(score)))
+
+
+def job_state_identity(job):
+    stable_url = (job.get("url") or "").split("?")[0].rstrip("/").lower()
+    if stable_url:
+        return stable_url
+    return "|".join([
+        _company_key(job.get("company", "")),
+        normalized_title(job.get("title")),
+        _norm_phrase(job.get("location")),
+    ])
 
 def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--input", default="Job_Automation.csv")
-    ap.add_argument("--output", default="jobs.json")
-    ap.add_argument("--history", default="sponsorship_history.json")
-    ap.add_argument("--seen", default="seen_jobs.json")
-    ap.add_argument("--no-descriptions", action="store_true",
-                     help="Skip fetching full job descriptions (faster, but no visa sponsorship signal)")
-    args = ap.parse_args()
+    profile = load_candidate_profile()
+    results = []
+    errors = []
 
-    companies = load_companies(args.input)
-    print(f"Loaded {len(companies)} companies from {args.input}")
+    for slug in GREENHOUSE_COMPANIES:
+        try:
+            found = scrape_greenhouse(slug)
+            results.extend(found)
+            print(f"greenhouse/{slug}: {len(found)} matches")
+        except Exception as e:
+            errors.append(f"greenhouse/{slug}: {e}")
+        time.sleep(0.3)
 
-    session = requests.Session()
-    workday_session = make_workday_session()
-    live_jobs, manual_check, errors = [], [], []
+    for slug in LEVER_COMPANIES:
+        try:
+            found = scrape_lever(slug)
+            results.extend(found)
+            print(f"lever/{slug}: {len(found)} matches")
+        except Exception as e:
+            errors.append(f"lever/{slug}: {e}")
+        time.sleep(0.3)
 
-    for row in companies:
-        name = row["company_name"].strip()
-        url = row["career_url"].strip()
-        kind = classify_url(url)
+    for slug in ASHBY_COMPANIES:
+        try:
+            found = scrape_ashby(slug)
+            results.extend(found)
+            print(f"ashby/{slug}: {len(found)} matches")
+        except Exception as e:
+            errors.append(f"ashby/{slug}: {e}")
+        time.sleep(0.3)
 
-        if kind == "workday":
-            print(f"  [workday] fetching {name} ...")
-            jobs, err = fetch_workday_jobs(name, url, workday_session, fetch_descriptions=not args.no_descriptions)
-            live_jobs.extend(jobs)
-            if err:
-                errors.append(err)
-            print(f"      -> {len(jobs)} Ireland postings")
-            time.sleep(1)  # spread out aggregate request rate across companies —
-            # a shared CDN/WAF across Workday tenants can rate-limit based on
-            # total volume from our IP, not just per-tenant.
-            if not jobs:
-                # Never let a company silently disappear — whether it's a
-                # real fetch error or genuinely zero open Ireland roles
-                # today, it still needs to show up somewhere clickable.
-                reason = "fetch error, verify manually" if err else "no Ireland postings found right now"
-                manual_check.append({"company": name, "url": url, "platform": f"workday ({reason})"})
-        else:
-            manual_check.append({"company": name, "url": url, "platform": kind})
+    for company, tenant, wd_host, site in WORKDAY_COMPANIES:
+        try:
+            found = scrape_workday(company, tenant, wd_host, site)
+            results.extend(found)
+            print(f"workday/{tenant}: {len(found)} matches")
+        except Exception as e:
+            errors.append(f"workday/{tenant}: {e}")
+        time.sleep(0.3)
 
-    print(f"\nProbing remaining {len(manual_check)} companies for Greenhouse/Lever/SmartRecruiters/"
-          f"Ashby/Recruitee/Personio/Pinpoint/Eightfold boards "
-          f"(cached — only new/changed companies are actually re-probed)...")
-    discovered_jobs, manual_check = probe_ats_for_manual_companies(
-        manual_check, session, cache_path="ats_platform_cache.json",
-        fetch_descriptions=not args.no_descriptions)
-    if discovered_jobs:
-        found_companies = sorted(set(j["company"] for j in discovered_jobs))
-        print(f"  -> Auto-discovered {len(discovered_jobs)} Ireland postings across "
-              f"{len(found_companies)} companies previously in the manual list: {', '.join(found_companies)}")
-    live_jobs.extend(discovered_jobs)
+    for company_id in SMARTRECRUITERS_COMPANIES:
+        try:
+            found = scrape_smartrecruiters(company_id)
+            results.extend(found)
+            print(f"smartrecruiters/{company_id}: {len(found)} matches")
+        except Exception as e:
+            errors.append(f"smartrecruiters/{company_id}: {e}")
+        time.sleep(0.3)
 
-    adzuna_jobs = load_adzuna_jobs()
-    if adzuna_jobs:
-        adzuna_flat = [job for jobs in adzuna_jobs.values() for job in jobs]
-        adzuna_companies = set(adzuna_jobs.keys())
-        live_jobs.extend(adzuna_flat)
-        manual_check = [c for c in manual_check if c["company"] not in adzuna_companies]
-        print(f"  -> Merged {len(adzuna_flat)} Adzuna-sourced postings across "
-              f"{len(adzuna_companies)} companies (run adzuna_fallback.py separately, daily, to refresh this).")
+    for slug in WORKABLE_COMPANIES:
+        try:
+            found = scrape_workable(slug)
+            results.extend(found)
+            print(f"workable/{slug}: {len(found)} matches")
+        except Exception as e:
+            errors.append(f"workable/{slug}: {e}")
+        time.sleep(0.3)
 
-    history = load_history(args.history)
-    history = update_history(history, live_jobs)
-    with open(args.history, "w", encoding="utf-8") as f:
-        json.dump(history, f, indent=2)
+    for slug in RECRUITEE_COMPANIES:
+        try:
+            found = scrape_recruitee(slug)
+            results.extend(found)
+            print(f"recruitee/{slug}: {len(found)} matches")
+        except Exception as e:
+            errors.append(f"recruitee/{slug}: {e}")
+        time.sleep(0.3)
 
-    now_iso = datetime.now(timezone.utc).isoformat()
-    seen_jobs = load_seen_jobs(args.seen)
-    seen_jobs = mark_new_jobs(live_jobs, seen_jobs, now_iso)
-    with open(args.seen, "w", encoding="utf-8") as f:
-        json.dump(seen_jobs, f, indent=2)
-    new_count = sum(1 for j in live_jobs if j["new_since_last_check"])
+    for slug in PERSONIO_COMPANIES:
+        try:
+            found = scrape_personio(slug)
+            results.extend(found)
+            print(f"personio/{slug}: {len(found)} matches")
+        except Exception as e:
+            errors.append(f"personio/{slug}: {e}")
+        time.sleep(0.3)
 
-    company_sponsorship_stats = {
-        company: {**h, **sponsorship_rarity_label(h)}
-        for company, h in history.items()
+    for slug in PINPOINT_COMPANIES:
+        try:
+            found = scrape_pinpoint(slug)
+            results.extend(found)
+            print(f"pinpoint/{slug}: {len(found)} Ireland jobs")
+        except Exception as e:
+            errors.append(f"pinpoint/{slug}: {e}")
+        time.sleep(0.3)
+
+    # Exact enterprise-platform mappings (Phenom / Eightfold). Validate before
+    # scraping so a stale mapping cannot silently pollute the dataset.
+    enterprise_sess = _session()
+    if enterprise_sess:
+        for company, slug in KNOWN_EIGHTFOLD_MAPPINGS.items():
+            try:
+                if _probe_platform("eightfold", slug, enterprise_sess):
+                    found = _scrape_eightfold(company, slug, enterprise_sess)
+                    results.extend(found)
+                    print(f"eightfold/{company}: {len(found)} Ireland jobs")
+                else:
+                    errors.append(f"eightfold/{company}: endpoint validation failed")
+            except Exception as e:
+                errors.append(f"eightfold/{company}: {e}")
+        for company, slug in KNOWN_PHENOM_MAPPINGS.items():
+            try:
+                if _probe_platform("phenom", slug, enterprise_sess):
+                    found = _scrape_phenom(company, slug, enterprise_sess)
+                    results.extend(found)
+                    print(f"phenom/{company}: {len(found)} Ireland jobs")
+                else:
+                    errors.append(f"phenom/{company}: endpoint validation failed")
+            except Exception as e:
+                errors.append(f"phenom/{company}: {e}")
+
+    # Proprietary/direct company search surfaces. These are deliberately
+    # conservative and only emit records with local Ireland context.
+    for company in ("Apple", "Google", "Microsoft", "Meta", "TikTok", "Oracle"):
+        try:
+            found = scrape_direct_company(company)
+            results.extend(found)
+            print(f"direct/{company}: {len(found)} Ireland jobs")
+        except Exception as e:
+            errors.append(f"direct/{company}: {e}")
+        time.sleep(0.4)
+
+    # Suman-style dynamic ATS discovery for companies not already wired into a
+    # known connector. Confirmed mappings persist in ats_platform_cache.json.
+    initial_registry = build_company_registry(include_cache=False)
+    try:
+        dynamic_found, _dynamic_mappings = discover_and_scrape_manual(initial_registry)
+        results.extend(dynamic_found)
+    except Exception as e:
+        errors.append(f"dynamic ATS discovery: {e}")
+
+    for company, url in JSONLD_CAREER_PAGES:
+        if IRELAND_ONLY and not jsonld_page_is_ireland(company, url):
+            continue
+        try:
+            found = scrape_jsonld(company, url)
+            results.extend(found)
+            print(f"jsonld/{company}: {len(found)} matches")
+        except Exception as e:
+            errors.append(f"jsonld/{company}: {e}")
+        time.sleep(0.3)
+
+    for country in ADZUNA_COUNTRIES:
+        for query in DIRECT_QUERIES:
+            try:
+                found = scrape_adzuna(country, query)
+                results.extend(found)
+                if found:
+                    print(f"adzuna/{country} ({query}): {len(found)} matches")
+            except Exception as e:
+                errors.append(f"adzuna/{country} ({query}): {e}")
+            time.sleep(0.3)
+
+    for locale in CAREERJET_LOCALES:
+        for query in DIRECT_QUERIES:
+            try:
+                found = scrape_careerjet(locale, query)
+                results.extend(found)
+                if found:
+                    print(f"careerjet/{locale} ({query}): {len(found)} matches")
+            except Exception as e:
+                errors.append(f"careerjet/{locale} ({query}): {e}")
+            time.sleep(0.3)
+
+    for query in DIRECT_QUERIES:
+        try:
+            found = scrape_jooble(query, "Ireland" if IRELAND_ONLY else "")
+            results.extend(found)
+            if found:
+                print(f"jooble ({query}): {len(found)} matches")
+        except Exception as e:
+            errors.append(f"jooble ({query}): {e}")
+        time.sleep(0.3)
+
+    try:
+        found = scrape_amazon("")
+        results.extend(found)
+        print(f"direct/Amazon: {len(found)} Ireland jobs")
+    except Exception as e:
+        errors.append(f"direct/Amazon: {e}")
+    time.sleep(0.5)
+
+    try:
+        found = scrape_netflix("")
+        results.extend(found)
+        print(f"direct/Netflix: {len(found)} Ireland jobs")
+    except Exception as e:
+        errors.append(f"direct/Netflix: {e}")
+    time.sleep(0.5)
+
+    # Source-priority de-duplication. Direct employer/ATS records win over
+    # aggregator copies of the same vacancy.
+    source_priority = {
+        "direct": 100, "workday": 95, "greenhouse": 95, "lever": 95, "ashby": 95,
+        "smartrecruiters": 95, "workable": 94, "recruitee": 94, "personio": 94,
+        "pinpoint": 94, "phenom": 93, "eightfold": 93, "jsonld": 90,
+        "adzuna": 30, "jooble": 25, "careerjet": 20,
     }
+    aggregator_sources = {"adzuna", "jooble", "careerjet"}
+    results.sort(key=lambda j: source_priority.get((j.get("ats") or "").lower(), 50), reverse=True)
 
-    official_permit_stats = load_official_permit_stats()
-    if official_permit_stats:
-        print(f"Merged official DETE permit records for {len(official_permit_stats)} companies "
-              f"(run visa_stats.py separately, monthly, to refresh this).")
+    seen_urls = set()
+    seen_signatures = set()
+    deduped = []
+    for j in results:
+        company_key = _company_key(company_display_name(j.get("company", "")))
+        url_key = (j.get("url") or "").split("?")[0].rstrip("/").lower()
+        title_key = normalized_title(j.get("title"))
+        loc_key = _norm_phrase(j.get("location"))
+        signature = (company_key, title_key, loc_key)
+        source = (j.get("ats") or "").lower()
+
+        if url_key and url_key in seen_urls:
+            continue
+        if source in aggregator_sources and signature in seen_signatures:
+            continue
+
+        deduped.append(j)
+        if url_key:
+            seen_urls.add(url_key)
+        if any(signature):
+            seen_signatures.add(signature)
+
+    results = deduped
+
+    # Tag every job with a parsed posting date + recency bucket, so the
+    # dashboard can filter by "last 24h / 7d / 30d" without re-parsing.
+    for j in results:
+        j["company"] = company_display_name(j.get("company", ""))
+        posted_dt = parse_posted_date(j.get("updated_at"))
+        j["posted_at_parsed"] = posted_dt.isoformat() if posted_dt else None
+        j["recency"] = recency_bucket(posted_dt)
+        j["employment_type"] = employment_type(j.get("title"))
+        j["sector"] = sector_for(j.get("company"))
+        j["country"] = "Ireland" if IRELAND_ONLY else country_from_location(j.get("location"))
+        j["ireland_area"] = ireland_area(j.get("location"))
+        description_text = j.get("description_text") or ""
+        j["visa_sponsorship"] = visa_sponsorship_from_text(
+            j.get("title"), j.get("location"), description_text,
+        )
+        # Generic CV/job matching metadata. No user-profile-specific title filtering.
+        j["match_keywords"] = resume_match_keywords(
+            j.get("title"), j.get("company"), j.get("sector"), j.get("location"), description_text
+        )
+        # Broad collection stays untouched; profile ranking is metadata only.
+        j.update(candidate_match(j, description_text, profile))
+        j.setdefault("work_mode", "remote" if "remote" in (j.get("location") or "").lower()
+                     else "hybrid" if "hybrid" in (j.get("location") or "").lower() else "unspecified")
+        j.setdefault("closing_date", None)
+        j.setdefault("requisition_id", None)
+        j.setdefault("salary", None)
+        if not j.get("source_type"):
+            j["source_type"] = (
+                "employer_direct"
+                if (j.get("ats") or "").lower() in
+                {"direct","workday","greenhouse","lever","ashby","smartrecruiters",
+                 "workable","recruitee","personio","pinpoint","phenom","eightfold","jsonld"}
+                else "aggregator" if (j.get("ats") or "").lower() in {"adzuna","jooble","careerjet"}
+                else "other"
+            )
+        j.pop("description_text", None)
+
+    # Persistent freshness state: supports old {id: "timestamp"} files and richer v2 objects.
+    now_dt = datetime.now(timezone.utc)
+    now_iso = now_dt.isoformat()
+    try:
+        with open("seen_jobs.json", encoding="utf-8") as f:
+            seen_jobs = json.load(f)
+        if not isinstance(seen_jobs, dict):
+            seen_jobs = {}
+    except Exception:
+        seen_jobs = {}
+
+    current_seen = dict(seen_jobs)
+    for j in results:
+        identity = job_state_identity(j)
+        prior = seen_jobs.get(identity)
+        if isinstance(prior, dict):
+            first_seen = prior.get("first_seen") or prior.get("first_seen_at") or now_iso
+        elif isinstance(prior, str):
+            first_seen = prior
+        else:
+            first_seen = now_iso
+
+        j["new_since_last_check"] = prior is None
+        j["first_seen_at"] = first_seen
+        j["last_seen_at"] = now_iso
+        j["last_verified_at"] = now_iso
+        j["active"] = True
+        j["discovery_score"] = discovery_value(j, now_dt)
+
+        current_seen[identity] = {
+            "first_seen": first_seen,
+            "last_seen": now_iso,
+            "last_verified": now_iso,
+            "company": j.get("company"),
+            "title": j.get("title"),
+        }
+
+    with open("seen_jobs.json", "w", encoding="utf-8") as f:
+        json.dump(current_seen, f, indent=2)
+
+    company_registry = build_company_registry(include_cache=True)
+
+    manual_check = []
+    for item in company_registry:
+        if item["automatic"]:
+            continue
+        manual_check.append({
+            "company": item["company"],
+            "url": item["careers_url"],
+            "platform": item["platform"],
+            "status": "manual-check" if item["careers_url"] else "needs-careers-url",
+        })
+    manual_check.sort(key=lambda x: x["company"].lower())
+
+    if MAX_AGE_DAYS is not None:
+        cutoff = datetime.now(timezone.utc) - timedelta(days=MAX_AGE_DAYS)
+        before = len(results)
+        results = [
+            j for j in results
+            if not j["posted_at_parsed"] or datetime.fromisoformat(j["posted_at_parsed"]) >= cutoff
+        ]
+        print(f"MAX_AGE_DAYS={MAX_AGE_DAYS}: dropped {before - len(results)} stale postings")
+
+    recency_counts = {"24h": 0, "7d": 0, "30d": 0, "older": 0, "unknown": 0}
+    for j in results:
+        recency_counts[j["recency"]] += 1
+
+    source_counts = {}
+    company_job_counts = {}
+    for j in results:
+        source_counts[j.get("ats") or "unknown"] = source_counts.get(j.get("ats") or "unknown", 0) + 1
+        company_job_counts[j.get("company") or "Unknown"] = company_job_counts.get(j.get("company") or "Unknown", 0) + 1
+
+    # Coverage diagnostics. "No live jobs" is not automatically the same as
+    # "the company has no jobs"; distinguish missing connectors from configured
+    # connectors that yielded no Ireland records.
+    live_company_keys = {_company_key(name) for name in company_job_counts}
+    coverage_diagnostics = []
+    for item in company_registry:
+        key = _company_key(item["company"])
+        if key in live_company_keys:
+            state = "working"
+            reason = "Ireland jobs returned in this run"
+        elif item.get("automatic"):
+            state = "configured_zero"
+            reason = "Connector is configured but returned no qualifying Ireland jobs; mapping/filter may need verification"
+        else:
+            state = "no_validated_connector"
+            reason = "No validated automatic connector yet"
+        coverage_diagnostics.append({
+            "company": item["company"],
+            "platform": item.get("platform"),
+            "state": state,
+            "reason": reason,
+            "careers_url": item.get("careers_url"),
+        })
 
     output = {
-        "generated_at": now_iso,
-        "live_jobs": live_jobs,
-        "manual_check_companies": manual_check,
-        "company_sponsorship_stats": company_sponsorship_stats,
-        "official_permit_stats": official_permit_stats,
-        "errors": errors,
-        "stats": {
-            "total_companies": len(companies),
-            "automated_companies": len(companies) - len(manual_check),
-            "manual_companies": len(manual_check),
-            "live_jobs_found": len(live_jobs),
-            "new_since_last_check": new_count,
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "focus": "ireland" if IRELAND_ONLY else "multi_region",
+        "integrations": {
+            "adzuna": bool(ADZUNA_APP_ID and ADZUNA_APP_KEY),
+            "jooble": bool(JOOBLE_API_KEY),
+            "careerjet": bool(CAREERJET_AFFID),
         },
+        "ranking_profile": {
+            "profile_id": profile.get("profile_id"),
+            "version": profile.get("version"),
+            "name": profile.get("name"),
+        } if profile else None,
+        "recency_counts": recency_counts,
+        "total_companies_checked": len(company_registry),
+        "registry_companies": company_registry,
+        "total_matches": len(results),
+        "new_since_last_check": sum(1 for j in results if j.get("new_since_last_check")),
+        "source_counts": source_counts,
+        "companies_with_live_jobs": len(company_job_counts),
+        "company_job_counts": company_job_counts,
+        "coverage_diagnostics": coverage_diagnostics,
+        "coverage_state_counts": {
+            state: sum(1 for x in coverage_diagnostics if x["state"] == state)
+            for state in ("working", "configured_zero", "no_validated_connector")
+        },
+        "manual_check_companies": manual_check,
+        "manual_check_count": len(manual_check),
+        "automatic_company_count": sum(1 for x in company_registry if x["automatic"]),
+        "companies_with_careers_url": sum(1 for x in company_registry if x["careers_url"]),
+        "errors": errors,
+        "jobs": results,
+        "note": (
+            "Broad Ireland job-data engine with persistent ATS discovery and optional "
+            "profile-aware ranking metadata. Collection is profile-agnostic; personalization "
+            "is applied after normalization so all jobs remain available."
+        ),
     }
 
-    with open(args.output, "w", encoding="utf-8") as f:
-        json.dump(output, f, indent=2, ensure_ascii=False)
+    with open("data.json", "w") as f:
+        json.dump(output, f, indent=2)
 
-    new_jobs = [j for j in live_jobs if j["new_since_last_check"]]
-    notify_github_issue(new_jobs)
-
-    print(f"\nDone. {len(live_jobs)} live Ireland job postings written to {args.output}")
-    print(f"{new_count} of those are NEW since the last run (see seen_jobs.json).")
-    print(f"Sponsorship history (cumulative across all runs) saved to {args.history}")
-    print(f"{len(manual_check)} companies need manual checking — still listed in the dashboard's directory tab.")
-    if errors:
-        print(f"{len(errors)} companies had fetch errors — see 'errors' in {args.output}")
+    print(f"\nDone. {len(results)} matching jobs written to data.json ({len(errors)} companies errored).")
 
 
 if __name__ == "__main__":
