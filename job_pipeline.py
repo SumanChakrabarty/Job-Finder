@@ -748,7 +748,7 @@ def normalize_greenhouse_job(company_name, job):
         "location": location,
         "posted_text": posted_text,
         "posted_days_ago": days_ago,
-        "employment_type": "Unspecified",
+        "employment_type": normalize_employment_type(None, job.get("title", "")),
         "url": job.get("absolute_url", ""),
         "source": "greenhouse_api",
         "visa_sponsorship": sponsorship,
