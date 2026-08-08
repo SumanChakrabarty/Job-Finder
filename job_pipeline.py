@@ -47,6 +47,8 @@ import re
 import sys
 import time
 import uuid
+import html
+import urllib.parse
 import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
 
@@ -1381,6 +1383,78 @@ def normalize_workable_job(company_name, job):
     }
 
 
+def _strip_html_tags(text):
+    return re.sub(r"<[^>]+>", " ", str(text or ""))
+
+
+def _html_to_text(fragment):
+    return re.sub(r"\s+", " ", html.unescape(_strip_html_tags(fragment))).strip()
+
+
+def scrape_apple_ireland(session):
+    """Apple's careers site has no public API and no shared ATS — but unlike
+    what I assumed, its search results page IS server-rendered: the job
+    data is present in the raw HTML response itself, before any JavaScript
+    runs (confirmed independently — search engine crawlers, which don't
+    execute JS, have indexed full job listings including reference numbers
+    directly from this URL). That means it can be parsed directly, the
+    same class of technique as any other HTML scrape, just without a
+    clean JSON API behind it."""
+    base = "https://jobs.apple.com"
+    url = base + "/en-ie/search?location=ireland-IRL"
+    try:
+        resp = session.get(url, headers=HEADERS, timeout=20)
+        if resp.status_code != 200:
+            return []
+        page = resp.text
+    except Exception:
+        return []
+
+    results = []
+    blocks = re.findall(r"(<li[^>]*>.*?/en-ie/details/.*?</li>)", page, flags=re.I | re.S)
+    if not blocks:
+        blocks = re.split(r'(?=<a[^>]+href=["\']/en-ie/details/)', page, flags=re.I)
+
+    seen_urls = set()
+    for block in blocks:
+        m = re.search(r'href=["\']([^"\']*/en-ie/details/[^"\']+)["\'][^>]*>(.*?)</a>',
+                       block, flags=re.I | re.S)
+        if not m:
+            continue
+        href = urllib.parse.urljoin(base, m.group(1))
+        title = _html_to_text(m.group(2))
+        if not title or href in seen_urls:
+            continue
+        seen_urls.add(href)
+
+        block_text = _html_to_text(block)
+        loc_match = re.search(r"Location\s+([^|•]+?)(?:Actions|Role Number|Weekly Hours|$)",
+                               block_text, flags=re.I)
+        location = loc_match.group(1).strip() if loc_match else "Ireland"
+        if not is_ireland_location(location):
+            continue
+
+        date_match = re.search(r"\b(\d{1,2}\s+[A-Za-z]{3}\s+20\d{2}|[A-Za-z]{3}\s+\d{1,2},?\s+20\d{2})\b",
+                                block_text)
+        posted_text = date_match.group(1) if date_match else "Unknown"
+
+        sponsorship, snippet = classify_sponsorship(block_text[:5000])
+
+        results.append({
+            "company": "Apple",
+            "title": title,
+            "location": location,
+            "posted_text": posted_text,
+            "posted_days_ago": None,
+            "employment_type": normalize_employment_type(None, title),
+            "url": href,
+            "source": "apple_html",
+            "visa_sponsorship": sponsorship,
+            "visa_snippet": snippet,
+        })
+    return results
+
+
 PROBE_VERSION = 13  # bump whenever a new ATS platform is added to the probe list, or slug guessing changes
 
 
@@ -1414,14 +1488,22 @@ def probe_ats_for_manual_companies(manual_companies, session, cache_path, fetch_
         name, url = entry["company"], entry["url"]
         cached = cache.get(name)
 
+        if name == "Fenergo":
+            print(f"=== FENERGO TRACE: cached entry = {cached} ===")
+
         if cached and cached.get("platform") in known_platforms:
             platform, slug = cached["platform"], cached["slug"]
             cache_hits_matched += 1
         elif cached and cached.get("platform") == "none":
+            if name == "Fenergo":
+                print("=== FENERGO TRACE: hit the 'none' cache branch — SKIPPED without re-probing. "
+                      "This is the bug if it's still happening on a run that should include Workable. ===")
             still_manual.append(entry)
             cache_hits_none += 1
             continue
         else:
+            if name == "Fenergo":
+                print("=== FENERGO TRACE: no valid cache hit — proceeding to fresh probe now ===")
             freshly_probed += 1
             platform, slug = None, None
             if name in KNOWN_PHENOM_DOMAINS:
@@ -1469,6 +1551,8 @@ def probe_ats_for_manual_companies(manual_companies, session, cache_path, fetch_
                     # cheaply, via the exact-URL override above for the
                     # handful of companies verified by hand.
             cache[name] = {"platform": platform or "none", "slug": slug}
+            if name == "Fenergo":
+                print(f"=== FENERGO TRACE: fresh probe finished, result = platform={platform!r}, slug={slug!r} ===")
             if platform is None:
                 still_manual.append(entry)
                 continue
@@ -1676,6 +1760,24 @@ def sponsorship_rarity_label(h):
 
 
 def main():
+    print(f"=== job_pipeline.py running with PROBE_VERSION={PROBE_VERSION} "
+          f"(should be 13 or higher — if this shows anything less, the uploaded "
+          f"file is NOT the latest version) ===")
+    print(f"=== Platforms supported: greenhouse, lever, smartrecruiters, ashby, "
+          f"recruitee, personio, pinpoint, eightfold, phenom, workable ===")
+    if os.path.exists("ats_platform_cache.json"):
+        with open("ats_platform_cache.json", encoding="utf-8") as f:
+            existing_cache = json.load(f)
+        stored_v = existing_cache.get("__probe_version__", "MISSING")
+        print(f"=== Existing ats_platform_cache.json found: stored __probe_version__={stored_v}, "
+              f"{len(existing_cache)} total entries ===")
+        if "Fenergo" in existing_cache:
+            print(f"=== Fenergo cache entry BEFORE this run: {existing_cache['Fenergo']} ===")
+        else:
+            print(f"=== Fenergo has no cache entry yet (never probed) ===")
+    else:
+        print("=== No ats_platform_cache.json found yet — this will be a fully fresh run ===")
+
     ap = argparse.ArgumentParser()
     ap.add_argument("--input", default="Job_Automation.csv")
     ap.add_argument("--output", default="jobs.json")
@@ -1727,6 +1829,21 @@ def main():
         print(f"  -> Auto-discovered {len(discovered_jobs)} Ireland postings across "
               f"{len(found_companies)} companies previously in the manual list: {', '.join(found_companies)}")
     live_jobs.extend(discovered_jobs)
+
+    apple_entry = next((c for c in manual_check if c["company"].strip().lower().startswith("apple")), None)
+    if apple_entry:
+        print("\nTrying direct HTML scrape for Apple (no API/shared ATS, but their search "
+              "page is server-rendered)...")
+        apple_jobs = scrape_apple_ireland(session)
+        if apple_jobs:
+            print(f"  -> Apple: {len(apple_jobs)} Ireland postings found via direct scrape")
+            for job in apple_jobs:
+                job["company"] = apple_entry["company"]  # match the exact name used in the CSV
+            live_jobs.extend(apple_jobs)
+            manual_check = [c for c in manual_check if c is not apple_entry]
+        else:
+            print("  -> Apple: scrape ran but found nothing this time (page structure may "
+                  "have changed, or genuinely zero current Ireland postings)")
 
     adzuna_jobs = load_adzuna_jobs()
     if adzuna_jobs:
