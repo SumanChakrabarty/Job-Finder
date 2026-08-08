@@ -459,6 +459,10 @@
     "platform": "greenhouse",
     "slug": "hubspotjobs"
   },
+  "UPS Ireland": {
+    "platform": "pinpoint",
+    "slug": "upscareers"
+  },
   "Google": {
     "platform": "none",
     "slug": null
@@ -1387,10 +1391,6 @@
     "platform": "none",
     "slug": null
   },
-  "UPS Ireland": {
-    "platform": "pinpoint",
-    "slug": "upscareers"
-  },
   "DSV Ireland": {
     "platform": "none",
     "slug": null
@@ -1515,5 +1515,5 @@
     "platform": "none",
     "slug": null
   },
-  "__probe_version__": 12
+  "__probe_version__": 13
 }
