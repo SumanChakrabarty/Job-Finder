@@ -1455,7 +1455,98 @@ def scrape_apple_ireland(session):
     return results
 
 
-PROBE_VERSION = 13  # bump whenever a new ATS platform is added to the probe list, or slug guessing changes
+def scrape_jsonld_jobpostings(url, company_name, session):
+    """Schema.org JobPosting is a real, standardized, machine-readable
+    format — not a company-specific trick. Companies embed it directly in
+    their career page HTML (as a <script type="application/ld+json">
+    block) specifically so Google can show their jobs in search results.
+    Since it's a genuine web standard rather than a guessed API, this can
+    work across many different companies' own existing career page URLs,
+    not just one company at a time. Handles a single JobPosting, a list
+    of them, or an ItemList wrapping them — real pages use all three
+    shapes depending on how they implemented it."""
+    try:
+        resp = session.get(url, headers=HEADERS, timeout=15)
+        if resp.status_code != 200:
+            return []
+        page = resp.text
+    except Exception:
+        return []
+
+    scripts = re.findall(r'<script[^>]+type=["\']application/ld\+json["\'][^>]*>(.*?)</script>',
+                          page, flags=re.I | re.S)
+    if not scripts:
+        return []
+
+    def extract_postings(node):
+        """JobPosting data can be a single dict, a list, or nested inside
+        an ItemList's 'itemListElement' — walk all three shapes."""
+        found = []
+        if isinstance(node, list):
+            for item in node:
+                found.extend(extract_postings(item))
+        elif isinstance(node, dict):
+            node_type = node.get("@type", "")
+            type_list = node_type if isinstance(node_type, list) else [node_type]
+            if "JobPosting" in type_list:
+                found.append(node)
+            elif "itemListElement" in node:
+                found.extend(extract_postings(node["itemListElement"]))
+            elif "item" in node:
+                found.extend(extract_postings(node["item"]))
+        return found
+
+    postings = []
+    for raw_script in scripts:
+        try:
+            parsed = json.loads(raw_script.strip())
+        except Exception:
+            continue
+        postings.extend(extract_postings(parsed))
+
+    results = []
+    seen_urls = set()
+    for job in postings:
+        location_obj = job.get("jobLocation") or {}
+        if isinstance(location_obj, list):
+            location_obj = location_obj[0] if location_obj else {}
+        address = location_obj.get("address") or {}
+        if isinstance(address, dict):
+            location = ", ".join(filter(None, [
+                address.get("addressLocality"), address.get("addressRegion"),
+                address.get("addressCountry")]))
+        else:
+            location = str(address)
+        if not location:
+            location = _html_to_text(str(job.get("jobLocationType", "")))
+        if not is_ireland_location(location):
+            continue
+
+        job_url = job.get("url") or job.get("sameAs") or url
+        if job_url in seen_urls:
+            continue
+        seen_urls.add(job_url)
+
+        description = _html_to_text(job.get("description", ""))
+        sponsorship, snippet = classify_sponsorship(description[:5000])
+
+        title = job.get("title", "").strip()
+        results.append({
+            "company": company_name,
+            "title": title,
+            "location": location,
+            "posted_text": job.get("datePosted", "Unknown"),
+            "posted_days_ago": None,
+            "employment_type": normalize_employment_type(job.get("employmentType"), title),
+            "url": job_url,
+            "source": "jsonld",
+            "visa_sponsorship": sponsorship,
+            "visa_snippet": snippet,
+        })
+    return results
+
+
+PROBE_VERSION = 14  # bump whenever a new ATS platform is added to the probe list, or slug guessing changes
 
 
 def probe_ats_for_manual_companies(manual_companies, session, cache_path, fetch_descriptions=True):
@@ -1513,6 +1604,13 @@ def probe_ats_for_manual_companies(manual_companies, session, cache_path, fetch_
                     platform, slug = "phenom", f"{known_domain}|{ref_num}"
             if platform is None:
                 for candidate in candidate_slugs(name):
+                    if name == "Fenergo":
+                        try:
+                            raw_resp = session.get(WORKABLE_JOBS_URL.format(slug=candidate), headers=HEADERS, timeout=10)
+                            print(f"=== FENERGO TRACE: trying candidate slug '{candidate}' against Workable "
+                                  f"directly -> HTTP {raw_resp.status_code}, body starts: {raw_resp.text[:200]!r} ===")
+                        except Exception as e:
+                            print(f"=== FENERGO TRACE: candidate '{candidate}' request raised exception: {e} ===")
                     if try_greenhouse(candidate, session) is not None:
                         platform, slug = "greenhouse", candidate
                         break
@@ -1844,6 +1942,29 @@ def main():
         else:
             print("  -> Apple: scrape ran but found nothing this time (page structure may "
                   "have changed, or genuinely zero current Ireland postings)")
+
+    print(f"\nChecking {len(manual_check)} remaining manual companies for embedded JobPosting "
+          f"structured data on their own career page (a real, standardized SEO format many "
+          f"companies use — not a guess, but not every company implements it either)...")
+    jsonld_found_companies = []
+    still_manual_after_jsonld = []
+    for entry in manual_check:
+        if not entry.get("url"):
+            still_manual_after_jsonld.append(entry)
+            continue
+        jsonld_jobs = scrape_jsonld_jobpostings(entry["url"], entry["company"], session)
+        if jsonld_jobs:
+            live_jobs.extend(jsonld_jobs)
+            jsonld_found_companies.append(entry["company"])
+        else:
+            still_manual_after_jsonld.append(entry)
+        time.sleep(0.3)
+    manual_check = still_manual_after_jsonld
+    if jsonld_found_companies:
+        print(f"  -> JobPosting structured data found for {len(jsonld_found_companies)} companies: "
+              f"{', '.join(jsonld_found_companies)}")
+    else:
+        print("  -> No companies had usable JobPosting structured data this run")
 
     adzuna_jobs = load_adzuna_jobs()
     if adzuna_jobs:
