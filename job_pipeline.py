@@ -232,25 +232,7 @@ def is_ireland_location(location_text: str) -> bool:
     return any(hint in lt for hint in IRELAND_LOCATION_HINTS)
 
 
-def guess_employment_type(bullet_fields):
-    if not bullet_fields:
-        return "Unspecified"
-    for b in bullet_fields:
-        bl = str(b).lower()
-        if "full time" in bl or "full-time" in bl:
-            return "Full-time"
-        if "part time" in bl or "part-time" in bl:
-            return "Part-time"
-        if "contract" in bl:
-            return "Contract"
-        if "intern" in bl:
-            return "Internship"
-        if "temporary" in bl:
-            return "Temporary"
-    return "Unspecified"
-
-
-def normalize_employment_type(raw):
+def normalize_employment_type(raw, title=""):
     """Every platform describes employment type in its own wording —
     Ashby uses 'FullTime' (no space), Lever uses 'Full-time', SmartRecruiters
     nests it under a different field entirely, Personio says 'Permanent'.
@@ -267,35 +249,46 @@ def normalize_employment_type(raw):
     (contemporary/temporary, irregular/regular, impermanent/permanent),
     so every category gets the same word-boundary treatment, not just the
     one that happened to get caught."""
-    if not raw:
-        return "Unspecified"
-    original = str(raw).lower()
+    original = str(raw).lower() if raw else ""
+    title_lower = str(title).lower() if title else ""
 
-    def word(pattern):
-        return re.search(pattern, original) is not None
+    def word(pattern, text):
+        return re.search(pattern, text) is not None
 
-    # Only the full word 'internship' counts — the bare abbreviation
-    # 'intern' turned out to be genuinely ambiguous in practice: besides
-    # colliding with 'international', a real Version 1 posting for a
-    # *Senior* Data Engineer (EUR 65-75k) was tagged just 'Intern', which
-    # almost certainly meant something like 'Internal' (an internal-
-    # transfer flag) rather than actual internship status. Requiring the
-    # unambiguous full word trades a little recall (missing postings that
-    # only ever say bare 'Intern') for no longer mislabeling real
-    # experienced roles as internships.
-    if word(r"\binternship\b"):
+    # The bare word 'intern' in the METADATA field is genuinely ambiguous
+    # (a real Version 1 posting used it to mean something like 'Internal',
+    # not internship) — only the full word 'internship' counts there.
+    # But the same bare word in the actual public-facing TITLE is a much
+    # more trustworthy signal: no employer titles a real senior role
+    # "Intern" by mistake. 'Work placement' is another real, common phrase
+    # for the same thing (e.g. Deloitte's Aspire Programme postings).
+    if word(r"\binternship\b", original):
         return "Internship"
-    if word(r"\bpart[\s-]?time\b"):
+    if word(r"\bintern(?:ship)?\b", title_lower) or word(r"\bwork\s?placement\b", title_lower):
+        return "Internship"
+    if word(r"\bpart[\s-]?time\b", original):
         return "Part-time"
-    if word(r"\btemp(?:orary)?\b"):  # 'temp' alone should count too, not just 'temporary'
+    if word(r"\bpart[\s-]?time\b", title_lower):
+        return "Part-time"
+    if word(r"\btemp(?:orary)?\b", original):  # 'temp' alone should count too, not just 'temporary'
         return "Temporary"
-    if word(r"\b(?:contract(?:or)?|freelance)\b"):
+    if word(r"\btemp(?:orary)?\b", title_lower):
+        return "Temporary"
+    if word(r"\b(?:contract(?:or)?|freelance)\b", original):
         # NOTE: 'consultant' deliberately excluded — it's commonly a
         # permanent full-time JOB TITLE at many companies (Accenture,
         # Deloitte, etc.), not a genuine employment-type signal. Treating
         # it as Contract would misclassify real full-time consultants.
         return "Contract"
-    if word(r"\b(?:full[\s-]?time|permanent|regular)\b"):
+    # Title-based Contract check is deliberately NARROWER than Part-time/
+    # Temporary above — "Contract Manager", "Contract Administrator", and
+    # "Contract Specialist" are real, common PERMANENT job titles about
+    # managing contracts, not contract-type roles themselves. A bare
+    # "contract" match in the title would recreate the same class of bug
+    # already fixed elsewhere. Only specific, unambiguous phrasing counts.
+    if word(r"\b(?:fixed[\s-]?term|contract\s+(?:role|position|basis)|\d+[\s-]?(?:month|week|year)s?\s+contract|contractor)\b", title_lower):
+        return "Contract"
+    if word(r"\b(?:full[\s-]?time|permanent|regular)\b", original):
         return "Full-time"
     return "Unspecified"
 
@@ -628,7 +621,9 @@ def fetch_workday_jobs(company_name, url, session, fetch_descriptions=True,
                     "location": location_text,
                     "posted_text": posted_text,
                     "posted_days_ago": parse_posted_text(posted_text),
-                    "employment_type": guess_employment_type(job.get("bulletFields")),
+                    "employment_type": normalize_employment_type(
+                        " ".join(str(b) for b in (job.get("bulletFields") or [])),
+                        job.get("title", "")),
                     "url": job_url,
                     "source": "workday_api",
                     "visa_sponsorship": sponsorship,
@@ -783,7 +778,7 @@ def normalize_lever_job(company_name, job):
         "location": location,
         "posted_text": posted_text,
         "posted_days_ago": days_ago,
-        "employment_type": normalize_employment_type(categories.get("commitment")),
+        "employment_type": normalize_employment_type(categories.get("commitment"), job.get("text", "")),
         "url": job.get("hostedUrl", ""),
         "source": "lever_api",
         "visa_sponsorship": sponsorship,
@@ -888,7 +883,7 @@ def normalize_smartrecruiters_job(company_name, job, slug, session, fetch_descri
         "location": location,
         "posted_text": posted_text,
         "posted_days_ago": days_ago,
-        "employment_type": normalize_employment_type(raw_employment_type),
+        "employment_type": normalize_employment_type(raw_employment_type, job.get("name", "")),
         "url": f"https://jobs.smartrecruiters.com/{slug}/{posting_id}",
         "source": "smartrecruiters_api",
         "visa_sponsorship": sponsorship,
@@ -929,7 +924,7 @@ def normalize_ashby_job(company_name, job):
         "location": location,
         "posted_text": posted_text,
         "posted_days_ago": days_ago,
-        "employment_type": normalize_employment_type(job.get("employmentType")),
+        "employment_type": normalize_employment_type(job.get("employmentType"), job.get("title", "")),
         "url": job.get("applyUrl", "") or job.get("jobUrl", ""),
         "source": "ashby_api",
         "visa_sponsorship": sponsorship,
@@ -972,7 +967,7 @@ def normalize_recruitee_job(company_name, job):
         "location": location,
         "posted_text": posted_text,
         "posted_days_ago": days_ago,
-        "employment_type": normalize_employment_type(job.get("employment_type_code")),
+        "employment_type": normalize_employment_type(job.get("employment_type_code"), job.get("title", "")),
         "url": job.get("careers_url", ""),
         "source": "recruitee_api",
         "visa_sponsorship": sponsorship,
@@ -1029,7 +1024,7 @@ def normalize_personio_job(company_name, slug, position):
         "location": office,
         "posted_text": posted_text,
         "posted_days_ago": days_ago,
-        "employment_type": normalize_employment_type(field("employmentType")),
+        "employment_type": normalize_employment_type(field("employmentType"), field("name")),
         "url": f"https://{slug}.jobs.personio.de/job/{position_id}",
         "source": "personio_xml",
         "visa_sponsorship": sponsorship,
@@ -1087,7 +1082,7 @@ def normalize_pinpoint_job(company_name, slug, job):
         "location": location,
         "posted_text": posted_text,
         "posted_days_ago": days_ago,
-        "employment_type": normalize_employment_type(job.get("employmentType") or job.get("employment_type")),
+        "employment_type": normalize_employment_type(job.get("employmentType") or job.get("employment_type"), job.get("title") or ""),
         "url": url,
         "source": "pinpoint_api",
         "visa_sponsorship": sponsorship,
@@ -1186,7 +1181,7 @@ def normalize_eightfold_job(company_name, slug, job):
         "location": location,
         "posted_text": posted_text,
         "posted_days_ago": days_ago,
-        "employment_type": normalize_employment_type(job.get("employment_type")),
+        "employment_type": normalize_employment_type(job.get("employment_type"), job.get("name") or job.get("title") or ""),
         "url": url,
         "source": "eightfold_api",
         "visa_sponsorship": sponsorship,
@@ -1326,7 +1321,7 @@ def normalize_phenom_job(company_name, domain, job):
         "location": str(location),
         "posted_text": posted_text,
         "posted_days_ago": days_ago,
-        "employment_type": normalize_employment_type(job.get("type")),
+        "employment_type": normalize_employment_type(job.get("type"), job.get("title") or job.get("jobTitle") or ""),
         "url": url,
         "source": "phenom_widgets",
         "visa_sponsorship": sponsorship,
@@ -1378,7 +1373,7 @@ def normalize_workable_job(company_name, job):
         "location": location,
         "posted_text": posted_text,
         "posted_days_ago": days_ago,
-        "employment_type": normalize_employment_type(job.get("employment_type") or job.get("type")),
+        "employment_type": normalize_employment_type(job.get("employment_type") or job.get("type"), job.get("title") or ""),
         "url": job.get("url") or job.get("shortlink") or "",
         "source": "workable_api",
         "visa_sponsorship": sponsorship,
