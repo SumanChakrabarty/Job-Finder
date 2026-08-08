@@ -687,12 +687,13 @@ def candidate_slugs(company_name: str):
     """Guesses a small set of plausible ATS board slugs from a company name.
     e.g. 'VMware (Broadcom)' -> ['vmware', 'broadcom']; 'HubSpot' -> ['hubspot']
 
-    Kept deliberately short (4, not 6+) — every extra candidate multiplies
-    cost across all 8 platforms for every one of ~340 manual companies,
-    most of which match nothing at all. Trimmed to the 4 patterns that
-    actually found real companies this session (bare join, hyphenated,
-    'jobs' suffix, first-two-words) and dropped the two that never once
-    produced a real hit (bare first word alone, two-words-hyphenated)."""
+    Kept deliberately bounded — every extra candidate multiplies cost
+    across all 8 platforms for every one of ~340 manual companies, most
+    of which match nothing at all. The 'jobs' suffix pattern (found
+    HubSpot's real token 'hubspotjobs') proved this kind of suffix
+    convention is real and common, so 'careers' gets the same treatment —
+    genuinely new, not a repeat of the bare-first-word guess that was
+    tried and dropped for never producing a single real hit."""
     base = re.sub(r"\([^)]*\)", " ", company_name)  # drop "(Broadcom)" etc.
     base = CORP_SUFFIX_RE.sub(" ", base)
     words = re.findall(r"[a-zA-Z0-9]+", base)
@@ -702,9 +703,10 @@ def candidate_slugs(company_name: str):
     slugs.add("".join(words).lower())
     slugs.add("-".join(words).lower())
     slugs.add("".join(words).lower() + "jobs")  # e.g. HubSpot's real board token is 'hubspotjobs', not 'hubspot'
+    slugs.add("".join(words).lower() + "careers")  # same convention, different common suffix
     if len(words) >= 2:
         slugs.add("".join(words[:2]).lower())   # first two words joined, e.g. "johnsonjohnson"
-    return list(slugs)[:4]  # trimmed for runtime — see docstring
+    return list(slugs)[:5]  # bounded — see docstring
 
 
 def try_greenhouse(slug, session):
@@ -1332,7 +1334,7 @@ def normalize_phenom_job(company_name, domain, job):
     }
 
 
-PROBE_VERSION = 11  # bump whenever a new ATS platform is added to the probe list, or slug guessing changes
+PROBE_VERSION = 12  # bump whenever a new ATS platform is added to the probe list, or slug guessing changes
 
 
 def probe_ats_for_manual_companies(manual_companies, session, cache_path, fetch_descriptions=True):
