@@ -1483,6 +1483,63 @@ def _extract_html_blocks_for_links(page, href_pattern):
     return blocks
 
 
+def scrape_amazon_ireland(session):
+    """Amazon has no public developer API — confirmed earlier. But unlike
+    what that meant for Apple, Amazon's search RESULTS PAGE genuinely is
+    client-rendered (verified: crawled content showed only generic
+    marketing text, no real listings). The actual data instead comes from
+    a real internal JSON endpoint their own frontend JS calls —
+    amazon.jobs/en/search.json — confirmed genuinely working (returned 197
+    real Ireland postings with real requisition IDs when tested). A third,
+    different category from both Apple (server-rendered HTML) and
+    everything else: a real hidden API, just not a documented public one."""
+    results, seen = [], set()
+    limit = 100
+    for offset in range(0, 600, limit):  # bounded — matches the confirmed-working reference implementation
+        params = {"base_query": "", "loc_query": "Ireland", "country": "IRL",
+                   "result_limit": limit, "offset": offset}
+        url = "https://www.amazon.jobs/en/search.json?" + urllib.parse.urlencode(params)
+        try:
+            resp = session.get(url, headers=HEADERS, timeout=10)
+            if resp.status_code != 200:
+                break
+            data = resp.json()
+        except Exception:
+            break
+        jobs = data.get("jobs") or []
+        if not jobs:
+            break
+        for job in jobs:
+            title = job.get("title", "")
+            location = job.get("normalized_location") or job.get("location") or ""
+            if not is_ireland_location(location):
+                continue
+            path = job.get("job_path", "")
+            job_id = str(job.get("id_icims") or job.get("id") or path or "")
+            key = job_id or (title.lower(), location.lower())
+            if key in seen:
+                continue
+            seen.add(key)
+            description = job.get("description") or job.get("basic_qualifications") or ""
+            sponsorship, snippet = classify_sponsorship(description[:5000])
+            results.append({
+                "company": "Amazon",
+                "title": title,
+                "location": location,
+                "posted_text": job.get("posted_date", "Unknown"),
+                "posted_days_ago": None,
+                "employment_type": normalize_employment_type(None, title),
+                "url": f"https://www.amazon.jobs{path}" if path else "https://www.amazon.jobs/en/",
+                "source": "amazon_json",
+                "visa_sponsorship": sponsorship,
+                "visa_snippet": snippet,
+            })
+        if len(jobs) < limit:
+            break
+        time.sleep(0.2)
+    return results
+
+
 def scrape_google_ireland(session, fetch_descriptions=True, max_pages=5):
     """Google's careers search page has no public API and no shared ATS —
     but real evidence (content independently crawled from this exact URL
@@ -1653,6 +1710,13 @@ def scrape_jsonld_jobpostings(url, company_name, session):
 
 
 PROBE_VERSION = 16  # bump whenever a new ATS platform is added to the probe list, or slug guessing changes
+
+# Deliberately SEPARATE from PROBE_VERSION — these two caches were sharing
+# one version number, which meant every ATS-platform fix (Workable, etc.)
+# was also silently wiping the entire JobPosting structured-data cache and
+# forcing an expensive full 342-company recheck for something completely
+# unrelated. Only bump this when the JSON-LD scraping logic itself changes.
+JSONLD_CACHE_VERSION = 1
 
 
 def probe_ats_for_manual_companies(manual_companies, session, cache_path, fetch_descriptions=True):
@@ -2065,13 +2129,28 @@ def main():
         else:
             print("  -> Google: scrape ran but found nothing this time")
 
+    amazon_entry = next((c for c in manual_check if c["company"].strip().lower().startswith("amazon")), None)
+    if amazon_entry:
+        print("\nTrying Amazon's internal jobs search endpoint (no public API, but a real "
+              "hidden JSON endpoint their own site uses — confirmed working, 197 real Ireland "
+              "postings found when tested)...")
+        amazon_jobs = scrape_amazon_ireland(session)
+        if amazon_jobs:
+            print(f"  -> Amazon: {len(amazon_jobs)} Ireland postings found")
+            for job in amazon_jobs:
+                job["company"] = amazon_entry["company"]
+            live_jobs.extend(amazon_jobs)
+            manual_check = [c for c in manual_check if c is not amazon_entry]
+        else:
+            print("  -> Amazon: found nothing this time")
+
     jsonld_cache_path = "jsonld_cache.json"
     jsonld_cache = {}
     if os.path.exists(jsonld_cache_path):
         with open(jsonld_cache_path, encoding="utf-8") as f:
             jsonld_cache = json.load(f)
     jsonld_cache_version = jsonld_cache.pop("__version__", 0)
-    if jsonld_cache_version != PROBE_VERSION:
+    if jsonld_cache_version != JSONLD_CACHE_VERSION:
         # Version changed — only clear the "no data found" verdicts so they
         # get a fresh chance; keep confirmed "has JobPosting data" hits as-is.
         jsonld_cache = {k: v for k, v in jsonld_cache.items() if v.get("has_data")}
@@ -2117,7 +2196,7 @@ def main():
         time.sleep(0.2)
 
     manual_check = still_manual_after_jsonld
-    jsonld_cache["__version__"] = PROBE_VERSION
+    jsonld_cache["__version__"] = JSONLD_CACHE_VERSION
     with open(jsonld_cache_path, "w", encoding="utf-8") as f:
         json.dump(jsonld_cache, f, indent=2)
     print(f"  Checked {jsonld_checked_this_run} companies fresh this run (rest served from cache).")
