@@ -1334,7 +1334,59 @@ def normalize_phenom_job(company_name, domain, job):
     }
 
 
-PROBE_VERSION = 12  # bump whenever a new ATS platform is added to the probe list, or slug guessing changes
+WORKABLE_JOBS_URL = "https://apply.workable.com/api/v1/widget/accounts/{slug}"
+
+
+def try_workable(slug, session):
+    try:
+        resp = session.get(WORKABLE_JOBS_URL.format(slug=slug), headers=HEADERS, timeout=10)
+        if resp.status_code != 200:
+            return None
+        data = resp.json()
+        jobs = data.get("jobs")
+        return jobs if jobs else None
+    except Exception:
+        return None
+
+
+def normalize_workable_job(company_name, job):
+    location_obj = job.get("location") or {}
+    if isinstance(location_obj, dict):
+        location = (location_obj.get("location_str") or
+                    ", ".join(filter(None, [location_obj.get("city"), location_obj.get("country")])))
+    else:
+        location = str(location_obj)
+    if not is_ireland_location(location):
+        return None
+
+    description = job.get("description") or ""
+    sponsorship, snippet = classify_sponsorship(description)
+
+    posted_text, days_ago = "Unknown", None
+    published = job.get("published_on") or job.get("created_at")
+    if published:
+        try:
+            posted_dt = datetime.fromisoformat(str(published).replace("Z", "+00:00"))
+            days_ago = (datetime.now(timezone.utc) - posted_dt).days
+            posted_text = f"Posted {days_ago} days ago" if days_ago > 0 else "Posted Today"
+        except Exception:
+            pass
+
+    return {
+        "company": company_name,
+        "title": (job.get("title") or "").strip(),
+        "location": location,
+        "posted_text": posted_text,
+        "posted_days_ago": days_ago,
+        "employment_type": normalize_employment_type(job.get("employment_type") or job.get("type")),
+        "url": job.get("url") or job.get("shortlink") or "",
+        "source": "workable_api",
+        "visa_sponsorship": sponsorship,
+        "visa_snippet": snippet,
+    }
+
+
+PROBE_VERSION = 13  # bump whenever a new ATS platform is added to the probe list, or slug guessing changes
 
 
 def probe_ats_for_manual_companies(manual_companies, session, cache_path, fetch_descriptions=True):
@@ -1360,7 +1412,7 @@ def probe_ats_for_manual_companies(manual_companies, session, cache_path, fetch_
 
     still_manual = []
     discovered_jobs = []
-    known_platforms = ("greenhouse", "lever", "smartrecruiters", "ashby", "recruitee", "personio", "pinpoint", "eightfold", "phenom")
+    known_platforms = ("greenhouse", "lever", "smartrecruiters", "ashby", "recruitee", "personio", "pinpoint", "eightfold", "phenom", "workable")
     cache_hits_matched, cache_hits_none, freshly_probed = 0, 0, 0
 
     for entry in manual_companies:
@@ -1407,6 +1459,9 @@ def probe_ats_for_manual_companies(manual_companies, session, cache_path, fetch_
                         break
                     if try_eightfold(candidate, session) is not None:
                         platform, slug = "eightfold", candidate
+                        break
+                    if try_workable(candidate, session) is not None:
+                        platform, slug = "workable", candidate
                         break
                     # NOTE: generic Phenom guessing removed from this loop —
                     # across the entire session it never once succeeded,
@@ -1478,6 +1533,12 @@ def probe_ats_for_manual_companies(manual_companies, session, cache_path, fetch_
             jobs = fetch_phenom_jobs_by_refnum(domain, ref_num, session)
             for job in jobs:
                 norm = normalize_phenom_job(name, domain, job)
+                if norm:
+                    company_jobs.append(norm)
+        elif platform == "workable":
+            jobs = try_workable(slug, session) or []
+            for job in jobs:
+                norm = normalize_workable_job(name, job)
                 if norm:
                     company_jobs.append(norm)
 
