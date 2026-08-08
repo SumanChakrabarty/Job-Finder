@@ -1388,8 +1388,8 @@
     "slug": null
   },
   "UPS Ireland": {
-    "platform": "none",
-    "slug": null
+    "platform": "pinpoint",
+    "slug": "upscareers"
   },
   "DSV Ireland": {
     "platform": "none",
@@ -1515,5 +1515,5 @@
     "platform": "none",
     "slug": null
   },
-  "__probe_version__": 11
+  "__probe_version__": 12
 }
