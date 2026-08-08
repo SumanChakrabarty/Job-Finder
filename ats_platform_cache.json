@@ -463,6 +463,10 @@
     "platform": "pinpoint",
     "slug": "upscareers"
   },
+  "Davy": {
+    "platform": "workable",
+    "slug": "davy"
+  },
   "Google": {
     "platform": "none",
     "slug": null
@@ -922,10 +926,6 @@
   "VHI Healthcare": {
     "platform": "none",
     "slug": null
-  },
-  "Davy": {
-    "platform": "workable",
-    "slug": "davy"
   },
   "Goodbody": {
     "platform": "none",
@@ -1504,8 +1504,8 @@
     "slug": null
   },
   "Fenergo": {
-    "platform": "none",
-    "slug": null
+    "platform": "workable",
+    "slug": "fenergocareers"
   },
   "SuperValu / Musgrave": {
     "platform": "none",
@@ -1515,5 +1515,5 @@
     "platform": "none",
     "slug": null
   },
-  "__probe_version__": 15
+  "__probe_version__": 16
 }
