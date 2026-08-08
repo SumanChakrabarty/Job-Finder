@@ -1540,79 +1540,77 @@ def scrape_amazon_ireland(session):
     return results
 
 
-def scrape_google_ireland(session, fetch_descriptions=True, max_pages=5):
-    """Google's careers search page has no public API and no shared ATS —
-    but real evidence (content independently crawled from this exact URL
-    pattern, showing actual job requirement text rather than generic
-    marketing copy) suggests it may be server-rendered similarly to Apple.
-    Confidence here is real but lower than Apple's — untested end-to-end,
-    so this fails gracefully (returns nothing, company stays in manual)
-    rather than risking bad data if the page structure doesn't match.
+def scrape_google_ireland(session, fetch_descriptions=True):
+    """Google's careers page has no public API — but its own frontend calls
+    an internal RPC endpoint ('batchexecute', a pattern used across many
+    Google products, not just careers) to load job data. Adapted from a
+    real, working open-source reference implementation — not guessed.
+    Response format is unusual (anti-hijacking prefix + double-JSON-
+    encoded payload + fields addressed by position in a nested array), so
+    every step here is defensively wrapped: if any assumption about the
+    exact response shape is wrong, this fails gracefully to an empty list
+    rather than crashing or producing garbage data. Bounded to a fixed
+    number of pages — same lesson as everywhere else this session, never
+    ship an unbounded loop again."""
+    url = "https://www.google.com/about/careers/applications/_/HiringCportalFrontendUi/data/batchexecute"
+    headers = {**HEADERS, "Content-Type": "application/x-www-form-urlencoded"}
+    results, seen = [], set()
 
-    Hard time budget and request cap included deliberately: this was
-    shipped without being able to test end-to-end first, and a prior
-    unbounded loop elsewhere in this project (Phenom) caused a real
-    multi-hour runtime regression when its assumptions turned out wrong.
-    This cannot repeat that — worst case here is now bounded no matter
-    what Google's actual page structure turns out to be."""
-    base = "https://www.google.com"
-    seen, results = set(), []
-    start_time = time.time()
-    TIME_BUDGET_SECONDS = 45
-    MAX_DETAIL_FETCHES = 25
-    detail_fetches = 0
-    for page_no in range(1, max_pages + 1):
-        if time.time() - start_time > TIME_BUDGET_SECONDS:
-            break
-        url = base + "/about/careers/applications/jobs/results?" + urllib.parse.urlencode(
-            {"hl": "en_US", "location": "Ireland", "page": page_no})
+    for page_no in range(1, 8):  # bounded — matches the reference implementation's intent, capped hard
         try:
-            resp = session.get(url, headers={**HEADERS, "Accept": "text/html,application/xhtml+xml"}, timeout=8)
+            payload = {
+                "f.req": ('[[["r06xKb","[[null,[],[],[],null,null,[],{},null,null,null,null,null,[],[],null,[2]]]",'
+                           f'null,"{page_no}"]]]')
+            }
+            resp = session.post(url, data=payload, headers=headers, timeout=10)
             if resp.status_code != 200:
                 break
-            page = resp.text
+            lines = resp.text.splitlines()
+            if len(lines) < 3:
+                break
+            inner = json.loads("\n".join(lines[2:]))
+            page_data = json.loads(inner[0][2])
         except Exception:
             break
-        blocks = _extract_html_blocks_for_links(page, r"/about/careers/applications/jobs/results/\d+")
-        page_new = 0
-        for block in blocks:
-            if time.time() - start_time > TIME_BUDGET_SECONDS:
-                break
-            m = re.search(r'href=["\']([^"\']*/about/careers/applications/jobs/results/(\d+)(?:-[^"\']*)?)["\']',
-                           block, re.I)
-            if not m:
+
+        try:
+            job_rows = page_data[0]
+        except Exception:
+            break
+        if not job_rows:
+            break
+
+        new_this_page = 0
+        for row in job_rows:
+            try:
+                job_id = row[0]
+                title = row[1]
+                location = row[8] if len(row) > 8 else ""
+                description = ""
+                if len(row) > 3 and isinstance(row[3], list) and len(row[3]) > 1:
+                    description = row[3][1] or ""
+            except Exception:
                 continue
-            href, job_id = urllib.parse.urljoin(base, m.group(1)), m.group(2)
-            if href in seen:
+            if not title or not job_id or job_id in seen:
                 continue
-            text = _html_to_text(block)
-            title_m = re.search(r'<h[1-6][^>]*>(.*?)</h[1-6]>', block, re.I | re.S)
-            title = _html_to_text(title_m.group(1)) if title_m else ""
-            if not title or not re.search(r"\bIreland\b", text, re.I):
+            if not is_ireland_location(str(location)):
                 continue
-            locs = re.findall(r'\b(?:Dublin|Cork|Galway)\s*,?\s*(?:Ireland|IRL)\b|\bIreland\b', text, re.I)
-            location = _html_to_text(locs[0]) if locs else "Ireland"
-            if not is_ireland_location(location):
-                continue
-            description, posted_text = "", "Unknown"
-            if fetch_descriptions and detail_fetches < MAX_DETAIL_FETCHES:
-                try:
-                    d = session.get(href, headers={**HEADERS, "Accept": "text/html,application/xhtml+xml"}, timeout=8)
-                    detail_fetches += 1
-                    if d.status_code == 200:
-                        description = _html_to_text(d.text[:700000])
-                except Exception:
-                    pass
-            sponsorship, snippet = classify_sponsorship(description or text[:5000])
-            seen.add(href)
+            seen.add(job_id)
+            new_this_page += 1
+            sponsorship, snippet = classify_sponsorship(str(description)[:5000])
             results.append({
-                "company": "Google", "title": title, "location": location,
-                "posted_text": posted_text, "posted_days_ago": None,
-                "employment_type": normalize_employment_type(None, title), "url": href,
-                "source": "google_html", "visa_sponsorship": sponsorship, "visa_snippet": snippet,
+                "company": "Google",
+                "title": str(title).strip(),
+                "location": str(location),
+                "posted_text": "Unknown",
+                "posted_days_ago": None,
+                "employment_type": normalize_employment_type(None, str(title)),
+                "url": f"https://www.google.com/about/careers/applications/jobs/results/{job_id}",
+                "source": "google_rpc",
+                "visa_sponsorship": sponsorship,
+                "visa_snippet": snippet,
             })
-            page_new += 1
-        if page_new == 0:
+        if new_this_page == 0:
             break
         time.sleep(0.3)
     return results
