@@ -1540,6 +1540,81 @@ def scrape_amazon_ireland(session):
     return results
 
 
+def _walk_meta_job_objects(node, found=None):
+    """Find job-shaped objects inside Meta's page data without depending
+    on unstable React/Next component names."""
+    if found is None:
+        found = []
+    if isinstance(node, dict):
+        keys = {str(k).lower() for k in node.keys()}
+        if any(k in keys for k in ("jobid", "job_id", "jobidstr")) and any(k in keys for k in ("title", "jobtitle", "name")):
+            found.append(node)
+        for value in node.values():
+            _walk_meta_job_objects(value, found)
+    elif isinstance(node, list):
+        for value in node:
+            _walk_meta_job_objects(value, found)
+    return found
+
+
+def scrape_meta_ireland(session):
+    """LOW CONFIDENCE — try with real skepticism, not optimism. The only
+    confirmed-working technique for Meta requires a real browser (their
+    job data loads via a separate async GraphQL call after the page
+    renders, confirmed by a working reference that has to wait and
+    intercept that specific follow-up request). This checks whether their
+    initial page load ALSO happens to embed a usable copy of that data
+    (a real, different technique — common for Next.js sites — just with
+    no positive evidence it applies here). Cheap and safe to try since it
+    fails to an empty list rather than guessing wrong; do not be surprised
+    if this finds nothing."""
+    results, seen = [], set()
+    try:
+        resp = session.get("https://www.metacareers.com/jobs/?location=Ireland", headers=HEADERS, timeout=15)
+        if resp.status_code != 200:
+            return []
+        page = resp.text
+    except Exception:
+        return []
+
+    scripts = re.findall(r'<script[^>]+id=["\']__NEXT_DATA__["\'][^>]*>(.*?)</script>', page, flags=re.I | re.S)
+    for raw in scripts:
+        try:
+            parsed = json.loads(html.unescape(raw).strip())
+        except Exception:
+            continue
+        for listing in _walk_meta_job_objects(parsed):
+            title = str(listing.get("title") or listing.get("jobTitle") or listing.get("name") or "").strip()
+            job_id = str(listing.get("id") or listing.get("job_id") or listing.get("jobIdStr") or "").strip()
+            locations = listing.get("locations") or listing.get("location") or ""
+            if isinstance(locations, list):
+                location = ", ".join(str(x) for x in locations)
+            elif isinstance(locations, dict):
+                location = ", ".join(str(v) for v in locations.values() if v)
+            else:
+                location = str(locations)
+            if not title or not job_id or job_id in seen or not is_ireland_location(location):
+                continue
+            seen.add(job_id)
+            description = str(listing.get("description") or "")
+            sponsorship, snippet = classify_sponsorship(description[:5000])
+            results.append({
+                "company": "Meta",
+                "title": title,
+                "location": location,
+                "posted_text": "Unknown",
+                "posted_days_ago": None,
+                "employment_type": normalize_employment_type(None, title),
+                "url": f"https://www.metacareers.com/jobs/{job_id}/",
+                "source": "meta_nextdata",
+                "visa_sponsorship": sponsorship,
+                "visa_snippet": snippet,
+            })
+        if results:
+            break
+    return results
+
+
 def scrape_google_ireland(session, fetch_descriptions=True):
     """Google's careers page has no public API — but its own frontend calls
     an internal RPC endpoint ('batchexecute', a pattern used across many
@@ -2141,6 +2216,22 @@ def main():
             manual_check = [c for c in manual_check if c is not amazon_entry]
         else:
             print("  -> Amazon: found nothing this time")
+
+    meta_entry = next((c for c in manual_check if c["company"].strip().lower().startswith("meta")), None)
+    if meta_entry:
+        print("\nTrying Meta (LOW CONFIDENCE — the only confirmed-working technique needs a "
+              "real browser, which this pipeline doesn't run; this checks a different, cheaper "
+              "possibility with no positive evidence yet, so finding nothing is the expected "
+              "outcome, not a failure)...")
+        meta_jobs = scrape_meta_ireland(session)
+        if meta_jobs:
+            print(f"  -> Meta: {len(meta_jobs)} Ireland postings found (better luck than expected!)")
+            for job in meta_jobs:
+                job["company"] = meta_entry["company"]
+            live_jobs.extend(meta_jobs)
+            manual_check = [c for c in manual_check if c is not meta_entry]
+        else:
+            print("  -> Meta: found nothing, as expected given low confidence going in")
 
     jsonld_cache_path = "jsonld_cache.json"
     jsonld_cache = {}
