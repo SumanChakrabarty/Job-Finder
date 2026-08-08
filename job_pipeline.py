@@ -1335,15 +1335,22 @@ WORKABLE_JOBS_URL = "https://apply.workable.com/api/v1/widget/accounts/{slug}"
 
 
 def try_workable(slug, session):
-    try:
-        resp = session.get(WORKABLE_JOBS_URL.format(slug=slug), headers=HEADERS, timeout=10)
-        if resp.status_code != 200:
+    for attempt in range(2):  # one retry after a real, confirmed 429 rate-limit
+        try:
+            resp = session.get(WORKABLE_JOBS_URL.format(slug=slug), headers=HEADERS, timeout=10)
+            if resp.status_code == 429:
+                if attempt == 0:
+                    time.sleep(3)
+                    continue
+                return None
+            if resp.status_code != 200:
+                return None
+            data = resp.json()
+            jobs = data.get("jobs")
+            return jobs if jobs else None
+        except Exception:
             return None
-        data = resp.json()
-        jobs = data.get("jobs")
-        return jobs if jobs else None
-    except Exception:
-        return None
+    return None
 
 
 def normalize_workable_job(company_name, job):
@@ -1455,6 +1462,81 @@ def scrape_apple_ireland(session):
     return results
 
 
+def _extract_html_blocks_for_links(page, href_pattern):
+    """Splits a page into per-link chunks so each job's surrounding text
+    (title, location, description) can be pulled out separately, instead
+    of treating the whole page as one blob."""
+    positions = [m.start() for m in re.finditer(href_pattern, page)]
+    blocks = []
+    for i, pos in enumerate(positions):
+        start = max(0, pos - 300)
+        end = positions[i + 1] if i + 1 < len(positions) else min(len(page), pos + 2000)
+        blocks.append(page[start:end])
+    return blocks
+
+
+def scrape_google_ireland(session, fetch_descriptions=True, max_pages=10):
+    """Google's careers search page has no public API and no shared ATS —
+    but real evidence (content independently crawled from this exact URL
+    pattern, showing actual job requirement text rather than generic
+    marketing copy) suggests it may be server-rendered similarly to Apple.
+    Confidence here is real but lower than Apple's — untested end-to-end,
+    so this fails gracefully (returns nothing, company stays in manual)
+    rather than risking bad data if the page structure doesn't match."""
+    base = "https://www.google.com"
+    seen, results = set(), []
+    for page_no in range(1, max_pages + 1):
+        url = base + "/about/careers/applications/jobs/results?" + urllib.parse.urlencode(
+            {"hl": "en_US", "location": "Ireland", "page": page_no})
+        try:
+            resp = session.get(url, headers={**HEADERS, "Accept": "text/html,application/xhtml+xml"}, timeout=15)
+            if resp.status_code != 200:
+                break
+            page = resp.text
+        except Exception:
+            break
+        blocks = _extract_html_blocks_for_links(page, r"/about/careers/applications/jobs/results/\d+")
+        page_new = 0
+        for block in blocks:
+            m = re.search(r'href=["\']([^"\']*/about/careers/applications/jobs/results/(\d+)(?:-[^"\']*)?)["\']',
+                           block, re.I)
+            if not m:
+                continue
+            href, job_id = urllib.parse.urljoin(base, m.group(1)), m.group(2)
+            if href in seen:
+                continue
+            text = _html_to_text(block)
+            title_m = re.search(r'<h[1-6][^>]*>(.*?)</h[1-6]>', block, re.I | re.S)
+            title = _html_to_text(title_m.group(1)) if title_m else ""
+            if not title or not re.search(r"\bIreland\b", text, re.I):
+                continue
+            locs = re.findall(r'\b(?:Dublin|Cork|Galway)\s*,?\s*(?:Ireland|IRL)\b|\bIreland\b', text, re.I)
+            location = _html_to_text(locs[0]) if locs else "Ireland"
+            if not is_ireland_location(location):
+                continue
+            description, posted_text = "", "Unknown"
+            if fetch_descriptions:
+                try:
+                    d = session.get(href, headers={**HEADERS, "Accept": "text/html,application/xhtml+xml"}, timeout=15)
+                    if d.status_code == 200:
+                        description = _html_to_text(d.text[:700000])
+                except Exception:
+                    pass
+            sponsorship, snippet = classify_sponsorship(description or text[:5000])
+            seen.add(href)
+            results.append({
+                "company": "Google", "title": title, "location": location,
+                "posted_text": posted_text, "posted_days_ago": None,
+                "employment_type": normalize_employment_type(None, title), "url": href,
+                "source": "google_html", "visa_sponsorship": sponsorship, "visa_snippet": snippet,
+            })
+            page_new += 1
+        if page_new == 0:
+            break
+        time.sleep(0.3)
+    return results
+
+
 def scrape_jsonld_jobpostings(url, company_name, session):
     """Schema.org JobPosting is a real, standardized, machine-readable
     format — not a company-specific trick. Companies embed it directly in
@@ -1466,7 +1548,7 @@ def scrape_jsonld_jobpostings(url, company_name, session):
     of them, or an ItemList wrapping them — real pages use all three
     shapes depending on how they implemented it."""
     try:
-        resp = session.get(url, headers=HEADERS, timeout=15)
+        resp = session.get(url, headers=HEADERS, timeout=7)
         if resp.status_code != 200:
             return []
         page = resp.text
@@ -1546,7 +1628,7 @@ def scrape_jsonld_jobpostings(url, company_name, session):
     return results
 
 
-PROBE_VERSION = 14  # bump whenever a new ATS platform is added to the probe list, or slug guessing changes
+PROBE_VERSION = 15  # bump whenever a new ATS platform is added to the probe list, or slug guessing changes
 
 
 def probe_ats_for_manual_companies(manual_companies, session, cache_path, fetch_descriptions=True):
@@ -1638,6 +1720,9 @@ def probe_ats_for_manual_companies(manual_companies, session, cache_path, fetch_
                     if try_workable(candidate, session) is not None:
                         platform, slug = "workable", candidate
                         break
+                    time.sleep(0.15)  # Workable is a single shared host across all companies —
+                    # confirmed via real evidence (429 responses) that hitting it back-to-back
+                    # across hundreds of candidate slugs was triggering their rate limit
                     # NOTE: generic Phenom guessing removed from this loop —
                     # across the entire session it never once succeeded,
                     # including on a URL confirmed to be genuine Phenom,
@@ -1943,23 +2028,76 @@ def main():
             print("  -> Apple: scrape ran but found nothing this time (page structure may "
                   "have changed, or genuinely zero current Ireland postings)")
 
-    print(f"\nChecking {len(manual_check)} remaining manual companies for embedded JobPosting "
-          f"structured data on their own career page (a real, standardized SEO format many "
-          f"companies use — not a guess, but not every company implements it either)...")
+    google_entry = next((c for c in manual_check if c["company"].strip().lower() == "google"), None)
+    if google_entry:
+        print("\nTrying direct HTML scrape for Google (lower confidence than Apple — real but "
+              "weaker evidence the page is server-rendered; will gracefully find nothing if not)...")
+        google_jobs = scrape_google_ireland(session)
+        if google_jobs:
+            print(f"  -> Google: {len(google_jobs)} Ireland postings found via direct scrape")
+            for job in google_jobs:
+                job["company"] = google_entry["company"]
+            live_jobs.extend(google_jobs)
+            manual_check = [c for c in manual_check if c is not google_entry]
+        else:
+            print("  -> Google: scrape ran but found nothing this time")
+
+    jsonld_cache_path = "jsonld_cache.json"
+    jsonld_cache = {}
+    if os.path.exists(jsonld_cache_path):
+        with open(jsonld_cache_path, encoding="utf-8") as f:
+            jsonld_cache = json.load(f)
+    jsonld_cache_version = jsonld_cache.pop("__version__", 0)
+    if jsonld_cache_version != PROBE_VERSION:
+        # Version changed — only clear the "no data found" verdicts so they
+        # get a fresh chance; keep confirmed "has JobPosting data" hits as-is.
+        jsonld_cache = {k: v for k, v in jsonld_cache.items() if v.get("has_data")}
+
+    print(f"\nChecking remaining manual companies for embedded JobPosting structured data on "
+          f"their own career page (a real, standardized SEO format many companies use — not "
+          f"every company implements it, and results are cached so this only costs real time "
+          f"once per company, not every run)...")
     jsonld_found_companies = []
     still_manual_after_jsonld = []
+    jsonld_checked_this_run = 0
     for entry in manual_check:
+        name = entry["company"]
+        cached = jsonld_cache.get(name)
+        if cached is not None:
+            if cached.get("has_data"):
+                # Confirmed source before — re-fetch fresh job data (jobs change),
+                # but skip re-checking whether the page has JobPosting markup at all.
+                jsonld_jobs = scrape_jsonld_jobpostings(entry["url"], name, session)
+                if jsonld_jobs:
+                    live_jobs.extend(jsonld_jobs)
+                    jsonld_found_companies.append(name)
+                else:
+                    still_manual_after_jsonld.append(entry)
+            else:
+                still_manual_after_jsonld.append(entry)
+            continue
+
         if not entry.get("url"):
             still_manual_after_jsonld.append(entry)
+            jsonld_cache[name] = {"has_data": False}
             continue
-        jsonld_jobs = scrape_jsonld_jobpostings(entry["url"], entry["company"], session)
+
+        jsonld_checked_this_run += 1
+        jsonld_jobs = scrape_jsonld_jobpostings(entry["url"], name, session)
         if jsonld_jobs:
             live_jobs.extend(jsonld_jobs)
-            jsonld_found_companies.append(entry["company"])
+            jsonld_found_companies.append(name)
+            jsonld_cache[name] = {"has_data": True}
         else:
             still_manual_after_jsonld.append(entry)
-        time.sleep(0.3)
+            jsonld_cache[name] = {"has_data": False}
+        time.sleep(0.2)
+
     manual_check = still_manual_after_jsonld
+    jsonld_cache["__version__"] = PROBE_VERSION
+    with open(jsonld_cache_path, "w", encoding="utf-8") as f:
+        json.dump(jsonld_cache, f, indent=2)
+    print(f"  Checked {jsonld_checked_this_run} companies fresh this run (rest served from cache).")
     if jsonld_found_companies:
         print(f"  -> JobPosting structured data found for {len(jsonld_found_companies)} companies: "
               f"{', '.join(jsonld_found_companies)}")
