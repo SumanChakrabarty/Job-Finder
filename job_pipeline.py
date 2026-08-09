@@ -1743,10 +1743,32 @@ def scrape_google_ireland(session, fetch_descriptions=True):
                 except Exception:
                     continue
             page.wait_for_timeout(2000)
-            # Scroll to load everything (results list is likely lazy-loaded)
-            for _ in range(15):
+            # Scroll to load everything — dynamic stability detection
+            # instead of a fixed guess, since a fixed count under-loaded
+            # results (confirmed: page showed "123 jobs matched" but only
+            # 27 headings were ever found). Also try clicking any visible
+            # "load more" style button, in case results are paginated
+            # rather than purely infinite-scroll.
+            last_count, stable_rounds = -1, 0
+            for _ in range(40):
+                count = page.locator("h3").count()
+                if count == last_count:
+                    stable_rounds += 1
+                    if stable_rounds >= 4:
+                        break
+                else:
+                    stable_rounds = 0
+                last_count = count
+                for more_text in ("Show more", "Load more", "See more", "More jobs"):
+                    try:
+                        btn = page.get_by_role("button", name=more_text, exact=False)
+                        if btn.count() > 0 and btn.first.is_visible():
+                            btn.first.click(timeout=1500)
+                            page.wait_for_timeout(800)
+                    except Exception:
+                        pass
                 page.mouse.wheel(0, 4000)
-                page.wait_for_timeout(800)
+                page.wait_for_timeout(700)
             headings = page.locator("h3")
             print(f"      [browser] Google: found {headings.count()} heading elements to check")
             for i in range(headings.count()):
@@ -1819,11 +1841,29 @@ def scrape_meta_ireland(session):
                 except Exception:
                     continue
             page.wait_for_timeout(2000)
-            for _ in range(15):
+            last_count, stable_rounds = -1, 0
+            for _ in range(40):
+                count = page.locator("h1, h2, h3").count()
+                if count == last_count:
+                    stable_rounds += 1
+                    if stable_rounds >= 4:
+                        break
+                else:
+                    stable_rounds = 0
+                last_count = count
+                for more_text in ("Show more", "Load more", "See more", "More jobs"):
+                    try:
+                        btn = page.get_by_role("button", name=more_text, exact=False)
+                        if btn.count() > 0 and btn.first.is_visible():
+                            btn.first.click(timeout=1500)
+                            page.wait_for_timeout(800)
+                    except Exception:
+                        pass
                 page.mouse.wheel(0, 4000)
-                page.wait_for_timeout(800)
+                page.wait_for_timeout(700)
             headings = page.locator("h1, h2, h3")
             print(f"      [browser] Meta: found {headings.count()} heading elements to check")
+            filtered_samples = []
             for i in range(headings.count()):
                 h = headings.nth(i)
                 title = _browser_text(h)
@@ -1839,6 +1879,8 @@ def scrape_meta_ireland(session):
                     if card and is_ireland_location(card):
                         break
                 if not is_ireland_location(card):
+                    if len(filtered_samples) < 5:
+                        filtered_samples.append(f"title={title!r} card={card[:150]!r}")
                     continue
                 key = title.lower().strip()
                 if key in seen:
@@ -1858,6 +1900,11 @@ def scrape_meta_ireland(session):
                     "visa_sponsorship": sponsorship,
                     "visa_snippet": snippet,
                 })
+            if not results and filtered_samples:
+                print(f"      [browser] Meta: {len(filtered_samples)} sample heading(s) that got "
+                      f"filtered out (real evidence of what's actually on the page):")
+                for s in filtered_samples:
+                    print(f"      [browser]   -> {s}")
             browser.close()
     except Exception as e:
         print(f"      [browser] Meta failed: {e}")
