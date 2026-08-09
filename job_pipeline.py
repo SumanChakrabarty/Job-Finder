@@ -2327,6 +2327,212 @@ def scrape_boston_scientific_ireland(session):
     return list(results.values())
 
 
+
+def _collect_browser_job_links(page, company_name, href_patterns, source_tag, results, default_location="Ireland"):
+    """Collect individual job links from the currently rendered browser page.
+    href_patterns is a list of regexes. The surrounding card must contain
+    Ireland evidence unless the caller explicitly supplies a page that is
+    already scoped to one Ireland location."""
+    patterns = [re.compile(x, re.I) for x in href_patterns]
+    anchors = page.locator("a[href]")
+    for i in range(anchors.count()):
+        a = anchors.nth(i)
+        try:
+            raw = a.get_attribute("href") or ""
+            href = urllib.parse.urljoin(page.url, raw)
+        except Exception:
+            continue
+        if not any(rx.search(href) for rx in patterns):
+            continue
+        key = href.split("?")[0].rstrip("/").lower()
+        if key in results:
+            continue
+        node, card = a, ""
+        for _ in range(6):
+            try:
+                node = node.locator("..")
+                text = _browser_text(node)
+            except Exception:
+                break
+            if text and len(text) <= 2500:
+                card = text
+            if card and (is_ireland_location(card) or re.search(r"\bIE\b", card, re.I)):
+                break
+        if not (is_ireland_location(card) or re.search(r"\bIE\b", card, re.I)):
+            continue
+        title = _browser_text(a).strip()
+        if not title or len(title) > 300:
+            try:
+                hs = node.locator("h1, h2, h3, h4")
+                if hs.count():
+                    title = _browser_text(hs.first).strip()
+            except Exception:
+                pass
+        if not title:
+            lines = [x.strip() for x in card.splitlines() if 4 <= len(x.strip()) <= 220]
+            title = lines[0] if lines else ""
+        if not title or title.lower() in _NON_JOB_HEADING_TEXTS:
+            continue
+        location = _extract_location_from_card(card, default_location)
+        posted_text, posted_days = extract_posted_from_text(card)
+        sponsorship, snippet = classify_sponsorship(card[:5000])
+        results[key] = {
+            "company": company_name,
+            "title": title[:300],
+            "location": location,
+            "posted_text": posted_text,
+            "posted_days_ago": posted_days,
+            "employment_type": normalize_employment_type(None, title),
+            "url": href,
+            "source": source_tag,
+            "visa_sponsorship": sponsorship,
+            "visa_snippet": snippet,
+        }
+
+
+def scrape_microsoft_ireland(session):
+    """Microsoft's Dublin page is dynamically rendered. The old raw-HTML
+    scraper commonly saw only the first three cards while the live page had
+    additional openings. Use the real browser and keep following rendered
+    job links, while requiring Ireland in each result card."""
+    if not HAS_PLAYWRIGHT:
+        print("      [microsoft] playwright not installed — skipping")
+        return []
+    urls = [
+        "https://careers.microsoft.com/v2/global/en/locations/dublin.html",
+        "https://jobs.careers.microsoft.com/global/en/search?q=&lc=Ireland",
+    ]
+    results = {}
+    try:
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch(headless=True)
+            page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
+            for start_url in urls:
+                page.goto(start_url, wait_until="domcontentloaded", timeout=60000)
+                page.wait_for_timeout(1800)
+                if start_url == urls[0]:
+                    _browser_accept_consent(page)
+                stagnant = 0
+                previous = 0
+                for _ in range(25):
+                    _collect_browser_job_links(
+                        page, "Microsoft",
+                        [r"careers\.microsoft\.com/.*/job/", r"jobs\.careers\.microsoft\.com/.*/job/", r"/job/"],
+                        "microsoft_browser", results, "Ireland")
+                    for txt in ("Load more", "Show more", "See more", "Next"):
+                        try:
+                            b = page.get_by_role("button", name=txt, exact=False)
+                            if b.count() and b.first.is_visible():
+                                b.first.click(timeout=1500)
+                                page.wait_for_timeout(700)
+                        except Exception:
+                            pass
+                    page.mouse.wheel(0, 3500)
+                    page.wait_for_timeout(500)
+                    current = len(results)
+                    stagnant = stagnant + 1 if current == previous else 0
+                    previous = current
+                    if stagnant >= 5:
+                        break
+            browser.close()
+    except Exception as e:
+        print(f"      [microsoft] browser scrape failed: {e}")
+    print(f"      [microsoft] {len(results)} unique Ireland jobs accumulated")
+    return list(results.values())
+
+
+def scrape_citi_ireland(session):
+    """Citi's Dublin search is paginated. The old implementation visited a
+    few hard-coded URLs and could stop at 25 while the official search had
+    more pages. Follow the numbered result pages and deduplicate by job URL."""
+    if not HAS_PLAYWRIGHT:
+        print("      [citi] playwright not installed — skipping")
+        return []
+    base = "https://jobs.citi.com/location/dublin/5441/2963597-7521314-2964574/4/{}"
+    results = {}
+    try:
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch(headless=True)
+            page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
+            for page_no in range(1, 8):
+                url = base.format(page_no)
+                page.goto(url, wait_until="domcontentloaded", timeout=60000)
+                page.wait_for_timeout(1200)
+                if page_no == 1:
+                    _browser_accept_consent(page)
+                before = len(results)
+                _collect_browser_job_links(
+                    page, "Citi",
+                    [r"jobs\.citi\.com/job/dublin/", r"jobs\.citi\.com/en/job/dublin/", r"jobs\.citi\.com/job/"],
+                    "citi_browser", results, "Dublin, Leinster, Ireland")
+                added = len(results) - before
+                print(f"      [citi] page {page_no}: +{added} jobs ({len(results)} total)")
+                # Current Citi pages expose the total in the page text. Stop
+                # after the first empty page; the URL itself is authoritative
+                # enough that we don't need to guess a fixed page count.
+                if added == 0 and page_no > 1:
+                    break
+            browser.close()
+    except Exception as e:
+        print(f"      [citi] browser scrape failed: {e}")
+    print(f"      [citi] {len(results)} unique Ireland jobs accumulated")
+    return list(results.values())
+
+
+def scrape_red_hat_ireland(session):
+    """Red Hat's locations page links into its live country search. Use a
+    browser so the Ireland country link and subsequent dynamic results are
+    actually rendered rather than scraping navigation text as jobs."""
+    if not HAS_PLAYWRIGHT:
+        print("      [red-hat] playwright not installed — skipping")
+        return []
+    start = "https://www.redhat.com/en/jobs/locations"
+    results = {}
+    try:
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch(headless=True)
+            page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
+            page.goto(start, wait_until="domcontentloaded", timeout=60000)
+            page.wait_for_timeout(1200)
+            _browser_accept_consent(page)
+            # Prefer the actual Ireland country link; if it is not a direct
+            # href, click the visible text and let the site route normally.
+            ireland_link = page.get_by_role("link", name=re.compile(r"^Ireland$", re.I))
+            if ireland_link.count():
+                try:
+                    ireland_link.first.click(timeout=3000)
+                    page.wait_for_timeout(1500)
+                except Exception:
+                    pass
+            _collect_browser_job_links(
+                page, "Red Hat",
+                [r"redhat\.com/.*/jobs/", r"redhat\.com/en/jobs/", r"redhat\.com/jobs/"],
+                "redhat_browser", results, "Ireland")
+            for _ in range(20):
+                for txt in ("Load more", "Show more", "See more", "Next"):
+                    try:
+                        b = page.get_by_role("button", name=txt, exact=False)
+                        if b.count() and b.first.is_visible():
+                            b.first.click(timeout=1200)
+                            page.wait_for_timeout(500)
+                    except Exception:
+                        pass
+                page.mouse.wheel(0, 3500)
+                page.wait_for_timeout(400)
+                before = len(results)
+                _collect_browser_job_links(
+                    page, "Red Hat",
+                    [r"redhat\.com/.*/jobs/", r"redhat\.com/en/jobs/", r"redhat\.com/jobs/"],
+                    "redhat_browser", results, "Ireland")
+                if len(results) == before:
+                    break
+            browser.close()
+    except Exception as e:
+        print(f"      [red-hat] browser scrape failed: {e}")
+    print(f"      [red-hat] {len(results)} unique Ireland jobs accumulated")
+    return list(results.values())
+
+
 def scrape_jnj_ireland(session):
     """Johnson & Johnson's first-party careers site supports an Ireland
     location query. Accumulate its current result cards while scrolling and
@@ -2335,7 +2541,7 @@ def scrape_jnj_ireland(session):
         print("      [jnj] playwright not installed — skipping")
         return []
     results = {}
-    url = "https://www.careers.jnj.com/en/jobs/?location=Ireland&search="
+    url = "https://www.careers.jnj.com/en/locations/emea/ireland/"
     try:
         with sync_playwright() as pw:
             browser = pw.chromium.launch(headless=True)
@@ -2649,7 +2855,7 @@ def scrape_jsonld_jobpostings(url, company_name, session):
     return results
 
 
-PROBE_VERSION = 16  # bump whenever a new ATS platform is added to the probe list, or slug guessing changes
+PROBE_VERSION = 17  # bump whenever a new ATS platform is added to the probe list, or slug guessing changes
 
 # Deliberately SEPARATE from PROBE_VERSION — these two caches were sharing
 # one version number, which meant every ATS-platform fix (Workable, etc.)
@@ -2973,7 +3179,7 @@ def test_single_company(name):
     """Fast test mode for one company — skips the full ~30 min pipeline
     entirely. Checks known dedicated scrapers by name directly (Apple,
     Google, Amazon, Meta, EY, KPMG, TikTok, Boston Scientific, J&J,
-    Johnson Controls), or falls back to trying it as a Workday tenant /
+    Johnson Controls, Microsoft, Citi, Red Hat), or falls back to trying it as a Workday tenant /
     generic ATS candidate using the company's row from the CSV."""
     print(f"=== Fast test mode: checking only '{name}' ===\n")
     session = requests.Session()
@@ -2990,6 +3196,11 @@ def test_single_company(name):
         "boston scientific": lambda: scrape_boston_scientific_ireland(session),
         "johnson & johnson": lambda: scrape_jnj_ireland(session),
         "johnson controls": lambda: scrape_johnson_controls_ireland(session),
+        "microsoft": lambda: scrape_microsoft_ireland(session),
+        "citi": lambda: scrape_citi_ireland(session),
+        "red hat": lambda: scrape_red_hat_ireland(session),
+        "oracle": lambda: scrape_oracle_candidate_experience("Oracle", "https://eeho.fa.us2.oraclecloud.com", "CX_1", session),
+        "jpmorgan chase": lambda: scrape_oracle_candidate_experience("JPMorgan Chase", "https://jpmc.fa.oraclecloud.com", "CX_1001", session),
     }
     matched_key = next((k for k in dedicated if name_lower == k or name_lower.startswith(k)), None)
 
@@ -3220,6 +3431,29 @@ def main():
         else:
             print(f"  -> {entry['company']}: found nothing this time")
 
+    # Dedicated browser scrapers for companies whose public pages are dynamic
+    # or paginated. These run before the generic HTML fallback so counts are
+    # based on the rendered first-party job listings rather than partial HTML.
+    special_browser_targets = [
+        ("microsoft", scrape_microsoft_ireland, "Microsoft Dublin/Ireland rendered careers search"),
+        ("citi", scrape_citi_ireland, "Citi Dublin paginated careers search"),
+        ("red hat", scrape_red_hat_ireland, "Red Hat rendered Ireland careers search"),
+    ]
+    for exact_name, scraper_fn, description in special_browser_targets:
+        entry = next((c for c in manual_check if c["company"].strip().lower() == exact_name), None)
+        if not entry:
+            continue
+        print(f"\nTrying {entry['company']} via dedicated browser automation — {description}...")
+        found_jobs = scraper_fn(session)
+        if found_jobs:
+            print(f"  -> {entry['company']}: {len(found_jobs)} Ireland postings found")
+            for job in found_jobs:
+                job["company"] = entry["company"]
+            live_jobs.extend(found_jobs)
+            manual_check = [c for c in manual_check if c is not entry]
+        else:
+            print(f"  -> {entry['company']}: found nothing this time")
+
     netflix_entry = next((c for c in manual_check if c["company"].strip().lower() == "netflix"), None)
     if netflix_entry:
         print("\nTrying Netflix (Eightfold, custom-branded domain, confirmed working endpoint)...")
@@ -3235,20 +3469,7 @@ def main():
 
     # Lightweight, pure-requests scraper (no browser needed) — real hint
     # patterns and URLs confirmed via a working reference, not guessed.
-    direct_html_targets = [
-        ("citi", "Citi", [
-            "https://jobs.citi.com/location/dublin-jobs/287/2963597-7521314-7778677-2964574/4",
-            "https://jobs.citi.com/location/dublin-jobs/287/2963597/2",
-            "https://jobs.citi.com/search-jobs/Ireland",
-        ], ("/job/dublin/", "/en/job/dublin/", "/job/"), "Dublin, Leinster, Ireland"),
-        ("microsoft", "Microsoft", [
-            "https://careers.microsoft.com/v2/global/en/locations/dublin.html",
-            "https://jobs.careers.microsoft.com/global/en/search?q=&lc=Ireland",
-        ], ("/job/", "/jobs/", "jobid", "job-id"), "Dublin, Ireland"),
-        ("red hat", "Red Hat", [
-            "https://www.redhat.com/en/jobs/locations",
-        ], ("/en/jobs/", "/jobs/", "job/"), "Ireland"),
-    ]
+    direct_html_targets = []  # handled above by dedicated browser scrapers
     for exact_name, display_name, urls, hints, default_loc in direct_html_targets:
         entry = next((c for c in manual_check if c["company"].strip().lower() == exact_name), None)
         if not entry:
