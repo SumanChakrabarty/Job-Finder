@@ -467,6 +467,14 @@
     "platform": "workable",
     "slug": "davy"
   },
+  "Fenergo": {
+    "platform": "workable",
+    "slug": "fenergocareers"
+  },
+  "Netflix": {
+    "platform": "eightfold",
+    "slug": "netflix"
+  },
   "Google": {
     "platform": "none",
     "slug": null
@@ -1503,10 +1511,6 @@
     "platform": "none",
     "slug": null
   },
-  "Fenergo": {
-    "platform": "workable",
-    "slug": "fenergocareers"
-  },
   "SuperValu / Musgrave": {
     "platform": "none",
     "slug": null
@@ -1515,13 +1519,9 @@
     "platform": "none",
     "slug": null
   },
-  "Netflix": {
-    "platform": "eightfold",
-    "slug": "netflix"
-  },
   "Red Hat": {
     "platform": "none",
     "slug": null
   },
-  "__probe_version__": 16
+  "__probe_version__": 17
 }
