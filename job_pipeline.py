@@ -235,6 +235,54 @@ def parse_posted_text(posted_text: str):
     return None
 
 
+UNKNOWN_POSTED_DAYS = 9999.0  # critical: JS treats null <= 1 as true, so never emit null for unknown ages
+
+
+def extract_posted_from_text(text: str):
+    """Find a posted-age/date phrase in rendered job-card text — used by
+    the browser-scraped sources (Google, Meta, EY, TikTok, etc.) which
+    otherwise had no date information at all."""
+    if not text:
+        return "Unknown", None
+    compact = re.sub(r"\s+", " ", str(text)).strip()
+    patterns = [
+        r"(?:posted\s+)?(?:just now|just posted|today|yesterday)",
+        r"(?:posted\s+)?\d+(?:\.\d+)?\s*(?:minutes?|mins?|hours?|hrs?|days?|weeks?|months?)\s+ago",
+        r"(?:posted|date posted|published)\s*[:\-]?\s*(?:\d{4}-\d{2}-\d{2}|[A-Za-z]{3,9}\s+\d{1,2},\s+\d{4}|\d{1,2}\s+[A-Za-z]{3,9}\s+\d{4})",
+    ]
+    for pat in patterns:
+        m = re.search(pat, compact, re.I)
+        if m:
+            txt = m.group(0)
+            days = parse_posted_text(txt)
+            if days is not None:
+                return txt, days
+    return "Unknown", None
+
+
+def normalize_posted_age(job):
+    """Normalize posting age without changing the dashboard's time-window
+    model. The dashboard filters are cumulative windows: 24 hours
+    (posted_days_ago <= 1), 7 days (<=7), 28 days (<=28), Any time (no
+    restriction). Unknown dates use a large numeric sentinel so JavaScript
+    cannot coerce null to 0 and accidentally classify them as recent —
+    they still remain visible under 'Any time', since that option applies
+    no age condition at all."""
+    days = job.get("posted_days_ago")
+    if days is None:
+        days = parse_posted_text(job.get("posted_text", ""))
+    try:
+        days = float(days) if days is not None else UNKNOWN_POSTED_DAYS
+    except (TypeError, ValueError):
+        days = UNKNOWN_POSTED_DAYS
+    if days < 0:
+        days = 0.0
+    job["posted_days_ago"] = days
+    job["posted_age_known"] = days < UNKNOWN_POSTED_DAYS
+    job.pop("posted_age_bucket", None)
+    return job
+
+
 def is_ireland_location(location_text: str) -> bool:
     if not location_text:
         return False
@@ -1689,12 +1737,13 @@ def _browser_scrape_jobs(company_name, url, link_fragment, source_tag):
                 seen.add(href)
                 description = card[:5000]
                 sponsorship, snippet = classify_sponsorship(description)
+                posted_text, posted_days = extract_posted_from_text(card)
                 results.append({
                     "company": company_name,
                     "title": title,
                     "location": locs[0] if locs else "Ireland",
-                    "posted_text": "Unknown",
-                    "posted_days_ago": None,
+                    "posted_text": posted_text,
+                    "posted_days_ago": posted_days,
                     "employment_type": normalize_employment_type(None, title),
                     "url": href,
                     "source": source_tag,
@@ -1778,13 +1827,14 @@ def _collect_filtered_page_jobs(page, company_name, href_regex, source_tag,
             continue
 
         location = _extract_location_from_card(card, default_location)
+        posted_text, posted_days = extract_posted_from_text(card)
         sponsorship, snippet = classify_sponsorship(card[:5000])
         results_by_url[href] = {
             "company": company_name,
             "title": title[:300],
             "location": location,
-            "posted_text": "Unknown",
-            "posted_days_ago": None,
+            "posted_text": posted_text,
+            "posted_days_ago": posted_days,
             "employment_type": normalize_employment_type(None, title),
             "url": href,
             "source": source_tag,
@@ -1859,13 +1909,14 @@ def scrape_google_ireland(session, fetch_descriptions=True):
                     # 'Ireland' literally in the card text (same fix that
                     # rescued Meta's real postings from being dropped).
                     location = _extract_location_from_card(card, "Ireland")
+                    posted_text, posted_days = extract_posted_from_text(card)
                     sponsorship, snippet = classify_sponsorship(card[:5000])
                     results.append({
                         "company": "Google",
                         "title": title,
                         "location": location,
-                        "posted_text": "Unknown",
-                        "posted_days_ago": None,
+                        "posted_text": posted_text,
+                        "posted_days_ago": posted_days,
                         "employment_type": normalize_employment_type(None, title),
                         "url": url,
                         "source": "google_browser",
@@ -2066,7 +2117,7 @@ def scrape_kpmg_ireland(session):
     if not HAS_PLAYWRIGHT:
         print("      [kpmg] playwright not installed — skipping")
         return []
-    base = "https://kpmgireland.avature.net/experiencedhires/SearchJobs/"
+    base = "https://kpmgireland.avature.net/careers/SearchJobs/"
     results = {}
     try:
         with sync_playwright() as pw:
@@ -2080,8 +2131,8 @@ def scrape_kpmg_ireland(session):
                 if offset == 0:
                     _browser_accept_consent(page)
                 before = len(results)
-                _collect_filtered_page_jobs(page, "KPMG Ireland", r"kpmgireland\.avature\.net/experiencedhires/(?:JobDetail|jobdetail)", "kpmg_avature", results, "Ireland")
-                _collect_links_from_html(page, "KPMG Ireland", r"kpmgireland\.avature\.net/experiencedhires/(?:JobDetail|jobdetail)", "kpmg_avature", results, "Ireland")
+                _collect_filtered_page_jobs(page, "KPMG Ireland", r"kpmgireland\.avature\.net/careers/(?:JobDetail|jobdetail|FolderDetail|folderdetail)", "kpmg_avature", results, "Ireland")
+                _collect_links_from_html(page, "KPMG Ireland", r"kpmgireland\.avature\.net/careers/(?:JobDetail|jobdetail|FolderDetail|folderdetail)", "kpmg_avature", results, "Ireland")
                 added = len(results) - before
                 print(f"      [kpmg] folderOffset={offset}: +{added} jobs ({len(results)} total)")
                 stagnant = stagnant + 1 if added == 0 else 0
@@ -2143,6 +2194,194 @@ def scrape_tiktok_ireland(session):
             browser.close()
     except Exception as e:
         print(f"      [tiktok] browser scrape failed: {e}")
+    return list(results.values())
+
+
+def _collect_verified_ireland_page_jobs(page, company_name, href_regex, source_tag,
+                                        results_by_url, default_location="Ireland"):
+    """Like _collect_filtered_page_jobs, but requires Ireland evidence in the
+    surrounding result card. Useful for boards whose location-filtered pages
+    may append unrelated "similar jobs" underneath the real filtered results."""
+    href_re = re.compile(href_regex, re.I)
+    anchors = page.locator("a[href]")
+    for i in range(anchors.count()):
+        a = anchors.nth(i)
+        try:
+            href = urllib.parse.urljoin(page.url, a.get_attribute("href") or "")
+        except Exception:
+            continue
+        if not href_re.search(href) or href in results_by_url:
+            continue
+        node, card = a, ""
+        for _ in range(6):
+            try:
+                node = node.locator("..")
+                candidate = _browser_text(node)
+            except Exception:
+                break
+            if candidate and len(candidate) <= 1800:
+                card = candidate
+            if card and (is_ireland_location(card) or re.search(r"\bIE\b", card)):
+                break
+        if not (is_ireland_location(card) or re.search(r"\bIE\b", card)):
+            continue
+        title = _browser_text(a).strip()
+        if not title or len(title) > 300:
+            lines = [x.strip() for x in card.splitlines() if 4 <= len(x.strip()) <= 220]
+            title = lines[0] if lines else ""
+        if not title or title.lower() in _NON_JOB_HEADING_TEXTS:
+            continue
+        location = _extract_location_from_card(card, default_location)
+        posted_text, posted_days = extract_posted_from_text(card)
+        sponsorship, snippet = classify_sponsorship(card[:5000])
+        results_by_url[href] = {
+            "company": company_name,
+            "title": title[:300],
+            "location": location,
+            "posted_text": posted_text,
+            "posted_days_ago": posted_days,
+            "employment_type": normalize_employment_type(None, title),
+            "url": href,
+            "source": source_tag,
+            "visa_sponsorship": sponsorship,
+            "visa_snippet": snippet,
+        }
+
+
+def scrape_boston_scientific_ireland(session):
+    """Boston Scientific runs SAP SuccessFactors. Its Ireland location pages
+    are server-rendered and can include unrelated 'similar jobs', so collect
+    only rows/cards that themselves show an Irish city/country marker."""
+    if not HAS_PLAYWRIGHT:
+        print("      [boston-scientific] playwright not installed — skipping")
+        return []
+    pages = [
+        ("Galway, Ireland", "https://jobs.bostonscientific.com/go/All-Jobs-in-Galway%2C-Ireland/392200/"),
+        ("Cork, Ireland", "https://jobs.bostonscientific.com/go/All-Jobs-in-Cork%2C-Ireland/392198/"),
+        ("Clonmel, Ireland", "https://jobs.bostonscientific.com/go/All-Jobs-in-Clonmel%2C-Ireland/392199/"),
+    ]
+    results = {}
+    try:
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch(headless=True)
+            page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
+            for default_location, base in pages:
+                stagnant = 0
+                for startrow in range(0, 500, 25):
+                    url = base if startrow == 0 else base.rstrip("/") + f"/{startrow}/"
+                    page.goto(url, wait_until="domcontentloaded", timeout=60000)
+                    page.wait_for_timeout(800)
+                    if startrow == 0:
+                        _browser_accept_consent(page)
+                    before = len(results)
+                    _collect_verified_ireland_page_jobs(
+                        page, "Boston Scientific",
+                        r"jobs\.bostonscientific\.com/job/[^/]+/\d+/?",
+                        "boston_scientific_successfactors", results, default_location)
+                    added = len(results) - before
+                    if startrow == 0:
+                        print(f"      [boston-scientific] {default_location}: +{added} jobs")
+                    stagnant = stagnant + 1 if added == 0 else 0
+                    if stagnant >= 2:
+                        break
+            browser.close()
+    except Exception as e:
+        print(f"      [boston-scientific] browser scrape failed: {e}")
+    print(f"      [boston-scientific] {len(results)} unique Ireland jobs accumulated")
+    return list(results.values())
+
+
+def scrape_jnj_ireland(session):
+    """Johnson & Johnson's first-party careers site supports an Ireland
+    location query. Accumulate its current result cards while scrolling and
+    loading more, trusting the page-level Ireland filter."""
+    if not HAS_PLAYWRIGHT:
+        print("      [jnj] playwright not installed — skipping")
+        return []
+    results = {}
+    url = "https://www.careers.jnj.com/en/jobs/?location=Ireland&search="
+    try:
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch(headless=True)
+            page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
+            page.goto(url, wait_until="domcontentloaded", timeout=60000)
+            page.wait_for_timeout(1200)
+            _browser_accept_consent(page)
+            stagnant, previous = 0, 0
+            for _ in range(100):
+                _collect_filtered_page_jobs(
+                    page, "Johnson & Johnson",
+                    r"careers\.jnj\.com/(?:en/)?jobs/r-[^/]+/[^/]+/?",
+                    "jnj_browser", results, "Ireland")
+                _collect_links_from_html(
+                    page, "Johnson & Johnson",
+                    r"careers\.jnj\.com/(?:en/)?jobs/r-[^/]+/[^/]+/?",
+                    "jnj_browser", results, "Ireland")
+                for txt in ("Load more", "Show more", "See more", "Next"):
+                    try:
+                        b = page.get_by_role("button", name=txt, exact=False)
+                        if b.count() and b.first.is_visible():
+                            b.first.click(timeout=1000)
+                            page.wait_for_timeout(400)
+                    except Exception:
+                        pass
+                page.mouse.wheel(0, 3000)
+                page.wait_for_timeout(350)
+                current = len(results)
+                stagnant = stagnant + 1 if current == previous else 0
+                previous = current
+                if stagnant >= 8:
+                    break
+            browser.close()
+    except Exception as e:
+        print(f"      [jnj] browser scrape failed: {e}")
+    print(f"      [jnj] {len(results)} unique Ireland jobs accumulated")
+    return list(results.values())
+
+
+def scrape_johnson_controls_ireland(session):
+    """Johnson Controls' current first-party search is a JS/Algolia-style
+    board. Use its real Ireland refinement and additionally verify Ireland in
+    each rendered card so a failed/refused URL filter cannot leak global jobs."""
+    if not HAS_PLAYWRIGHT:
+        print("      [johnson-controls] playwright not installed — skipping")
+        return []
+    results = {}
+    params = urllib.parse.urlencode({
+        "production_JCI_jobs[refinementList][locations_list][0]": "Ireland"
+    })
+    url = "https://jobs.johnsoncontrols.com/job-search?" + params
+    try:
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch(headless=True)
+            page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
+            page.goto(url, wait_until="domcontentloaded", timeout=60000)
+            page.wait_for_timeout(1400)
+            _browser_accept_consent(page)
+            stagnant, previous = 0, 0
+            for _ in range(120):
+                _collect_verified_ireland_page_jobs(
+                    page, "Johnson Controls", r"jobs\.johnsoncontrols\.com/job/WD\d+/?",
+                    "johnson_controls_browser", results, "Ireland")
+                for txt in ("Load more", "Show more", "See more", "Next"):
+                    try:
+                        b = page.get_by_role("button", name=txt, exact=False)
+                        if b.count() and b.first.is_visible():
+                            b.first.click(timeout=1000)
+                            page.wait_for_timeout(350)
+                    except Exception:
+                        pass
+                page.mouse.wheel(0, 3200)
+                page.wait_for_timeout(350)
+                current = len(results)
+                stagnant = stagnant + 1 if current == previous else 0
+                previous = current
+                if stagnant >= 8:
+                    break
+            browser.close()
+    except Exception as e:
+        print(f"      [johnson-controls] browser scrape failed: {e}")
+    print(f"      [johnson-controls] {len(results)} unique Ireland jobs accumulated")
     return list(results.values())
 
 
@@ -2710,6 +2949,30 @@ def main():
         else:
             print(f"  -> {entry['company']}: found nothing this time")
 
+    # Exact-name matching here, not prefix — "Johnson Controls" and
+    # "Johnson & Johnson" share a prefix, as do "Boston Scientific" and
+    # "Boston Consulting Group (BCG)". A prefix match would risk running
+    # the wrong company's scraper against the wrong CSV entry.
+    exact_browser_targets = [
+        ("boston scientific", scrape_boston_scientific_ireland, "Boston Scientific (SuccessFactors, office-specific pages)"),
+        ("johnson & johnson", scrape_jnj_ireland, "Johnson & Johnson (first-party board)"),
+        ("johnson controls", scrape_johnson_controls_ireland, "Johnson Controls (Algolia-style board)"),
+    ]
+    for exact_name, scraper_fn, description in exact_browser_targets:
+        entry = next((c for c in manual_check if c["company"].strip().lower() == exact_name), None)
+        if not entry:
+            continue
+        print(f"\nTrying {entry['company']} via real browser automation — {description}...")
+        found_jobs = scraper_fn(session)
+        if found_jobs:
+            print(f"  -> {entry['company']}: {len(found_jobs)} Ireland postings found")
+            for job in found_jobs:
+                job["company"] = entry["company"]
+            live_jobs.extend(found_jobs)
+            manual_check = [c for c in manual_check if c is not entry]
+        else:
+            print(f"  -> {entry['company']}: found nothing this time")
+
     jsonld_cache_path = "jsonld_cache.json"
     jsonld_cache = {}
     if os.path.exists(jsonld_cache_path):
@@ -2802,6 +3065,15 @@ def main():
     if official_permit_stats:
         print(f"Merged official DETE permit records for {len(official_permit_stats)} companies "
               f"(run visa_stats.py separately, monthly, to refresh this).")
+
+    # Normalize posted age for EVERY source before writing jobs.json. Time
+    # filtering stays cumulative exactly as the dashboard expects: 24 hours
+    # (<=1 day), 7 days (<=7), 28 days (<=28), Any time (no restriction).
+    # Unknown dates become the 9999 sentinel instead of null so they can't
+    # be misclassified as recent — they still appear when "Any time" is
+    # selected, since that option applies no age condition at all.
+    for job in live_jobs:
+        normalize_posted_age(job)
 
     output = {
         "generated_at": now_iso,
