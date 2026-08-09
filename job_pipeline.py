@@ -1604,8 +1604,27 @@ def _browser_scrape_jobs(company_name, url, link_fragment, source_tag):
             browser = pw.chromium.launch(headless=True)
             page = browser.new_page(viewport={"width": 1440, "height": 1000}, locale="en-IE")
             page.goto(url, wait_until="domcontentloaded", timeout=60000)
-            page.wait_for_timeout(4000)
+            page.wait_for_timeout(2000)
+            # EU/Ireland-locale sessions almost always trigger a GDPR
+            # cookie-consent banner — if it's never dismissed, some sites
+            # never render the real content behind it at all. Try several
+            # common real-world button phrasings; harmless if none match.
+            consent_clicked = False
+            for consent_text in ("Accept all", "Accept All", "I agree", "I Agree", "Accept",
+                                  "Allow all", "Allow All", "Got it", "OK"):
+                try:
+                    btn = page.get_by_role("button", name=consent_text, exact=False)
+                    if btn.count() > 0:
+                        btn.first.click(timeout=2000)
+                        page.wait_for_timeout(1000)
+                        consent_clicked = True
+                        break
+                except Exception:
+                    continue
+            page.wait_for_timeout(2000)
             links = _browser_job_links(page, link_fragment)
+            print(f"      [browser] {company_name}: consent banner clicked={consent_clicked}, "
+                  f"matching links found={links.count()}")
             for i in range(links.count()):
                 a = links.nth(i)
                 href = urllib.parse.urljoin(url, a.get_attribute("href") or "")
