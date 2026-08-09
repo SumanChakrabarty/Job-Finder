@@ -1574,17 +1574,35 @@ def _browser_job_links(page, fragment):
 def _browser_card(anchor):
     """Walks up the DOM from a job link to find its surrounding card text
     (title + location) — reads what's actually rendered on screen rather
-    than guessing at an underlying API's data shape."""
-    text = ""
+    than guessing at an underlying API's data shape.
+
+    Stops at the FIRST reasonably-sized candidate instead of continuing
+    to expand — the earlier version kept walking until text stopped
+    fitting under a loose 2500-char cap, which usually meant landing on
+    a shared container holding MANY different jobs' info mashed together
+    (confirmed by real evidence: every single card came back with the
+    exact same oversized text, regardless of which link it started from).
+    A single job's own card is normally well under a few hundred
+    characters — once we're in a plausible range, stop growing."""
+    MIN_LEN, MAX_LEN = 15, 500
     node = anchor
-    for _ in range(7):
+    best = ""
+    for _ in range(6):
         node = node.locator("..")
         candidate = _browser_text(node)
-        if candidate and len(candidate) < 2500:
-            text = candidate
-        if candidate and is_ireland_location(candidate):
+        if not candidate:
+            continue
+        if len(candidate) > MAX_LEN:
+            # Grew into a shared/multi-job container — stop and use
+            # whatever the last reasonably-sized candidate was, even if
+            # it didn't contain a matched location, rather than accepting
+            # this oversized one.
             break
-    return text
+        if len(candidate) >= MIN_LEN:
+            best = candidate
+        if best and is_ireland_location(best):
+            break
+    return best
 
 
 def _browser_scrape_jobs(company_name, url, link_fragment, source_tag):
@@ -1681,15 +1699,80 @@ def _browser_scrape_jobs(company_name, url, link_fragment, source_tag):
 
 
 def scrape_google_ireland(session, fetch_descriptions=True):
+    """Real evidence ruled out the link-matching approach used for Meta:
+    the crawled content for individual Google job listings comes from the
+    exact same URL as the search results LIST page, with no per-job ID in
+    the path — meaning jobs likely expand inline via JavaScript rather
+    than navigating to a real separate page. Reads job list items
+    directly instead (title heading + nearby location text within each
+    repeating list entry), rather than looking for a link pattern that
+    may not exist."""
     if not HAS_PLAYWRIGHT:
         print("      [google] playwright not installed — skipping Google (see requirements.txt)")
         return []
-    return _browser_scrape_jobs(
-        "Google",
-        "https://www.google.com/about/careers/applications/jobs/results?location=Ireland",
-        "/about/careers/applications/jobs/results/",
-        "google_browser",
-    )
+    results, seen = [], set()
+    try:
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch(headless=True)
+            page = browser.new_page(viewport={"width": 1440, "height": 1000}, locale="en-IE")
+            page.goto("https://www.google.com/about/careers/applications/jobs/results?location=Ireland",
+                       wait_until="domcontentloaded", timeout=60000)
+            page.wait_for_timeout(2000)
+            for consent_text in ("Accept all", "Accept All", "I agree", "I Agree", "Accept",
+                                  "Allow all", "Allow All", "Got it", "OK"):
+                try:
+                    btn = page.get_by_role("button", name=consent_text, exact=False)
+                    if btn.count() > 0:
+                        btn.first.click(timeout=2000)
+                        page.wait_for_timeout(1000)
+                        break
+                except Exception:
+                    continue
+            page.wait_for_timeout(2000)
+            # Scroll to load everything (results list is likely lazy-loaded)
+            for _ in range(15):
+                page.mouse.wheel(0, 4000)
+                page.wait_for_timeout(800)
+            headings = page.locator("h3")
+            print(f"      [browser] Google: found {headings.count()} heading elements to check")
+            for i in range(headings.count()):
+                h = headings.nth(i)
+                title = _browser_text(h)
+                if not title or len(title) > 200:
+                    continue
+                node = h
+                card = ""
+                for _ in range(4):
+                    node = node.locator("..")
+                    candidate = _browser_text(node)
+                    if candidate and len(candidate) < 500:
+                        card = candidate
+                    if card and is_ireland_location(card):
+                        break
+                if not is_ireland_location(card):
+                    continue
+                key = title.lower().strip()
+                if key in seen:
+                    continue
+                seen.add(key)
+                locs = [x.strip() for x in card.splitlines() if x.strip() and is_ireland_location(x)]
+                sponsorship, snippet = classify_sponsorship(card[:5000])
+                results.append({
+                    "company": "Google",
+                    "title": title,
+                    "location": locs[0] if locs else "Ireland",
+                    "posted_text": "Unknown",
+                    "posted_days_ago": None,
+                    "employment_type": normalize_employment_type(None, title),
+                    "url": "https://www.google.com/about/careers/applications/jobs/results?location=Ireland",
+                    "source": "google_browser",
+                    "visa_sponsorship": sponsorship,
+                    "visa_snippet": snippet,
+                })
+            browser.close()
+    except Exception as e:
+        print(f"      [browser] Google failed: {e}")
+    return results
 
 
 def scrape_meta_ireland(session):
