@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-09T23:19:15.717395+00:00",
+  "generated_at": "2026-08-09T23:49:37.850276+00:00",
   "live_jobs": [
     {
       "company": "Accenture",
@@ -1833,21 +1833,6 @@
     },
     {
       "company": "Mastercard",
-      "title": "Senior Platform Architect",
-      "location": "Dublin, Ireland",
-      "posted_text": "Posted 4 Days Ago",
-      "posted_days_ago": 4.0,
-      "employment_type": "Unspecified",
-      "url": "https://mastercard.wd1.myworkdayjobs.com/CorporateCareers/job/Dublin-Ireland/Senior-Platform-Architect_R-270041-1",
-      "source": "workday_api",
-      "visa_sponsorship": "not_mentioned",
-      "visa_snippet": null,
-      "new_since_last_check": false,
-      "first_seen_at": "2026-08-05T10:11:07.632851+00:00",
-      "posted_age_known": true
-    },
-    {
-      "company": "Mastercard",
       "title": "AI engineer II",
       "location": "Dublin, Ireland",
       "posted_text": "Posted 5 Days Ago",
@@ -2109,6 +2094,21 @@
       "posted_days_ago": 30.0,
       "employment_type": "Unspecified",
       "url": "https://mastercard.wd1.myworkdayjobs.com/CorporateCareers/job/Dublin-Ireland/Senior-AI-Engineer_R-281081",
+      "source": "workday_api",
+      "visa_sponsorship": "not_mentioned",
+      "visa_snippet": null,
+      "new_since_last_check": false,
+      "first_seen_at": "2026-08-04T11:39:32.112480+00:00",
+      "posted_age_known": true
+    },
+    {
+      "company": "Mastercard",
+      "title": "Lead Software Engineer",
+      "location": "Dublin, Ireland",
+      "posted_text": "Posted 30+ Days Ago",
+      "posted_days_ago": 30.0,
+      "employment_type": "Unspecified",
+      "url": "https://mastercard.wd1.myworkdayjobs.com/CorporateCareers/job/Dublin-Ireland/Lead-Software-Engineer_R-281080",
       "source": "workday_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
@@ -2934,21 +2934,6 @@
       "posted_days_ago": 12.0,
       "employment_type": "Unspecified",
       "url": "https://sanofi.wd3.myworkdayjobs.com/SanofiCareers/job/Waterford/Quality-Assurance-Specialist---Talent-Community_R2867051",
-      "source": "workday_api",
-      "visa_sponsorship": "not_mentioned",
-      "visa_snippet": null,
-      "new_since_last_check": false,
-      "first_seen_at": "2026-08-04T11:39:32.112480+00:00",
-      "posted_age_known": true
-    },
-    {
-      "company": "Sanofi",
-      "title": "Process Engineer",
-      "location": "Waterford",
-      "posted_text": "Posted 13 Days Ago",
-      "posted_days_ago": 13.0,
-      "employment_type": "Unspecified",
-      "url": "https://sanofi.wd3.myworkdayjobs.com/SanofiCareers/job/Waterford/Process-Engineer_R2866893-1",
       "source": "workday_api",
       "visa_sponsorship": "not_mentioned",
       "visa_snippet": null,
@@ -10340,8 +10325,8 @@
       "company": "Snowflake",
       "title": "Senior Program Manager, Training Partnerships & Operations",
       "location": "US-CA-Dublin",
-      "posted_text": "Posted 15 days ago",
-      "posted_days_ago": 15.0,
+      "posted_text": "Posted 16 days ago",
+      "posted_days_ago": 16.0,
       "employment_type": "Full-time",
       "url": "https://jobs.ashbyhq.com/snowflake/e2a5504a-faa3-4193-8636-7942770a3b6c/application",
       "source": "ashby_api",
@@ -24958,172 +24943,164 @@
     "Salesforce": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 4787,
-      "total": 4787,
-      "label": "No sponsorship info found (4787 postings scanned)",
+      "not_mentioned": 4822,
+      "total": 4822,
+      "label": "No sponsorship info found (4822 postings scanned)",
       "category": "no_data"
     },
     "Workday": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 2746,
-      "total": 2746,
-      "label": "No sponsorship info found (2746 postings scanned)",
+      "not_mentioned": 2768,
+      "total": 2768,
+      "label": "No sponsorship info found (2768 postings scanned)",
       "category": "no_data"
     },
     "Autodesk": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 1259,
-      "total": 1259,
-      "label": "No sponsorship info found (1259 postings scanned)",
+      "not_mentioned": 1270,
+      "total": 1270,
+      "label": "No sponsorship info found (1270 postings scanned)",
       "category": "no_data"
     },
     "Analog Devices": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 2996,
-      "total": 2996,
-      "label": "No sponsorship info found (2996 postings scanned)",
+      "not_mentioned": 3023,
+      "total": 3023,
+      "label": "No sponsorship info found (3023 postings scanned)",
       "category": "no_data"
     },
     "Gilead Sciences": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 1295,
-      "total": 1295,
-      "label": "No sponsorship info found (1295 postings scanned)",
+      "not_mentioned": 1307,
+      "total": 1307,
+      "label": "No sponsorship info found (1307 postings scanned)",
       "category": "no_data"
     },
     "Stripe": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 7150,
-      "total": 7150,
-      "label": "No sponsorship info found (7150 postings scanned)",
+      "not_mentioned": 7200,
+      "total": 7200,
+      "label": "No sponsorship info found (7200 postings scanned)",
       "category": "no_data"
     },
     "Intercom": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 6097,
-      "total": 6097,
-      "label": "No sponsorship info found (6097 postings scanned)",
+      "not_mentioned": 6142,
+      "total": 6142,
+      "label": "No sponsorship info found (6142 postings scanned)",
       "category": "no_data"
     },
     "Toast": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 3121,
-      "total": 3121,
-      "label": "No sponsorship info found (3121 postings scanned)",
+      "not_mentioned": 3145,
+      "total": 3145,
+      "label": "No sponsorship info found (3145 postings scanned)",
       "category": "no_data"
     },
     "MongoDB": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 9840,
-      "total": 9840,
-      "label": "No sponsorship info found (9840 postings scanned)",
+      "not_mentioned": 9914,
+      "total": 9914,
+      "label": "No sponsorship info found (9914 postings scanned)",
       "category": "no_data"
     },
     "Qualtrics": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 268,
-      "total": 268,
-      "label": "No sponsorship info found (268 postings scanned)",
+      "not_mentioned": 270,
+      "total": 270,
+      "label": "No sponsorship info found (270 postings scanned)",
       "category": "no_data"
     },
     "Twilio": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 1569,
-      "total": 1569,
-      "label": "No sponsorship info found (1569 postings scanned)",
+      "not_mentioned": 1580,
+      "total": 1580,
+      "label": "No sponsorship info found (1580 postings scanned)",
       "category": "no_data"
     },
     "Pinterest": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 1824,
-      "total": 1824,
-      "label": "No sponsorship info found (1824 postings scanned)",
+      "not_mentioned": 1839,
+      "total": 1839,
+      "label": "No sponsorship info found (1839 postings scanned)",
       "category": "no_data"
     },
     "Reddit": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 321,
-      "total": 321,
-      "label": "No sponsorship info found (321 postings scanned)",
+      "not_mentioned": 323,
+      "total": 323,
+      "label": "No sponsorship info found (323 postings scanned)",
       "category": "no_data"
     },
     "Asana": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 1064,
-      "total": 1064,
-      "label": "No sponsorship info found (1064 postings scanned)",
+      "not_mentioned": 1072,
+      "total": 1072,
+      "label": "No sponsorship info found (1072 postings scanned)",
       "category": "no_data"
     },
     "Figma": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 133,
-      "total": 133,
-      "label": "No sponsorship info found (133 postings scanned)",
+      "not_mentioned": 134,
+      "total": 134,
+      "label": "No sponsorship info found (134 postings scanned)",
       "category": "no_data"
     },
     "Dropbox": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 134,
-      "total": 134,
-      "label": "No sponsorship info found (134 postings scanned)",
+      "not_mentioned": 135,
+      "total": 135,
+      "label": "No sponsorship info found (135 postings scanned)",
       "category": "no_data"
     },
     "Datadog": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 3227,
-      "total": 3227,
-      "label": "No sponsorship info found (3227 postings scanned)",
+      "not_mentioned": 3252,
+      "total": 3252,
+      "label": "No sponsorship info found (3252 postings scanned)",
       "category": "no_data"
     },
     "Zscaler": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 134,
-      "total": 134,
-      "label": "No sponsorship info found (134 postings scanned)",
+      "not_mentioned": 135,
+      "total": 135,
+      "label": "No sponsorship info found (135 postings scanned)",
       "category": "no_data"
     },
     "Okta": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 1282,
-      "total": 1282,
-      "label": "No sponsorship info found (1282 postings scanned)",
+      "not_mentioned": 1291,
+      "total": 1291,
+      "label": "No sponsorship info found (1291 postings scanned)",
       "category": "no_data"
     },
     "Pure Storage": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 254,
-      "total": 254,
-      "label": "No sponsorship info found (254 postings scanned)",
+      "not_mentioned": 255,
+      "total": 255,
+      "label": "No sponsorship info found (255 postings scanned)",
       "category": "no_data"
     },
     "JD Sports Ireland": {
-      "sponsors": 0,
-      "no_sponsorship": 0,
-      "not_mentioned": 133,
-      "total": 133,
-      "label": "No sponsorship info found (133 postings scanned)",
-      "category": "no_data"
-    },
-    "Mercury Engineering": {
       "sponsors": 0,
       "no_sponsorship": 0,
       "not_mentioned": 134,
@@ -25131,12 +25108,20 @@
       "label": "No sponsorship info found (134 postings scanned)",
       "category": "no_data"
     },
+    "Mercury Engineering": {
+      "sponsors": 0,
+      "no_sponsorship": 0,
+      "not_mentioned": 135,
+      "total": 135,
+      "label": "No sponsorship info found (135 postings scanned)",
+      "category": "no_data"
+    },
     "Pfizer": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 262,
-      "total": 262,
-      "label": "No sponsorship info found (262 postings scanned)",
+      "not_mentioned": 264,
+      "total": 264,
+      "label": "No sponsorship info found (264 postings scanned)",
       "category": "no_data"
     },
     "VMware (Broadcom)": {
@@ -25150,9 +25135,9 @@
     "Cadence Design Systems": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 1173,
-      "total": 1173,
-      "label": "No sponsorship info found (1173 postings scanned)",
+      "not_mentioned": 1182,
+      "total": 1182,
+      "label": "No sponsorship info found (1182 postings scanned)",
       "category": "no_data"
     },
     "Broadcom": {
@@ -25166,209 +25151,209 @@
     "MSD (Merck Sharp & Dohme)": {
       "sponsors": 0,
       "no_sponsorship": 6,
-      "not_mentioned": 3805,
-      "total": 3811,
-      "label": "Rules out sponsorship in 6 of 3811 postings",
+      "not_mentioned": 3806,
+      "total": 3812,
+      "label": "Rules out sponsorship in 6 of 3812 postings",
       "category": "explicit_negative"
     },
     "State Street": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 4321,
-      "total": 4321,
-      "label": "No sponsorship info found (4321 postings scanned)",
+      "not_mentioned": 4356,
+      "total": 4356,
+      "label": "No sponsorship info found (4356 postings scanned)",
       "category": "no_data"
     },
     "Mercer": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 2568,
-      "total": 2568,
-      "label": "No sponsorship info found (2568 postings scanned)",
+      "not_mentioned": 2588,
+      "total": 2588,
+      "label": "No sponsorship info found (2588 postings scanned)",
       "category": "no_data"
     },
     "Marsh McLennan": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 2568,
-      "total": 2568,
-      "label": "No sponsorship info found (2568 postings scanned)",
+      "not_mentioned": 2588,
+      "total": 2588,
+      "label": "No sponsorship info found (2588 postings scanned)",
       "category": "no_data"
     },
     "PwC Ireland": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 8408,
-      "total": 8408,
-      "label": "No sponsorship info found (8408 postings scanned)",
+      "not_mentioned": 8456,
+      "total": 8456,
+      "label": "No sponsorship info found (8456 postings scanned)",
       "category": "no_data"
     },
     "Arista Networks": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 1602,
-      "total": 1602,
-      "label": "No sponsorship info found (1602 postings scanned)",
+      "not_mentioned": 1616,
+      "total": 1616,
+      "label": "No sponsorship info found (1616 postings scanned)",
       "category": "no_data"
     },
     "ClickUp": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 663,
-      "total": 663,
-      "label": "No sponsorship info found (663 postings scanned)",
+      "not_mentioned": 669,
+      "total": 669,
+      "label": "No sponsorship info found (669 postings scanned)",
       "category": "no_data"
     },
     "Notion": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 1570,
-      "total": 1570,
-      "label": "No sponsorship info found (1570 postings scanned)",
+      "not_mentioned": 1586,
+      "total": 1586,
+      "label": "No sponsorship info found (1586 postings scanned)",
       "category": "no_data"
     },
     "Snowflake": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 1072,
-      "total": 1072,
-      "label": "No sponsorship info found (1072 postings scanned)",
+      "not_mentioned": 1081,
+      "total": 1081,
+      "label": "No sponsorship info found (1081 postings scanned)",
       "category": "no_data"
     },
     "AbbVie": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 1315,
-      "total": 1315,
-      "label": "No sponsorship info found (1315 postings scanned)",
+      "not_mentioned": 1331,
+      "total": 1331,
+      "label": "No sponsorship info found (1331 postings scanned)",
       "category": "no_data"
     },
     "Version 1": {
-      "sponsors": 80,
+      "sponsors": 81,
       "no_sponsorship": 0,
-      "not_mentioned": 13213,
-      "total": 13293,
-      "label": "Rarely mentions sponsorship (80 of 13293)",
+      "not_mentioned": 13336,
+      "total": 13417,
+      "label": "Rarely mentions sponsorship (81 of 13417)",
       "category": "rare_positive"
     },
     "Harvey Nash Ireland": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 966,
-      "total": 966,
-      "label": "No sponsorship info found (966 postings scanned)",
+      "not_mentioned": 974,
+      "total": 974,
+      "label": "No sponsorship info found (974 postings scanned)",
       "category": "no_data"
     },
     "Primark / Penneys": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 5109,
-      "total": 5109,
-      "label": "No sponsorship info found (5109 postings scanned)",
+      "not_mentioned": 5168,
+      "total": 5168,
+      "label": "No sponsorship info found (5168 postings scanned)",
       "category": "no_data"
     },
     "Wayflyer": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 750,
-      "total": 750,
-      "label": "No sponsorship info found (750 postings scanned)",
+      "not_mentioned": 756,
+      "total": 756,
+      "label": "No sponsorship info found (756 postings scanned)",
       "category": "no_data"
     },
     "Dillon Eustace": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 240,
-      "total": 240,
-      "label": "No sponsorship info found (240 postings scanned)",
+      "not_mentioned": 242,
+      "total": 242,
+      "label": "No sponsorship info found (242 postings scanned)",
       "category": "no_data"
     },
     "Ericsson": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 118,
-      "total": 118,
-      "label": "No sponsorship info found (118 postings scanned)",
+      "not_mentioned": 119,
+      "total": 119,
+      "label": "No sponsorship info found (119 postings scanned)",
       "category": "no_data"
     },
     "PTSB (Permanent TSB)": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 354,
-      "total": 354,
-      "label": "No sponsorship info found (354 postings scanned)",
+      "not_mentioned": 357,
+      "total": 357,
+      "label": "No sponsorship info found (357 postings scanned)",
       "category": "no_data"
     },
     "Eurofins Scientific": {
       "sponsors": 0,
-      "no_sponsorship": 90,
-      "not_mentioned": 796,
-      "total": 886,
-      "label": "Rules out sponsorship in 90 of 886 postings",
+      "no_sponsorship": 91,
+      "not_mentioned": 806,
+      "total": 897,
+      "label": "Rules out sponsorship in 91 of 897 postings",
       "category": "explicit_negative"
     },
     "Genesys": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 975,
-      "total": 975,
-      "label": "No sponsorship info found (975 postings scanned)",
+      "not_mentioned": 984,
+      "total": 984,
+      "label": "No sponsorship info found (984 postings scanned)",
       "category": "no_data"
     },
     "Mastercard": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 4025,
-      "total": 4025,
-      "label": "No sponsorship info found (4025 postings scanned)",
+      "not_mentioned": 4062,
+      "total": 4062,
+      "label": "No sponsorship info found (4062 postings scanned)",
       "category": "no_data"
     },
     "PayPal": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 230,
-      "total": 230,
-      "label": "No sponsorship info found (230 postings scanned)",
+      "not_mentioned": 231,
+      "total": 231,
+      "label": "No sponsorship info found (231 postings scanned)",
       "category": "no_data"
     },
     "Adobe": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 122,
-      "total": 122,
-      "label": "No sponsorship info found (122 postings scanned)",
+      "not_mentioned": 123,
+      "total": 123,
+      "label": "No sponsorship info found (123 postings scanned)",
       "category": "no_data"
     },
     "Sanofi": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 569,
-      "total": 569,
-      "label": "No sponsorship info found (569 postings scanned)",
+      "not_mentioned": 573,
+      "total": 573,
+      "label": "No sponsorship info found (573 postings scanned)",
       "category": "no_data"
     },
     "Elavon": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 442,
-      "total": 442,
-      "label": "No sponsorship info found (442 postings scanned)",
+      "not_mentioned": 446,
+      "total": 446,
+      "label": "No sponsorship info found (446 postings scanned)",
       "category": "no_data"
     },
     "Deloitte Ireland": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 3608,
-      "total": 3608,
-      "label": "No sponsorship info found (3608 postings scanned)",
+      "not_mentioned": 3638,
+      "total": 3638,
+      "label": "No sponsorship info found (3638 postings scanned)",
       "category": "no_data"
     },
     "Accenture": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 3815,
-      "total": 3815,
-      "label": "No sponsorship info found (3815 postings scanned)",
+      "not_mentioned": 3853,
+      "total": 3853,
+      "label": "No sponsorship info found (3853 postings scanned)",
       "category": "no_data"
     },
     "Rockwell Automation": {
@@ -25414,9 +25399,9 @@
     "Zimmer Biomet": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 223,
-      "total": 223,
-      "label": "No sponsorship info found (223 postings scanned)",
+      "not_mentioned": 226,
+      "total": 226,
+      "label": "No sponsorship info found (226 postings scanned)",
       "category": "no_data"
     },
     "Labcorp": {
@@ -25454,9 +25439,9 @@
     "HubSpot": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 3608,
-      "total": 3608,
-      "label": "No sponsorship info found (3608 postings scanned)",
+      "not_mentioned": 3649,
+      "total": 3649,
+      "label": "No sponsorship info found (3649 postings scanned)",
       "category": "no_data"
     },
     "Cisco": {
@@ -25470,9 +25455,9 @@
     "ServiceNow": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 311,
-      "total": 311,
-      "label": "No sponsorship info found (311 postings scanned)",
+      "not_mentioned": 315,
+      "total": 315,
+      "label": "No sponsorship info found (315 postings scanned)",
       "category": "no_data"
     },
     "DHL Ireland": {
@@ -25486,81 +25471,81 @@
     "Apple": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 700,
-      "total": 700,
-      "label": "No sponsorship info found (700 postings scanned)",
+      "not_mentioned": 720,
+      "total": 720,
+      "label": "No sponsorship info found (720 postings scanned)",
       "category": "no_data"
     },
     "Amazon": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 5516,
-      "total": 5516,
-      "label": "No sponsorship info found (5516 postings scanned)",
+      "not_mentioned": 5713,
+      "total": 5713,
+      "label": "No sponsorship info found (5713 postings scanned)",
       "category": "no_data"
     },
     "Google": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 1166,
-      "total": 1166,
-      "label": "No sponsorship info found (1166 postings scanned)",
+      "not_mentioned": 1289,
+      "total": 1289,
+      "label": "No sponsorship info found (1289 postings scanned)",
       "category": "no_data"
     },
     "Meta": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 100,
-      "total": 100,
-      "label": "No sponsorship info found (100 postings scanned)",
+      "not_mentioned": 110,
+      "total": 110,
+      "label": "No sponsorship info found (110 postings scanned)",
       "category": "no_data"
     },
     "EY Ireland": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 1287,
-      "total": 1287,
-      "label": "No sponsorship info found (1287 postings scanned)",
+      "not_mentioned": 1430,
+      "total": 1430,
+      "label": "No sponsorship info found (1430 postings scanned)",
       "category": "no_data"
     },
     "TikTok": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 108,
-      "total": 108,
-      "label": "No sponsorship info found (108 postings scanned)",
+      "not_mentioned": 120,
+      "total": 120,
+      "label": "No sponsorship info found (120 postings scanned)",
       "category": "no_data"
     },
     "KPMG Ireland": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 16,
-      "total": 16,
-      "label": "No sponsorship info found (16 postings scanned)",
+      "not_mentioned": 18,
+      "total": 18,
+      "label": "No sponsorship info found (18 postings scanned)",
       "category": "no_data"
     },
     "Boston Scientific": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 112,
-      "total": 112,
-      "label": "No sponsorship info found (112 postings scanned)",
+      "not_mentioned": 126,
+      "total": 126,
+      "label": "No sponsorship info found (126 postings scanned)",
       "category": "no_data"
     },
     "Johnson Controls": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 160,
-      "total": 160,
-      "label": "No sponsorship info found (160 postings scanned)",
+      "not_mentioned": 180,
+      "total": 180,
+      "label": "No sponsorship info found (180 postings scanned)",
       "category": "no_data"
     },
     "Citi": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 190,
-      "total": 190,
-      "label": "No sponsorship info found (190 postings scanned)",
+      "not_mentioned": 223,
+      "total": 223,
+      "label": "No sponsorship info found (223 postings scanned)",
       "category": "no_data"
     },
     "Microsoft": {
@@ -25582,17 +25567,17 @@
     "JPMorgan Chase": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 72,
-      "total": 72,
-      "label": "No sponsorship info found (72 postings scanned)",
+      "not_mentioned": 84,
+      "total": 84,
+      "label": "No sponsorship info found (84 postings scanned)",
       "category": "no_data"
     },
     "Oracle": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 30,
-      "total": 30,
-      "label": "No sponsorship info found (30 postings scanned)",
+      "not_mentioned": 35,
+      "total": 35,
+      "label": "No sponsorship info found (35 postings scanned)",
       "category": "no_data"
     }
   },
@@ -28523,27 +28508,27 @@
     }
   },
   "errors": [
-    "Eaton: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"12DB72MSMEIJFH\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
-    "Bausch + Lomb: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"BF2F5CMSMEJWSK\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
-    "Takeda: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"9895A1MSMEKF81\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
-    "Edwards Lifesciences: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"1546D1MSMELT95\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
-    "Teleflex: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"EE5147MSMEM8QY\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
-    "Zimmer Biomet: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"1B6E8BMSMEMPS4\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
-    "Viatris: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"A670B7MSMEN515\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
-    "Teva Pharmaceuticals: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"F56191MSMENK6W\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
-    "Jazz Pharmaceuticals: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"5AD49EMSMEO0RW\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
-    "ResMed: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"8A1D1DMSMEOGLE\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
-    "Becton Dickinson (BD): request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"B0D12DMSMEOW98\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
-    "Northern Trust: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"63A858MSMERUYN\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
-    "DXC Technology: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"B4449DMSMEU462\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
-    "Aon: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"399B8BMSMEUJU5\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
-    "Willis Towers Watson (WTW): request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"589B5EMSMEUZ9I\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})"
+    "Eaton: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"962521MSMFO631\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
+    "Bausch + Lomb: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"520286MSMFPGB4\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
+    "Takeda: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"F3B914MSMFPXFC\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
+    "Edwards Lifesciences: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"24640EMSMFQVM8\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
+    "Teleflex: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"B0D12DMSMFRA1I\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
+    "Zimmer Biomet: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"1DFC11MSMFRNUX\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
+    "Viatris: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"9E7035MSMFS21E\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
+    "Teva Pharmaceuticals: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"CB5A28MSMFSGEA\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
+    "Jazz Pharmaceuticals: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"F84C3AMSMFSWEC\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
+    "ResMed: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"85A862MSMFTAOO\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
+    "Becton Dickinson (BD): request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"589B5EMSMFTOJ3\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
+    "Northern Trust: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"520286MSMFWFS8\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
+    "DXC Technology: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"24640EMSMFYI6G\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
+    "Aon: request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"63A858MSMFYW3C\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})",
+    "Willis Towers Watson (WTW): request failed (HTTP 422: {\"errorCode\":\"HTTP_422\",\"errorCaseId\":\"F56191MSMFZB1O\",\"httpStatus\":422,\"locale\":\"en-US,en;q\\u003d0.9\",\"message\":\"\",\"messageParams\":{}})"
   ],
   "stats": {
     "total_companies": 399,
     "automated_companies": 65,
     "manual_companies": 334,
-    "live_jobs_found": 1552,
+    "live_jobs_found": 1551,
     "new_since_last_check": 0
   }
 }
