@@ -1746,19 +1746,54 @@ def scrape_google_ireland(session, fetch_descriptions=True):
             # Scroll to load everything — dynamic stability detection
             # instead of a fixed guess, since a fixed count under-loaded
             # results (confirmed: page showed "123 jobs matched" but only
-            # 27 headings were ever found). Also try clicking any visible
-            # "load more" style button, in case results are paginated
-            # rather than purely infinite-scroll.
-            last_count, stable_rounds = -1, 0
+            # 27 headings were ever found, even after longer scrolling —
+            # the list is virtualized, meaning it RECYCLES the same DOM
+            # nodes as you scroll rather than growing them, so waiting for
+            # the count to stabilize never works). Process whatever's
+            # currently on screen at EACH scroll step instead, and
+            # accumulate results across the whole scroll using the
+            # existing `seen` dedup set.
+            def process_visible_google_headings():
+                headings = page.locator("h3")
+                for i in range(headings.count()):
+                    h = headings.nth(i)
+                    title = _browser_text(h)
+                    if not title or len(title) > 200 or title.strip().lower() in _NON_JOB_HEADING_TEXTS:
+                        continue
+                    key = title.lower().strip()
+                    if key in seen:
+                        continue
+                    node = h
+                    card = ""
+                    for _ in range(4):
+                        node = node.locator("..")
+                        candidate = _browser_text(node)
+                        if candidate and len(candidate) < 500:
+                            card = candidate
+                        if card and is_ireland_location(card):
+                            break
+                    if not is_ireland_location(card):
+                        continue
+                    seen.add(key)
+                    locs = [x.strip() for x in card.splitlines() if x.strip() and is_ireland_location(x)]
+                    sponsorship, snippet = classify_sponsorship(card[:5000])
+                    results.append({
+                        "company": "Google",
+                        "title": title,
+                        "location": locs[0] if locs else "Ireland",
+                        "posted_text": "Unknown",
+                        "posted_days_ago": None,
+                        "employment_type": normalize_employment_type(None, title),
+                        "url": "https://www.google.com/about/careers/applications/jobs/results?location=Ireland",
+                        "source": "google_browser",
+                        "visa_sponsorship": sponsorship,
+                        "visa_snippet": snippet,
+                    })
+
+            process_visible_google_headings()
+            stagnant_rounds = 0
+            prev_result_count = len(results)
             for _ in range(40):
-                count = page.locator("h3").count()
-                if count == last_count:
-                    stable_rounds += 1
-                    if stable_rounds >= 4:
-                        break
-                else:
-                    stable_rounds = 0
-                last_count = count
                 for more_text in ("Show more", "Load more", "See more", "More jobs"):
                     try:
                         btn = page.get_by_role("button", name=more_text, exact=False)
@@ -1769,42 +1804,15 @@ def scrape_google_ireland(session, fetch_descriptions=True):
                         pass
                 page.mouse.wheel(0, 4000)
                 page.wait_for_timeout(700)
-            headings = page.locator("h3")
-            print(f"      [browser] Google: found {headings.count()} heading elements to check")
-            for i in range(headings.count()):
-                h = headings.nth(i)
-                title = _browser_text(h)
-                if not title or len(title) > 200 or title.strip().lower() in _NON_JOB_HEADING_TEXTS:
-                    continue
-                node = h
-                card = ""
-                for _ in range(4):
-                    node = node.locator("..")
-                    candidate = _browser_text(node)
-                    if candidate and len(candidate) < 500:
-                        card = candidate
-                    if card and is_ireland_location(card):
+                process_visible_google_headings()
+                if len(results) == prev_result_count:
+                    stagnant_rounds += 1
+                    if stagnant_rounds >= 6:
                         break
-                if not is_ireland_location(card):
-                    continue
-                key = title.lower().strip()
-                if key in seen:
-                    continue
-                seen.add(key)
-                locs = [x.strip() for x in card.splitlines() if x.strip() and is_ireland_location(x)]
-                sponsorship, snippet = classify_sponsorship(card[:5000])
-                results.append({
-                    "company": "Google",
-                    "title": title,
-                    "location": locs[0] if locs else "Ireland",
-                    "posted_text": "Unknown",
-                    "posted_days_ago": None,
-                    "employment_type": normalize_employment_type(None, title),
-                    "url": "https://www.google.com/about/careers/applications/jobs/results?location=Ireland",
-                    "source": "google_browser",
-                    "visa_sponsorship": sponsorship,
-                    "visa_snippet": snippet,
-                })
+                else:
+                    stagnant_rounds = 0
+                prev_result_count = len(results)
+            print(f"      [browser] Google: {len(results)} Ireland postings accumulated across scroll")
             browser.close()
     except Exception as e:
         print(f"      [browser] Google failed: {e}")
@@ -1878,6 +1886,28 @@ def scrape_meta_ireland(session):
                         card = candidate
                     if card and is_ireland_location(card):
                         break
+                # Real evidence: Meta shows one primary location plus a
+                # collapsed "+N locations" badge that doesn't reveal the
+                # actual list as plain text — Ireland is very likely
+                # hiding behind it for multi-location roles. Click it and
+                # check the WHOLE page afterward (popovers/tooltips often
+                # render elsewhere in the DOM, not nested in the card).
+                if not is_ireland_location(card):
+                    more_locs_match = re.search(r"\+\d+\s*locations?", card, re.I)
+                    if more_locs_match:
+                        try:
+                            badge = h.locator("..").get_by_text(more_locs_match.group(0), exact=False)
+                            if badge.count() > 0:
+                                badge.first.click(timeout=1500)
+                                page.wait_for_timeout(600)
+                                expanded = _browser_text(page.locator("body"))
+                                if is_ireland_location(expanded):
+                                    idx = expanded.lower().find("ireland")
+                                    card = expanded[max(0, idx - 100):idx + 100]
+                                page.keyboard.press("Escape")
+                                page.wait_for_timeout(200)
+                        except Exception:
+                            pass
                 if not is_ireland_location(card):
                     if len(filtered_samples) < 5:
                         filtered_samples.append(f"title={title!r} card={card[:150]!r}")
