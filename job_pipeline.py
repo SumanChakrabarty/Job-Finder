@@ -67,6 +67,14 @@ except ImportError:
           "may fail with 400/422 errors that curl_cffi's browser-TLS impersonation "
           "can get past. Install with: pip install curl_cffi")
 
+try:
+    from playwright.sync_api import sync_playwright
+    HAS_PLAYWRIGHT = True
+except ImportError:
+    HAS_PLAYWRIGHT = False
+    print("Note: 'playwright' not installed — Google/Meta browser connectors disabled. "
+          "Install with: pip install playwright && python -m playwright install chromium")
+
 IRELAND_LOCATION_HINTS = [
     "ireland", "dublin", "cork", "galway", "limerick", "waterford",
     "kilkenny", "kildare", "leinster", "munster", "belfast", "shannon",
@@ -1540,155 +1548,123 @@ def scrape_amazon_ireland(session):
     return results
 
 
-def _walk_meta_job_objects(node, found=None):
-    """Find job-shaped objects inside Meta's page data without depending
-    on unstable React/Next component names."""
-    if found is None:
-        found = []
-    if isinstance(node, dict):
-        keys = {str(k).lower() for k in node.keys()}
-        if any(k in keys for k in ("jobid", "job_id", "jobidstr")) and any(k in keys for k in ("title", "jobtitle", "name")):
-            found.append(node)
-        for value in node.values():
-            _walk_meta_job_objects(value, found)
-    elif isinstance(node, list):
-        for value in node:
-            _walk_meta_job_objects(value, found)
-    return found
+def _browser_text(locator):
+    try:
+        return re.sub(r"\s+", " ", locator.inner_text(timeout=3000)).strip()
+    except Exception:
+        return ""
 
 
-def scrape_meta_ireland(session):
-    """LOW CONFIDENCE — try with real skepticism, not optimism. The only
-    confirmed-working technique for Meta requires a real browser (their
-    job data loads via a separate async GraphQL call after the page
-    renders, confirmed by a working reference that has to wait and
-    intercept that specific follow-up request). This checks whether their
-    initial page load ALSO happens to embed a usable copy of that data
-    (a real, different technique — common for Next.js sites — just with
-    no positive evidence it applies here). Cheap and safe to try since it
-    fails to an empty list rather than guessing wrong; do not be surprised
-    if this finds nothing."""
+def _browser_job_links(page, fragment):
+    """Scrolls until the number of matching links stabilizes — handles
+    infinite-scroll/lazy-loaded job lists instead of assuming everything
+    is present on initial load."""
+    stable, last = 0, -1
+    for _ in range(25):
+        count = page.locator(f'a[href*="{fragment}"]').count()
+        stable = stable + 1 if count == last else 0
+        last = count
+        if stable >= 3:
+            break
+        page.mouse.wheel(0, 5000)
+        page.wait_for_timeout(1200)
+    return page.locator(f'a[href*="{fragment}"]')
+
+
+def _browser_card(anchor):
+    """Walks up the DOM from a job link to find its surrounding card text
+    (title + location) — reads what's actually rendered on screen rather
+    than guessing at an underlying API's data shape."""
+    text = ""
+    node = anchor
+    for _ in range(7):
+        node = node.locator("..")
+        candidate = _browser_text(node)
+        if candidate and len(candidate) < 2500:
+            text = candidate
+        if candidate and is_ireland_location(candidate):
+            break
+    return text
+
+
+def _browser_scrape_jobs(company_name, url, link_fragment, source_tag):
+    """Generic real-browser job scraper — works the same way regardless of
+    whether the underlying site uses GraphQL, a REST API, or anything
+    else, because it reads the actual rendered page rather than
+    replicating a specific backend contract. This is the technique that
+    replaced two earlier, more fragile attempts (a guessed Google RPC
+    call, and a Meta-specific GraphQL network-interception approach) —
+    both were tied to one company's exact internal API shape and broke or
+    never worked; this one is shared and more resilient to change."""
+    if not HAS_PLAYWRIGHT:
+        return []
     results, seen = [], set()
     try:
-        resp = session.get("https://www.metacareers.com/jobs/?location=Ireland", headers=HEADERS, timeout=15)
-        if resp.status_code != 200:
-            return []
-        page = resp.text
-    except Exception:
-        return []
-
-    scripts = re.findall(r'<script[^>]+id=["\']__NEXT_DATA__["\'][^>]*>(.*?)</script>', page, flags=re.I | re.S)
-    for raw in scripts:
-        try:
-            parsed = json.loads(html.unescape(raw).strip())
-        except Exception:
-            continue
-        for listing in _walk_meta_job_objects(parsed):
-            title = str(listing.get("title") or listing.get("jobTitle") or listing.get("name") or "").strip()
-            job_id = str(listing.get("id") or listing.get("job_id") or listing.get("jobIdStr") or "").strip()
-            locations = listing.get("locations") or listing.get("location") or ""
-            if isinstance(locations, list):
-                location = ", ".join(str(x) for x in locations)
-            elif isinstance(locations, dict):
-                location = ", ".join(str(v) for v in locations.values() if v)
-            else:
-                location = str(locations)
-            if not title or not job_id or job_id in seen or not is_ireland_location(location):
-                continue
-            seen.add(job_id)
-            description = str(listing.get("description") or "")
-            sponsorship, snippet = classify_sponsorship(description[:5000])
-            results.append({
-                "company": "Meta",
-                "title": title,
-                "location": location,
-                "posted_text": "Unknown",
-                "posted_days_ago": None,
-                "employment_type": normalize_employment_type(None, title),
-                "url": f"https://www.metacareers.com/jobs/{job_id}/",
-                "source": "meta_nextdata",
-                "visa_sponsorship": sponsorship,
-                "visa_snippet": snippet,
-            })
-        if results:
-            break
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch(headless=True)
+            page = browser.new_page(viewport={"width": 1440, "height": 1000}, locale="en-IE")
+            page.goto(url, wait_until="domcontentloaded", timeout=60000)
+            page.wait_for_timeout(4000)
+            links = _browser_job_links(page, link_fragment)
+            for i in range(links.count()):
+                a = links.nth(i)
+                href = urllib.parse.urljoin(url, a.get_attribute("href") or "")
+                if not href or href in seen:
+                    continue
+                card = _browser_card(a)
+                if not is_ireland_location(card):
+                    continue
+                title = _browser_text(a)
+                if not title or len(title) > 300:
+                    lines = [x.strip() for x in card.splitlines() if x.strip()]
+                    title = next((x for x in lines if 4 <= len(x) <= 180 and not is_ireland_location(x)), "")
+                if not title:
+                    continue
+                locs = [x.strip() for x in card.splitlines() if x.strip() and is_ireland_location(x)]
+                seen.add(href)
+                description = card[:5000]
+                sponsorship, snippet = classify_sponsorship(description)
+                results.append({
+                    "company": company_name,
+                    "title": title,
+                    "location": locs[0] if locs else "Ireland",
+                    "posted_text": "Unknown",
+                    "posted_days_ago": None,
+                    "employment_type": normalize_employment_type(None, title),
+                    "url": href,
+                    "source": source_tag,
+                    "visa_sponsorship": sponsorship,
+                    "visa_snippet": snippet,
+                })
+            browser.close()
+    except Exception as e:
+        print(f"      [browser] {company_name} failed: {e}")
     return results
 
 
 def scrape_google_ireland(session, fetch_descriptions=True):
-    """Google's careers page has no public API — but its own frontend calls
-    an internal RPC endpoint ('batchexecute', a pattern used across many
-    Google products, not just careers) to load job data. Adapted from a
-    real, working open-source reference implementation — not guessed.
-    Response format is unusual (anti-hijacking prefix + double-JSON-
-    encoded payload + fields addressed by position in a nested array), so
-    every step here is defensively wrapped: if any assumption about the
-    exact response shape is wrong, this fails gracefully to an empty list
-    rather than crashing or producing garbage data. Bounded to a fixed
-    number of pages — same lesson as everywhere else this session, never
-    ship an unbounded loop again."""
-    url = "https://www.google.com/about/careers/applications/_/HiringCportalFrontendUi/data/batchexecute"
-    headers = {**HEADERS, "Content-Type": "application/x-www-form-urlencoded"}
-    results, seen = [], set()
+    if not HAS_PLAYWRIGHT:
+        print("      [google] playwright not installed — skipping Google (see requirements.txt)")
+        return []
+    return _browser_scrape_jobs(
+        "Google",
+        "https://www.google.com/about/careers/applications/jobs/results?location=Ireland",
+        "/about/careers/applications/jobs/results/",
+        "google_browser",
+    )
 
-    for page_no in range(1, 8):  # bounded — matches the reference implementation's intent, capped hard
-        try:
-            payload = {
-                "f.req": ('[[["r06xKb","[[null,[],[],[],null,null,[],{},null,null,null,null,null,[],[],null,[2]]]",'
-                           f'null,"{page_no}"]]]')
-            }
-            resp = session.post(url, data=payload, headers=headers, timeout=10)
-            if resp.status_code != 200:
-                break
-            lines = resp.text.splitlines()
-            if len(lines) < 3:
-                break
-            inner = json.loads("\n".join(lines[2:]))
-            page_data = json.loads(inner[0][2])
-        except Exception:
-            break
 
-        try:
-            job_rows = page_data[0]
-        except Exception:
-            break
-        if not job_rows:
-            break
+def scrape_meta_ireland(session):
+    if not HAS_PLAYWRIGHT:
+        print("      [meta] playwright not installed — skipping Meta (see requirements.txt)")
+        return []
+    return _browser_scrape_jobs(
+        "Meta",
+        "https://www.metacareers.com/jobs/?q=&location=Ireland",
+        "/profile/job_details/",
+        "meta_browser",
+    )
 
-        new_this_page = 0
-        for row in job_rows:
-            try:
-                job_id = row[0]
-                title = row[1]
-                location = row[8] if len(row) > 8 else ""
-                description = ""
-                if len(row) > 3 and isinstance(row[3], list) and len(row[3]) > 1:
-                    description = row[3][1] or ""
-            except Exception:
-                continue
-            if not title or not job_id or job_id in seen:
-                continue
-            if not is_ireland_location(str(location)):
-                continue
-            seen.add(job_id)
-            new_this_page += 1
-            sponsorship, snippet = classify_sponsorship(str(description)[:5000])
-            results.append({
-                "company": "Google",
-                "title": str(title).strip(),
-                "location": str(location),
-                "posted_text": "Unknown",
-                "posted_days_ago": None,
-                "employment_type": normalize_employment_type(None, str(title)),
-                "url": f"https://www.google.com/about/careers/applications/jobs/results/{job_id}",
-                "source": "google_rpc",
-                "visa_sponsorship": sponsorship,
-                "visa_snippet": snippet,
-            })
-        if new_this_page == 0:
-            break
-        time.sleep(0.3)
-    return results
 
 
 def scrape_jsonld_jobpostings(url, company_name, session):
@@ -2190,17 +2166,18 @@ def main():
 
     google_entry = next((c for c in manual_check if c["company"].strip().lower() == "google"), None)
     if google_entry:
-        print("\nTrying direct HTML scrape for Google (lower confidence than Apple — real but "
-              "weaker evidence the page is server-rendered; will gracefully find nothing if not)...")
+        print("\nTrying Google via real browser automation (reads the actual rendered page — "
+              "no API guessing, more resilient to backend changes than the two earlier attempts "
+              "that guessed at a specific hidden endpoint and didn't work)...")
         google_jobs = scrape_google_ireland(session)
         if google_jobs:
-            print(f"  -> Google: {len(google_jobs)} Ireland postings found via direct scrape")
+            print(f"  -> Google: {len(google_jobs)} Ireland postings found")
             for job in google_jobs:
                 job["company"] = google_entry["company"]
             live_jobs.extend(google_jobs)
             manual_check = [c for c in manual_check if c is not google_entry]
         else:
-            print("  -> Google: scrape ran but found nothing this time")
+            print("  -> Google: found nothing this time")
 
     amazon_entry = next((c for c in manual_check if c["company"].strip().lower().startswith("amazon")), None)
     if amazon_entry:
@@ -2219,19 +2196,19 @@ def main():
 
     meta_entry = next((c for c in manual_check if c["company"].strip().lower().startswith("meta")), None)
     if meta_entry:
-        print("\nTrying Meta (LOW CONFIDENCE — the only confirmed-working technique needs a "
-              "real browser, which this pipeline doesn't run; this checks a different, cheaper "
-              "possibility with no positive evidence yet, so finding nothing is the expected "
-              "outcome, not a failure)...")
+        print("\nTrying Meta via real browser automation (same technique as Google — reads the "
+              "actual rendered page rather than replicating their internal GraphQL contract, "
+              "which is more resilient if that contract changes)...")
         meta_jobs = scrape_meta_ireland(session)
         if meta_jobs:
-            print(f"  -> Meta: {len(meta_jobs)} Ireland postings found (better luck than expected!)")
+            print(f"  -> Meta: {len(meta_jobs)} Ireland postings found")
             for job in meta_jobs:
                 job["company"] = meta_entry["company"]
             live_jobs.extend(meta_jobs)
             manual_check = [c for c in manual_check if c is not meta_entry]
         else:
-            print("  -> Meta: found nothing, as expected given low confidence going in")
+            print("  -> Meta: found nothing this time (browser automation failed, or genuinely "
+                  "zero current Ireland postings)")
 
     jsonld_cache_path = "jsonld_cache.json"
     jsonld_cache = {}
