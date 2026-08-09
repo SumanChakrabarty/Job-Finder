@@ -1625,6 +1625,18 @@ def _browser_scrape_jobs(company_name, url, link_fragment, source_tag):
             links = _browser_job_links(page, link_fragment)
             print(f"      [browser] {company_name}: consent banner clicked={consent_clicked}, "
                   f"matching links found={links.count()}")
+            if links.count() == 0:
+                # Zero links at all — the URL/page-structure assumption is
+                # likely wrong. Show what's actually there instead of
+                # guessing blind a third time.
+                try:
+                    print(f"      [browser] {company_name}: actual page title = {page.title()!r}, "
+                          f"final URL = {page.url!r}")
+                    body_sample = _browser_text(page.locator("body"))[:300]
+                    print(f"      [browser] {company_name}: body text sample = {body_sample!r}")
+                except Exception as e:
+                    print(f"      [browser] {company_name}: couldn't read page for diagnostics ({e})")
+            filtered_out_samples = []
             for i in range(links.count()):
                 a = links.nth(i)
                 href = urllib.parse.urljoin(url, a.get_attribute("href") or "")
@@ -1632,6 +1644,8 @@ def _browser_scrape_jobs(company_name, url, link_fragment, source_tag):
                     continue
                 card = _browser_card(a)
                 if not is_ireland_location(card):
+                    if len(filtered_out_samples) < 3:
+                        filtered_out_samples.append(card[:200])
                     continue
                 title = _browser_text(a)
                 if not title or len(title) > 300:
@@ -1655,6 +1669,11 @@ def _browser_scrape_jobs(company_name, url, link_fragment, source_tag):
                     "visa_sponsorship": sponsorship,
                     "visa_snippet": snippet,
                 })
+            if not results and filtered_out_samples:
+                print(f"      [browser] {company_name}: {len(filtered_out_samples)} sample card(s) "
+                      f"that got filtered out for not matching an Ireland location:")
+                for s in filtered_out_samples:
+                    print(f"      [browser]   -> {s!r}")
             browser.close()
     except Exception as e:
         print(f"      [browser] {company_name} failed: {e}")
