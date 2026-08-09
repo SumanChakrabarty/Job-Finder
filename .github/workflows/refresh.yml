@@ -2,12 +2,15 @@ name: refresh-jobs
 
 on:
   schedule:
+    # GitHub's practical minimum reliable interval is ~15 min; it can lag
+    # a few minutes further during busy periods — that's normal for free
+    # scheduled Actions, not a bug in this workflow.
     - cron: '*/15 * * * *'
-  workflow_dispatch: {}
+  workflow_dispatch: {}   # lets you trigger a run manually from the Actions tab
 
 permissions:
-  contents: write
-  issues: write
+  contents: write   # to commit jobs.json back to the repo
+  issues: write      # to open the "new jobs found" notification issue
 
 jobs:
   refresh:
@@ -20,12 +23,14 @@ jobs:
           python-version: '3.11'
 
       - name: Install dependencies
-        run: pip install requests openpyxl curl_cffi
+        run: |
+          pip install requests openpyxl curl_cffi playwright
+          python -m playwright install --with-deps chromium
 
       - name: Run job pipeline
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: python job_pipeline.py
+        run: python -u job_pipeline.py
 
       - name: Commit updated data files
         run: |
