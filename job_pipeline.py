@@ -1548,6 +1548,20 @@ def scrape_amazon_ireland(session):
     return results
 
 
+# Filter/UI section headings that show up as real <h1-h3> elements on
+# these career pages but are never actual job titles — confirmed via
+# direct evidence (a real run returned "Locations", "Experience", "Degree"
+# etc. as if they were postings, because the filter sidebar's applied-
+# filter chip literally displays "Ireland" as text, passing the location
+# check even though it has nothing to do with any real job).
+_NON_JOB_HEADING_TEXTS = {
+    "locations", "location", "experience", "skills & qualifications", "skills and qualifications",
+    "degree", "job types", "job type", "organizations", "organization", "sort by", "filters",
+    "filter", "clear all", "search", "featured jobs", "results", "refine your search",
+    "expand_less", "expand_more", "info_outline", "remove", "which location(s) do you prefer?",
+}
+
+
 def _browser_text(locator):
     try:
         return re.sub(r"\s+", " ", locator.inner_text(timeout=3000)).strip()
@@ -1738,7 +1752,7 @@ def scrape_google_ireland(session, fetch_descriptions=True):
             for i in range(headings.count()):
                 h = headings.nth(i)
                 title = _browser_text(h)
-                if not title or len(title) > 200:
+                if not title or len(title) > 200 or title.strip().lower() in _NON_JOB_HEADING_TEXTS:
                     continue
                 node = h
                 card = ""
@@ -1776,15 +1790,78 @@ def scrape_google_ireland(session, fetch_descriptions=True):
 
 
 def scrape_meta_ireland(session):
+    """Rebuilt using the same technique that just worked for Google (16
+    real postings found) instead of continuing to adjust the fragile
+    link-then-walk-up-the-DOM approach, which struggled twice in a row —
+    real evidence showed it either landed on a shared multi-job container
+    or found nothing at all, most likely because location info for some
+    listings sits behind a collapsed "+21 locations" style control that
+    isn't present as plain text until expanded."""
     if not HAS_PLAYWRIGHT:
         print("      [meta] playwright not installed — skipping Meta (see requirements.txt)")
         return []
-    return _browser_scrape_jobs(
-        "Meta",
-        "https://www.metacareers.com/jobs/?q=&location=Ireland",
-        "/profile/job_details/",
-        "meta_browser",
-    )
+    results, seen = [], set()
+    try:
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch(headless=True)
+            page = browser.new_page(viewport={"width": 1440, "height": 1000}, locale="en-IE")
+            page.goto("https://www.metacareers.com/jobs/?q=&location=Ireland",
+                       wait_until="domcontentloaded", timeout=60000)
+            page.wait_for_timeout(2000)
+            for consent_text in ("Accept all", "Accept All", "I agree", "I Agree", "Accept",
+                                  "Allow all", "Allow All", "Got it", "OK"):
+                try:
+                    btn = page.get_by_role("button", name=consent_text, exact=False)
+                    if btn.count() > 0:
+                        btn.first.click(timeout=2000)
+                        page.wait_for_timeout(1000)
+                        break
+                except Exception:
+                    continue
+            page.wait_for_timeout(2000)
+            for _ in range(15):
+                page.mouse.wheel(0, 4000)
+                page.wait_for_timeout(800)
+            headings = page.locator("h1, h2, h3")
+            print(f"      [browser] Meta: found {headings.count()} heading elements to check")
+            for i in range(headings.count()):
+                h = headings.nth(i)
+                title = _browser_text(h)
+                if not title or len(title) > 200 or title.strip().lower() in _NON_JOB_HEADING_TEXTS:
+                    continue
+                node = h
+                card = ""
+                for _ in range(4):
+                    node = node.locator("..")
+                    candidate = _browser_text(node)
+                    if candidate and len(candidate) < 500:
+                        card = candidate
+                    if card and is_ireland_location(card):
+                        break
+                if not is_ireland_location(card):
+                    continue
+                key = title.lower().strip()
+                if key in seen:
+                    continue
+                seen.add(key)
+                locs = [x.strip() for x in card.splitlines() if x.strip() and is_ireland_location(x)]
+                sponsorship, snippet = classify_sponsorship(card[:5000])
+                results.append({
+                    "company": "Meta",
+                    "title": title,
+                    "location": locs[0] if locs else "Ireland",
+                    "posted_text": "Unknown",
+                    "posted_days_ago": None,
+                    "employment_type": normalize_employment_type(None, title),
+                    "url": "https://www.metacareers.com/jobs/?q=&location=Ireland",
+                    "source": "meta_browser",
+                    "visa_sponsorship": sponsorship,
+                    "visa_snippet": snippet,
+                })
+            browser.close()
+    except Exception as e:
+        print(f"      [browser] Meta failed: {e}")
+    return results
 
 
 
