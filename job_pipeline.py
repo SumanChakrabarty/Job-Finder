@@ -1795,28 +1795,33 @@ def _collect_filtered_page_jobs(page, company_name, href_regex, source_tag,
 
 def scrape_google_ireland(session, fetch_descriptions=True):
     """Collect Google jobs whose Google Careers search is filtered to
-    Ireland. Google paginates search results (20/page) rather than
-    infinite-scrolling everything into the DOM at once (confirmed: scroll-
-    based accumulation plateaued at the same count regardless of how long
-    it scrolled) — walks explicit ?page=N result pages instead, and
-    deduplicates by the stable numeric job URL."""
+    Ireland. Uses explicit ?page=N pagination (confirmed more reliable
+    than scroll-based accumulation, which plateaued regardless of scroll
+    time). Reads job TITLES FROM HEADINGS rather than per-job links —
+    real evidence showed Google, unlike Meta, doesn't expose individual
+    job listings as distinct clickable links with unique hrefs (an href-
+    based version of this function found 0 real results across 2 pages,
+    while this heading-based approach has confirmed real hits before).
+    Trusts the page-level ?location=Ireland filter for location, the same
+    principle that fixed Meta, rather than requiring 'Ireland' literally
+    inside each heading's nearby text."""
     if not HAS_PLAYWRIGHT:
         print("      [google] playwright not installed — skipping")
         return []
 
     base = "https://www.google.com/about/careers/applications/jobs/results"
-    results_by_url = {}
+    seen_titles, results = set(), []
     try:
         with sync_playwright() as pw:
             browser = pw.chromium.launch(headless=True)
             page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
 
-            empty_or_repeat_pages = 0
-            for page_no in range(1, 101):  # hard safety ceiling
+            empty_pages = 0
+            for page_no in range(1, 31):  # hard safety ceiling
                 query = urllib.parse.urlencode({"location": "Ireland", "page": page_no})
                 url = f"{base}?{query}"
                 page.goto(url, wait_until="domcontentloaded", timeout=60000)
-                page.wait_for_timeout(1200)
+                page.wait_for_timeout(1500)
 
                 if page_no == 1:
                     for consent_text in ("Accept all", "Accept All", "I agree", "I Agree", "Accept",
@@ -1830,27 +1835,57 @@ def scrape_google_ireland(session, fetch_descriptions=True):
                         except Exception:
                             pass
 
-                before = len(results_by_url)
-                _collect_filtered_page_jobs(
-                    page, "Google",
-                    r"/about/careers/applications/jobs/results/\d+(?:-|/|$)",
-                    "google_browser", results_by_url, "Ireland"
-                )
-                added = len(results_by_url) - before
-                print(f"      [google] page {page_no}: +{added} jobs ({len(results_by_url)} total)")
-
+                before = len(results)
+                headings = page.locator("h3")
+                for i in range(headings.count()):
+                    h = headings.nth(i)
+                    title = _browser_text(h)
+                    if not title or len(title) > 200 or title.strip().lower() in _NON_JOB_HEADING_TEXTS:
+                        continue
+                    key = title.lower().strip()
+                    if key in seen_titles:
+                        continue
+                    seen_titles.add(key)
+                    node = h
+                    card = ""
+                    for _ in range(4):
+                        node = node.locator("..")
+                        candidate = _browser_text(node)
+                        if candidate and len(candidate) < 500:
+                            card = candidate
+                        if candidate and len(candidate) >= 30:
+                            break
+                    # Trust the page-level Ireland filter — don't require
+                    # 'Ireland' literally in the card text (same fix that
+                    # rescued Meta's real postings from being dropped).
+                    location = _extract_location_from_card(card, "Ireland")
+                    sponsorship, snippet = classify_sponsorship(card[:5000])
+                    results.append({
+                        "company": "Google",
+                        "title": title,
+                        "location": location,
+                        "posted_text": "Unknown",
+                        "posted_days_ago": None,
+                        "employment_type": normalize_employment_type(None, title),
+                        "url": url,
+                        "source": "google_browser",
+                        "visa_sponsorship": sponsorship,
+                        "visa_snippet": snippet,
+                    })
+                added = len(results) - before
+                print(f"      [google] page {page_no}: +{added} jobs ({len(results)} total)")
                 if added == 0:
-                    empty_or_repeat_pages += 1
+                    empty_pages += 1
                 else:
-                    empty_or_repeat_pages = 0
-                if empty_or_repeat_pages >= 2:
+                    empty_pages = 0
+                if empty_pages >= 2:
                     break
 
             browser.close()
     except Exception as e:
         print(f"      [google] browser scrape failed: {e}")
 
-    return list(results_by_url.values())
+    return results
 
 
 def scrape_meta_ireland(session):
@@ -1938,6 +1973,177 @@ def scrape_meta_ireland(session):
 
 
 
+
+
+def _browser_accept_consent(page):
+    for consent_text in ("Accept all", "Accept All", "I agree", "I Agree", "Accept",
+                         "Allow all", "Allow All", "Got it", "OK"):
+        try:
+            btn = page.get_by_role("button", name=consent_text, exact=False)
+            if btn.count() and btn.first.is_visible():
+                btn.first.click(timeout=1500)
+                page.wait_for_timeout(400)
+                return True
+        except Exception:
+            pass
+    return False
+
+
+def _collect_links_from_html(page, company_name, href_regex, source_tag,
+                             results_by_url, default_location="Ireland"):
+    """Fallback for pages where job cards are server-rendered but Playwright
+    locators do not expose the link cleanly — parses the raw page markup
+    directly instead of going through Playwright's DOM query layer, which
+    can miss links a plain regex over the actual HTML still catches."""
+    try:
+        markup = page.content()
+    except Exception:
+        return
+    rx = re.compile(r'<a\b[^>]*href=["\']([^"\']+)["\'][^>]*>(.*?)</a>', re.I | re.S)
+    href_re = re.compile(href_regex, re.I)
+    for raw_href, body in rx.findall(markup):
+        href = urllib.parse.urljoin(page.url, html.unescape(raw_href))
+        if not href_re.search(href) or href in results_by_url:
+            continue
+        title = _html_to_text(body)
+        if not title or title.lower() in _NON_JOB_HEADING_TEXTS or len(title) > 300:
+            continue
+        sponsorship, snippet = classify_sponsorship("")
+        results_by_url[href] = {
+            "company": company_name,
+            "title": title,
+            "location": default_location,
+            "posted_text": "Unknown",
+            "posted_days_ago": None,
+            "employment_type": normalize_employment_type(None, title),
+            "url": href,
+            "source": source_tag,
+            "visa_sponsorship": sponsorship,
+            "visa_snippet": snippet,
+        }
+
+
+def scrape_ey_ireland(session):
+    """EY uses SAP SuccessFactors — confirmed earlier to have no free public
+    API, which only mattered for a requests-based approach. Real browser
+    automation doesn't need an API, it just reads the page like a human
+    would, so the earlier 'no API' conclusion doesn't block this. Walks
+    SuccessFactors' locationsearch + startrow pagination."""
+    if not HAS_PLAYWRIGHT:
+        print("      [ey] playwright not installed — skipping")
+        return []
+    base = "https://careers.ey.com/ey/search/"
+    results = {}
+    try:
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch(headless=True)
+            page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
+            stagnant = 0
+            for startrow in range(0, 2500, 25):
+                url = base + "?" + urllib.parse.urlencode({"q": "", "locationsearch": "Ireland", "startrow": startrow})
+                page.goto(url, wait_until="domcontentloaded", timeout=60000)
+                page.wait_for_timeout(1000)
+                if startrow == 0:
+                    _browser_accept_consent(page)
+                before = len(results)
+                _collect_filtered_page_jobs(page, "EY Ireland", r"careers\.ey\.com/ey/job/", "ey_successfactors", results, "Ireland")
+                _collect_links_from_html(page, "EY Ireland", r"careers\.ey\.com/ey/job/", "ey_successfactors", results, "Ireland")
+                added = len(results) - before
+                print(f"      [ey] startrow={startrow}: +{added} jobs ({len(results)} total)")
+                stagnant = stagnant + 1 if added == 0 else 0
+                if stagnant >= 2:
+                    break
+            browser.close()
+    except Exception as e:
+        print(f"      [ey] browser scrape failed: {e}")
+    return list(results.values())
+
+
+def scrape_kpmg_ireland(session):
+    """KPMG Ireland's live experienced-hire board is Avature — same story
+    as EY: no free API, but browser automation doesn't need one. Walks
+    Avature's folderOffset pagination."""
+    if not HAS_PLAYWRIGHT:
+        print("      [kpmg] playwright not installed — skipping")
+        return []
+    base = "https://kpmgireland.avature.net/experiencedhires/SearchJobs/"
+    results = {}
+    try:
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch(headless=True)
+            page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
+            stagnant = 0
+            for offset in range(0, 1000, 10):
+                url = base + "?" + urllib.parse.urlencode({"folderOffset": offset})
+                page.goto(url, wait_until="domcontentloaded", timeout=60000)
+                page.wait_for_timeout(900)
+                if offset == 0:
+                    _browser_accept_consent(page)
+                before = len(results)
+                _collect_filtered_page_jobs(page, "KPMG Ireland", r"kpmgireland\.avature\.net/experiencedhires/(?:JobDetail|jobdetail)", "kpmg_avature", results, "Ireland")
+                _collect_links_from_html(page, "KPMG Ireland", r"kpmgireland\.avature\.net/experiencedhires/(?:JobDetail|jobdetail)", "kpmg_avature", results, "Ireland")
+                added = len(results) - before
+                print(f"      [kpmg] folderOffset={offset}: +{added} jobs ({len(results)} total)")
+                stagnant = stagnant + 1 if added == 0 else 0
+                if stagnant >= 2:
+                    break
+            browser.close()
+    except Exception as e:
+        print(f"      [kpmg] browser scrape failed: {e}")
+    return list(results.values())
+
+
+def scrape_tiktok_ireland(session):
+    """TikTok's current careers frontend is lifeattiktok.com (different
+    from the older careers.tiktok.com custom-token URLs checked earlier
+    this session — real evidence they've since moved to a more
+    conventional, searchable board). Uses the site's own real search box."""
+    if not HAS_PLAYWRIGHT:
+        print("      [tiktok] playwright not installed — skipping")
+        return []
+    results = {}
+    try:
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch(headless=True)
+            page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
+            page.goto("https://lifeattiktok.com/search", wait_until="domcontentloaded", timeout=60000)
+            page.wait_for_timeout(1200)
+            _browser_accept_consent(page)
+            try:
+                inp = page.get_by_placeholder(re.compile(r"Enter Title, Skill, or City", re.I))
+                if inp.count():
+                    inp.first.fill("Dublin")
+                    btn = page.get_by_role("button", name=re.compile(r"Search now|Search", re.I))
+                    if btn.count():
+                        btn.first.click(timeout=3000)
+                        page.wait_for_timeout(1400)
+            except Exception:
+                pass
+
+            stagnant, previous = 0, 0
+            for _ in range(120):
+                _collect_filtered_page_jobs(page, "TikTok Ireland", r"lifeattiktok\.com/search/\d+", "tiktok_browser", results, "Dublin, Ireland")
+                _collect_links_from_html(page, "TikTok Ireland", r"lifeattiktok\.com/search/\d+", "tiktok_browser", results, "Dublin, Ireland")
+                for txt in ("Load more", "Show more", "See more", "More jobs"):
+                    try:
+                        b = page.get_by_role("button", name=txt, exact=False)
+                        if b.count() and b.first.is_visible():
+                            b.first.click(timeout=1000)
+                            page.wait_for_timeout(350)
+                    except Exception:
+                        pass
+                page.mouse.wheel(0, 3000)
+                page.wait_for_timeout(350)
+                current = len(results)
+                stagnant = stagnant + 1 if current == previous else 0
+                previous = current
+                if stagnant >= 6:
+                    break
+            print(f"      [tiktok] {len(results)} unique Ireland jobs accumulated")
+            browser.close()
+    except Exception as e:
+        print(f"      [tiktok] browser scrape failed: {e}")
+    return list(results.values())
 
 
 def scrape_jsonld_jobpostings(url, company_name, session):
@@ -2482,6 +2688,27 @@ def main():
         else:
             print("  -> Meta: found nothing this time (browser automation failed, or genuinely "
                   "zero current Ireland postings)")
+
+    browser_targets = [
+        ("ey", scrape_ey_ireland, "EY (SuccessFactors — no free API, but browser automation "
+                                    "doesn't need one, it just reads the page)"),
+        ("kpmg", scrape_kpmg_ireland, "KPMG (Avature — same story as EY)"),
+        ("tiktok", scrape_tiktok_ireland, "TikTok (moved to a searchable board since last checked)"),
+    ]
+    for prefix, scraper_fn, description in browser_targets:
+        entry = next((c for c in manual_check if c["company"].strip().lower().startswith(prefix)), None)
+        if not entry:
+            continue
+        print(f"\nTrying {entry['company']} via real browser automation — {description}...")
+        found_jobs = scraper_fn(session)
+        if found_jobs:
+            print(f"  -> {entry['company']}: {len(found_jobs)} Ireland postings found")
+            for job in found_jobs:
+                job["company"] = entry["company"]
+            live_jobs.extend(found_jobs)
+            manual_check = [c for c in manual_check if c is not entry]
+        else:
+            print(f"  -> {entry['company']}: found nothing this time")
 
     jsonld_cache_path = "jsonld_cache.json"
     jsonld_cache = {}
