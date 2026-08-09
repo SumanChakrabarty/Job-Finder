@@ -1712,233 +1712,231 @@ def _browser_scrape_jobs(company_name, url, link_fragment, source_tag):
     return results
 
 
+def _extract_location_from_card(card_text, default="Ireland"):
+    """Best-effort location extraction for already location-filtered career
+    pages. Important: Google/Meta virtualized result cards do not always
+    expose the location text in the same DOM subtree as the title/link.
+    Because the page itself is explicitly filtered to Ireland, lack of
+    visible location text is NOT a reason to discard the posting — this
+    was the actual bug that made real Meta postings disappear (location
+    hidden behind a collapsed '+N locations' control). Prefers a specific
+    city when visible, otherwise safely falls back to the default."""
+    lines = [x.strip() for x in (card_text or "").splitlines() if x.strip()]
+    for line in lines:
+        if is_ireland_location(line):
+            return line[:180]
+    return default
+
+
+def _collect_filtered_page_jobs(page, company_name, href_regex, source_tag,
+                                 results_by_url, default_location="Ireland"):
+    """Collect job links currently rendered on a location-filtered page.
+    Intentionally TRUSTS the page-level location filter already applied
+    via the URL, rather than re-verifying 'Ireland' appears in each card's
+    visible text — that redundant re-check was the actual bug (confirmed
+    by real evidence) silently dropping genuine Ireland postings whenever
+    a site didn't render location as plain text in the card."""
+    href_re = re.compile(href_regex, re.I)
+    anchors = page.locator("a[href]")
+    for i in range(anchors.count()):
+        a = anchors.nth(i)
+        try:
+            raw_href = a.get_attribute("href") or ""
+            href = urllib.parse.urljoin(page.url, raw_href)
+        except Exception:
+            continue
+        if not href_re.search(href) or href in results_by_url:
+            continue
+
+        title = _browser_text(a).strip()
+        card = ""
+        node = a
+        for _ in range(5):
+            try:
+                node = node.locator("..")
+                candidate = _browser_text(node)
+            except Exception:
+                break
+            if candidate and len(candidate) <= 1600:
+                card = candidate
+            if card and len(card) >= 30:
+                break
+
+        # Meta often puts the title in a sibling/parent element while the
+        # actual link text is empty — prefer a nearby heading in that case.
+        if not title or len(title) > 260:
+            try:
+                hs = node.locator("h1, h2, h3, h4")
+                if hs.count():
+                    title = _browser_text(hs.first).strip()
+            except Exception:
+                pass
+        if not title:
+            lines = [x.strip() for x in card.splitlines() if 3 < len(x.strip()) <= 220]
+            title = lines[0] if lines else ""
+        if not title or title.lower() in _NON_JOB_HEADING_TEXTS:
+            continue
+
+        location = _extract_location_from_card(card, default_location)
+        sponsorship, snippet = classify_sponsorship(card[:5000])
+        results_by_url[href] = {
+            "company": company_name,
+            "title": title[:300],
+            "location": location,
+            "posted_text": "Unknown",
+            "posted_days_ago": None,
+            "employment_type": normalize_employment_type(None, title),
+            "url": href,
+            "source": source_tag,
+            "visa_sponsorship": sponsorship,
+            "visa_snippet": snippet,
+        }
+
+
 def scrape_google_ireland(session, fetch_descriptions=True):
-    """Real evidence ruled out the link-matching approach used for Meta:
-    the crawled content for individual Google job listings comes from the
-    exact same URL as the search results LIST page, with no per-job ID in
-    the path — meaning jobs likely expand inline via JavaScript rather
-    than navigating to a real separate page. Reads job list items
-    directly instead (title heading + nearby location text within each
-    repeating list entry), rather than looking for a link pattern that
-    may not exist."""
+    """Collect Google jobs whose Google Careers search is filtered to
+    Ireland. Google paginates search results (20/page) rather than
+    infinite-scrolling everything into the DOM at once (confirmed: scroll-
+    based accumulation plateaued at the same count regardless of how long
+    it scrolled) — walks explicit ?page=N result pages instead, and
+    deduplicates by the stable numeric job URL."""
     if not HAS_PLAYWRIGHT:
-        print("      [google] playwright not installed — skipping Google (see requirements.txt)")
+        print("      [google] playwright not installed — skipping")
         return []
-    results, seen = [], set()
+
+    base = "https://www.google.com/about/careers/applications/jobs/results"
+    results_by_url = {}
     try:
         with sync_playwright() as pw:
             browser = pw.chromium.launch(headless=True)
-            page = browser.new_page(viewport={"width": 1440, "height": 1000}, locale="en-IE")
-            page.goto("https://www.google.com/about/careers/applications/jobs/results?location=Ireland",
-                       wait_until="domcontentloaded", timeout=60000)
-            page.wait_for_timeout(2000)
-            for consent_text in ("Accept all", "Accept All", "I agree", "I Agree", "Accept",
-                                  "Allow all", "Allow All", "Got it", "OK"):
-                try:
-                    btn = page.get_by_role("button", name=consent_text, exact=False)
-                    if btn.count() > 0:
-                        btn.first.click(timeout=2000)
-                        page.wait_for_timeout(1000)
-                        break
-                except Exception:
-                    continue
-            page.wait_for_timeout(2000)
-            # Scroll to load everything — dynamic stability detection
-            # instead of a fixed guess, since a fixed count under-loaded
-            # results (confirmed: page showed "123 jobs matched" but only
-            # 27 headings were ever found, even after longer scrolling —
-            # the list is virtualized, meaning it RECYCLES the same DOM
-            # nodes as you scroll rather than growing them, so waiting for
-            # the count to stabilize never works). Process whatever's
-            # currently on screen at EACH scroll step instead, and
-            # accumulate results across the whole scroll using the
-            # existing `seen` dedup set.
-            def process_visible_google_headings():
-                headings = page.locator("h3")
-                for i in range(headings.count()):
-                    h = headings.nth(i)
-                    title = _browser_text(h)
-                    if not title or len(title) > 200 or title.strip().lower() in _NON_JOB_HEADING_TEXTS:
-                        continue
-                    key = title.lower().strip()
-                    if key in seen:
-                        continue
-                    node = h
-                    card = ""
-                    for _ in range(4):
-                        node = node.locator("..")
-                        candidate = _browser_text(node)
-                        if candidate and len(candidate) < 500:
-                            card = candidate
-                        if card and is_ireland_location(card):
-                            break
-                    if not is_ireland_location(card):
-                        continue
-                    seen.add(key)
-                    locs = [x.strip() for x in card.splitlines() if x.strip() and is_ireland_location(x)]
-                    sponsorship, snippet = classify_sponsorship(card[:5000])
-                    results.append({
-                        "company": "Google",
-                        "title": title,
-                        "location": locs[0] if locs else "Ireland",
-                        "posted_text": "Unknown",
-                        "posted_days_ago": None,
-                        "employment_type": normalize_employment_type(None, title),
-                        "url": "https://www.google.com/about/careers/applications/jobs/results?location=Ireland",
-                        "source": "google_browser",
-                        "visa_sponsorship": sponsorship,
-                        "visa_snippet": snippet,
-                    })
+            page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
 
-            process_visible_google_headings()
-            stagnant_rounds = 0
-            prev_result_count = len(results)
-            for _ in range(40):
-                for more_text in ("Show more", "Load more", "See more", "More jobs"):
-                    try:
-                        btn = page.get_by_role("button", name=more_text, exact=False)
-                        if btn.count() > 0 and btn.first.is_visible():
-                            btn.first.click(timeout=1500)
-                            page.wait_for_timeout(800)
-                    except Exception:
-                        pass
-                page.mouse.wheel(0, 4000)
-                page.wait_for_timeout(700)
-                process_visible_google_headings()
-                if len(results) == prev_result_count:
-                    stagnant_rounds += 1
-                    if stagnant_rounds >= 6:
-                        break
+            empty_or_repeat_pages = 0
+            for page_no in range(1, 101):  # hard safety ceiling
+                query = urllib.parse.urlencode({"location": "Ireland", "page": page_no})
+                url = f"{base}?{query}"
+                page.goto(url, wait_until="domcontentloaded", timeout=60000)
+                page.wait_for_timeout(1200)
+
+                if page_no == 1:
+                    for consent_text in ("Accept all", "Accept All", "I agree", "I Agree", "Accept",
+                                         "Allow all", "Allow All", "Got it", "OK"):
+                        try:
+                            btn = page.get_by_role("button", name=consent_text, exact=False)
+                            if btn.count() and btn.first.is_visible():
+                                btn.first.click(timeout=1500)
+                                page.wait_for_timeout(500)
+                                break
+                        except Exception:
+                            pass
+
+                before = len(results_by_url)
+                _collect_filtered_page_jobs(
+                    page, "Google",
+                    r"/about/careers/applications/jobs/results/\d+(?:-|/|$)",
+                    "google_browser", results_by_url, "Ireland"
+                )
+                added = len(results_by_url) - before
+                print(f"      [google] page {page_no}: +{added} jobs ({len(results_by_url)} total)")
+
+                if added == 0:
+                    empty_or_repeat_pages += 1
                 else:
-                    stagnant_rounds = 0
-                prev_result_count = len(results)
-            print(f"      [browser] Google: {len(results)} Ireland postings accumulated across scroll")
+                    empty_or_repeat_pages = 0
+                if empty_or_repeat_pages >= 2:
+                    break
+
             browser.close()
     except Exception as e:
-        print(f"      [browser] Google failed: {e}")
-    return results
+        print(f"      [google] browser scrape failed: {e}")
+
+    return list(results_by_url.values())
 
 
 def scrape_meta_ireland(session):
-    """Rebuilt using the same technique that just worked for Google (16
-    real postings found) instead of continuing to adjust the fragile
-    link-then-walk-up-the-DOM approach, which struggled twice in a row —
-    real evidence showed it either landed on a shared multi-job container
-    or found nothing at all, most likely because location info for some
-    listings sits behind a collapsed "+21 locations" style control that
-    isn't present as plain text until expanded."""
+    """Collect Meta jobs from its Ireland office pages directly. Meta's
+    current public detail links are /profile/job_details/<numeric-id>/,
+    not an older pattern — confirmed real, current. Dublin and Clonee are
+    both real Meta Ireland office locations; scraping each office's own
+    pre-filtered page sidesteps the '+N locations' problem entirely,
+    since we don't need to verify location text when the page itself is
+    already scoped to that specific office."""
     if not HAS_PLAYWRIGHT:
-        print("      [meta] playwright not installed — skipping Meta (see requirements.txt)")
+        print("      [meta] playwright not installed — skipping")
         return []
-    results, seen = [], set()
+
+    ireland_pages = [
+        ("Dublin, Ireland",
+         "https://www.metacareers.com/locations/dublin/?offices%5B0%5D=Dublin%2C+Ireland&p%5Boffices%5D%5B0%5D=Dublin%2C+Ireland"),
+        ("Clonee, Ireland",
+         "https://www.metacareers.com/locations/clonee/?offices%5B0%5D=Clonee%2C+Ireland&p%5Boffices%5D%5B0%5D=Clonee%2C+Ireland"),
+    ]
+    results_by_url = {}
+
     try:
         with sync_playwright() as pw:
             browser = pw.chromium.launch(headless=True)
-            page = browser.new_page(viewport={"width": 1440, "height": 1000}, locale="en-IE")
-            page.goto("https://www.metacareers.com/jobs/?q=&location=Ireland",
-                       wait_until="domcontentloaded", timeout=60000)
-            page.wait_for_timeout(2000)
-            for consent_text in ("Accept all", "Accept All", "I agree", "I Agree", "Accept",
-                                  "Allow all", "Allow All", "Got it", "OK"):
-                try:
-                    btn = page.get_by_role("button", name=consent_text, exact=False)
-                    if btn.count() > 0:
-                        btn.first.click(timeout=2000)
-                        page.wait_for_timeout(1000)
-                        break
-                except Exception:
-                    continue
-            page.wait_for_timeout(2000)
-            last_count, stable_rounds = -1, 0
-            for _ in range(40):
-                count = page.locator("h1, h2, h3").count()
-                if count == last_count:
-                    stable_rounds += 1
-                    if stable_rounds >= 4:
-                        break
-                else:
-                    stable_rounds = 0
-                last_count = count
-                for more_text in ("Show more", "Load more", "See more", "More jobs"):
+            page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
+
+            for default_location, url in ireland_pages:
+                page.goto(url, wait_until="domcontentloaded", timeout=60000)
+                page.wait_for_timeout(1800)
+
+                for consent_text in ("Accept all", "Accept All", "I agree", "I Agree", "Accept",
+                                     "Allow all", "Allow All", "Got it", "OK"):
                     try:
-                        btn = page.get_by_role("button", name=more_text, exact=False)
-                        if btn.count() > 0 and btn.first.is_visible():
+                        btn = page.get_by_role("button", name=consent_text, exact=False)
+                        if btn.count() and btn.first.is_visible():
                             btn.first.click(timeout=1500)
-                            page.wait_for_timeout(800)
+                            page.wait_for_timeout(500)
+                            break
                     except Exception:
                         pass
-                page.mouse.wheel(0, 4000)
-                page.wait_for_timeout(700)
-            headings = page.locator("h1, h2, h3")
-            print(f"      [browser] Meta: found {headings.count()} heading elements to check")
-            filtered_samples = []
-            for i in range(headings.count()):
-                h = headings.nth(i)
-                title = _browser_text(h)
-                if not title or len(title) > 200 or title.strip().lower() in _NON_JOB_HEADING_TEXTS:
-                    continue
-                node = h
-                card = ""
-                for _ in range(4):
-                    node = node.locator("..")
-                    candidate = _browser_text(node)
-                    if candidate and len(candidate) < 500:
-                        card = candidate
-                    if card and is_ireland_location(card):
-                        break
-                # Real evidence: Meta shows one primary location plus a
-                # collapsed "+N locations" badge that doesn't reveal the
-                # actual list as plain text — Ireland is very likely
-                # hiding behind it for multi-location roles. Click it and
-                # check the WHOLE page afterward (popovers/tooltips often
-                # render elsewhere in the DOM, not nested in the card).
-                if not is_ireland_location(card):
-                    more_locs_match = re.search(r"\+\d+\s*locations?", card, re.I)
-                    if more_locs_match:
+
+                stagnant = 0
+                previous = len(results_by_url)
+                for _ in range(100):
+                    _collect_filtered_page_jobs(
+                        page, "Meta",
+                        r"metacareers\.com/profile/job_details/\d+/?",
+                        "meta_browser", results_by_url, default_location
+                    )
+
+                    for more_text in ("Show more", "Load more", "See more", "More jobs", "View more"):
                         try:
-                            badge = h.locator("..").get_by_text(more_locs_match.group(0), exact=False)
-                            if badge.count() > 0:
-                                badge.first.click(timeout=1500)
-                                page.wait_for_timeout(600)
-                                expanded = _browser_text(page.locator("body"))
-                                if is_ireland_location(expanded):
-                                    idx = expanded.lower().find("ireland")
-                                    card = expanded[max(0, idx - 100):idx + 100]
-                                page.keyboard.press("Escape")
-                                page.wait_for_timeout(200)
+                            btn = page.get_by_role("button", name=more_text, exact=False)
+                            if btn.count() and btn.first.is_visible():
+                                btn.first.click(timeout=1000)
+                                page.wait_for_timeout(400)
                         except Exception:
                             pass
-                if not is_ireland_location(card):
-                    if len(filtered_samples) < 5:
-                        filtered_samples.append(f"title={title!r} card={card[:150]!r}")
-                    continue
-                key = title.lower().strip()
-                if key in seen:
-                    continue
-                seen.add(key)
-                locs = [x.strip() for x in card.splitlines() if x.strip() and is_ireland_location(x)]
-                sponsorship, snippet = classify_sponsorship(card[:5000])
-                results.append({
-                    "company": "Meta",
-                    "title": title,
-                    "location": locs[0] if locs else "Ireland",
-                    "posted_text": "Unknown",
-                    "posted_days_ago": None,
-                    "employment_type": normalize_employment_type(None, title),
-                    "url": "https://www.metacareers.com/jobs/?q=&location=Ireland",
-                    "source": "meta_browser",
-                    "visa_sponsorship": sponsorship,
-                    "visa_snippet": snippet,
-                })
-            if not results and filtered_samples:
-                print(f"      [browser] Meta: {len(filtered_samples)} sample heading(s) that got "
-                      f"filtered out (real evidence of what's actually on the page):")
-                for s in filtered_samples:
-                    print(f"      [browser]   -> {s}")
+
+                    page.mouse.wheel(0, 3200)
+                    page.wait_for_timeout(500)
+                    _collect_filtered_page_jobs(
+                        page, "Meta",
+                        r"metacareers\.com/profile/job_details/\d+/?",
+                        "meta_browser", results_by_url, default_location
+                    )
+
+                    current = len(results_by_url)
+                    if current == previous:
+                        stagnant += 1
+                    else:
+                        stagnant = 0
+                    previous = current
+                    if stagnant >= 12:
+                        break
+
+                print(f"      [meta] {default_location}: {len(results_by_url)} unique Ireland jobs accumulated")
+
             browser.close()
     except Exception as e:
-        print(f"      [browser] Meta failed: {e}")
-    return results
+        print(f"      [meta] browser scrape failed: {e}")
+
+    return list(results_by_url.values())
+
+
 
 
 
