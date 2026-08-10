@@ -2401,6 +2401,7 @@ def scrape_microsoft_ireland(session):
     urls = [
         "https://careers.microsoft.com/v2/global/en/locations/dublin.html",
         "https://jobs.careers.microsoft.com/global/en/search?q=&lc=Ireland",
+        "https://apply.careers.microsoft.com/careers?location=Ireland",
     ]
     results = {}
     try:
@@ -2417,7 +2418,8 @@ def scrape_microsoft_ireland(session):
                 for _ in range(25):
                     _collect_browser_job_links(
                         page, "Microsoft",
-                        [r"careers\.microsoft\.com/.*/job/", r"jobs\.careers\.microsoft\.com/.*/job/", r"/job/"],
+                        [r"careers\.microsoft\.com/.*/job/", r"jobs\.careers\.microsoft\.com/.*/job/",
+                         r"apply\.careers\.microsoft\.com/", r"/job/"],
                         "microsoft_browser", results, "Ireland")
                     for txt in ("Load more", "Show more", "See more", "Next"):
                         try:
@@ -2541,39 +2543,43 @@ def scrape_jnj_ireland(session):
         print("      [jnj] playwright not installed — skipping")
         return []
     results = {}
-    url = "https://www.careers.jnj.com/en/locations/emea/ireland/"
+    urls = [
+        "https://www.careers.jnj.com/en/locations/emea/ireland/",
+        "https://www.careers.jnj.com/en/jobs/?search=Ireland",
+    ]
     try:
         with sync_playwright() as pw:
             browser = pw.chromium.launch(headless=True)
             page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
-            page.goto(url, wait_until="domcontentloaded", timeout=60000)
-            page.wait_for_timeout(1200)
-            _browser_accept_consent(page)
-            stagnant, previous = 0, 0
-            for _ in range(100):
-                _collect_filtered_page_jobs(
-                    page, "Johnson & Johnson",
-                    r"careers\.jnj\.com/(?:en/)?jobs/r-[^/]+/[^/]+/?",
-                    "jnj_browser", results, "Ireland")
-                _collect_links_from_html(
-                    page, "Johnson & Johnson",
-                    r"careers\.jnj\.com/(?:en/)?jobs/r-[^/]+/[^/]+/?",
-                    "jnj_browser", results, "Ireland")
-                for txt in ("Load more", "Show more", "See more", "Next"):
-                    try:
-                        b = page.get_by_role("button", name=txt, exact=False)
-                        if b.count() and b.first.is_visible():
-                            b.first.click(timeout=1000)
-                            page.wait_for_timeout(400)
-                    except Exception:
-                        pass
-                page.mouse.wheel(0, 3000)
-                page.wait_for_timeout(350)
-                current = len(results)
-                stagnant = stagnant + 1 if current == previous else 0
-                previous = current
-                if stagnant >= 8:
-                    break
+            for url in urls:
+                page.goto(url, wait_until="domcontentloaded", timeout=60000)
+                page.wait_for_timeout(1200)
+                _browser_accept_consent(page)
+                stagnant, previous = 0, 0
+                for _ in range(100):
+                    _collect_filtered_page_jobs(
+                        page, "Johnson & Johnson",
+                        r"careers\.jnj\.com/en/job(?:s)?/",
+                        "jnj_browser", results, "Ireland")
+                    _collect_links_from_html(
+                        page, "Johnson & Johnson",
+                        r"careers\.jnj\.com/en/job(?:s)?/",
+                        "jnj_browser", results, "Ireland")
+                    for txt in ("Load more", "Show more", "See more", "Next"):
+                        try:
+                            b = page.get_by_role("button", name=txt, exact=False)
+                            if b.count() and b.first.is_visible():
+                                b.first.click(timeout=1000)
+                                page.wait_for_timeout(400)
+                        except Exception:
+                            pass
+                    page.mouse.wheel(0, 3000)
+                    page.wait_for_timeout(350)
+                    current = len(results)
+                    stagnant = stagnant + 1 if current == previous else 0
+                    previous = current
+                    if stagnant >= 8:
+                        break
             browser.close()
     except Exception as e:
         print(f"      [jnj] browser scrape failed: {e}")
@@ -2624,6 +2630,58 @@ def scrape_johnson_controls_ireland(session):
     except Exception as e:
         print(f"      [johnson-controls] browser scrape failed: {e}")
     print(f"      [johnson-controls] {len(results)} unique Ireland jobs accumulated")
+    return list(results.values())
+
+
+def scrape_hsbc_ireland(session):
+    """HSBC Ireland's live careers site runs SAP SuccessFactors — same
+    platform, same technique as EY, adapted to HSBC's own search URL and
+    parameters."""
+    if not HAS_PLAYWRIGHT:
+        print("      [hsbc] playwright not installed — skipping")
+        return []
+    search_urls = [
+        "https://apply.careers.hsbc.com/search/?q=&locationsearch=Dublin",
+        "https://apply.careers.hsbc.com/search/?q=&locationsearch=Ireland",
+    ]
+    results = {}
+    try:
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch(headless=True)
+            page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
+            for search_url in search_urls:
+                page.goto(search_url, wait_until="domcontentloaded", timeout=60000)
+                page.wait_for_timeout(1200)
+                _browser_accept_consent(page)
+                stagnant, previous = 0, 0
+                for _ in range(60):
+                    _collect_filtered_page_jobs(
+                        page, "HSBC Ireland",
+                        r"apply\.careers\.hsbc\.com/job/",
+                        "hsbc_successfactors", results, "Dublin, Ireland")
+                    _collect_links_from_html(
+                        page, "HSBC Ireland",
+                        r"apply\.careers\.hsbc\.com/job/",
+                        "hsbc_successfactors", results, "Dublin, Ireland")
+                    for txt in ("Load more", "Show more", "See more", "Next"):
+                        try:
+                            b = page.get_by_role("button", name=txt, exact=False)
+                            if b.count() and b.first.is_visible():
+                                b.first.click(timeout=1000)
+                                page.wait_for_timeout(400)
+                        except Exception:
+                            pass
+                    page.mouse.wheel(0, 3000)
+                    page.wait_for_timeout(350)
+                    current = len(results)
+                    stagnant = stagnant + 1 if current == previous else 0
+                    previous = current
+                    if stagnant >= 6:
+                        break
+            browser.close()
+    except Exception as e:
+        print(f"      [hsbc] browser scrape failed: {e}")
+    print(f"      [hsbc] {len(results)} unique Ireland jobs accumulated")
     return list(results.values())
 
 
@@ -3196,6 +3254,7 @@ def test_single_company(name):
         "boston scientific": lambda: scrape_boston_scientific_ireland(session),
         "johnson & johnson": lambda: scrape_jnj_ireland(session),
         "johnson controls": lambda: scrape_johnson_controls_ireland(session),
+        "hsbc": lambda: scrape_hsbc_ireland(session),
         "microsoft": lambda: scrape_microsoft_ireland(session),
         "citi": lambda: scrape_citi_ireland(session),
         "red hat": lambda: scrape_red_hat_ireland(session),
@@ -3415,6 +3474,7 @@ def main():
         ("boston scientific", scrape_boston_scientific_ireland, "Boston Scientific (SuccessFactors, office-specific pages)"),
         ("johnson & johnson", scrape_jnj_ireland, "Johnson & Johnson (first-party board)"),
         ("johnson controls", scrape_johnson_controls_ireland, "Johnson Controls (Algolia-style board)"),
+        ("hsbc ireland", scrape_hsbc_ireland, "HSBC Ireland (SuccessFactors, same technique as EY)"),
     ]
     for exact_name, scraper_fn, description in exact_browser_targets:
         entry = next((c for c in manual_check if c["company"].strip().lower() == exact_name), None)
