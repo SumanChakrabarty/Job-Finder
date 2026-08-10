@@ -47,6 +47,7 @@ import re
 import sys
 import time
 import uuid
+import signal
 import html
 import urllib.parse
 import xml.etree.ElementTree as ET
@@ -219,6 +220,77 @@ def classify_url(url: str) -> str:
     if "lever.co" in url:
         return "lever"
     return "custom"
+
+
+class _HardTimeout(Exception):
+    pass
+
+
+def _timeout_handler(signum, frame):
+    raise _HardTimeout()
+
+
+def run_with_hard_timeout(fn, seconds, label):
+    """Forcibly interrupts fn() after `seconds`, no matter what it's doing
+    internally — a real, OS-level alarm, not a cooperative check the
+    function has to remember to make itself. This is the guaranteed fix
+    after two separate incidents today where a company-specific scraper's
+    OWN internal time-budget logic either wasn't actually wired up, or an
+    entirely different function had no time budget at all, and either way
+    the whole pipeline hung for hours. Every single company scraper call
+    in main() should go through this from now on — no exceptions, no
+    matter how well-behaved a given function looks on inspection, since
+    that's exactly what we assumed twice already and were wrong both
+    times."""
+    old_handler = signal.signal(signal.SIGALRM, _timeout_handler)
+    signal.alarm(seconds)
+    try:
+        return fn()
+    except _HardTimeout:
+        print(f"      [{label}] HARD TIMEOUT — forcibly stopped after {seconds}s "
+              f"(this company's own internal bounds failed or don't exist; "
+              f"the pipeline continues normally with whatever it already found)")
+        return []
+    finally:
+        signal.alarm(0)
+        signal.signal(signal.SIGALRM, old_handler)
+
+
+BROWSER_SCRAPE_CACHE_PATH = "browser_scrape_cache.json"
+BROWSER_SCRAPE_MAX_AGE_HOURS = 3  # only actually re-run a real browser scrape this often
+
+
+def _load_browser_scrape_cache():
+    if os.path.exists(BROWSER_SCRAPE_CACHE_PATH):
+        try:
+            with open(BROWSER_SCRAPE_CACHE_PATH, encoding="utf-8") as f:
+                return json.load(f)
+        except Exception:
+            return {}
+    return {}
+
+
+def cached_browser_scrape(cache, company_key, scraper_fn, timeout_seconds, label):
+    """The real fix for a run that took hours even with every individual
+    company correctly time-bounded: running ~20 separate real browser
+    automations sequentially, every single 15-minute cycle, is simply a
+    lot of real work even when nothing is broken. Same principle already
+    used elsewhere in this pipeline (ATS platform matching, JSON-LD
+    checks) — don't redo expensive, slow-changing work on every run.
+    Reuses a cached result if it's recent enough; only actually launches
+    a browser when the cache is missing or stale."""
+    entry = cache.get(company_key)
+    if entry:
+        age_hours = (time.time() - entry.get("checked_at", 0)) / 3600
+        if age_hours < BROWSER_SCRAPE_MAX_AGE_HOURS:
+            jobs = entry.get("jobs", [])
+            print(f"      [{label}] using cached result from {age_hours:.1f}h ago "
+                  f"({len(jobs)} jobs) — next real check in {BROWSER_SCRAPE_MAX_AGE_HOURS - age_hours:.1f}h")
+            return jobs
+
+    jobs = run_with_hard_timeout(scraper_fn, timeout_seconds, label)
+    cache[company_key] = {"jobs": jobs, "checked_at": time.time()}
+    return jobs
 
 
 def parse_posted_text(posted_text: str):
@@ -3697,6 +3769,13 @@ def main():
     companies = load_companies(args.input)
     print(f"Loaded {len(companies)} companies from {args.input}")
 
+    browser_cache = _load_browser_scrape_cache()
+    fresh_count = sum(1 for v in browser_cache.values()
+                       if (time.time() - v.get("checked_at", 0)) / 3600 < BROWSER_SCRAPE_MAX_AGE_HOURS)
+    print(f"=== Browser-scrape cache: {len(browser_cache)} companies tracked, "
+          f"{fresh_count} still fresh (within {BROWSER_SCRAPE_MAX_AGE_HOURS}h) and will be reused "
+          f"instantly instead of re-launching a real browser this run ===")
+
     session = requests.Session()
     workday_session = make_workday_session()
     live_jobs, manual_check, errors = [], [], []
@@ -3741,7 +3820,7 @@ def main():
     if apple_entry:
         print("\nTrying direct HTML scrape for Apple (no API/shared ATS, but their search "
               "page is server-rendered)...")
-        apple_jobs = scrape_apple_ireland(session)
+        apple_jobs = cached_browser_scrape(browser_cache, "Apple", lambda: scrape_apple_ireland(session), 180, "apple")
         if apple_jobs:
             print(f"  -> Apple: {len(apple_jobs)} Ireland postings found via direct scrape")
             for job in apple_jobs:
@@ -3757,7 +3836,7 @@ def main():
         print("\nTrying Google via real browser automation (reads the actual rendered page — "
               "no API guessing, more resilient to backend changes than the two earlier attempts "
               "that guessed at a specific hidden endpoint and didn't work)...")
-        google_jobs = scrape_google_ireland(session)
+        google_jobs = cached_browser_scrape(browser_cache, "Google", lambda: scrape_google_ireland(session), 240, "google")
         if google_jobs:
             print(f"  -> Google: {len(google_jobs)} Ireland postings found")
             for job in google_jobs:
@@ -3772,7 +3851,7 @@ def main():
         print("\nTrying Amazon's internal jobs search endpoint (no public API, but a real "
               "hidden JSON endpoint their own site uses — confirmed working, 197 real Ireland "
               "postings found when tested)...")
-        amazon_jobs = scrape_amazon_ireland(session)
+        amazon_jobs = cached_browser_scrape(browser_cache, "Amazon", lambda: scrape_amazon_ireland(session), 180, "amazon")
         if amazon_jobs:
             print(f"  -> Amazon: {len(amazon_jobs)} Ireland postings found")
             for job in amazon_jobs:
@@ -3787,7 +3866,7 @@ def main():
         print("\nTrying Meta via real browser automation (same technique as Google — reads the "
               "actual rendered page rather than replicating their internal GraphQL contract, "
               "which is more resilient if that contract changes)...")
-        meta_jobs = scrape_meta_ireland(session)
+        meta_jobs = cached_browser_scrape(browser_cache, "Meta", lambda: scrape_meta_ireland(session), 240, "meta")
         if meta_jobs:
             print(f"  -> Meta: {len(meta_jobs)} Ireland postings found")
             for job in meta_jobs:
@@ -3809,7 +3888,7 @@ def main():
         if not entry:
             continue
         print(f"\nTrying {entry['company']} via real browser automation — {description}...")
-        found_jobs = scraper_fn(session)
+        found_jobs = cached_browser_scrape(browser_cache, entry["company"], lambda: scraper_fn(session), 240, entry["company"])
         if found_jobs:
             print(f"  -> {entry['company']}: {len(found_jobs)} Ireland postings found")
             for job in found_jobs:
@@ -3839,7 +3918,7 @@ def main():
         if not entry:
             continue
         print(f"\nTrying {entry['company']} via real browser automation — {description}...")
-        found_jobs = scraper_fn(session)
+        found_jobs = cached_browser_scrape(browser_cache, entry["company"], lambda: scraper_fn(session), 240, entry["company"])
         if found_jobs:
             print(f"  -> {entry['company']}: {len(found_jobs)} Ireland postings found")
             for job in found_jobs:
@@ -3862,7 +3941,7 @@ def main():
         if not entry:
             continue
         print(f"\nTrying {entry['company']} via dedicated browser automation — {description}...")
-        found_jobs = scraper_fn(session)
+        found_jobs = cached_browser_scrape(browser_cache, entry["company"], lambda: scraper_fn(session), 240, entry["company"])
         if found_jobs:
             print(f"  -> {entry['company']}: {len(found_jobs)} Ireland postings found")
             for job in found_jobs:
@@ -3875,7 +3954,7 @@ def main():
     netflix_entry = next((c for c in manual_check if c["company"].strip().lower() == "netflix"), None)
     if netflix_entry:
         print("\nTrying Netflix (Eightfold, custom-branded domain, confirmed working endpoint)...")
-        netflix_jobs = scrape_netflix_ireland(session)
+        netflix_jobs = cached_browser_scrape(browser_cache, "Netflix", lambda: scrape_netflix_ireland(session), 120, "netflix")
         if netflix_jobs:
             print(f"  -> Netflix: {len(netflix_jobs)} Ireland postings found")
             for job in netflix_jobs:
@@ -3921,7 +4000,10 @@ def main():
         if not entry:
             continue
         print(f"\nTrying {display_name} via Oracle Recruiting Cloud's public REST API...")
-        found_jobs = scrape_oracle_candidate_experience(display_name, host, site_number, session)
+        found_jobs = cached_browser_scrape(
+            browser_cache, display_name,
+            lambda: scrape_oracle_candidate_experience(display_name, host, site_number, session),
+            180, display_name)
         if found_jobs:
             print(f"  -> {entry['company']}: {len(found_jobs)} Ireland postings found")
             for job in found_jobs:
@@ -4032,6 +4114,9 @@ def main():
     # selected, since that option applies no age condition at all.
     for job in live_jobs:
         normalize_posted_age(job)
+
+    with open(BROWSER_SCRAPE_CACHE_PATH, "w", encoding="utf-8") as f:
+        json.dump(browser_cache, f, indent=2, ensure_ascii=False)
 
     output = {
         "generated_at": now_iso,
