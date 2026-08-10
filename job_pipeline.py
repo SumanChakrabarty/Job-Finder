@@ -2819,68 +2819,199 @@ def scrape_grant_thornton_direct(session):
     return results
 
 
-def scrape_nvidia_ireland(session):
-    """NVIDIA's Workday tenant returns 200 OK but 0 postings via the plain
-    HTTP API — different failure mode from the 422 cluster, but still
-    stuck. Real browser automation (load the actual page, type 'Ireland'
-    into the real search box, read what renders) can succeed where a
-    direct API call doesn't, since it's indistinguishable from a genuine
-    human visit."""
+def _browser_collect_job_links_with_retries(page, company_name, patterns, source_tag, results,
+                                             default_location="Ireland", rounds=40, timeout_ms=90000):
+    """Shared browser loop for proprietary career sites.  It keeps scrolling,
+    follows visible load-more/next controls, and deduplicates individual job URLs."""
+    for _ in range(rounds):
+        before = len(results)
+        _collect_browser_job_links(page, company_name, patterns, source_tag, results, default_location)
+        for txt in ("Load more", "Show more", "See more", "Next", "View more"):
+            try:
+                b = page.get_by_role("button", name=txt, exact=False)
+                if b.count() and b.first.is_visible():
+                    b.first.click(timeout=1500)
+                    page.wait_for_timeout(700)
+            except Exception:
+                pass
+        page.mouse.wheel(0, 5000)
+        page.wait_for_timeout(500)
+        if len(results) == before:
+            # A second pass catches cards injected after the scroll.
+            page.wait_for_timeout(700)
+            _collect_browser_job_links(page, company_name, patterns, source_tag, results, default_location)
+            if len(results) == before:
+                break
+
+
+def scrape_aon_ireland(session):
+    """Aon now publishes live vacancies on jobs.aon.com.  The location index
+    exposes Ireland/Dublin and individual postings use /jobs/<numeric-id>.
+    Use the first-party location page and rendered pagination rather than the
+    old generic ATS probing."""
     if not HAS_PLAYWRIGHT:
-        print("      [nvidia] playwright not installed — skipping")
+        print("      [aon] playwright not installed — skipping")
         return []
-    board_url = "https://nvidia.wd5.myworkdayjobs.com/en-US/NVIDIAExternalCareerSite/search?q=Ireland"
+    urls = [
+        "https://jobs.aon.com/?country=ie",
+        "https://jobs.aon.com/jobs/locations?lang=en-US",
+    ]
     results = {}
     try:
         with sync_playwright() as pw:
             browser = pw.chromium.launch(headless=True)
             page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
-            page.goto(board_url, wait_until="domcontentloaded", timeout=60000)
-            page.wait_for_timeout(1800)
-            _browser_accept_consent(page)
-            search_box_found = False
-            for selector_fn in (
-                lambda: page.get_by_placeholder(re.compile(r"search", re.I)),
-                lambda: page.get_by_role("textbox"),
-            ):
+            for url in urls:
                 try:
-                    loc = selector_fn()
-                    if loc.count():
-                        box = loc.first
-                        box.fill("Ireland", timeout=1500)
-                        box.press("Enter", timeout=1500)
-                        page.wait_for_timeout(1800)
-                        search_box_found = True
-                        break
-                except Exception:
-                    pass
-            try:
-                all_links = page.locator("a[href]")
-                hrefs = [all_links.nth(i).get_attribute("href") or "" for i in range(all_links.count())]
-                matching = sum(1 for h in hrefs if re.search(r"myworkdayjobs\.com/.*job", h, re.I))
-                print(f"      [nvidia] search box found={search_box_found}, page title={page.title()!r}, "
-                      f"total links={len(hrefs)}, matching job-pattern links={matching}")
-                sample = [h for h in hrefs if h and "job" in h.lower()][:8]
-                print(f"      [nvidia] sample real hrefs on page: {sample}")
-            except Exception as e:
-                print(f"      [nvidia] diagnostic read failed: {e}")
-            stagnant, previous = 0, 0
-            for _ in range(40):
-                _collect_verified_ireland_page_jobs(
-                    page, "NVIDIA", r"nvidia\.wd5\.myworkdayjobs\.com/.*/job/",
-                    "nvidia_workday_browser", results, "Ireland")
-                page.mouse.wheel(0, 3000)
-                page.wait_for_timeout(500)
-                current = len(results)
-                stagnant = stagnant + 1 if current == previous else 0
-                previous = current
-                if stagnant >= 8:
-                    break
+                    page.goto(url, wait_until="domcontentloaded", timeout=90000)
+                    page.wait_for_timeout(1800)
+                    _browser_accept_consent(page)
+                    # If this is the location index, click Ireland first.
+                    for name in (r"^Ireland$", r"^Dublin$"):
+                        try:
+                            link = page.get_by_role("link", name=re.compile(name, re.I))
+                            if link.count():
+                                link.first.click(timeout=3000)
+                                page.wait_for_timeout(1600)
+                                break
+                        except Exception:
+                            pass
+                    _browser_collect_job_links_with_retries(
+                        page, "Aon", [r"jobs\.aon\.com/(?:jobs|signin/jobs|sign-up/jobs)/\d+"],
+                        "aon_browser", results, "Ireland", rounds=35)
+                except Exception as e:
+                    print(f"      [aon] page failed {url}: {e}")
             browser.close()
     except Exception as e:
-        print(f"      [nvidia] browser scrape failed: {e}")
+        print(f"      [aon] browser scrape failed: {e}")
+    print(f"      [aon] {len(results)} unique Ireland jobs accumulated")
+    return list(results.values())
+
+
+def scrape_eaton_ireland(session):
+    """Eaton's public careers entry point is jobs.eaton.com.  The marketing
+    site links into that applicant portal, so use a real browser, follow the
+    Search Jobs entry point, search for Ireland/Dublin when possible, and
+    verify Ireland on each rendered job card."""
+    if not HAS_PLAYWRIGHT:
+        print("      [eaton] playwright not installed — skipping")
+        return []
+    urls = [
+        "https://jobs.eaton.com/",
+        "https://www.eaton.com/ie/en-gb/company/careers.html",
+        "https://www.eaton.com/ie/en-gb/company/careers/life-at-eaton/dublin.html",
+    ]
+    results = {}
+    try:
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch(headless=True)
+            page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
+            for url in urls:
+                try:
+                    page.goto(url, wait_until="domcontentloaded", timeout=90000)
+                    page.wait_for_timeout(1800)
+                    _browser_accept_consent(page)
+                    # Click the site's search/apply entry point if present.
+                    for label in (r"Search jobs", r"Search and apply", r"Find Jobs", r"Search Careers"):
+                        try:
+                            el = page.get_by_role("link", name=re.compile(label, re.I))
+                            if el.count():
+                                href = el.first.get_attribute("href") or ""
+                                if href:
+                                    page.goto(urllib.parse.urljoin(page.url, href), wait_until="domcontentloaded", timeout=90000)
+                                    page.wait_for_timeout(1500)
+                                else:
+                                    el.first.click(timeout=3000)
+                                    page.wait_for_timeout(1500)
+                                break
+                        except Exception:
+                            pass
+                    # Best-effort location/search box.
+                    for selector in ("input[placeholder*='Location' i]", "input[placeholder*='Search' i]", "input[type='search']"):
+                        try:
+                            inp = page.locator(selector)
+                            if inp.count():
+                                inp.first.fill("Ireland")
+                                inp.first.press("Enter")
+                                page.wait_for_timeout(1500)
+                                break
+                        except Exception:
+                            pass
+                    _browser_collect_job_links_with_retries(
+                        page, "Eaton",
+                        [r"jobs\.eaton\.com/[^#?]*(?:job|jobs)[^#?]*", r"jobs\.eaton\.com/[^#?]*\d{4,}"],
+                        "eaton_browser", results, "Ireland", rounds=35)
+                except Exception as e:
+                    print(f"      [eaton] page failed {url}: {e}")
+            browser.close()
+    except Exception as e:
+        print(f"      [eaton] browser scrape failed: {e}")
+    print(f"      [eaton] {len(results)} unique Ireland jobs accumulated")
+    return list(results.values())
+
+
+def scrape_nvidia_ireland(session):
+    """NVIDIA has moved its public jobs experience to jobs.nvidia.com,
+    powered by Eightfold.  Prefer the public Eightfold JSON feed and only
+    fall back to the old Workday/browser path if that feed is unavailable.
+    Never treat a login/recaptcha page as zero jobs."""
+    results = {}
+    # Public Eightfold feed used by the current jobs.nvidia.com experience.
+    for start_at in range(0, 2000, 100):
+        try:
+            resp = session.get(
+                "https://jobs.nvidia.com/api/apply/v2/jobs",
+                params={"domain": "nvidia.com", "start": start_at, "num": 100, "query": "Ireland"},
+                headers=HEADERS, timeout=20)
+            if resp.status_code != 200:
+                print(f"      [nvidia] Eightfold API HTTP {resp.status_code} at start={start_at}")
+                break
+            data = resp.json()
+        except Exception as e:
+            print(f"      [nvidia] Eightfold API unavailable: {e}")
+            break
+        positions = data.get("positions") or []
+        if not positions:
+            break
+        before = len(results)
+        for raw in positions:
+            norm = normalize_eightfold_job("NVIDIA", "nvidia", raw)
+            if norm:
+                key = norm["url"].split("?")[0].rstrip("/").lower()
+                results[key] = norm
+        print(f"      [nvidia] Eightfold start={start_at}: +{len(results)-before} Ireland jobs ({len(results)} total)")
+        if len(positions) < 100:
+            break
+    if results:
+        return list(results.values())
+
+    if not HAS_PLAYWRIGHT:
+        print("      [nvidia] public Eightfold feed returned no usable Ireland jobs and playwright is not installed")
+        return []
+
+    # Browser fallback against the new public site.  A login/recaptcha page is
+    # explicitly reported rather than converted into a false zero.
+    try:
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch(headless=True)
+            page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
+            page.goto("https://jobs.nvidia.com/careers", wait_until="domcontentloaded", timeout=90000)
+            page.wait_for_timeout(2500)
+            title = (page.title() or "").lower()
+            body = _browser_text(page).lower()
+            if any(x in title or x in body for x in ("sign in", "login", "recaptcha", "verify you are human")):
+                print("      [nvidia] official jobs site is currently behind login/anti-bot verification; not reporting a false zero")
+                browser.close()
+                return []
+            _browser_collect_job_links_with_retries(
+                page, "NVIDIA", [r"jobs\.nvidia\.com/careers/job/\d+"],
+                "nvidia_eightfold_browser", results, "Ireland", rounds=45)
+            browser.close()
+    except Exception as e:
+        print(f"      [nvidia] browser fallback failed: {e}")
     print(f"      [nvidia] {len(results)} unique Ireland jobs accumulated")
     return list(results.values())
+
 
 
 def _scrape_public_careers_page(company_name, url, href_hints, session, default_location="Ireland"):
@@ -3456,6 +3587,8 @@ def test_single_company(name):
         "dxc": lambda: scrape_dxc_ireland(session),
         "grant thornton": lambda: scrape_grant_thornton_direct(session),
         "nvidia": lambda: scrape_nvidia_ireland(session),
+        "aon": lambda: scrape_aon_ireland(session),
+        "eaton": lambda: scrape_eaton_ireland(session),
         "microsoft": lambda: scrape_microsoft_ireland(session),
         "citi": lambda: scrape_citi_ireland(session),
         "red hat": lambda: scrape_red_hat_ireland(session),
@@ -3683,7 +3816,9 @@ def main():
         ("hsbc ireland", scrape_hsbc_ireland, "HSBC Ireland (SuccessFactors, same technique as EY)"),
         ("dxc technology", scrape_dxc_ireland, "DXC Technology (bypasses its stuck Workday tenant)"),
         ("grant thornton ireland", scrape_grant_thornton_direct, "Grant Thornton (their real current careers site, not the stuck Workday tenant)"),
-        ("nvidia", scrape_nvidia_ireland, "NVIDIA (real browser automation against their Workday board, bypasses the plain-HTTP-request block)"),
+        ("nvidia", scrape_nvidia_ireland, "NVIDIA (public Eightfold feed, same platform as Netflix — falls back to a browser check that honestly reports a sign-in wall instead of a false zero)"),
+        ("aon", scrape_aon_ireland, "Aon (first-party jobs.aon.com, bypasses their stuck Workday tenant)"),
+        ("eaton", scrape_eaton_ireland, "Eaton (first-party jobs.eaton.com applicant portal, bypasses their stuck Workday tenant)"),
     ]
     for exact_name, scraper_fn, description in exact_browser_targets:
         entry = next((c for c in manual_check if c["company"].strip().lower() == exact_name), None)
