@@ -2504,20 +2504,22 @@ def scrape_red_hat_ireland(session):
             if ireland_link_found:
                 try:
                     ireland_link.first.click(timeout=3000)
-                    page.wait_for_timeout(1500)
+                    page.wait_for_timeout(3000)  # was 1500 — real results page needs more time to render
                 except Exception:
                     pass
             try:
                 all_links = page.locator("a[href]")
-                matching = sum(1 for i in range(all_links.count())
-                               if re.search(r"redhat\.com/.*/jobs/", (all_links.nth(i).get_attribute("href") or ""), re.I))
+                hrefs = [all_links.nth(i).get_attribute("href") or "" for i in range(all_links.count())]
+                matching = sum(1 for h in hrefs if re.search(r"redhat\.com/.*job", h, re.I))
                 print(f"      [red-hat] Ireland link found={ireland_link_found}, page title={page.title()!r}, "
-                      f"total links={all_links.count()}, matching job-pattern links={matching}")
+                      f"total links={len(hrefs)}, matching job-pattern links={matching}")
+                sample = [h for h in hrefs if h and "redhat" in h.lower()][:10]
+                print(f"      [red-hat] sample real hrefs on page: {sample}")
             except Exception as e:
                 print(f"      [red-hat] diagnostic read failed: {e}")
             _collect_browser_job_links(
                 page, "Red Hat",
-                [r"redhat\.com/.*/jobs/", r"redhat\.com/en/jobs/", r"redhat\.com/jobs/"],
+                [r"redhat\.com/.*job", r"redhat\.com/en/jobs/", r"redhat\.com/jobs/"],
                 "redhat_browser", results, "Ireland")
             for _ in range(20):
                 for txt in ("Load more", "Show more", "See more", "Next"):
@@ -2533,7 +2535,7 @@ def scrape_red_hat_ireland(session):
                 before = len(results)
                 _collect_browser_job_links(
                     page, "Red Hat",
-                    [r"redhat\.com/.*/jobs/", r"redhat\.com/en/jobs/", r"redhat\.com/jobs/"],
+                    [r"redhat\.com/.*job", r"redhat\.com/en/jobs/", r"redhat\.com/jobs/"],
                     "redhat_browser", results, "Ireland")
                 if len(results) == before:
                     break
@@ -2563,6 +2565,15 @@ def scrape_jnj_ireland(session):
             for url in urls:
                 page.goto(url, wait_until="domcontentloaded", timeout=60000)
                 page.wait_for_timeout(1200)
+                # Real evidence: this site shows a Cloudflare "Just a
+                # moment..." bot-check page first, which auto-resolves
+                # after several seconds for a genuine browser. Poll for it
+                # to clear instead of a fixed short wait that's nowhere
+                # near long enough for the JS challenge to complete.
+                for _ in range(12):
+                    if "just a moment" not in (page.title() or "").lower():
+                        break
+                    page.wait_for_timeout(1000)
                 _browser_accept_consent(page)
                 try:
                     all_links = page.locator("a[href]")
@@ -2672,21 +2683,23 @@ def scrape_hsbc_ireland(session):
                 _browser_accept_consent(page)
                 try:
                     all_links = page.locator("a[href]")
-                    matching = sum(1 for i in range(all_links.count())
-                                   if re.search(r"apply\.careers\.hsbc\.com/job/", (all_links.nth(i).get_attribute("href") or ""), re.I))
-                    print(f"      [hsbc] {search_url}: page title={page.title()!r}, total links={all_links.count()}, "
+                    hrefs = [all_links.nth(i).get_attribute("href") or "" for i in range(all_links.count())]
+                    matching = sum(1 for h in hrefs if re.search(r"hsbc\.com/(?:job|position|opportunit|career)", h, re.I))
+                    print(f"      [hsbc] {search_url}: page title={page.title()!r}, total links={len(hrefs)}, "
                           f"matching job-pattern links={matching}")
+                    sample = [h for h in hrefs if h and "hsbc" in h.lower()][:8]
+                    print(f"      [hsbc] sample real hrefs on page: {sample}")
                 except Exception as e:
                     print(f"      [hsbc] diagnostic read failed: {e}")
                 stagnant, previous = 0, 0
                 for _ in range(60):
                     _collect_filtered_page_jobs(
                         page, "HSBC Ireland",
-                        r"apply\.careers\.hsbc\.com/job/",
+                        r"hsbc\.com/(?:job|position|opportunit|career)",
                         "hsbc_successfactors", results, "Dublin, Ireland")
                     _collect_links_from_html(
                         page, "HSBC Ireland",
-                        r"apply\.careers\.hsbc\.com/job/",
+                        r"hsbc\.com/(?:job|position|opportunit|career)",
                         "hsbc_successfactors", results, "Dublin, Ireland")
                     for txt in ("Load more", "Show more", "See more", "Next"):
                         try:
@@ -2731,6 +2744,16 @@ def scrape_dxc_ireland(session):
                 page.goto(url, wait_until="domcontentloaded", timeout=60000)
                 page.wait_for_timeout(1200)
                 _browser_accept_consent(page)
+                try:
+                    all_links = page.locator("a[href]")
+                    hrefs = [all_links.nth(i).get_attribute("href") or "" for i in range(all_links.count())]
+                    matching = sum(1 for h in hrefs if re.search(r"careers\.dxc\.com/job", h, re.I))
+                    print(f"      [dxc] {url}: page title={page.title()!r}, total links={len(hrefs)}, "
+                          f"matching job-pattern links={matching}")
+                    sample = [h for h in hrefs if h and "dxc" in h.lower()][:8]
+                    print(f"      [dxc] sample real hrefs on page: {sample}")
+                except Exception as e:
+                    print(f"      [dxc] diagnostic read failed: {e}")
                 stagnant, previous = 0, 0
                 for _ in range(40):
                     _collect_verified_ireland_page_jobs(
@@ -2815,6 +2838,7 @@ def scrape_nvidia_ireland(session):
             page.goto(board_url, wait_until="domcontentloaded", timeout=60000)
             page.wait_for_timeout(1800)
             _browser_accept_consent(page)
+            search_box_found = False
             for selector_fn in (
                 lambda: page.get_by_placeholder(re.compile(r"search", re.I)),
                 lambda: page.get_by_role("textbox"),
@@ -2826,9 +2850,20 @@ def scrape_nvidia_ireland(session):
                         box.fill("Ireland", timeout=1500)
                         box.press("Enter", timeout=1500)
                         page.wait_for_timeout(1800)
+                        search_box_found = True
                         break
                 except Exception:
                     pass
+            try:
+                all_links = page.locator("a[href]")
+                hrefs = [all_links.nth(i).get_attribute("href") or "" for i in range(all_links.count())]
+                matching = sum(1 for h in hrefs if re.search(r"myworkdayjobs\.com/.*job", h, re.I))
+                print(f"      [nvidia] search box found={search_box_found}, page title={page.title()!r}, "
+                      f"total links={len(hrefs)}, matching job-pattern links={matching}")
+                sample = [h for h in hrefs if h and "job" in h.lower()][:8]
+                print(f"      [nvidia] sample real hrefs on page: {sample}")
+            except Exception as e:
+                print(f"      [nvidia] diagnostic read failed: {e}")
             stagnant, previous = 0, 0
             for _ in range(40):
                 _collect_verified_ireland_page_jobs(
