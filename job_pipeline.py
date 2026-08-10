@@ -2500,12 +2500,21 @@ def scrape_red_hat_ireland(session):
             # Prefer the actual Ireland country link; if it is not a direct
             # href, click the visible text and let the site route normally.
             ireland_link = page.get_by_role("link", name=re.compile(r"^Ireland$", re.I))
-            if ireland_link.count():
+            ireland_link_found = ireland_link.count() > 0
+            if ireland_link_found:
                 try:
                     ireland_link.first.click(timeout=3000)
                     page.wait_for_timeout(1500)
                 except Exception:
                     pass
+            try:
+                all_links = page.locator("a[href]")
+                matching = sum(1 for i in range(all_links.count())
+                               if re.search(r"redhat\.com/.*/jobs/", (all_links.nth(i).get_attribute("href") or ""), re.I))
+                print(f"      [red-hat] Ireland link found={ireland_link_found}, page title={page.title()!r}, "
+                      f"total links={all_links.count()}, matching job-pattern links={matching}")
+            except Exception as e:
+                print(f"      [red-hat] diagnostic read failed: {e}")
             _collect_browser_job_links(
                 page, "Red Hat",
                 [r"redhat\.com/.*/jobs/", r"redhat\.com/en/jobs/", r"redhat\.com/jobs/"],
@@ -2555,6 +2564,14 @@ def scrape_jnj_ireland(session):
                 page.goto(url, wait_until="domcontentloaded", timeout=60000)
                 page.wait_for_timeout(1200)
                 _browser_accept_consent(page)
+                try:
+                    all_links = page.locator("a[href]")
+                    matching = sum(1 for i in range(all_links.count())
+                                   if re.search(r"careers\.jnj\.com/en/job", (all_links.nth(i).get_attribute("href") or ""), re.I))
+                    print(f"      [jnj] {url}: page title={page.title()!r}, total links={all_links.count()}, "
+                          f"matching job-pattern links={matching}")
+                except Exception as e:
+                    print(f"      [jnj] diagnostic read failed: {e}")
                 stagnant, previous = 0, 0
                 for _ in range(100):
                     _collect_filtered_page_jobs(
@@ -2653,6 +2670,14 @@ def scrape_hsbc_ireland(session):
                 page.goto(search_url, wait_until="domcontentloaded", timeout=60000)
                 page.wait_for_timeout(1200)
                 _browser_accept_consent(page)
+                try:
+                    all_links = page.locator("a[href]")
+                    matching = sum(1 for i in range(all_links.count())
+                                   if re.search(r"apply\.careers\.hsbc\.com/job/", (all_links.nth(i).get_attribute("href") or ""), re.I))
+                    print(f"      [hsbc] {search_url}: page title={page.title()!r}, total links={all_links.count()}, "
+                          f"matching job-pattern links={matching}")
+                except Exception as e:
+                    print(f"      [hsbc] diagnostic read failed: {e}")
                 stagnant, previous = 0, 0
                 for _ in range(60):
                     _collect_filtered_page_jobs(
@@ -2682,6 +2707,144 @@ def scrape_hsbc_ireland(session):
     except Exception as e:
         print(f"      [hsbc] browser scrape failed: {e}")
     print(f"      [hsbc] {len(results)} unique Ireland jobs accumulated")
+    return list(results.values())
+
+
+def scrape_dxc_ireland(session):
+    """DXC Technology is currently stuck in the Workday 422-error cluster
+    (a shared, unresolved block affecting ~15 tenants this whole session).
+    Bypasses that entirely with a direct scrape of their own public
+    careers site instead."""
+    if not HAS_PLAYWRIGHT:
+        print("      [dxc] playwright not installed — skipping")
+        return []
+    urls = [
+        "https://careers.dxc.com/job-search-results/?location=Ireland",
+        "https://careers.dxc.com/job-search-results/?keyword=&location=Ireland",
+    ]
+    results = {}
+    try:
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch(headless=True)
+            page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
+            for url in urls:
+                page.goto(url, wait_until="domcontentloaded", timeout=60000)
+                page.wait_for_timeout(1200)
+                _browser_accept_consent(page)
+                stagnant, previous = 0, 0
+                for _ in range(40):
+                    _collect_verified_ireland_page_jobs(
+                        page, "DXC Technology", r"careers\.dxc\.com/job/",
+                        "dxc_browser", results, "Ireland")
+                    for txt in ("Load more", "Show more", "See more", "Next"):
+                        try:
+                            b = page.get_by_role("button", name=txt, exact=False)
+                            if b.count() and b.first.is_visible():
+                                b.first.click(timeout=1000)
+                                page.wait_for_timeout(400)
+                        except Exception:
+                            pass
+                    page.mouse.wheel(0, 3000)
+                    page.wait_for_timeout(350)
+                    current = len(results)
+                    stagnant = stagnant + 1 if current == previous else 0
+                    previous = current
+                    if stagnant >= 8:
+                        break
+            browser.close()
+    except Exception as e:
+        print(f"      [dxc] browser scrape failed: {e}")
+    print(f"      [dxc] {len(results)} unique Ireland jobs accumulated")
+    return list(results.values())
+
+
+def scrape_grant_thornton_direct(session):
+    """Grant Thornton's original Workday tenant (iegt.wd3) has been part of
+    the stuck-422 cluster all session and appears to no longer be their
+    live hiring source — their current real careers pages are on their
+    own site instead. Lightweight, no browser needed."""
+    urls = [
+        "https://www.grantthornton.ie/careers/",
+        "https://www.grantthornton.ie/careers/experienced-hires/",
+        "https://www.grantthornton.ie/careers/early-careers/",
+    ]
+    hints = ("/careers/", "/job/", "/jobs/", "vacanc", "opportunit",
+             "experienced-hires", "graduate", "undergrad")
+    blocked_titles = {
+        "why grant thornton", "our benefits", "working at grant thornton",
+        "careers", "experienced hires", "early careers",
+        "graduate programme", "undergrad programme", "contact us",
+    }
+    results, seen = [], set()
+    for url in urls:
+        try:
+            rows = _scrape_public_careers_page("Grant Thornton Ireland", url, hints, session, "Ireland")
+        except Exception as e:
+            print(f"      [grant-thornton] page failed {url}: {e}")
+            continue
+        for job in rows:
+            title = (job.get("title") or "").strip()
+            href = (job.get("url") or "").strip()
+            if not title or not href or title.lower() in blocked_titles:
+                continue
+            key = href.split("?")[0].rstrip("/").lower()
+            if key in seen:
+                continue
+            seen.add(key)
+            results.append(job)
+    print(f"      [grant-thornton] {len(results)} candidate Ireland opportunities")
+    return results
+
+
+def scrape_nvidia_ireland(session):
+    """NVIDIA's Workday tenant returns 200 OK but 0 postings via the plain
+    HTTP API — different failure mode from the 422 cluster, but still
+    stuck. Real browser automation (load the actual page, type 'Ireland'
+    into the real search box, read what renders) can succeed where a
+    direct API call doesn't, since it's indistinguishable from a genuine
+    human visit."""
+    if not HAS_PLAYWRIGHT:
+        print("      [nvidia] playwright not installed — skipping")
+        return []
+    board_url = "https://nvidia.wd5.myworkdayjobs.com/en-US/NVIDIAExternalCareerSite/search?q=Ireland"
+    results = {}
+    try:
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch(headless=True)
+            page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
+            page.goto(board_url, wait_until="domcontentloaded", timeout=60000)
+            page.wait_for_timeout(1800)
+            _browser_accept_consent(page)
+            for selector_fn in (
+                lambda: page.get_by_placeholder(re.compile(r"search", re.I)),
+                lambda: page.get_by_role("textbox"),
+            ):
+                try:
+                    loc = selector_fn()
+                    if loc.count():
+                        box = loc.first
+                        box.fill("Ireland", timeout=1500)
+                        box.press("Enter", timeout=1500)
+                        page.wait_for_timeout(1800)
+                        break
+                except Exception:
+                    pass
+            stagnant, previous = 0, 0
+            for _ in range(40):
+                _collect_verified_ireland_page_jobs(
+                    page, "NVIDIA", r"nvidia\.wd5\.myworkdayjobs\.com/.*/job/",
+                    "nvidia_workday_browser", results, "Ireland")
+                page.mouse.wheel(0, 3000)
+                page.wait_for_timeout(500)
+                current = len(results)
+                stagnant = stagnant + 1 if current == previous else 0
+                previous = current
+                if stagnant >= 8:
+                    break
+            browser.close()
+    except Exception as e:
+        print(f"      [nvidia] browser scrape failed: {e}")
+    print(f"      [nvidia] {len(results)} unique Ireland jobs accumulated")
     return list(results.values())
 
 
@@ -2913,7 +3076,7 @@ def scrape_jsonld_jobpostings(url, company_name, session):
     return results
 
 
-PROBE_VERSION = 17  # bump whenever a new ATS platform is added to the probe list, or slug guessing changes
+PROBE_VERSION = 18  # bump whenever a new ATS platform is added to the probe list, or slug guessing changes
 
 # Deliberately SEPARATE from PROBE_VERSION — these two caches were sharing
 # one version number, which meant every ATS-platform fix (Workable, etc.)
@@ -3255,6 +3418,9 @@ def test_single_company(name):
         "johnson & johnson": lambda: scrape_jnj_ireland(session),
         "johnson controls": lambda: scrape_johnson_controls_ireland(session),
         "hsbc": lambda: scrape_hsbc_ireland(session),
+        "dxc": lambda: scrape_dxc_ireland(session),
+        "grant thornton": lambda: scrape_grant_thornton_direct(session),
+        "nvidia": lambda: scrape_nvidia_ireland(session),
         "microsoft": lambda: scrape_microsoft_ireland(session),
         "citi": lambda: scrape_citi_ireland(session),
         "red hat": lambda: scrape_red_hat_ireland(session),
@@ -3311,6 +3477,11 @@ def main():
           f"file is NOT the latest version) ===")
     print(f"=== Platforms supported: greenhouse, lever, smartrecruiters, ashby, "
           f"recruitee, personio, pinpoint, eightfold, phenom, workable ===")
+    print(f"=== Dedicated company scrapers present: "
+          f"dxc={('scrape_dxc_ireland' in globals())}, "
+          f"grant_thornton={('scrape_grant_thornton_direct' in globals())}, "
+          f"nvidia={('scrape_nvidia_ireland' in globals())} "
+          f"(should all say True — if any say False, this upload is missing that code) ===")
     if os.path.exists("ats_platform_cache.json"):
         with open("ats_platform_cache.json", encoding="utf-8") as f:
             existing_cache = json.load(f)
@@ -3475,6 +3646,9 @@ def main():
         ("johnson & johnson", scrape_jnj_ireland, "Johnson & Johnson (first-party board)"),
         ("johnson controls", scrape_johnson_controls_ireland, "Johnson Controls (Algolia-style board)"),
         ("hsbc ireland", scrape_hsbc_ireland, "HSBC Ireland (SuccessFactors, same technique as EY)"),
+        ("dxc technology", scrape_dxc_ireland, "DXC Technology (bypasses its stuck Workday tenant)"),
+        ("grant thornton ireland", scrape_grant_thornton_direct, "Grant Thornton (their real current careers site, not the stuck Workday tenant)"),
+        ("nvidia", scrape_nvidia_ireland, "NVIDIA (real browser automation against their Workday board, bypasses the plain-HTTP-request block)"),
     ]
     for exact_name, scraper_fn, description in exact_browser_targets:
         entry = next((c for c in manual_check if c["company"].strip().lower() == exact_name), None)
