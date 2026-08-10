@@ -2820,13 +2820,27 @@ def scrape_grant_thornton_direct(session):
 
 
 def _browser_collect_job_links_with_retries(page, company_name, patterns, source_tag, results,
-                                             default_location="Ireland", rounds=40, timeout_ms=90000):
+                                             default_location="Ireland", rounds=40, timeout_ms=45000):
     """Shared browser loop for proprietary career sites.  It keeps scrolling,
-    follows visible load-more/next controls, and deduplicates individual job URLs."""
+    follows visible load-more/next controls, and deduplicates individual job URLs.
+
+    timeout_ms is now an ACTUAL hard wall-clock budget, not just an unused
+    parameter — confirmed real bug: it was defined but never checked
+    anywhere, meaning the only real bound was a round count, with no
+    guarantee on how long each round actually took. A run went over 90
+    minutes as a direct result. This is now enforced every round,
+    regardless of internal state, matching the lesson from an earlier
+    unbounded-loop incident this session (never trust round/iteration
+    counts alone to bound real time)."""
+    start_time = time.time()
     for _ in range(rounds):
+        if (time.time() - start_time) * 1000 > timeout_ms:
+            break
         before = len(results)
         _collect_browser_job_links(page, company_name, patterns, source_tag, results, default_location)
         for txt in ("Load more", "Show more", "See more", "Next", "View more"):
+            if (time.time() - start_time) * 1000 > timeout_ms:
+                break
             try:
                 b = page.get_by_role("button", name=txt, exact=False)
                 if b.count() and b.first.is_visible():
@@ -2863,7 +2877,7 @@ def scrape_aon_ireland(session):
             page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
             for url in urls:
                 try:
-                    page.goto(url, wait_until="domcontentloaded", timeout=90000)
+                    page.goto(url, wait_until="domcontentloaded", timeout=30000)
                     page.wait_for_timeout(1800)
                     _browser_accept_consent(page)
                     # If this is the location index, click Ireland first.
@@ -2908,7 +2922,7 @@ def scrape_eaton_ireland(session):
             page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
             for url in urls:
                 try:
-                    page.goto(url, wait_until="domcontentloaded", timeout=90000)
+                    page.goto(url, wait_until="domcontentloaded", timeout=30000)
                     page.wait_for_timeout(1800)
                     _browser_accept_consent(page)
                     # Click the site's search/apply entry point if present.
@@ -2918,7 +2932,7 @@ def scrape_eaton_ireland(session):
                             if el.count():
                                 href = el.first.get_attribute("href") or ""
                                 if href:
-                                    page.goto(urllib.parse.urljoin(page.url, href), wait_until="domcontentloaded", timeout=90000)
+                                    page.goto(urllib.parse.urljoin(page.url, href), wait_until="domcontentloaded", timeout=30000)
                                     page.wait_for_timeout(1500)
                                 else:
                                     el.first.click(timeout=3000)
@@ -2995,7 +3009,7 @@ def scrape_nvidia_ireland(session):
         with sync_playwright() as pw:
             browser = pw.chromium.launch(headless=True)
             page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
-            page.goto("https://jobs.nvidia.com/careers", wait_until="domcontentloaded", timeout=90000)
+            page.goto("https://jobs.nvidia.com/careers", wait_until="domcontentloaded", timeout=30000)
             page.wait_for_timeout(2500)
             title = (page.title() or "").lower()
             body = _browser_text(page).lower()
