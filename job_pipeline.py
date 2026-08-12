@@ -3153,6 +3153,335 @@ def _scrape_public_careers_page(company_name, url, href_hints, session, default_
             "visa_snippet": snippet,
         })
     return results
+def scrape_cognizant_ireland(session):
+    """Cognizant's global jobs board is server-rendered — visits each
+    candidate job's own detail page to verify Ireland, since the list
+    page itself doesn't show location clearly. Capped at a reasonable
+    number of detail-page checks to keep this bounded."""
+    search_url = "https://careers.cognizant.com/global-en/jobs/"
+    results = {}
+    try:
+        resp = session.get(search_url, headers=HEADERS, timeout=20)
+        if resp.status_code != 200:
+            return []
+        page = resp.text
+    except Exception:
+        return []
+    links = []
+    for m in re.finditer(r'<a\b[^>]*href=["\']([^"\']+)["\'][^>]*>(.*?)</a>', page, re.I | re.S):
+        href = urllib.parse.urljoin(search_url, m.group(1))
+        if re.search(r"/global-en/jobs/\d+/[^/]+/?$", href):
+            links.append((href, _html_to_text(m.group(2))))
+    for href, anchor_title in links[:120]:  # bounded — real evidence this can run to hundreds otherwise
+        if href in results:
+            continue
+        try:
+            resp2 = session.get(href, headers=HEADERS, timeout=15)
+            if resp2.status_code != 200:
+                continue
+            text = _html_to_text(resp2.text)
+        except Exception:
+            continue
+        if not is_ireland_location(text):
+            continue
+        title = anchor_title or "Cognizant role"
+        posted_text, posted_days = extract_posted_from_text(text)
+        sponsorship, snippet = classify_sponsorship(text[:5000])
+        results[href] = {
+            "company": "Cognizant", "title": title[:300],
+            "location": _extract_location_from_card(text, "Ireland"),
+            "posted_text": posted_text, "posted_days_ago": posted_days,
+            "employment_type": normalize_employment_type(None, title),
+            "url": href, "source": "cognizant_direct",
+            "visa_sponsorship": sponsorship, "visa_snippet": snippet,
+        }
+    print(f"      [cognizant] {len(results)} unique Ireland jobs accumulated")
+    return list(results.values())
+
+
+def scrape_aib_ireland(session):
+    """AIB's real jobs board, filtered defensively for genuine Irish
+    locations and against UK-only postings that might otherwise slip in."""
+    if not HAS_PLAYWRIGHT:
+        print("      [aib] playwright not installed — skipping")
+        return []
+    results = {}
+    try:
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch(headless=True)
+            page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
+            page.goto("https://jobs.aib.ie/go/Search-All-Jobs/3834700/", wait_until="domcontentloaded", timeout=30000)
+            page.wait_for_timeout(1200)
+            _browser_accept_consent(page)
+            _browser_collect_job_links_with_retries(
+                page, "AIB (Allied Irish Banks)", [r"jobs\.aib\.ie/aib/job/"],
+                "aib_browser", results, "Ireland", rounds=25)
+            browser.close()
+    except Exception as e:
+        print(f"      [aib] browser scrape failed: {e}")
+    cleaned = {}
+    for href, j in results.items():
+        text = f"{j.get('title','')} {j.get('location','')}".lower()
+        irish = bool(re.search(r"\b(dublin|cork|galway|limerick|waterford|kildare|ireland)\b", text))
+        uk_only = bool(re.search(r"\b(london|belfast|england|scotland|wales|united kingdom)\b", text)) and not irish
+        if irish and not uk_only:
+            cleaned[href] = j
+    print(f"      [aib] {len(cleaned)} unique Ireland jobs accumulated")
+    return list(cleaned.values())
+
+
+def scrape_bnp_paribas_ireland(session):
+    """BNP's Dublin listing is server-rendered — plain HTTP first, real
+    browser fallback only if that comes back empty."""
+    company = "BNP Paribas Ireland"
+    urls = ["https://group.bnpparibas/en/careers/all-job-offers/dublin",
+            "https://group.bnpparibas/en/careers/all-job-offers/permanent/ireland"]
+    results = {}
+    for url in urls:
+        try:
+            resp = session.get(url, headers=HEADERS, timeout=20)
+            if resp.status_code != 200:
+                continue
+            page = resp.text
+        except Exception:
+            continue
+        for m in re.finditer(r'<a\b[^>]*href=["\']([^"\']+)["\'][^>]*>(.*?)</a>', page, re.I | re.S):
+            href = urllib.parse.urljoin(url, m.group(1))
+            title = _html_to_text(m.group(2))
+            if not title or len(title) < 4:
+                continue
+            start, end = max(0, m.start() - 1500), min(len(page), m.end() + 1500)
+            card = _html_to_text(page[start:end])
+            if not is_ireland_location(f"{title} {card}"):
+                continue
+            if not ("/careers/" in href or "/jobs/" in href):
+                continue
+            if any(x in title.lower() for x in ("create email alert", "display job offers", "apply now")):
+                continue
+            posted_text, posted_days = extract_posted_from_text(card)
+            sponsorship, snippet = classify_sponsorship(card[:5000])
+            results[href] = {
+                "company": company, "title": title[:300], "location": "Dublin, Ireland",
+                "posted_text": posted_text, "posted_days_ago": posted_days,
+                "employment_type": normalize_employment_type(None, title),
+                "url": href, "source": "bnp_direct",
+                "visa_sponsorship": sponsorship, "visa_snippet": snippet,
+            }
+    if not results and HAS_PLAYWRIGHT:
+        try:
+            with sync_playwright() as pw:
+                browser = pw.chromium.launch(headless=True)
+                page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
+                page.goto(urls[0], wait_until="domcontentloaded", timeout=30000)
+                page.wait_for_timeout(1200)
+                _browser_accept_consent(page)
+                _browser_collect_job_links_with_retries(
+                    page, company, [r"group\.bnpparibas/en/careers/"],
+                    "bnp_browser", results, "Dublin, Ireland", rounds=25)
+                browser.close()
+        except Exception as e:
+            print(f"      [bnp] browser fallback failed: {e}")
+    print(f"      [bnp] {len(results)} unique Ireland jobs accumulated")
+    return list(results.values())
+
+
+def scrape_blackrock_ireland(session):
+    """BlackRock runs on Phenom (same platform as Citi, which already
+    works via real browser automation — the widget/refNum API approach
+    never worked all session, browser automation reading the rendered
+    page is the technique that actually succeeds for Phenom sites)."""
+    if not HAS_PLAYWRIGHT:
+        print("      [blackrock] playwright not installed — skipping")
+        return []
+    urls = [
+        "https://careers.blackrock.com/location/dublin-jobs/45831/2963597-7521314-2964574/4",
+        "https://careers.blackrock.com/search-jobs?location=Dublin%2C%20Ireland",
+    ]
+    results = {}
+    try:
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch(headless=True)
+            page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
+            for url in urls:
+                try:
+                    page.goto(url, wait_until="domcontentloaded", timeout=30000)
+                    page.wait_for_timeout(1200)
+                    _browser_accept_consent(page)
+                    _browser_collect_job_links_with_retries(
+                        page, "BlackRock", [r"careers\.blackrock\.com/job/dublin/"],
+                        "blackrock_browser", results, "Dublin, Ireland", rounds=30)
+                except Exception as e:
+                    print(f"      [blackrock] page failed {url}: {e}")
+            browser.close()
+    except Exception as e:
+        print(f"      [blackrock] browser scrape failed: {e}")
+    for j in results.values():
+        j["title"] = re.split(r"\s*Location:\s*", j.get("title", ""), maxsplit=1, flags=re.I)[0].strip()
+        j["location"] = "Dublin, Ireland"
+    print(f"      [blackrock] {len(results)} unique Ireland jobs accumulated")
+    return list(results.values())
+
+
+def scrape_bank_of_ireland_direct(session):
+    """Bank of Ireland's own jobs board, filtered against UK-only postings."""
+    if not HAS_PLAYWRIGHT:
+        print("      [boi] playwright not installed — skipping")
+        return []
+    results = {}
+    try:
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch(headless=True)
+            page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
+            page.goto("https://careers.bankofireland.com/jobs/search", wait_until="domcontentloaded", timeout=30000)
+            page.wait_for_timeout(1200)
+            _browser_accept_consent(page)
+            _browser_collect_job_links_with_retries(
+                page, "Bank of Ireland", [r"careers\.bankofireland\.com/jobs/"],
+                "boi_browser", results, "Ireland", rounds=25)
+            browser.close()
+    except Exception as e:
+        print(f"      [boi] browser scrape failed: {e}")
+    cleaned = {}
+    for href, j in results.items():
+        title = (j.get("title") or "").strip()
+        text = f"{title} {j.get('location','')}".lower()
+        if not title or title.lower().startswith("skip to") or "#jobs_search_results" in href:
+            continue
+        irish = bool(re.search(r"\b(dublin|cork|galway|limerick|waterford|kilkenny|ireland)\b", text))
+        uk_only = bool(re.search(r"\b(bristol|london|belfast|england|scotland|wales|united kingdom|\buk\b)\b", text)) and not irish
+        if irish and not uk_only:
+            cleaned[href] = j
+    print(f"      [boi] {len(cleaned)} unique Ireland jobs accumulated")
+    return list(cleaned.values())
+
+
+def scrape_ing_ireland(session):
+    """ING also runs on Phenom — same technique as Citi/BlackRock."""
+    if not HAS_PLAYWRIGHT:
+        print("      [ing] playwright not installed — skipping")
+        return []
+    results = {}
+    try:
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch(headless=True)
+            page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
+            page.goto("https://careers.ing.com/en/location/dublin-jobs/2618/2963597-7521314-2964574/4",
+                       wait_until="domcontentloaded", timeout=30000)
+            page.wait_for_timeout(1200)
+            _browser_accept_consent(page)
+            _browser_collect_job_links_with_retries(
+                page, "ING", [r"careers\.ing\.com/en/job/dublin/"],
+                "ing_browser", results, "Dublin, Ireland", rounds=30)
+            browser.close()
+    except Exception as e:
+        print(f"      [ing] browser scrape failed: {e}")
+    print(f"      [ing] {len(results)} unique Ireland jobs accumulated")
+    return list(results.values())
+
+
+def scrape_deutsche_bank_ireland(session):
+    """Deutsche Bank's professional roles search, real browser rendering."""
+    if not HAS_PLAYWRIGHT:
+        print("      [deutsche-bank] playwright not installed — skipping")
+        return []
+    urls = ["https://careers.db.com/professionals/search-roles/"]
+    results = {}
+    try:
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch(headless=True)
+            page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
+            for url in urls:
+                page.goto(url, wait_until="domcontentloaded", timeout=30000)
+                page.wait_for_timeout(1800)
+                _browser_accept_consent(page)
+                _collect_verified_ireland_page_jobs(
+                    page, "Deutsche Bank", r"careers\.db\.com/professionals/job/",
+                    "deutsche_bank_browser", results, "Ireland")
+            browser.close()
+    except Exception as e:
+        print(f"      [deutsche-bank] browser scrape failed: {e}")
+    print(f"      [deutsche-bank] {len(results)} unique Ireland jobs accumulated")
+    return list(results.values())
+
+
+def scrape_arup_ireland(session):
+    """Arup's real dedicated Ireland jobs page, lightweight regex parse —
+    no browser needed."""
+    source_url = "https://jobs.arup.com/page/jobs-in-ireland-252"
+    results = {}
+    try:
+        resp = session.get(source_url, headers=HEADERS, timeout=20)
+        if resp.status_code != 200:
+            return []
+        page = resp.text
+    except Exception:
+        return []
+    for m in re.finditer(r'<a\b[^>]*href=["\']([^"\']*?/jobs/[^"\']+)["\'][^>]*>(.*?)</a>', page, re.I | re.S):
+        href = urllib.parse.urljoin(source_url, m.group(1)).split("?")[0]
+        title = _html_to_text(m.group(2)).strip()
+        if "/other-jobs-matching/" in href.lower():
+            continue
+        if not re.search(r"/jobs/[a-z0-9][^/]*-\d+$", href, re.I):
+            continue
+        if not title or title.lower() in {"learn more", "jobs", "search jobs"}:
+            continue
+        if title.startswith("\U0001F50D"):
+            continue
+        if href in results:
+            continue
+        start, end = max(0, m.start() - 800), min(len(page), m.end() + 800)
+        card = _html_to_text(page[start:end])
+        posted_text, posted_days = extract_posted_from_text(card)
+        sponsorship, snippet = classify_sponsorship(card[:5000])
+        results[href] = {
+            "company": "Arup", "title": title[:300],
+            "location": _extract_location_from_card(card, "Ireland"),
+            "posted_text": posted_text, "posted_days_ago": posted_days,
+            "employment_type": normalize_employment_type(None, title),
+            "url": href, "source": "arup_direct",
+            "visa_sponsorship": sponsorship, "visa_snippet": snippet,
+        }
+    print(f"      [arup] {len(results)} unique Ireland jobs accumulated")
+    return list(results.values())
+
+
+def scrape_central_bank_ireland_direct(session):
+    """Central Bank of Ireland's real Candidate Manager vacancies board —
+    genuinely new company, not previously in the pipeline at all."""
+    if not HAS_PLAYWRIGHT:
+        print("      [central-bank] playwright not installed — skipping")
+        return []
+    url = "https://www.candidatemanager.net/cm/p/pJobs.aspx?a=1bqO7eBaJhQ%3D&mid=YUYF&sid=BDCXCX"
+    results = {}
+    try:
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch(headless=True)
+            page = browser.new_page(viewport={"width": 1400, "height": 1000}, locale="en-IE")
+            page.goto(url, wait_until="domcontentloaded", timeout=30000)
+            page.wait_for_timeout(900)
+            body = _browser_text(page.locator("body"))
+            if "no jobs were found" not in body.lower():
+                anchors = page.locator("a[href*='pJobDetails.aspx']")
+                for i in range(anchors.count()):
+                    a = anchors.nth(i)
+                    href = urllib.parse.urljoin(page.url, a.get_attribute("href") or "")
+                    title = _browser_text(a)
+                    if href and title and href not in results:
+                        sponsorship, snippet = classify_sponsorship(title)
+                        results[href] = {
+                            "company": "Central Bank of Ireland", "title": title[:300],
+                            "location": "Dublin, Ireland", "posted_text": "Unknown", "posted_days_ago": None,
+                            "employment_type": normalize_employment_type(None, title),
+                            "url": href, "source": "central_bank_direct",
+                            "visa_sponsorship": sponsorship, "visa_snippet": snippet,
+                        }
+            browser.close()
+    except Exception as e:
+        print(f"      [central-bank] browser scrape failed: {e}")
+    print(f"      [central-bank] {len(results)} current vacancies")
+    return list(results.values())
+
+
 
 
 def scrape_oracle_candidate_experience(company_name, host, site_number, session, country_code="IE", max_pages=12):
@@ -3675,6 +4004,15 @@ def test_single_company(name):
         "nvidia": lambda: scrape_nvidia_ireland(session),
         "aon": lambda: scrape_aon_ireland(session),
         "eaton": lambda: scrape_eaton_ireland(session),
+        "cognizant": lambda: scrape_cognizant_ireland(session),
+        "aib": lambda: scrape_aib_ireland(session),
+        "bnp paribas": lambda: scrape_bnp_paribas_ireland(session),
+        "blackrock": lambda: scrape_blackrock_ireland(session),
+        "bank of ireland": lambda: scrape_bank_of_ireland_direct(session),
+        "ing": lambda: scrape_ing_ireland(session),
+        "deutsche bank": lambda: scrape_deutsche_bank_ireland(session),
+        "arup": lambda: scrape_arup_ireland(session),
+        "central bank": lambda: scrape_central_bank_ireland_direct(session),
         "microsoft": lambda: scrape_microsoft_ireland(session),
         "citi": lambda: scrape_citi_ireland(session),
         "red hat": lambda: scrape_red_hat_ireland(session),
@@ -3912,6 +4250,15 @@ def main():
         ("nvidia", scrape_nvidia_ireland, "NVIDIA (public Eightfold feed, same platform as Netflix — falls back to a browser check that honestly reports a sign-in wall instead of a false zero)"),
         ("aon", scrape_aon_ireland, "Aon (first-party jobs.aon.com, bypasses their stuck Workday tenant)"),
         ("eaton", scrape_eaton_ireland, "Eaton (first-party jobs.eaton.com applicant portal, bypasses their stuck Workday tenant)"),
+        ("cognizant", scrape_cognizant_ireland, "Cognizant (verifies Ireland on each job's own detail page)"),
+        ("aib (allied irish banks)", scrape_aib_ireland, "AIB (real jobs board, filtered against UK-only postings)"),
+        ("bnp paribas ireland", scrape_bnp_paribas_ireland, "BNP Paribas (first-party Dublin jobs page)"),
+        ("blackrock", scrape_blackrock_ireland, "BlackRock (Phenom platform, same technique as Citi)"),
+        ("bank of ireland", scrape_bank_of_ireland_direct, "Bank of Ireland (first-party jobs board)"),
+        ("ing", scrape_ing_ireland, "ING (Phenom platform, same technique as Citi/BlackRock)"),
+        ("deutsche bank", scrape_deutsche_bank_ireland, "Deutsche Bank (first-party professional roles search)"),
+        ("arup", scrape_arup_ireland, "Arup (real dedicated Ireland jobs page, no browser needed)"),
+        ("central bank of ireland", scrape_central_bank_ireland_direct, "Central Bank of Ireland (genuinely new — real Candidate Manager vacancies board)"),
     ]
     for exact_name, scraper_fn, description in exact_browser_targets:
         entry = next((c for c in manual_check if c["company"].strip().lower() == exact_name), None)
