@@ -48,7 +48,7 @@ import sys
 import time
 import uuid
 import signal
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from concurrent.futures import ThreadPoolExecutor, as_completed, TimeoutError as FuturesTimeoutError
 import html
 import urllib.parse
 import xml.etree.ElementTree as ET
@@ -259,6 +259,8 @@ def run_with_hard_timeout(fn, seconds, label):
 
 BROWSER_SCRAPE_CACHE_PATH = "browser_scrape_cache.json"
 BROWSER_SCRAPE_MAX_AGE_HOURS = 3  # only actually re-run a real browser scrape this often
+EMPTY_RESULT_MAX_AGE_HOURS = 0.5  # empty results retried much sooner — could be a real "no jobs",
+# or could be a one-time failure (crash, resource contention); don't lock in a failure for 3 hours
 
 
 def _load_browser_scrape_cache():
@@ -271,7 +273,10 @@ def _load_browser_scrape_cache():
     return {}
 
 
-PARALLEL_WORKERS = int(os.environ.get("SCRAPE_WORKERS", "8"))
+PARALLEL_WORKERS = int(os.environ.get("SCRAPE_WORKERS", "3"))  # conservative — GitHub Actions'
+# free-tier runners have limited CPU/memory (~2 cores, 7GB RAM); too many
+# simultaneous real Chrome instances can crash or silently fail, and those
+# failures then get cached for 3 hours, making the problem look permanent.
 
 
 def cached_browser_scrape(cache, company_key, scraper_fn, timeout_seconds, label):
@@ -282,17 +287,28 @@ def cached_browser_scrape(cache, company_key, scraper_fn, timeout_seconds, label
     used elsewhere in this pipeline (ATS platform matching, JSON-LD
     checks) — don't redo expensive, slow-changing work on every run.
     Reuses a cached result if it's recent enough; only actually launches
-    a browser when the cache is missing or stale."""
+    a browser when the cache is missing or stale.
+
+    Empty results get a much shorter cache lifetime than real ones — a
+    genuine "no current openings" is one thing, but an empty result could
+    just as easily mean the browser crashed or got resource-starved this
+    one time (a real risk when several run concurrently). Locking that in
+    for the full 3 hours would make a one-time failure look permanent.
+    Only a confirmed, real (non-empty) result earns the long cache."""
     entry = cache.get(company_key)
     if entry:
         age_hours = (time.time() - entry.get("checked_at", 0)) / 3600
-        if age_hours < BROWSER_SCRAPE_MAX_AGE_HOURS:
+        had_jobs = bool(entry.get("jobs"))
+        max_age = BROWSER_SCRAPE_MAX_AGE_HOURS if had_jobs else EMPTY_RESULT_MAX_AGE_HOURS
+        if age_hours < max_age:
             jobs = entry.get("jobs", [])
             print(f"      [{label}] using cached result from {age_hours:.1f}h ago "
-                  f"({len(jobs)} jobs) — next real check in {BROWSER_SCRAPE_MAX_AGE_HOURS - age_hours:.1f}h")
+                  f"({len(jobs)} jobs) — next real check in {max_age - age_hours:.1f}h")
             return jobs
 
-    jobs = run_with_hard_timeout(scraper_fn, timeout_seconds, label)
+    jobs = scraper_fn()  # timeout now enforced by the thread pool itself (future.result(timeout=X)),
+    # not signal.alarm() — that only works in the main thread and crashed
+    # every single dedicated company the moment parallel execution began.
     cache[company_key] = {"jobs": jobs, "checked_at": time.time()}
     return jobs
 
@@ -312,24 +328,35 @@ def run_company_tasks_in_parallel(tasks, workers=None):
     instance internally when called; nothing is shared across threads
     except this function's own bookkeeping.
 
-    workers defaults to a conservative 8, not the 16 a much larger
-    reference implementation used — worth raising later if this proves
-    stable, but starting conservative given real browser processes are
-    heavier per-worker than plain HTTP requests."""
+    workers defaults to a conservative 3, not 8 — GitHub Actions' free-tier
+    runners have limited CPU/memory, and too many simultaneous real Chrome
+    instances risks its own failures. Per-task timeouts are now enforced
+    via future.result(timeout=X) — the thread-safe way to do this.
+    signal.alarm() (the previous mechanism) ONLY works in the main thread
+    and crashed every single dedicated company the moment this function
+    started running them in worker threads instead — confirmed via a real
+    run where all 44 companies failed with the exact same error. This
+    does not forcibly kill a timed-out task's underlying thread (Python
+    has no clean way to do that), but it does stop the pipeline waiting
+    on it and lets everything else proceed normally."""
     results, errors = [], []
     if not tasks:
         return results, errors
     with ThreadPoolExecutor(max_workers=workers or PARALLEL_WORKERS) as pool:
-        future_map = {pool.submit(fn): (label, company) for label, company, fn in tasks}
-        for fut in as_completed(future_map):
-            label, company = future_map[fut]
+        future_map = {pool.submit(fn): (label, company, timeout_s) for label, company, fn, timeout_s in tasks}
+        for fut in future_map:
+            label, company, timeout_s = future_map[fut]
             try:
-                jobs = fut.result() or []
+                jobs = fut.result(timeout=timeout_s) or []
                 if jobs:
                     print(f"  -> {company}: {len(jobs)} Ireland postings found")
                 else:
                     print(f"  -> {company}: found nothing this time")
                 results.append((company, jobs))
+            except FuturesTimeoutError:
+                print(f"  -> {company}: HARD TIMEOUT after {timeout_s}s "
+                      f"(pipeline continues normally with whatever else it already found)")
+                errors.append(f"{label}/{company}: timed out after {timeout_s}s")
             except Exception as exc:
                 print(f"  -> {company}: task failed ({exc})")
                 errors.append(f"{label}/{company}: {exc}")
@@ -4598,7 +4625,7 @@ def main():
         def make_task(fn=scraper_fn, name=company_name, ts=timeout_s):
             return lambda: cached_browser_scrape(browser_cache, name, lambda: fn(session), ts, name)
 
-        task_list.append((key, company_name, make_task()))
+        task_list.append((key, company_name, make_task(), timeout_s))
 
     # Oracle Candidate Experience companies (different call signature —
     # needs host/site_number — handled the same way, just built separately)
@@ -4619,7 +4646,7 @@ def main():
                 lambda: scrape_oracle_candidate_experience(name, h, s, session),
                 180, name)
 
-        task_list.append(("oracle_cx", company_name, make_oracle_task()))
+        task_list.append(("oracle_cx", company_name, make_oracle_task(), 180))
 
     print(f"\n=== Running {len(task_list)} dedicated company scrapers in parallel "
           f"(up to {PARALLEL_WORKERS} at once) — this replaces what used to be "
