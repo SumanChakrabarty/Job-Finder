@@ -65,10 +65,28 @@ NON_ALNUM = re.compile(r"[^a-z0-9]+")
 
 
 def normalize_name(name: str) -> str:
+    """Fully concatenated, no separators — safe for EXACT matching only,
+    since the whole string must agree either way. NOT safe as the basis
+    for substring matching (see normalize_name_spaced below)."""
     name = re.sub(r"\([^)]*\)", " ", name)  # drop parenthetical e.g. "(Broadcom)"
     name = CORP_SUFFIXES.sub(" ", name)
     name = NON_ALNUM.sub("", name.lower())
     return name.strip()
+
+
+def normalize_name_spaced(name: str) -> str:
+    """Same cleanup as normalize_name, but keeps a single space between
+    words instead of concatenating everything together. Needed for a real
+    fix: with company names fully concatenated (no separators), a short
+    name like "Visa" can silently match INSIDE an unrelated word (e.g.
+    "Advisable Consulting" -> "advisableconsulting" contains "visa" at
+    position 2). Preserving word boundaries here lets the partial-match
+    fallback require a genuine whole-word occurrence instead of a raw
+    substring anywhere in the string."""
+    name = re.sub(r"\([^)]*\)", " ", name)
+    name = CORP_SUFFIXES.sub(" ", name)
+    name = re.sub(r"[^a-z0-9]+", " ", name.lower())
+    return re.sub(r"\s+", " ", name).strip()
 
 
 def download_workbook(url, session):
@@ -133,20 +151,34 @@ def parse_year(url, year, session):
 
 def match_companies(csv_companies, year_data):
     """year_data: {year: {employer_name: count}}. Returns per-CSV-company stats."""
-    normalized_index = []  # (normalized_employer, original_employer)
+    normalized_index = []  # (normalize_name, normalize_name_spaced, original_employer)
     all_employers = set()
     for counts in year_data.values():
         all_employers.update(counts.keys())
     for emp in all_employers:
-        normalized_index.append((normalize_name(emp), emp))
+        normalized_index.append((normalize_name(emp), normalize_name_spaced(emp), emp))
 
     results = {}
     for company in csv_companies:
         target = normalize_name(company)
+        target_spaced = normalize_name_spaced(company)
         if not target:
             continue
-        matches = [orig for norm, orig in normalized_index
-                   if norm == target or (len(target) >= 4 and (target in norm or norm in target))]
+        # Real fix: the old fallback did a raw substring check on fully
+        # concatenated names, meaning a short company name like "Visa"
+        # could silently match INSIDE an unrelated word (e.g. "Advisable
+        # Consulting" -> "advisableconsulting" contains "visa"). Now
+        # requires a genuine whole-word match on the space-preserving
+        # normalization instead — "Visa" still correctly matches "Visa
+        # Europe Services", but can no longer match text buried inside a
+        # longer unrelated word. Threshold kept at 4 (unchanged) since the
+        # word-boundary requirement is what actually fixes the collision,
+        # not the length — raising the threshold further would just block
+        # legitimate short names like "Visa" and "Meta" from matching at all.
+        matches = [orig for norm, norm_spaced, orig in normalized_index
+                   if norm == target or
+                   (len(target_spaced) >= 4 and
+                    re.search(rf"\b{re.escape(target_spaced)}\b", norm_spaced))]
         if not matches:
             continue
 
