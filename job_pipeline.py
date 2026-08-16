@@ -48,6 +48,7 @@ import sys
 import time
 import uuid
 import signal
+from concurrent.futures import ThreadPoolExecutor, as_completed
 import html
 import urllib.parse
 import xml.etree.ElementTree as ET
@@ -270,6 +271,9 @@ def _load_browser_scrape_cache():
     return {}
 
 
+PARALLEL_WORKERS = int(os.environ.get("SCRAPE_WORKERS", "8"))
+
+
 def cached_browser_scrape(cache, company_key, scraper_fn, timeout_seconds, label):
     """The real fix for a run that took hours even with every individual
     company correctly time-bounded: running ~20 separate real browser
@@ -291,6 +295,45 @@ def cached_browser_scrape(cache, company_key, scraper_fn, timeout_seconds, label
     jobs = run_with_hard_timeout(scraper_fn, timeout_seconds, label)
     cache[company_key] = {"jobs": jobs, "checked_at": time.time()}
     return jobs
+
+
+def run_company_tasks_in_parallel(tasks, workers=None):
+    """The real fix for multi-hour runtimes: every company scraper up to
+    this point ran one at a time, waiting for each to fully finish before
+    starting the next — even with per-company time caps and caching, that
+    is still a lot of real sequential work across ~30+ companies. Runs
+    them concurrently instead, the same approach already proven to work
+    well for this kind of I/O-bound (mostly waiting on network/page-load,
+    not CPU) workload. Each task is (label, company_name, callable) —
+    callables already handle their own caching/timeout internally via
+    cached_browser_scrape, so this only changes *when* they run, not
+    their individual safety guarantees. Playwright's sync API is safe to
+    use this way since each task creates its own independent browser
+    instance internally when called; nothing is shared across threads
+    except this function's own bookkeeping.
+
+    workers defaults to a conservative 8, not the 16 a much larger
+    reference implementation used — worth raising later if this proves
+    stable, but starting conservative given real browser processes are
+    heavier per-worker than plain HTTP requests."""
+    results, errors = [], []
+    if not tasks:
+        return results, errors
+    with ThreadPoolExecutor(max_workers=workers or PARALLEL_WORKERS) as pool:
+        future_map = {pool.submit(fn): (label, company) for label, company, fn in tasks}
+        for fut in as_completed(future_map):
+            label, company = future_map[fut]
+            try:
+                jobs = fut.result() or []
+                if jobs:
+                    print(f"  -> {company}: {len(jobs)} Ireland postings found")
+                else:
+                    print(f"  -> {company}: found nothing this time")
+                results.append((company, jobs))
+            except Exception as exc:
+                print(f"  -> {company}: task failed ({exc})")
+                errors.append(f"{label}/{company}: {exc}")
+    return results, errors
 
 
 def parse_posted_text(posted_text: str):
@@ -3483,6 +3526,317 @@ def scrape_central_bank_ireland_direct(session):
 
 
 
+def scrape_irish_life_ireland(session):
+    """Irish Life's real careers board (life-careers.com)."""
+    if not HAS_PLAYWRIGHT:
+        print("      [irish-life] playwright not installed — skipping")
+        return []
+    results = {}
+    try:
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch(headless=True)
+            page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
+            page.goto("https://life-careers.com/irishlife/go/irishlife/3805801",
+                       wait_until="domcontentloaded", timeout=30000)
+            page.wait_for_timeout(1500)
+            _browser_accept_consent(page)
+            _browser_collect_job_links_with_retries(
+                page, "Irish Life", [r"life-careers\.com/irishlife/job/"],
+                "irish_life_browser", results, "Ireland", rounds=25)
+            browser.close()
+    except Exception as e:
+        print(f"      [irish-life] browser scrape failed: {e}")
+    print(f"      [irish-life] {len(results)} unique Ireland jobs accumulated")
+    return list(results.values())
+
+
+def scrape_ups_ireland(session):
+    """UPS Ireland's real jobs board, filtered to genuine Irish locations."""
+    if not HAS_PLAYWRIGHT:
+        print("      [ups] playwright not installed — skipping")
+        return []
+    url = ("https://www.jobs-ups.com/global/en/search-results"
+           "?p=ChIJ5QX6zvnKd0gRYREw9umce3I&location=Ireland%2C%20Shefford%2C%20UK"
+           "&latitude=53.40833676721639&longitude=-6.160288504069749")
+    results = {}
+    try:
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch(headless=True)
+            page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
+            page.goto(url, wait_until="domcontentloaded", timeout=30000)
+            page.wait_for_timeout(1800)
+            _browser_accept_consent(page)
+            _collect_verified_ireland_page_jobs(
+                page, "UPS Ireland", r"jobs-ups\.com/global/en/job/",
+                "ups_browser", results, "Ireland")
+            browser.close()
+    except Exception as e:
+        print(f"      [ups] browser scrape failed: {e}")
+    print(f"      [ups] {len(results)} unique Ireland jobs accumulated")
+    return list(results.values())
+
+
+def scrape_three_ireland_direct(session):
+    """Three Ireland's real Cornerstone OnDemand careers site."""
+    if not HAS_PLAYWRIGHT:
+        print("      [three-ireland] playwright not installed — skipping")
+        return []
+    results = {}
+    try:
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch(headless=True)
+            page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
+            page.goto("https://three-ireland.csod.com/ux/ats/careersite/5/home?c=three-ireland&country=ie",
+                       wait_until="domcontentloaded", timeout=30000)
+            page.wait_for_timeout(1800)
+            _browser_accept_consent(page)
+            _browser_collect_job_links_with_retries(
+                page, "Three Ireland", [r"three-ireland\.csod\.com/.*ats/careersite/.*job"],
+                "three_ireland_browser", results, "Ireland", rounds=25)
+            browser.close()
+    except Exception as e:
+        print(f"      [three-ireland] browser scrape failed: {e}")
+    print(f"      [three-ireland] {len(results)} unique Ireland jobs accumulated")
+    return list(results.values())
+
+
+def scrape_aiven_ireland(session):
+    """Aiven's careers listing, lightweight regex parse — no browser needed."""
+    listing = "https://aiven.io/careers/job"
+    results = {}
+    try:
+        resp = session.get(listing, headers=HEADERS, timeout=20)
+        if resp.status_code != 200:
+            return []
+        page = resp.text
+    except Exception:
+        return []
+    for m in re.finditer(r'href=["\']([^"\']*/careers/job/\d+[^"\']*)["\']', page, re.I):
+        href = urllib.parse.urljoin(listing, m.group(1)).split("?")[0]
+        if href in results:
+            continue
+        start, end = max(0, m.start() - 800), min(len(page), m.end() + 800)
+        card = _html_to_text(page[start:end])
+        if not is_ireland_location(card):
+            continue
+        title_m = re.search(r'>([^<]{4,180})</a>', page[m.start():m.start() + 500])
+        title = title_m.group(1).strip() if title_m else "Aiven role"
+        posted_text, posted_days = extract_posted_from_text(card)
+        sponsorship, snippet = classify_sponsorship(card[:5000])
+        results[href] = {
+            "company": "Aiven", "title": title[:300],
+            "location": _extract_location_from_card(card, "Ireland"),
+            "posted_text": posted_text, "posted_days_ago": posted_days,
+            "employment_type": normalize_employment_type(None, title),
+            "url": href, "source": "aiven_direct",
+            "visa_sponsorship": sponsorship, "visa_snippet": snippet,
+        }
+    print(f"      [aiven] {len(results)} unique Ireland jobs accumulated")
+    return list(results.values())
+
+
+def scrape_huawei_ireland(session):
+    """Huawei Ireland's Teamtailor board."""
+    if not HAS_PLAYWRIGHT:
+        print("      [huawei] playwright not installed — skipping")
+        return []
+    results = {}
+    try:
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch(headless=True)
+            page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
+            page.goto("https://huaweiireland.teamtailor.com/jobs", wait_until="domcontentloaded", timeout=30000)
+            page.wait_for_timeout(1200)
+            _browser_accept_consent(page)
+            _browser_collect_job_links_with_retries(
+                page, "Huawei", [r"huaweiireland\.teamtailor\.com/jobs/\d+"],
+                "huawei_browser", results, "Ireland", rounds=20)
+            browser.close()
+    except Exception as e:
+        print(f"      [huawei] browser scrape failed: {e}")
+    print(f"      [huawei] {len(results)} unique Ireland jobs accumulated")
+    return list(results.values())
+
+
+def scrape_ge_healthcare_ireland(session):
+    """GE HealthCare runs on Phenom — same technique as BlackRock/Citi/ING."""
+    if not HAS_PLAYWRIGHT:
+        print("      [ge-healthcare] playwright not installed — skipping")
+        return []
+    results = {}
+    try:
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch(headless=True)
+            page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
+            page.goto("https://careers.gehealthcare.com/global/en/search-results?keywords=Ireland",
+                       wait_until="domcontentloaded", timeout=30000)
+            page.wait_for_timeout(1500)
+            _browser_accept_consent(page)
+            _browser_collect_job_links_with_retries(
+                page, "GE HealthCare", [r"careers\.gehealthcare\.com/global/en/job/"],
+                "ge_healthcare_browser", results, "Ireland", rounds=25)
+            browser.close()
+    except Exception as e:
+        print(f"      [ge-healthcare] browser scrape failed: {e}")
+    print(f"      [ge-healthcare] {len(results)} unique Ireland jobs accumulated")
+    return list(results.values())
+
+
+def scrape_exl_ireland(session):
+    """EXL runs Oracle Recruiting Cloud — reuses the same real API technique
+    already proven for JPMorgan/Oracle, just a different tenant."""
+    return scrape_oracle_candidate_experience(
+        "EXL", "https://fa-ewjt-saasfaprod1.fa.ocs.oraclecloud.com", "CX_2", session)
+
+
+def scrape_ntt_data_ireland(session):
+    """NTT DATA's official SuccessFactors board — same technique as EY."""
+    if not HAS_PLAYWRIGHT:
+        print("      [ntt-data] playwright not installed — skipping")
+        return []
+    base = "https://careers-inc.nttdata.com"
+    urls = [f"{base}/search/?q=&locationsearch=Ireland", f"{base}/search/?q=&locationsearch=Dublin"]
+    results = {}
+    try:
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch(headless=True)
+            page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
+            for url in urls:
+                page.goto(url, wait_until="domcontentloaded", timeout=30000)
+                page.wait_for_timeout(1200)
+                _browser_accept_consent(page)
+                _collect_filtered_page_jobs(
+                    page, "NTT DATA", rf"{re.escape(base)}/job/",
+                    "ntt_data_browser", results, "Ireland")
+            browser.close()
+    except Exception as e:
+        print(f"      [ntt-data] browser scrape failed: {e}")
+    print(f"      [ntt-data] {len(results)} unique Ireland jobs accumulated")
+    return list(results.values())
+
+
+def scrape_guidewire_ireland(session):
+    """Guidewire's official careers listing."""
+    if not HAS_PLAYWRIGHT:
+        print("      [guidewire] playwright not installed — skipping")
+        return []
+    results = {}
+    try:
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch(headless=True)
+            page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
+            page.goto("https://www.guidewire.com/about/careers/jobs", wait_until="domcontentloaded", timeout=30000)
+            page.wait_for_timeout(1500)
+            _browser_accept_consent(page)
+            _browser_collect_job_links_with_retries(
+                page, "Guidewire", [r"guidewire\.com/about/careers/jobs/"],
+                "guidewire_browser", results, "Ireland", rounds=25)
+            browser.close()
+    except Exception as e:
+        print(f"      [guidewire] browser scrape failed: {e}")
+    print(f"      [guidewire] {len(results)} unique Ireland jobs accumulated")
+    return list(results.values())
+
+
+def scrape_hcltech_ireland(session):
+    """HCLTech's Ireland-filtered search page."""
+    if not HAS_PLAYWRIGHT:
+        print("      [hcltech] playwright not installed — skipping")
+        return []
+    urls = [
+        "https://careers.hcltech.com/search/?q=&locationsearch=Ireland",
+        "https://careers.hcltech.com/search/?q=&locationsearch=Dublin",
+    ]
+    results = {}
+    try:
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch(headless=True)
+            page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
+            for url in urls:
+                page.goto(url, wait_until="domcontentloaded", timeout=30000)
+                page.wait_for_timeout(1200)
+                _browser_accept_consent(page)
+                _collect_filtered_page_jobs(
+                    page, "HCLTech", r"careers\.hcltech\.com/job/",
+                    "hcltech_browser", results, "Ireland")
+            browser.close()
+    except Exception as e:
+        print(f"      [hcltech] browser scrape failed: {e}")
+    print(f"      [hcltech] {len(results)} unique Ireland jobs accumulated")
+    return list(results.values())
+
+
+def scrape_allianz_ireland(session):
+    """Allianz Ireland's real careers page."""
+    if not HAS_PLAYWRIGHT:
+        print("      [allianz] playwright not installed — skipping")
+        return []
+    results = {}
+    try:
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch(headless=True)
+            page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
+            page.goto("https://careers.allianz.com/ie/en/allianz-ireland", wait_until="domcontentloaded", timeout=30000)
+            page.wait_for_timeout(1500)
+            _browser_accept_consent(page)
+            _browser_collect_job_links_with_retries(
+                page, "Allianz", [r"careers\.allianz\.com/.*/job/"],
+                "allianz_browser", results, "Ireland", rounds=25)
+            browser.close()
+    except Exception as e:
+        print(f"      [allianz] browser scrape failed: {e}")
+    print(f"      [allianz] {len(results)} unique Ireland jobs accumulated")
+    return list(results.values())
+
+
+def scrape_siemens_ireland(session):
+    """Siemens' Avature-powered search."""
+    if not HAS_PLAYWRIGHT:
+        print("      [siemens] playwright not installed — skipping")
+        return []
+    results = {}
+    try:
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch(headless=True)
+            page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
+            page.goto("https://jobs.siemens.com/en_US/externaljobs/SearchJobs/?jobRecordsPerPage=25&searchKeyword=Ireland",
+                       wait_until="domcontentloaded", timeout=30000)
+            page.wait_for_timeout(1800)
+            _browser_accept_consent(page)
+            _browser_collect_job_links_with_retries(
+                page, "Siemens", [r"jobs\.siemens\.com/en_US/externaljobs/JobDetail/"],
+                "siemens_browser", results, "Ireland", rounds=25)
+            browser.close()
+    except Exception as e:
+        print(f"      [siemens] browser scrape failed: {e}")
+    print(f"      [siemens] {len(results)} unique Ireland jobs accumulated")
+    return list(results.values())
+
+
+def scrape_pepsico_ireland(session):
+    """PepsiCo's official careers search."""
+    if not HAS_PLAYWRIGHT:
+        print("      [pepsico] playwright not installed — skipping")
+        return []
+    results = {}
+    try:
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch(headless=True)
+            page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
+            page.goto("https://www.pepsicojobs.com/main/jobs?stretchUnit=MILES&stretch=25&page=1&location=Ireland",
+                       wait_until="domcontentloaded", timeout=30000)
+            page.wait_for_timeout(1800)
+            _browser_accept_consent(page)
+            _browser_collect_job_links_with_retries(
+                page, "PepsiCo", [r"pepsicojobs\.com/main/jobs/"],
+                "pepsico_browser", results, "Ireland", rounds=25)
+            browser.close()
+    except Exception as e:
+        print(f"      [pepsico] browser scrape failed: {e}")
+    print(f"      [pepsico] {len(results)} unique Ireland jobs accumulated")
+    return list(results.values())
+
+
 
 def scrape_oracle_candidate_experience(company_name, host, site_number, session, country_code="IE", max_pages=12):
     """Oracle Recruiting Cloud's public Candidate Experience UI is
@@ -4018,6 +4372,19 @@ def test_single_company(name):
         "red hat": lambda: scrape_red_hat_ireland(session),
         "oracle": lambda: scrape_oracle_candidate_experience("Oracle", "https://eeho.fa.us2.oraclecloud.com", "CX_1", session),
         "jpmorgan chase": lambda: scrape_oracle_candidate_experience("JPMorgan Chase", "https://jpmc.fa.oraclecloud.com", "CX_1001", session),
+        "irish life": lambda: scrape_irish_life_ireland(session),
+        "ups": lambda: scrape_ups_ireland(session),
+        "three ireland": lambda: scrape_three_ireland_direct(session),
+        "aiven": lambda: scrape_aiven_ireland(session),
+        "huawei": lambda: scrape_huawei_ireland(session),
+        "ge healthcare": lambda: scrape_ge_healthcare_ireland(session),
+        "exl": lambda: scrape_exl_ireland(session),
+        "ntt data": lambda: scrape_ntt_data_ireland(session),
+        "guidewire": lambda: scrape_guidewire_ireland(session),
+        "hcltech": lambda: scrape_hcltech_ireland(session),
+        "allianz": lambda: scrape_allianz_ireland(session),
+        "siemens": lambda: scrape_siemens_ireland(session),
+        "pepsico": lambda: scrape_pepsico_ireland(session),
     }
     matched_key = next((k for k in dedicated if name_lower == k or name_lower.startswith(k)), None)
 
@@ -4154,190 +4521,87 @@ def main():
               f"{len(found_companies)} companies previously in the manual list: {', '.join(found_companies)}")
     live_jobs.extend(discovered_jobs)
 
-    apple_entry = next((c for c in manual_check if c["company"].strip().lower().startswith("apple")), None)
-    if apple_entry:
-        print("\nTrying direct HTML scrape for Apple (no API/shared ATS, but their search "
-              "page is server-rendered)...")
-        apple_jobs = cached_browser_scrape(browser_cache, "Apple", lambda: scrape_apple_ireland(session), 180, "apple")
-        if apple_jobs:
-            print(f"  -> Apple: {len(apple_jobs)} Ireland postings found via direct scrape")
-            for job in apple_jobs:
-                job["company"] = apple_entry["company"]  # match the exact name used in the CSV
-            live_jobs.extend(apple_jobs)
-            manual_check = [c for c in manual_check if c is not apple_entry]
-        else:
-            print("  -> Apple: scrape ran but found nothing this time (page structure may "
-                  "have changed, or genuinely zero current Ireland postings)")
-
-    google_entry = next((c for c in manual_check if c["company"].strip().lower() == "google"), None)
-    if google_entry:
-        print("\nTrying Google via real browser automation (reads the actual rendered page — "
-              "no API guessing, more resilient to backend changes than the two earlier attempts "
-              "that guessed at a specific hidden endpoint and didn't work)...")
-        google_jobs = cached_browser_scrape(browser_cache, "Google", lambda: scrape_google_ireland(session), 240, "google")
-        if google_jobs:
-            print(f"  -> Google: {len(google_jobs)} Ireland postings found")
-            for job in google_jobs:
-                job["company"] = google_entry["company"]
-            live_jobs.extend(google_jobs)
-            manual_check = [c for c in manual_check if c is not google_entry]
-        else:
-            print("  -> Google: found nothing this time")
-
-    amazon_entry = next((c for c in manual_check if c["company"].strip().lower().startswith("amazon")), None)
-    if amazon_entry:
-        print("\nTrying Amazon's internal jobs search endpoint (no public API, but a real "
-              "hidden JSON endpoint their own site uses — confirmed working, 197 real Ireland "
-              "postings found when tested)...")
-        amazon_jobs = cached_browser_scrape(browser_cache, "Amazon", lambda: scrape_amazon_ireland(session), 180, "amazon")
-        if amazon_jobs:
-            print(f"  -> Amazon: {len(amazon_jobs)} Ireland postings found")
-            for job in amazon_jobs:
-                job["company"] = amazon_entry["company"]
-            live_jobs.extend(amazon_jobs)
-            manual_check = [c for c in manual_check if c is not amazon_entry]
-        else:
-            print("  -> Amazon: found nothing this time")
-
-    meta_entry = next((c for c in manual_check if c["company"].strip().lower().startswith("meta")), None)
-    if meta_entry:
-        print("\nTrying Meta via real browser automation (same technique as Google — reads the "
-              "actual rendered page rather than replicating their internal GraphQL contract, "
-              "which is more resilient if that contract changes)...")
-        meta_jobs = cached_browser_scrape(browser_cache, "Meta", lambda: scrape_meta_ireland(session), 240, "meta")
-        if meta_jobs:
-            print(f"  -> Meta: {len(meta_jobs)} Ireland postings found")
-            for job in meta_jobs:
-                job["company"] = meta_entry["company"]
-            live_jobs.extend(meta_jobs)
-            manual_check = [c for c in manual_check if c is not meta_entry]
-        else:
-            print("  -> Meta: found nothing this time (browser automation failed, or genuinely "
-                  "zero current Ireland postings)")
-
-    browser_targets = [
-        ("ey", scrape_ey_ireland, "EY (SuccessFactors — no free API, but browser automation "
-                                    "doesn't need one, it just reads the page)"),
-        ("kpmg", scrape_kpmg_ireland, "KPMG (Avature — same story as EY)"),
-        ("tiktok", scrape_tiktok_ireland, "TikTok (moved to a searchable board since last checked)"),
+    # ------------------------------------------------------------------
+    # All dedicated company scrapers now run CONCURRENTLY instead of one
+    # after another — this is the real fix for a multi-hour runtime.
+    # Each entry is (match_type, name_or_prefix, scraper_fn, timeout_seconds,
+    # description). match_type is "exact" or "prefix" — prefix matching is
+    # only used where there's no real collision risk (confirmed below);
+    # anything with a same-prefix sibling (Johnson Controls / Johnson &
+    # Johnson, Boston Scientific / Boston Consulting Group) uses "exact".
+    dedicated_company_specs = [
+        ("prefix", "apple", scrape_apple_ireland, 180,
+         "direct HTML scrape (no API/shared ATS, but their search page is server-rendered)"),
+        ("exact", "google", scrape_google_ireland, 240,
+         "real browser automation (reads the actual rendered page)"),
+        ("prefix", "amazon", scrape_amazon_ireland, 180,
+         "internal jobs search endpoint (confirmed working hidden JSON endpoint)"),
+        ("prefix", "meta", scrape_meta_ireland, 240,
+         "real browser automation (reads the actual rendered page)"),
+        ("prefix", "ey", scrape_ey_ireland, 240,
+         "SuccessFactors — no free API, but browser automation doesn't need one"),
+        ("prefix", "kpmg", scrape_kpmg_ireland, 240, "Avature — same story as EY"),
+        ("prefix", "tiktok", scrape_tiktok_ireland, 240, "searchable board"),
+        ("exact", "boston scientific", scrape_boston_scientific_ireland, 240,
+         "SuccessFactors, office-specific pages"),
+        ("exact", "johnson & johnson", scrape_jnj_ireland, 240, "first-party board"),
+        ("exact", "johnson controls", scrape_johnson_controls_ireland, 240, "Algolia-style board"),
+        ("exact", "hsbc ireland", scrape_hsbc_ireland, 240, "SuccessFactors, same technique as EY"),
+        ("exact", "dxc technology", scrape_dxc_ireland, 240, "bypasses its stuck Workday tenant"),
+        ("exact", "grant thornton ireland", scrape_grant_thornton_direct, 240,
+         "their real current careers site, not the stuck Workday tenant"),
+        ("exact", "nvidia", scrape_nvidia_ireland, 240,
+         "public Eightfold feed, same platform as Netflix"),
+        ("exact", "aon", scrape_aon_ireland, 240, "first-party jobs.aon.com"),
+        ("exact", "eaton", scrape_eaton_ireland, 240, "first-party jobs.eaton.com applicant portal"),
+        ("exact", "cognizant", scrape_cognizant_ireland, 240, "verifies Ireland on each job's own detail page"),
+        ("exact", "aib (allied irish banks)", scrape_aib_ireland, 240, "real jobs board, filtered against UK-only postings"),
+        ("exact", "bnp paribas ireland", scrape_bnp_paribas_ireland, 240, "first-party Dublin jobs page"),
+        ("exact", "blackrock", scrape_blackrock_ireland, 240, "Phenom platform, same technique as Citi"),
+        ("exact", "bank of ireland", scrape_bank_of_ireland_direct, 240, "first-party jobs board"),
+        ("exact", "ing", scrape_ing_ireland, 240, "Phenom platform, same technique as Citi/BlackRock"),
+        ("exact", "deutsche bank", scrape_deutsche_bank_ireland, 240, "first-party professional roles search"),
+        ("exact", "arup", scrape_arup_ireland, 240, "real dedicated Ireland jobs page, no browser needed"),
+        ("exact", "central bank of ireland", scrape_central_bank_ireland_direct, 240,
+         "genuinely new — real Candidate Manager vacancies board"),
+        ("exact", "microsoft", scrape_microsoft_ireland, 240, "Dublin/Ireland rendered careers search"),
+        ("exact", "citi", scrape_citi_ireland, 240, "Dublin paginated careers search"),
+        ("exact", "red hat", scrape_red_hat_ireland, 240, "rendered Ireland careers search"),
+        ("exact", "netflix", scrape_netflix_ireland, 120, "Eightfold, custom-branded domain"),
+        ("exact", "irish life", scrape_irish_life_ireland, 180, "real careers board"),
+        ("exact", "ups ireland", scrape_ups_ireland, 180, "real jobs board"),
+        ("exact", "three ireland", scrape_three_ireland_direct, 180, "Cornerstone OnDemand careers site"),
+        ("exact", "aiven", scrape_aiven_ireland, 60, "lightweight regex parse, no browser needed"),
+        ("exact", "huawei", scrape_huawei_ireland, 180, "Teamtailor board"),
+        ("exact", "ge healthcare", scrape_ge_healthcare_ireland, 180, "Phenom platform, same technique as BlackRock/Citi/ING"),
+        ("exact", "exl", scrape_exl_ireland, 180, "Oracle Recruiting Cloud, same technique as JPMorgan/Oracle"),
+        ("exact", "ntt data", scrape_ntt_data_ireland, 180, "SuccessFactors, same technique as EY"),
+        ("exact", "guidewire", scrape_guidewire_ireland, 180, "official careers listing"),
+        ("exact", "hcltech", scrape_hcltech_ireland, 180, "Ireland-filtered search page"),
+        ("exact", "allianz", scrape_allianz_ireland, 180, "real careers page"),
+        ("exact", "siemens", scrape_siemens_ireland, 180, "Avature-powered search"),
+        ("exact", "pepsico", scrape_pepsico_ireland, 180, "official careers search"),
     ]
-    for prefix, scraper_fn, description in browser_targets:
-        entry = next((c for c in manual_check if c["company"].strip().lower().startswith(prefix)), None)
+
+    task_list = []
+    matched_entries = {}  # company_display_name -> manual_check entry
+    for match_type, key, scraper_fn, timeout_s, description in dedicated_company_specs:
+        if match_type == "exact":
+            entry = next((c for c in manual_check if c["company"].strip().lower() == key), None)
+        else:
+            entry = next((c for c in manual_check if c["company"].strip().lower().startswith(key)), None)
         if not entry:
             continue
-        print(f"\nTrying {entry['company']} via real browser automation — {description}...")
-        found_jobs = cached_browser_scrape(browser_cache, entry["company"], lambda: scraper_fn(session), 240, entry["company"])
-        if found_jobs:
-            print(f"  -> {entry['company']}: {len(found_jobs)} Ireland postings found")
-            for job in found_jobs:
-                job["company"] = entry["company"]
-            live_jobs.extend(found_jobs)
-            manual_check = [c for c in manual_check if c is not entry]
-        else:
-            print(f"  -> {entry['company']}: found nothing this time")
+        company_name = entry["company"]
+        matched_entries[company_name] = entry
 
-    # Exact-name matching here, not prefix — "Johnson Controls" and
-    # "Johnson & Johnson" share a prefix, as do "Boston Scientific" and
-    # "Boston Consulting Group (BCG)". A prefix match would risk running
-    # the wrong company's scraper against the wrong CSV entry.
-    exact_browser_targets = [
-        ("boston scientific", scrape_boston_scientific_ireland, "Boston Scientific (SuccessFactors, office-specific pages)"),
-        ("johnson & johnson", scrape_jnj_ireland, "Johnson & Johnson (first-party board)"),
-        ("johnson controls", scrape_johnson_controls_ireland, "Johnson Controls (Algolia-style board)"),
-        ("hsbc ireland", scrape_hsbc_ireland, "HSBC Ireland (SuccessFactors, same technique as EY)"),
-        ("dxc technology", scrape_dxc_ireland, "DXC Technology (bypasses its stuck Workday tenant)"),
-        ("grant thornton ireland", scrape_grant_thornton_direct, "Grant Thornton (their real current careers site, not the stuck Workday tenant)"),
-        ("nvidia", scrape_nvidia_ireland, "NVIDIA (public Eightfold feed, same platform as Netflix — falls back to a browser check that honestly reports a sign-in wall instead of a false zero)"),
-        ("aon", scrape_aon_ireland, "Aon (first-party jobs.aon.com, bypasses their stuck Workday tenant)"),
-        ("eaton", scrape_eaton_ireland, "Eaton (first-party jobs.eaton.com applicant portal, bypasses their stuck Workday tenant)"),
-        ("cognizant", scrape_cognizant_ireland, "Cognizant (verifies Ireland on each job's own detail page)"),
-        ("aib (allied irish banks)", scrape_aib_ireland, "AIB (real jobs board, filtered against UK-only postings)"),
-        ("bnp paribas ireland", scrape_bnp_paribas_ireland, "BNP Paribas (first-party Dublin jobs page)"),
-        ("blackrock", scrape_blackrock_ireland, "BlackRock (Phenom platform, same technique as Citi)"),
-        ("bank of ireland", scrape_bank_of_ireland_direct, "Bank of Ireland (first-party jobs board)"),
-        ("ing", scrape_ing_ireland, "ING (Phenom platform, same technique as Citi/BlackRock)"),
-        ("deutsche bank", scrape_deutsche_bank_ireland, "Deutsche Bank (first-party professional roles search)"),
-        ("arup", scrape_arup_ireland, "Arup (real dedicated Ireland jobs page, no browser needed)"),
-        ("central bank of ireland", scrape_central_bank_ireland_direct, "Central Bank of Ireland (genuinely new — real Candidate Manager vacancies board)"),
-    ]
-    for exact_name, scraper_fn, description in exact_browser_targets:
-        entry = next((c for c in manual_check if c["company"].strip().lower() == exact_name), None)
-        if not entry:
-            continue
-        print(f"\nTrying {entry['company']} via real browser automation — {description}...")
-        found_jobs = cached_browser_scrape(browser_cache, entry["company"], lambda: scraper_fn(session), 240, entry["company"])
-        if found_jobs:
-            print(f"  -> {entry['company']}: {len(found_jobs)} Ireland postings found")
-            for job in found_jobs:
-                job["company"] = entry["company"]
-            live_jobs.extend(found_jobs)
-            manual_check = [c for c in manual_check if c is not entry]
-        else:
-            print(f"  -> {entry['company']}: found nothing this time")
+        def make_task(fn=scraper_fn, name=company_name, ts=timeout_s):
+            return lambda: cached_browser_scrape(browser_cache, name, lambda: fn(session), ts, name)
 
-    # Dedicated browser scrapers for companies whose public pages are dynamic
-    # or paginated. These run before the generic HTML fallback so counts are
-    # based on the rendered first-party job listings rather than partial HTML.
-    special_browser_targets = [
-        ("microsoft", scrape_microsoft_ireland, "Microsoft Dublin/Ireland rendered careers search"),
-        ("citi", scrape_citi_ireland, "Citi Dublin paginated careers search"),
-        ("red hat", scrape_red_hat_ireland, "Red Hat rendered Ireland careers search"),
-    ]
-    for exact_name, scraper_fn, description in special_browser_targets:
-        entry = next((c for c in manual_check if c["company"].strip().lower() == exact_name), None)
-        if not entry:
-            continue
-        print(f"\nTrying {entry['company']} via dedicated browser automation — {description}...")
-        found_jobs = cached_browser_scrape(browser_cache, entry["company"], lambda: scraper_fn(session), 240, entry["company"])
-        if found_jobs:
-            print(f"  -> {entry['company']}: {len(found_jobs)} Ireland postings found")
-            for job in found_jobs:
-                job["company"] = entry["company"]
-            live_jobs.extend(found_jobs)
-            manual_check = [c for c in manual_check if c is not entry]
-        else:
-            print(f"  -> {entry['company']}: found nothing this time")
+        task_list.append((key, company_name, make_task()))
 
-    netflix_entry = next((c for c in manual_check if c["company"].strip().lower() == "netflix"), None)
-    if netflix_entry:
-        print("\nTrying Netflix (Eightfold, custom-branded domain, confirmed working endpoint)...")
-        netflix_jobs = cached_browser_scrape(browser_cache, "Netflix", lambda: scrape_netflix_ireland(session), 120, "netflix")
-        if netflix_jobs:
-            print(f"  -> Netflix: {len(netflix_jobs)} Ireland postings found")
-            for job in netflix_jobs:
-                job["company"] = netflix_entry["company"]
-            live_jobs.extend(netflix_jobs)
-            manual_check = [c for c in manual_check if c is not netflix_entry]
-        else:
-            print("  -> Netflix: found nothing this time")
-
-    # Lightweight, pure-requests scraper (no browser needed) — real hint
-    # patterns and URLs confirmed via a working reference, not guessed.
-    direct_html_targets = []  # handled above by dedicated browser scrapers
-    for exact_name, display_name, urls, hints, default_loc in direct_html_targets:
-        entry = next((c for c in manual_check if c["company"].strip().lower() == exact_name), None)
-        if not entry:
-            continue
-        print(f"\nTrying {display_name} via direct HTML scrape (no browser needed)...")
-        found = {}
-        for u in urls:
-            for job in _scrape_public_careers_page(display_name, u, hints, session, default_loc):
-                key = job["url"].split("?")[0].rstrip("/").lower()
-                found[key] = job
-        found_jobs = list(found.values())
-        if display_name == "Red Hat":
-            blocked = {"locations", "departments", "life at red hat", "hiring process", "info guide", "students", "benefits"}
-            found_jobs = [j for j in found_jobs if j["title"].strip().lower() not in blocked]
-        if found_jobs:
-            print(f"  -> {entry['company']}: {len(found_jobs)} Ireland postings found")
-            for job in found_jobs:
-                job["company"] = entry["company"]
-            live_jobs.extend(found_jobs)
-            manual_check = [c for c in manual_check if c is not entry]
-        else:
-            print(f"  -> {entry['company']}: found nothing this time")
-
-    # Oracle Candidate Experience REST API — real, public, confirmed working.
+    # Oracle Candidate Experience companies (different call signature —
+    # needs host/site_number — handled the same way, just built separately)
     oracle_cx_targets = [
         ("jpmorgan chase", "JPMorgan Chase", "https://jpmc.fa.oraclecloud.com", "CX_1001"),
         ("oracle", "Oracle", "https://eeho.fa.us2.oraclecloud.com", "CX_1"),
@@ -4346,19 +4610,32 @@ def main():
         entry = next((c for c in manual_check if c["company"].strip().lower() == exact_name), None)
         if not entry:
             continue
-        print(f"\nTrying {display_name} via Oracle Recruiting Cloud's public REST API...")
-        found_jobs = cached_browser_scrape(
-            browser_cache, display_name,
-            lambda: scrape_oracle_candidate_experience(display_name, host, site_number, session),
-            180, display_name)
-        if found_jobs:
-            print(f"  -> {entry['company']}: {len(found_jobs)} Ireland postings found")
-            for job in found_jobs:
-                job["company"] = entry["company"]
-            live_jobs.extend(found_jobs)
-            manual_check = [c for c in manual_check if c is not entry]
-        else:
-            print(f"  -> {entry['company']}: found nothing this time")
+        company_name = entry["company"]
+        matched_entries[company_name] = entry
+
+        def make_oracle_task(h=host, s=site_number, name=company_name):
+            return lambda: cached_browser_scrape(
+                browser_cache, name,
+                lambda: scrape_oracle_candidate_experience(name, h, s, session),
+                180, name)
+
+        task_list.append(("oracle_cx", company_name, make_oracle_task()))
+
+    print(f"\n=== Running {len(task_list)} dedicated company scrapers in parallel "
+          f"(up to {PARALLEL_WORKERS} at once) — this replaces what used to be "
+          f"a fully sequential, one-at-a-time pass ===")
+    parallel_results, parallel_errors = run_company_tasks_in_parallel(task_list)
+
+    for company_name, jobs in parallel_results:
+        if jobs:
+            for job in jobs:
+                job["company"] = company_name
+            live_jobs.extend(jobs)
+            entry = matched_entries.get(company_name)
+            if entry is not None:
+                manual_check = [c for c in manual_check if c is not entry]
+    if parallel_errors:
+        errors.extend(parallel_errors)
 
     jsonld_cache_path = "jsonld_cache.json"
     jsonld_cache = {}
