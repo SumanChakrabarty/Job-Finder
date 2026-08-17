@@ -227,7 +227,7 @@ BROWSER_SCRAPE_CACHE_PATH = "browser_scrape_cache.json"
 BROWSER_SCRAPE_MAX_AGE_HOURS = 3  # only actually re-run a real browser scrape this often
 EMPTY_RESULT_MAX_AGE_HOURS = 0.5  # empty results retried much sooner — could be a real "no jobs",
 # or could be a one-time failure (crash, resource contention); don't lock in a failure for 3 hours
-PARALLEL_WORKERS = int(os.environ.get("SCRAPE_WORKERS", "3"))  # conservative — GitHub Actions'
+PARALLEL_WORKERS = int(os.environ.get("SCRAPE_WORKERS", "6"))  # conservative — GitHub Actions'
 # free-tier runners have limited CPU/memory (~2 cores, 7GB RAM); too many simultaneous real
 # Chrome instances can crash or silently fail
 
@@ -3990,6 +3990,11 @@ def scrape_jsonld_jobpostings(url, company_name, session):
 
 
 PROBE_VERSION = 18  # bump whenever a new ATS platform is added to the probe list, or slug guessing changes
+PROBE_WORKERS = int(os.environ.get("PROBE_WORKERS", "12"))
+WORKDAY_WORKERS = int(os.environ.get("WORKDAY_WORKERS", "3"))  # deliberately small — a shared
+# CDN/WAF across Workday tenants can rate-limit based on aggregate request volume from one IP,
+# confirmed by the deliberate 1-second-per-company sleep this replaces; full-speed parallelism
+# here risks making the already-stuck cluster of ~16 companies worse, not just faster
 
 # Deliberately SEPARATE from PROBE_VERSION — these two caches were sharing
 # one version number, which meant every ATS-platform fix (Workable, etc.)
@@ -4131,80 +4136,99 @@ def probe_ats_for_manual_companies(manual_companies, session, cache_path, fetch_
                 if done_count % 50 == 0:
                     print(f"      [probe] {done_count}/{freshly_probed} companies checked so far...")
 
-    # Fetch actual job postings for every confirmed platform+slug — kept
-    # sequential deliberately: this is typically one fast API call per
-    # company (not the 28-request guessing gauntlet above), and the vast
-    # majority of these come straight from cache on any normal run.
-    for entry, platform, slug in confirmed_platform_entries:
+    # Fetch confirmed platform boards concurrently. Each worker gets its own
+    # requests.Session, so there is no shared-session race and the per-company
+    # normalization logic/results are unchanged. This removes a large serial
+    # bottleneck when many companies have already been matched in the cache.
+    def _fetch_confirmed(entry_platform_slug):
+        entry, platform, slug = entry_platform_slug
+        local_session = requests.Session()
         name, url = entry["company"], entry["url"]
         company_jobs = []
         if platform == "greenhouse":
-            jobs = try_greenhouse(slug, session) or []
+            jobs = try_greenhouse(slug, local_session) or []
             for job in jobs:
                 norm = normalize_greenhouse_job(name, job)
                 if norm:
                     company_jobs.append(norm)
         elif platform == "lever":
-            jobs = try_lever(slug, session) or []
+            jobs = try_lever(slug, local_session) or []
             for job in jobs:
                 norm = normalize_lever_job(name, job)
                 if norm:
                     company_jobs.append(norm)
         elif platform == "smartrecruiters":
-            jobs = try_smartrecruiters(slug, session) or []
+            jobs = try_smartrecruiters(slug, local_session) or []
             for job in jobs:
-                norm = normalize_smartrecruiters_job(name, job, slug, session, fetch_descriptions)
+                norm = normalize_smartrecruiters_job(name, job, slug, local_session, fetch_descriptions)
                 if norm:
                     company_jobs.append(norm)
         elif platform == "ashby":
-            jobs = try_ashby(slug, session) or []
+            jobs = try_ashby(slug, local_session) or []
             for job in jobs:
                 norm = normalize_ashby_job(name, job)
                 if norm:
                     company_jobs.append(norm)
         elif platform == "recruitee":
-            jobs = try_recruitee(slug, session) or []
+            jobs = try_recruitee(slug, local_session) or []
             for job in jobs:
                 norm = normalize_recruitee_job(name, job)
                 if norm:
                     company_jobs.append(norm)
         elif platform == "personio":
-            jobs = try_personio(slug, session) or []
+            jobs = try_personio(slug, local_session) or []
             for job in jobs:
                 norm = normalize_personio_job(name, slug, job)
                 if norm:
                     company_jobs.append(norm)
         elif platform == "pinpoint":
-            jobs = try_pinpoint(slug, session) or []
+            jobs = try_pinpoint(slug, local_session) or []
             for job in jobs:
                 norm = normalize_pinpoint_job(name, slug, job)
                 if norm:
                     company_jobs.append(norm)
         elif platform == "eightfold":
-            jobs = try_eightfold(slug, session) or []
+            jobs = try_eightfold(slug, local_session) or []
             for job in jobs:
                 norm = normalize_eightfold_job(name, slug, job)
                 if norm:
                     company_jobs.append(norm)
         elif platform == "phenom":
             domain, ref_num = slug.split("|", 1)
-            jobs = fetch_phenom_jobs_by_refnum(domain, ref_num, session)
+            jobs = fetch_phenom_jobs_by_refnum(domain, ref_num, local_session)
             for job in jobs:
                 norm = normalize_phenom_job(name, domain, job)
                 if norm:
                     company_jobs.append(norm)
         elif platform == "workable":
-            jobs = try_workable(slug, session) or []
+            jobs = try_workable(slug, local_session) or []
             for job in jobs:
                 norm = normalize_workable_job(name, job)
                 if norm:
                     company_jobs.append(norm)
+        return entry, platform, slug, company_jobs
 
-        if company_jobs:
-            discovered_jobs.extend(company_jobs)
-        else:
-            still_manual.append({"company": name, "url": url,
-                                  "platform": f"{platform} (no Ireland postings found right now)"})
+    if confirmed_platform_entries:
+        print(f"  Fetching {len(confirmed_platform_entries)} confirmed ATS boards in parallel...")
+        with ThreadPoolExecutor(max_workers=min(PARALLEL_WORKERS, len(confirmed_platform_entries))) as pool:
+            future_map = {
+                pool.submit(_fetch_confirmed, item): item
+                for item in confirmed_platform_entries
+            }
+            for fut, original in future_map.items():
+                try:
+                    entry, platform, slug, company_jobs = fut.result()
+                except Exception as exc:
+                    # Preserve the existing behavior for a failed board: it remains manual.
+                    entry, platform, slug = original
+                    company_jobs = []
+                    print(f"      [ATS] {entry['company']}: fetch failed ({exc})")
+                name, url = entry["company"], entry["url"]
+                if company_jobs:
+                    discovered_jobs.extend(company_jobs)
+                else:
+                    still_manual.append({"company": name, "url": url,
+                                          "platform": f"{platform} (no Ireland postings found right now)"})
 
     cache["__probe_version__"] = PROBE_VERSION
     with open(cache_path, "w", encoding="utf-8") as f:
@@ -4473,32 +4497,49 @@ def main():
           f"instantly instead of re-launching a real browser this run ===")
 
     session = requests.Session()
-    workday_session = make_workday_session()
     live_jobs, manual_check, errors = [], [], []
 
-    for row in companies:
+    workday_rows = [row for row in companies if classify_url(row["career_url"].strip()) == "workday"]
+    other_rows = [row for row in companies if classify_url(row["career_url"].strip()) != "workday"]
+
+    print(f"\n  Fetching {len(workday_rows)} Workday companies (modest parallelism — kept small "
+          f"deliberately, since a shared CDN/WAF across Workday tenants can rate-limit based on "
+          f"aggregate request volume from one IP, not just per-tenant. Full-speed parallelism here "
+          f"risks making that worse, not just faster)...")
+
+    def _fetch_one_workday(row):
+        name = row["company_name"].strip()
+        url = row["career_url"].strip()
+        local_workday_session = make_workday_session()
+        jobs, err = fetch_workday_jobs(name, url, local_workday_session, fetch_descriptions=not args.no_descriptions)
+        return name, url, jobs, err
+
+    if workday_rows:
+        with ThreadPoolExecutor(max_workers=min(WORKDAY_WORKERS, len(workday_rows))) as pool:
+            futures = {pool.submit(_fetch_one_workday, row): row for row in workday_rows}
+            done = 0
+            for fut in futures:
+                row = futures[fut]
+                try:
+                    name, url, jobs, err = fut.result()
+                except Exception as exc:
+                    name, url = row["company_name"].strip(), row["career_url"].strip()
+                    jobs, err = [], str(exc)
+                live_jobs.extend(jobs)
+                if err:
+                    errors.append(err)
+                done += 1
+                print(f"      [workday {done}/{len(workday_rows)}] {name} -> {len(jobs)} Ireland postings")
+                if not jobs:
+                    reason = "fetch error, verify manually" if err else "no Ireland postings found right now"
+                    manual_check.append({"company": name, "url": url, "platform": f"workday ({reason})"})
+
+    for row in other_rows:
         name = row["company_name"].strip()
         url = row["career_url"].strip()
         kind = classify_url(url)
+        manual_check.append({"company": name, "url": url, "platform": kind})
 
-        if kind == "workday":
-            print(f"  [workday] fetching {name} ...")
-            jobs, err = fetch_workday_jobs(name, url, workday_session, fetch_descriptions=not args.no_descriptions)
-            live_jobs.extend(jobs)
-            if err:
-                errors.append(err)
-            print(f"      -> {len(jobs)} Ireland postings")
-            time.sleep(1)  # spread out aggregate request rate across companies —
-            # a shared CDN/WAF across Workday tenants can rate-limit based on
-            # total volume from our IP, not just per-tenant.
-            if not jobs:
-                # Never let a company silently disappear — whether it's a
-                # real fetch error or genuinely zero open Ireland roles
-                # today, it still needs to show up somewhere clickable.
-                reason = "fetch error, verify manually" if err else "no Ireland postings found right now"
-                manual_check.append({"company": name, "url": url, "platform": f"workday ({reason})"})
-        else:
-            manual_check.append({"company": name, "url": url, "platform": kind})
 
     print(f"\nProbing remaining {len(manual_check)} companies for Greenhouse/Lever/SmartRecruiters/"
           f"Ashby/Recruitee/Personio/Pinpoint/Eightfold boards "
@@ -4631,19 +4672,16 @@ def main():
     jsonld_found_companies = []
     still_manual_after_jsonld = []
     jsonld_checked_this_run = 0
+    # JSON-LD checks are independent per company. Run only the actual network
+    # checks concurrently; cache bookkeeping remains single-threaded so output
+    # and cache semantics stay unchanged.
+    jsonld_tasks = []
     for entry in manual_check:
         name = entry["company"]
         cached = jsonld_cache.get(name)
         if cached is not None:
             if cached.get("has_data"):
-                # Confirmed source before — re-fetch fresh job data (jobs change),
-                # but skip re-checking whether the page has JobPosting markup at all.
-                jsonld_jobs = scrape_jsonld_jobpostings(entry["url"], name, session)
-                if jsonld_jobs:
-                    live_jobs.extend(jsonld_jobs)
-                    jsonld_found_companies.append(name)
-                else:
-                    still_manual_after_jsonld.append(entry)
+                jsonld_tasks.append((entry, True))
             else:
                 still_manual_after_jsonld.append(entry)
             continue
@@ -4654,15 +4692,31 @@ def main():
             continue
 
         jsonld_checked_this_run += 1
-        jsonld_jobs = scrape_jsonld_jobpostings(entry["url"], name, session)
-        if jsonld_jobs:
-            live_jobs.extend(jsonld_jobs)
-            jsonld_found_companies.append(name)
-            jsonld_cache[name] = {"has_data": True}
-        else:
-            still_manual_after_jsonld.append(entry)
-            jsonld_cache[name] = {"has_data": False}
-        time.sleep(0.2)
+        jsonld_tasks.append((entry, False))
+
+    def _run_jsonld(item):
+        entry, had_cached_data = item
+        local_session = requests.Session()
+        return entry, had_cached_data, scrape_jsonld_jobpostings(
+            entry["url"], entry["company"], local_session
+        )
+
+    if jsonld_tasks:
+        with ThreadPoolExecutor(max_workers=min(PARALLEL_WORKERS, len(jsonld_tasks))) as pool:
+            future_map = {pool.submit(_run_jsonld, item): item for item in jsonld_tasks}
+            for fut, item in future_map.items():
+                entry, had_cached_data, jsonld_jobs = fut.result()
+                name = entry["company"]
+                if jsonld_jobs:
+                    live_jobs.extend(jsonld_jobs)
+                    jsonld_found_companies.append(name)
+                    jsonld_cache[name] = {"has_data": True}
+                else:
+                    still_manual_after_jsonld.append(entry)
+                    # Preserve an existing positive cache only if the refresh
+                    # failed to produce jobs; this matches the prior behavior
+                    # of leaving the company manual for this run.
+                    jsonld_cache[name] = {"has_data": had_cached_data}
 
     manual_check = still_manual_after_jsonld
     jsonld_cache["__version__"] = JSONLD_CACHE_VERSION
