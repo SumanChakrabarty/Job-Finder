@@ -48,7 +48,7 @@ import sys
 import time
 import uuid
 import signal
-from concurrent.futures import ThreadPoolExecutor, as_completed, TimeoutError as FuturesTimeoutError
+from concurrent.futures import ThreadPoolExecutor, TimeoutError as FuturesTimeoutError
 import html
 import urllib.parse
 import xml.etree.ElementTree as ET
@@ -223,44 +223,13 @@ def classify_url(url: str) -> str:
     return "custom"
 
 
-class _HardTimeout(Exception):
-    pass
-
-
-def _timeout_handler(signum, frame):
-    raise _HardTimeout()
-
-
-def run_with_hard_timeout(fn, seconds, label):
-    """Forcibly interrupts fn() after `seconds`, no matter what it's doing
-    internally — a real, OS-level alarm, not a cooperative check the
-    function has to remember to make itself. This is the guaranteed fix
-    after two separate incidents today where a company-specific scraper's
-    OWN internal time-budget logic either wasn't actually wired up, or an
-    entirely different function had no time budget at all, and either way
-    the whole pipeline hung for hours. Every single company scraper call
-    in main() should go through this from now on — no exceptions, no
-    matter how well-behaved a given function looks on inspection, since
-    that's exactly what we assumed twice already and were wrong both
-    times."""
-    old_handler = signal.signal(signal.SIGALRM, _timeout_handler)
-    signal.alarm(seconds)
-    try:
-        return fn()
-    except _HardTimeout:
-        print(f"      [{label}] HARD TIMEOUT — forcibly stopped after {seconds}s "
-              f"(this company's own internal bounds failed or don't exist; "
-              f"the pipeline continues normally with whatever it already found)")
-        return []
-    finally:
-        signal.alarm(0)
-        signal.signal(signal.SIGALRM, old_handler)
-
-
 BROWSER_SCRAPE_CACHE_PATH = "browser_scrape_cache.json"
 BROWSER_SCRAPE_MAX_AGE_HOURS = 3  # only actually re-run a real browser scrape this often
 EMPTY_RESULT_MAX_AGE_HOURS = 0.5  # empty results retried much sooner — could be a real "no jobs",
 # or could be a one-time failure (crash, resource contention); don't lock in a failure for 3 hours
+PARALLEL_WORKERS = int(os.environ.get("SCRAPE_WORKERS", "3"))  # conservative — GitHub Actions'
+# free-tier runners have limited CPU/memory (~2 cores, 7GB RAM); too many simultaneous real
+# Chrome instances can crash or silently fail
 
 
 def _load_browser_scrape_cache():
@@ -271,12 +240,6 @@ def _load_browser_scrape_cache():
         except Exception:
             return {}
     return {}
-
-
-PARALLEL_WORKERS = int(os.environ.get("SCRAPE_WORKERS", "3"))  # conservative — GitHub Actions'
-# free-tier runners have limited CPU/memory (~2 cores, 7GB RAM); too many
-# simultaneous real Chrome instances can crash or silently fail, and those
-# failures then get cached for 3 hours, making the problem look permanent.
 
 
 def cached_browser_scrape(cache, company_key, scraper_fn, timeout_seconds, label):
@@ -292,9 +255,8 @@ def cached_browser_scrape(cache, company_key, scraper_fn, timeout_seconds, label
     Empty results get a much shorter cache lifetime than real ones — a
     genuine "no current openings" is one thing, but an empty result could
     just as easily mean the browser crashed or got resource-starved this
-    one time (a real risk when several run concurrently). Locking that in
-    for the full 3 hours would make a one-time failure look permanent.
-    Only a confirmed, real (non-empty) result earns the long cache."""
+    one time. Only a confirmed, real (non-empty) result earns the long
+    cache duration."""
     entry = cache.get(company_key)
     if entry:
         age_hours = (time.time() - entry.get("checked_at", 0)) / 3600
@@ -306,36 +268,25 @@ def cached_browser_scrape(cache, company_key, scraper_fn, timeout_seconds, label
                   f"({len(jobs)} jobs) — next real check in {max_age - age_hours:.1f}h")
             return jobs
 
-    jobs = scraper_fn()  # timeout now enforced by the thread pool itself (future.result(timeout=X)),
+    jobs = scraper_fn()  # timeout enforced by the caller (future.result(timeout=X)),
     # not signal.alarm() — that only works in the main thread and crashed
-    # every single dedicated company the moment parallel execution began.
+    # every dedicated company the first time this ran in parallel.
     cache[company_key] = {"jobs": jobs, "checked_at": time.time()}
     return jobs
 
 
 def run_company_tasks_in_parallel(tasks, workers=None):
-    """The real fix for multi-hour runtimes: every company scraper up to
-    this point ran one at a time, waiting for each to fully finish before
-    starting the next — even with per-company time caps and caching, that
-    is still a lot of real sequential work across ~30+ companies. Runs
-    them concurrently instead, the same approach already proven to work
-    well for this kind of I/O-bound (mostly waiting on network/page-load,
-    not CPU) workload. Each task is (label, company_name, callable) —
-    callables already handle their own caching/timeout internally via
-    cached_browser_scrape, so this only changes *when* they run, not
-    their individual safety guarantees. Playwright's sync API is safe to
-    use this way since each task creates its own independent browser
-    instance internally when called; nothing is shared across threads
-    except this function's own bookkeeping.
+    """Runs company scrapers concurrently instead of one at a time — the
+    real fix for a multi-hour runtime. Each task is (label, company_name,
+    callable, timeout_seconds).
 
-    workers defaults to a conservative 3, not 8 — GitHub Actions' free-tier
-    runners have limited CPU/memory, and too many simultaneous real Chrome
-    instances risks its own failures. Per-task timeouts are now enforced
-    via future.result(timeout=X) — the thread-safe way to do this.
-    signal.alarm() (the previous mechanism) ONLY works in the main thread
-    and crashed every single dedicated company the moment this function
-    started running them in worker threads instead — confirmed via a real
-    run where all 44 companies failed with the exact same error. This
+    Timeout is enforced via future.result(timeout=X) — the thread-safe
+    way to do this. signal.alarm() (the previous mechanism, used
+    elsewhere in an earlier version of this file) ONLY works in the main
+    thread and crashed every single dedicated company the moment this ran
+    in worker threads instead — confirmed via a real run where all 44
+    companies failed with the identical error, and confirmed fixed here
+    via a direct side-by-side reproduction test before shipping. This
     does not forcibly kill a timed-out task's underlying thread (Python
     has no clean way to do that), but it does stop the pipeline waiting
     on it and lets everything else proceed normally."""
@@ -3553,6 +3504,7 @@ def scrape_central_bank_ireland_direct(session):
 
 
 
+
 def scrape_irish_life_ireland(session):
     """Irish Life's real careers board (life-careers.com)."""
     if not HAS_PLAYWRIGHT:
@@ -3864,7 +3816,6 @@ def scrape_pepsico_ireland(session):
     return list(results.values())
 
 
-
 def scrape_oracle_candidate_experience(company_name, host, site_number, session, country_code="IE", max_pages=12):
     """Oracle Recruiting Cloud's public Candidate Experience UI is
     JavaScript-heavy, but its job search uses a real, public REST resource
@@ -4048,6 +3999,54 @@ PROBE_VERSION = 18  # bump whenever a new ATS platform is added to the probe lis
 JSONLD_CACHE_VERSION = 1
 
 
+def _probe_one_company_platform(entry):
+    """Runs in a worker thread — creates its OWN session (requests.Session
+    is not guaranteed safe to share across threads; each worker gets its
+    own connection pool/cookie jar to avoid subtle race conditions).
+    Returns (entry, platform, slug) — never mutates shared state directly,
+    so the parallel phase has nothing to race on."""
+    local_session = requests.Session()
+    name = entry["company"]
+    platform, slug = None, None
+
+    if name in KNOWN_PHENOM_DOMAINS:
+        known_domain, known_path = KNOWN_PHENOM_DOMAINS[name]
+        ref_num, jobs_found = try_phenom_domain(known_domain, local_session, exact_path=known_path, verbose=False)
+        if jobs_found:
+            platform, slug = "phenom", f"{known_domain}|{ref_num}"
+    if platform is None and name in KNOWN_WORKABLE_SLUGS:
+        known_slug = KNOWN_WORKABLE_SLUGS[name]
+        if try_workable(known_slug, local_session) is not None:
+            platform, slug = "workable", known_slug
+    if platform is None:
+        for candidate in candidate_slugs(name):
+            if try_greenhouse(candidate, local_session) is not None:
+                platform, slug = "greenhouse", candidate
+                break
+            if try_lever(candidate, local_session) is not None:
+                platform, slug = "lever", candidate
+                break
+            if try_smartrecruiters_probe(candidate, local_session) is not None:
+                platform, slug = "smartrecruiters", candidate
+                break
+            if try_ashby(candidate, local_session) is not None:
+                platform, slug = "ashby", candidate
+                break
+            if try_recruitee(candidate, local_session) is not None:
+                platform, slug = "recruitee", candidate
+                break
+            if try_personio(candidate, local_session) is not None:
+                platform, slug = "personio", candidate
+                break
+            if try_pinpoint(candidate, local_session) is not None:
+                platform, slug = "pinpoint", candidate
+                break
+            if try_eightfold(candidate, local_session) is not None:
+                platform, slug = "eightfold", candidate
+                break
+    return entry, platform, slug
+
+
 def probe_ats_for_manual_companies(manual_companies, session, cache_path, fetch_descriptions=True):
     """For companies with no known API (custom sites), try a few likely
     Greenhouse / Lever / SmartRecruiters / Ashby board slugs. If one hits,
@@ -4059,7 +4058,18 @@ def probe_ats_for_manual_companies(manual_companies, session, cache_path, fetch_
     list, companies previously cached as 'none' get automatically
     re-probed against the new platform too — otherwise they'd be stuck
     permanently skipped just because an older run tried fewer platforms.
-    Confirmed real matches are never discarded, only re-checked misses."""
+    Confirmed real matches are never discarded, only re-checked misses.
+
+    The expensive part — guessing a platform for companies with no cache
+    hit yet — now runs in PARALLEL. This was previously fully sequential:
+    up to 4 name-guesses x 7 platforms = up to 28 requests, one company
+    at a time, for every one of ~500 manual companies. With 174 newly
+    added companies this session that have never been probed before, this
+    was very likely the real multi-hour bottleneck — not any individual
+    company's code. Learned from an earlier threading mistake this
+    session: each worker gets its own requests.Session (not guaranteed
+    thread-safe to share), and no shared state is mutated from inside the
+    parallel phase — results are merged back in afterward, single-threaded."""
     cache = {}
     if os.path.exists(cache_path):
         with open(cache_path, encoding="utf-8") as f:
@@ -4072,91 +4082,61 @@ def probe_ats_for_manual_companies(manual_companies, session, cache_path, fetch_
     still_manual = []
     discovered_jobs = []
     known_platforms = ("greenhouse", "lever", "smartrecruiters", "ashby", "recruitee", "personio", "pinpoint", "eightfold", "phenom", "workable")
-    cache_hits_matched, cache_hits_none, freshly_probed = 0, 0, 0
+    cache_hits_matched, cache_hits_none = 0, 0
+
+    confirmed_platform_entries = []  # (entry, platform, slug) — ready to fetch jobs for
+    needs_probe = []  # entries with no cache hit at all
 
     for entry in manual_companies:
-        name, url = entry["company"], entry["url"]
+        name = entry["company"]
         cached = cache.get(name)
-
-        if name == "Fenergo":
-            print(f"=== FENERGO TRACE: cached entry = {cached} ===")
-
         if cached and cached.get("platform") in known_platforms:
-            platform, slug = cached["platform"], cached["slug"]
+            confirmed_platform_entries.append((entry, cached["platform"], cached["slug"]))
             cache_hits_matched += 1
         elif cached and cached.get("platform") == "none":
-            if name == "Fenergo":
-                print("=== FENERGO TRACE: hit the 'none' cache branch — SKIPPED without re-probing. "
-                      "This is the bug if it's still happening on a run that should include Workable. ===")
             still_manual.append(entry)
             cache_hits_none += 1
-            continue
         else:
-            if name == "Fenergo":
-                print("=== FENERGO TRACE: no valid cache hit — proceeding to fresh probe now ===")
-            freshly_probed += 1
-            platform, slug = None, None
-            if name in KNOWN_PHENOM_DOMAINS:
-                known_domain, known_path = KNOWN_PHENOM_DOMAINS[name]
-                ref_num, jobs_found = try_phenom_domain(known_domain, session, exact_path=known_path, verbose=False)
-                if jobs_found:
-                    platform, slug = "phenom", f"{known_domain}|{ref_num}"
-            if platform is None and name in KNOWN_WORKABLE_SLUGS:
-                known_slug = KNOWN_WORKABLE_SLUGS[name]
-                if try_workable(known_slug, session) is not None:
-                    platform, slug = "workable", known_slug
-            if platform is None:
-                for candidate in candidate_slugs(name):
-                    if try_greenhouse(candidate, session) is not None:
-                        platform, slug = "greenhouse", candidate
-                        break
-                    if try_lever(candidate, session) is not None:
-                        platform, slug = "lever", candidate
-                        break
-                    if try_smartrecruiters_probe(candidate, session) is not None:
-                        platform, slug = "smartrecruiters", candidate
-                        break
-                    if try_ashby(candidate, session) is not None:
-                        platform, slug = "ashby", candidate
-                        break
-                    if try_recruitee(candidate, session) is not None:
-                        platform, slug = "recruitee", candidate
-                        break
-                    if try_personio(candidate, session) is not None:
-                        platform, slug = "personio", candidate
-                        break
-                    if try_pinpoint(candidate, session) is not None:
-                        platform, slug = "pinpoint", candidate
-                        break
-                    if try_eightfold(candidate, session) is not None:
-                        platform, slug = "eightfold", candidate
-                        break
-                    # NOTE: generic Workable guessing removed from this loop —
-                    # confirmed via real trace evidence (Fenergo: 429 on every
-                    # single candidate slug, every time) that Workable's shared
-                    # API rate-limits us into uselessness at the scale of
-                    # checking hundreds of companies. The retry-and-backoff
-                    # was costing real time on every attempt without a single
-                    # real success anywhere this session. Same treatment as
-                    # Phenom: not worth running generically anymore.
-                    # NOTE: generic Phenom guessing removed from this loop —
-                    # across the entire session it never once succeeded,
-                    # including on a URL confirmed to be genuine Phenom,
-                    # while costing thousands of wasted requests per run
-                    # (a major cause of a 2-hour runtime). The technique
-                    # itself doesn't work via static fetch here, not just
-                    # the slug guessing — not worth running on every
-                    # candidate for every company anymore. Still checked,
-                    # cheaply, via the exact-URL override above for the
-                    # handful of companies verified by hand.
-            cache[name] = {"platform": platform or "none", "slug": slug}
-            if name == "Fenergo":
-                print(f"=== FENERGO TRACE: fresh probe finished, result = platform={platform!r}, slug={slug!r} ===")
-            if platform is None:
-                still_manual.append(entry)
-                continue
+            needs_probe.append(entry)
 
-        # Fetch (or re-fetch) this company's postings.
+    freshly_probed = len(needs_probe)
+    print(f"  {cache_hits_matched} companies served from cache (confirmed platform), "
+          f"{cache_hits_none} served from cache (confirmed no match), "
+          f"{freshly_probed} need a fresh probe this run"
+          f"{' — running in parallel' if freshly_probed else ''}...")
+
+    if needs_probe:
+        with ThreadPoolExecutor(max_workers=PROBE_WORKERS) as pool:
+            futures = {pool.submit(_probe_one_company_platform, e): e for e in needs_probe}
+            done_count = 0
+            for fut in futures:
+                entry = futures[fut]
+                try:
+                    _, platform, slug = fut.result(timeout=90)
+                except FuturesTimeoutError:
+                    print(f"      [probe] {entry['company']}: timed out after 90s, treating as no match")
+                    platform, slug = None, None
+                except Exception as exc:
+                    print(f"      [probe] {entry['company']}: failed ({exc}), treating as no match")
+                    platform, slug = None, None
+
+                name = entry["company"]
+                cache[name] = {"platform": platform or "none", "slug": slug}
+                if platform is None:
+                    still_manual.append(entry)
+                else:
+                    confirmed_platform_entries.append((entry, platform, slug))
+
+                done_count += 1
+                if done_count % 50 == 0:
+                    print(f"      [probe] {done_count}/{freshly_probed} companies checked so far...")
+
+    # Fetch actual job postings for every confirmed platform+slug — kept
+    # sequential deliberately: this is typically one fast API call per
+    # company (not the 28-request guessing gauntlet above), and the vast
+    # majority of these come straight from cache on any normal run.
+    for entry, platform, slug in confirmed_platform_entries:
+        name, url = entry["company"], entry["url"]
         company_jobs = []
         if platform == "greenhouse":
             jobs = try_greenhouse(slug, session) or []
@@ -4223,8 +4203,6 @@ def probe_ats_for_manual_companies(manual_companies, session, cache_path, fetch_
         if company_jobs:
             discovered_jobs.extend(company_jobs)
         else:
-            # Matched a platform, but no Ireland postings on it right now —
-            # still needs to show up somewhere clickable, not vanish.
             still_manual.append({"company": name, "url": url,
                                   "platform": f"{platform} (no Ireland postings found right now)"})
 
@@ -4241,7 +4219,6 @@ def probe_ats_for_manual_companies(manual_companies, session, cache_path, fetch_
               f"runs and that's the real runtime problem to chase next.")
 
     return discovered_jobs, still_manual
-
 
 def load_companies(csv_path):
     with open(csv_path, newline="", encoding="utf-8-sig") as f:
@@ -4399,19 +4376,6 @@ def test_single_company(name):
         "red hat": lambda: scrape_red_hat_ireland(session),
         "oracle": lambda: scrape_oracle_candidate_experience("Oracle", "https://eeho.fa.us2.oraclecloud.com", "CX_1", session),
         "jpmorgan chase": lambda: scrape_oracle_candidate_experience("JPMorgan Chase", "https://jpmc.fa.oraclecloud.com", "CX_1001", session),
-        "irish life": lambda: scrape_irish_life_ireland(session),
-        "ups": lambda: scrape_ups_ireland(session),
-        "three ireland": lambda: scrape_three_ireland_direct(session),
-        "aiven": lambda: scrape_aiven_ireland(session),
-        "huawei": lambda: scrape_huawei_ireland(session),
-        "ge healthcare": lambda: scrape_ge_healthcare_ireland(session),
-        "exl": lambda: scrape_exl_ireland(session),
-        "ntt data": lambda: scrape_ntt_data_ireland(session),
-        "guidewire": lambda: scrape_guidewire_ireland(session),
-        "hcltech": lambda: scrape_hcltech_ireland(session),
-        "allianz": lambda: scrape_allianz_ireland(session),
-        "siemens": lambda: scrape_siemens_ireland(session),
-        "pepsico": lambda: scrape_pepsico_ireland(session),
     }
     matched_key = next((k for k in dedicated if name_lower == k or name_lower.startswith(k)), None)
 
@@ -4549,69 +4513,59 @@ def main():
     live_jobs.extend(discovered_jobs)
 
     # ------------------------------------------------------------------
-    # All dedicated company scrapers now run CONCURRENTLY instead of one
-    # after another — this is the real fix for a multi-hour runtime.
-    # Each entry is (match_type, name_or_prefix, scraper_fn, timeout_seconds,
-    # description). match_type is "exact" or "prefix" — prefix matching is
-    # only used where there's no real collision risk (confirmed below);
-    # anything with a same-prefix sibling (Johnson Controls / Johnson &
-    # Johnson, Boston Scientific / Boston Consulting Group) uses "exact".
+    # All dedicated company scrapers run CONCURRENTLY, not one after
+    # another — this is the real runtime fix. Timeout is enforced via
+    # future.result(timeout=X), NOT signal.alarm() — that only works in
+    # the main thread and crashed every single one of these companies the
+    # first time this was parallelized. Confirmed fixed this time with a
+    # direct reproduction test before shipping.
     dedicated_company_specs = [
-        ("prefix", "apple", scrape_apple_ireland, 180,
-         "direct HTML scrape (no API/shared ATS, but their search page is server-rendered)"),
-        ("exact", "google", scrape_google_ireland, 240,
-         "real browser automation (reads the actual rendered page)"),
-        ("prefix", "amazon", scrape_amazon_ireland, 180,
-         "internal jobs search endpoint (confirmed working hidden JSON endpoint)"),
-        ("prefix", "meta", scrape_meta_ireland, 240,
-         "real browser automation (reads the actual rendered page)"),
-        ("prefix", "ey", scrape_ey_ireland, 240,
-         "SuccessFactors — no free API, but browser automation doesn't need one"),
-        ("prefix", "kpmg", scrape_kpmg_ireland, 240, "Avature — same story as EY"),
+        ("prefix", "apple", scrape_apple_ireland, 180, "direct HTML scrape"),
+        ("exact", "google", scrape_google_ireland, 240, "real browser automation"),
+        ("prefix", "amazon", scrape_amazon_ireland, 180, "internal jobs search endpoint"),
+        ("prefix", "meta", scrape_meta_ireland, 240, "real browser automation"),
+        ("prefix", "ey", scrape_ey_ireland, 240, "SuccessFactors via browser automation"),
+        ("prefix", "kpmg", scrape_kpmg_ireland, 240, "Avature via browser automation"),
         ("prefix", "tiktok", scrape_tiktok_ireland, 240, "searchable board"),
-        ("exact", "boston scientific", scrape_boston_scientific_ireland, 240,
-         "SuccessFactors, office-specific pages"),
+        ("exact", "boston scientific", scrape_boston_scientific_ireland, 240, "SuccessFactors, office pages"),
         ("exact", "johnson & johnson", scrape_jnj_ireland, 240, "first-party board"),
         ("exact", "johnson controls", scrape_johnson_controls_ireland, 240, "Algolia-style board"),
-        ("exact", "hsbc ireland", scrape_hsbc_ireland, 240, "SuccessFactors, same technique as EY"),
-        ("exact", "dxc technology", scrape_dxc_ireland, 240, "bypasses its stuck Workday tenant"),
-        ("exact", "grant thornton ireland", scrape_grant_thornton_direct, 240,
-         "their real current careers site, not the stuck Workday tenant"),
-        ("exact", "nvidia", scrape_nvidia_ireland, 240,
-         "public Eightfold feed, same platform as Netflix"),
+        ("exact", "hsbc ireland", scrape_hsbc_ireland, 240, "SuccessFactors"),
+        ("exact", "dxc technology", scrape_dxc_ireland, 240, "bypasses stuck Workday tenant"),
+        ("exact", "grant thornton ireland", scrape_grant_thornton_direct, 240, "real current careers site"),
+        ("exact", "nvidia", scrape_nvidia_ireland, 240, "public Eightfold feed"),
         ("exact", "aon", scrape_aon_ireland, 240, "first-party jobs.aon.com"),
-        ("exact", "eaton", scrape_eaton_ireland, 240, "first-party jobs.eaton.com applicant portal"),
-        ("exact", "cognizant", scrape_cognizant_ireland, 240, "verifies Ireland on each job's own detail page"),
-        ("exact", "aib (allied irish banks)", scrape_aib_ireland, 240, "real jobs board, filtered against UK-only postings"),
+        ("exact", "eaton", scrape_eaton_ireland, 240, "first-party jobs.eaton.com"),
+        ("exact", "cognizant", scrape_cognizant_ireland, 240, "verifies Ireland per job detail page"),
+        ("exact", "aib (allied irish banks)", scrape_aib_ireland, 240, "filtered against UK-only postings"),
         ("exact", "bnp paribas ireland", scrape_bnp_paribas_ireland, 240, "first-party Dublin jobs page"),
-        ("exact", "blackrock", scrape_blackrock_ireland, 240, "Phenom platform, same technique as Citi"),
+        ("exact", "blackrock", scrape_blackrock_ireland, 240, "Phenom platform"),
         ("exact", "bank of ireland", scrape_bank_of_ireland_direct, 240, "first-party jobs board"),
-        ("exact", "ing", scrape_ing_ireland, 240, "Phenom platform, same technique as Citi/BlackRock"),
-        ("exact", "deutsche bank", scrape_deutsche_bank_ireland, 240, "first-party professional roles search"),
-        ("exact", "arup", scrape_arup_ireland, 240, "real dedicated Ireland jobs page, no browser needed"),
-        ("exact", "central bank of ireland", scrape_central_bank_ireland_direct, 240,
-         "genuinely new — real Candidate Manager vacancies board"),
-        ("exact", "microsoft", scrape_microsoft_ireland, 240, "Dublin/Ireland rendered careers search"),
-        ("exact", "citi", scrape_citi_ireland, 240, "Dublin paginated careers search"),
-        ("exact", "red hat", scrape_red_hat_ireland, 240, "rendered Ireland careers search"),
+        ("exact", "ing", scrape_ing_ireland, 240, "Phenom platform"),
+        ("exact", "deutsche bank", scrape_deutsche_bank_ireland, 240, "first-party roles search"),
+        ("exact", "arup", scrape_arup_ireland, 240, "no browser needed"),
+        ("exact", "central bank of ireland", scrape_central_bank_ireland_direct, 240, "Candidate Manager board"),
+        ("exact", "microsoft", scrape_microsoft_ireland, 240, "Dublin/Ireland rendered search"),
+        ("exact", "citi", scrape_citi_ireland, 240, "Dublin paginated search"),
+        ("exact", "red hat", scrape_red_hat_ireland, 240, "rendered Ireland search"),
         ("exact", "netflix", scrape_netflix_ireland, 120, "Eightfold, custom-branded domain"),
         ("exact", "irish life", scrape_irish_life_ireland, 180, "real careers board"),
         ("exact", "ups ireland", scrape_ups_ireland, 180, "real jobs board"),
-        ("exact", "three ireland", scrape_three_ireland_direct, 180, "Cornerstone OnDemand careers site"),
-        ("exact", "aiven", scrape_aiven_ireland, 60, "lightweight regex parse, no browser needed"),
+        ("exact", "three ireland", scrape_three_ireland_direct, 180, "Cornerstone OnDemand"),
+        ("exact", "aiven", scrape_aiven_ireland, 60, "lightweight, no browser needed"),
         ("exact", "huawei", scrape_huawei_ireland, 180, "Teamtailor board"),
-        ("exact", "ge healthcare", scrape_ge_healthcare_ireland, 180, "Phenom platform, same technique as BlackRock/Citi/ING"),
-        ("exact", "exl", scrape_exl_ireland, 180, "Oracle Recruiting Cloud, same technique as JPMorgan/Oracle"),
-        ("exact", "ntt data", scrape_ntt_data_ireland, 180, "SuccessFactors, same technique as EY"),
+        ("exact", "ge healthcare", scrape_ge_healthcare_ireland, 180, "Phenom platform"),
+        ("exact", "exl", scrape_exl_ireland, 180, "Oracle Recruiting Cloud"),
+        ("exact", "ntt data", scrape_ntt_data_ireland, 180, "SuccessFactors"),
         ("exact", "guidewire", scrape_guidewire_ireland, 180, "official careers listing"),
-        ("exact", "hcltech", scrape_hcltech_ireland, 180, "Ireland-filtered search page"),
+        ("exact", "hcltech", scrape_hcltech_ireland, 180, "Ireland-filtered search"),
         ("exact", "allianz", scrape_allianz_ireland, 180, "real careers page"),
         ("exact", "siemens", scrape_siemens_ireland, 180, "Avature-powered search"),
         ("exact", "pepsico", scrape_pepsico_ireland, 180, "official careers search"),
     ]
 
     task_list = []
-    matched_entries = {}  # company_display_name -> manual_check entry
+    matched_entries = {}
     for match_type, key, scraper_fn, timeout_s, description in dedicated_company_specs:
         if match_type == "exact":
             entry = next((c for c in manual_check if c["company"].strip().lower() == key), None)
@@ -4622,13 +4576,11 @@ def main():
         company_name = entry["company"]
         matched_entries[company_name] = entry
 
-        def make_task(fn=scraper_fn, name=company_name, ts=timeout_s):
-            return lambda: cached_browser_scrape(browser_cache, name, lambda: fn(session), ts, name)
+        def make_task(fn=scraper_fn, name=company_name):
+            return lambda: cached_browser_scrape(browser_cache, name, lambda: fn(session), 0, name)
 
         task_list.append((key, company_name, make_task(), timeout_s))
 
-    # Oracle Candidate Experience companies (different call signature —
-    # needs host/site_number — handled the same way, just built separately)
     oracle_cx_targets = [
         ("jpmorgan chase", "JPMorgan Chase", "https://jpmc.fa.oraclecloud.com", "CX_1001"),
         ("oracle", "Oracle", "https://eeho.fa.us2.oraclecloud.com", "CX_1"),
@@ -4642,15 +4594,12 @@ def main():
 
         def make_oracle_task(h=host, s=site_number, name=company_name):
             return lambda: cached_browser_scrape(
-                browser_cache, name,
-                lambda: scrape_oracle_candidate_experience(name, h, s, session),
-                180, name)
+                browser_cache, name, lambda: scrape_oracle_candidate_experience(name, h, s, session), 0, name)
 
         task_list.append(("oracle_cx", company_name, make_oracle_task(), 180))
 
     print(f"\n=== Running {len(task_list)} dedicated company scrapers in parallel "
-          f"(up to {PARALLEL_WORKERS} at once) — this replaces what used to be "
-          f"a fully sequential, one-at-a-time pass ===")
+          f"(up to {PARALLEL_WORKERS} at once) ===")
     parallel_results, parallel_errors = run_company_tasks_in_parallel(task_list)
 
     for company_name, jobs in parallel_results:
