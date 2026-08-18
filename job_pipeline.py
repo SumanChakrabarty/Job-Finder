@@ -286,14 +286,26 @@ def run_company_tasks_in_parallel(tasks, workers=None):
     thread and crashed every single dedicated company the moment this ran
     in worker threads instead — confirmed via a real run where all 44
     companies failed with the identical error, and confirmed fixed here
-    via a direct side-by-side reproduction test before shipping. This
-    does not forcibly kill a timed-out task's underlying thread (Python
-    has no clean way to do that), but it does stop the pipeline waiting
-    on it and lets everything else proceed normally."""
+    via a direct side-by-side reproduction test before shipping.
+
+    Critical follow-up bug, also confirmed via a real run: giving up on a
+    slow task via future.result(timeout=X) does NOT stop its underlying
+    thread — that thread keeps running in the background. Using
+    ThreadPoolExecutor as a context manager (`with ... as pool:`) shuts
+    the pool down on exit with wait=True by default, which BLOCKS THE
+    WHOLE PROGRAM until every background thread actually finishes — even
+    ones already reported as timed out. A real run hit exactly this: DXC
+    correctly printed "HARD TIMEOUT after 240s", but the pipeline then
+    silently hung for 10+ minutes waiting for DXC's still-running browser
+    task to actually complete before the pool would let the program move
+    on. Explicitly shutting down with wait=False avoids this — any
+    genuinely stuck background thread is abandoned (Python has no clean
+    way to force-kill a thread) rather than blocking everything else."""
     results, errors = [], []
     if not tasks:
         return results, errors
-    with ThreadPoolExecutor(max_workers=workers or PARALLEL_WORKERS) as pool:
+    pool = ThreadPoolExecutor(max_workers=workers or PARALLEL_WORKERS)
+    try:
         future_map = {pool.submit(fn): (label, company, timeout_s) for label, company, fn, timeout_s in tasks}
         for fut in future_map:
             label, company, timeout_s = future_map[fut]
@@ -311,6 +323,8 @@ def run_company_tasks_in_parallel(tasks, workers=None):
             except Exception as exc:
                 print(f"  -> {company}: task failed ({exc})")
                 errors.append(f"{label}/{company}: {exc}")
+    finally:
+        pool.shutdown(wait=False)
     return results, errors
 
 
@@ -1810,7 +1824,7 @@ def _browser_scrape_jobs(company_name, url, link_fragment, source_tag):
     results, seen = [], set()
     try:
         with sync_playwright() as pw:
-            browser = pw.chromium.launch(headless=True)
+            browser = pw.chromium.launch(headless=True, args=["--disable-http2"])
             page = browser.new_page(viewport={"width": 1440, "height": 1000}, locale="en-IE")
             page.goto(url, wait_until="domcontentloaded", timeout=60000)
             page.wait_for_timeout(2000)
@@ -1992,7 +2006,7 @@ def scrape_google_ireland(session, fetch_descriptions=True):
     seen_titles, results = set(), []
     try:
         with sync_playwright() as pw:
-            browser = pw.chromium.launch(headless=True)
+            browser = pw.chromium.launch(headless=True, args=["--disable-http2"])
             page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
 
             empty_pages = 0
@@ -2090,7 +2104,7 @@ def scrape_meta_ireland(session):
 
     try:
         with sync_playwright() as pw:
-            browser = pw.chromium.launch(headless=True)
+            browser = pw.chromium.launch(headless=True, args=["--disable-http2"])
             page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
 
             for default_location, url in ireland_pages:
@@ -2216,7 +2230,7 @@ def scrape_ey_ireland(session):
     results = {}
     try:
         with sync_playwright() as pw:
-            browser = pw.chromium.launch(headless=True)
+            browser = pw.chromium.launch(headless=True, args=["--disable-http2"])
             page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
             stagnant = 0
             for startrow in range(0, 2500, 25):
@@ -2240,9 +2254,12 @@ def scrape_ey_ireland(session):
 
 
 def scrape_kpmg_ireland(session):
-    """KPMG Ireland's live experienced-hire board is Avature — same story
-    as EY: no free API, but browser automation doesn't need one. Walks
-    Avature's folderOffset pagination."""
+    """KPMG Ireland's live experienced-hire board is Avature. Real evidence
+    showed navigating directly to a folderOffset URL loads an EMPTY,
+    unsubmitted search form ("No jobs found" with blank Keywords/Location
+    dropdowns) — the URL parameter alone does not trigger real results.
+    Click the actual "Search" button (with no filters = search everything)
+    to trigger a genuine search, then collect and paginate from there."""
     if not HAS_PLAYWRIGHT:
         print("      [kpmg] playwright not installed — skipping")
         return []
@@ -2250,27 +2267,66 @@ def scrape_kpmg_ireland(session):
     results = {}
     try:
         with sync_playwright() as pw:
-            browser = pw.chromium.launch(headless=True)
+            browser = pw.chromium.launch(headless=True, args=["--disable-http2"])
             page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
-            stagnant = 0
-            for offset in range(0, 1000, 10):
-                url = base + "?" + urllib.parse.urlencode({"folderOffset": offset})
-                page.goto(url, wait_until="domcontentloaded", timeout=60000)
-                page.wait_for_timeout(900)
-                if offset == 0:
-                    _browser_accept_consent(page)
+            page.goto(base, wait_until="domcontentloaded", timeout=60000)
+            page.wait_for_timeout(1500)
+            _browser_accept_consent(page)
+            try:
+                search_btn = page.get_by_role("button", name=re.compile(r"^search$", re.I))
+                if search_btn.count():
+                    search_btn.first.click(timeout=5000)
+                    page.wait_for_timeout(2500)
+                    print("      [kpmg] clicked real Search button")
+                else:
+                    print("      [kpmg] no Search button found by role — trying input[type=submit]")
+                    alt = page.locator("input[type=submit], button[type=submit]")
+                    if alt.count():
+                        alt.first.click(timeout=5000)
+                        page.wait_for_timeout(2500)
+            except Exception as e:
+                print(f"      [kpmg] search click failed: {e}")
+
+            try:
+                body_text = _browser_text(page.locator("body"))[:300]
+                print(f"      [kpmg] body text after search click: {body_text!r}")
+            except Exception:
+                pass
+
+            stagnant, previous = 0, 0
+            for _ in range(40):
                 before = len(results)
-                _collect_filtered_page_jobs(page, "KPMG Ireland", r"kpmgireland\.avature\.net/careers/(?:JobDetail|jobdetail|FolderDetail|folderdetail)", "kpmg_avature", results, "Ireland")
-                _collect_links_from_html(page, "KPMG Ireland", r"kpmgireland\.avature\.net/careers/(?:JobDetail|jobdetail|FolderDetail|folderdetail)", "kpmg_avature", results, "Ireland")
+                _collect_filtered_page_jobs(
+                    page, "KPMG Ireland",
+                    r"kpmgireland\.avature\.net/careers/(?!SearchJobs(?:/|\?|$)|CreateAccount(?:/|\?|$)|Login(?:/|\?|$)|TalentCommunity)[^\"\'<>?#]+",
+                    "kpmg_avature", results, "Ireland")
+                _collect_links_from_html(
+                    page, "KPMG Ireland",
+                    r"kpmgireland\.avature\.net/careers/(?!SearchJobs(?:/|\?|$)|CreateAccount(?:/|\?|$)|Login(?:/|\?|$)|TalentCommunity)[^\"\'<>?#]+",
+                    "kpmg_avature", results, "Ireland")
                 added = len(results) - before
-                print(f"      [kpmg] folderOffset={offset}: +{added} jobs ({len(results)} total)")
-                stagnant = stagnant + 1 if added == 0 else 0
-                if stagnant >= 2:
+                print(f"      [kpmg] pass: +{added} jobs ({len(results)} total)")
+                for txt in ("Load more", "Show more", "Next", "Next page"):
+                    try:
+                        b = page.get_by_role("button", name=txt, exact=False)
+                        if b.count() and b.first.is_visible():
+                            b.first.click(timeout=1000)
+                            page.wait_for_timeout(700)
+                    except Exception:
+                        pass
+                page.mouse.wheel(0, 3000)
+                page.wait_for_timeout(500)
+                current = len(results)
+                stagnant = stagnant + 1 if current == previous else 0
+                previous = current
+                if stagnant >= 4:
                     break
             browser.close()
     except Exception as e:
         print(f"      [kpmg] browser scrape failed: {e}")
+    print(f"      [kpmg] {len(results)} unique Ireland jobs accumulated")
     return list(results.values())
+
 
 
 def scrape_tiktok_ireland(session):
@@ -2284,7 +2340,7 @@ def scrape_tiktok_ireland(session):
     results = {}
     try:
         with sync_playwright() as pw:
-            browser = pw.chromium.launch(headless=True)
+            browser = pw.chromium.launch(headless=True, args=["--disable-http2"])
             page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
             page.goto("https://lifeattiktok.com/search", wait_until="domcontentloaded", timeout=60000)
             page.wait_for_timeout(1200)
@@ -2392,7 +2448,7 @@ def scrape_boston_scientific_ireland(session):
     results = {}
     try:
         with sync_playwright() as pw:
-            browser = pw.chromium.launch(headless=True)
+            browser = pw.chromium.launch(headless=True, args=["--disable-http2"])
             page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
             for default_location, base in pages:
                 stagnant = 0
@@ -2499,7 +2555,7 @@ def scrape_microsoft_ireland(session):
     results = {}
     try:
         with sync_playwright() as pw:
-            browser = pw.chromium.launch(headless=True)
+            browser = pw.chromium.launch(headless=True, args=["--disable-http2"])
             page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
             for start_url in urls:
                 page.goto(start_url, wait_until="domcontentloaded", timeout=60000)
@@ -2547,7 +2603,7 @@ def scrape_citi_ireland(session):
     results = {}
     try:
         with sync_playwright() as pw:
-            browser = pw.chromium.launch(headless=True)
+            browser = pw.chromium.launch(headless=True, args=["--disable-http2"])
             page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
             for page_no in range(1, 8):
                 url = base.format(page_no)
@@ -2585,7 +2641,7 @@ def scrape_red_hat_ireland(session):
     results = {}
     try:
         with sync_playwright() as pw:
-            browser = pw.chromium.launch(headless=True)
+            browser = pw.chromium.launch(headless=True, args=["--disable-http2"])
             page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
             page.goto(start, wait_until="domcontentloaded", timeout=60000)
             page.wait_for_timeout(1200)
@@ -2653,7 +2709,7 @@ def scrape_jnj_ireland(session):
     ]
     try:
         with sync_playwright() as pw:
-            browser = pw.chromium.launch(headless=True)
+            browser = pw.chromium.launch(headless=True, args=["--disable-http2"])
             page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
             for url in urls:
                 page.goto(url, wait_until="domcontentloaded", timeout=60000)
@@ -2663,7 +2719,7 @@ def scrape_jnj_ireland(session):
                 # after several seconds for a genuine browser. Poll for it
                 # to clear instead of a fixed short wait that's nowhere
                 # near long enough for the JS challenge to complete.
-                for _ in range(12):
+                for _ in range(35):
                     if "just a moment" not in (page.title() or "").lower():
                         break
                     page.wait_for_timeout(1000)
@@ -2684,7 +2740,7 @@ def scrape_jnj_ireland(session):
                         "jnj_browser", results, "Ireland")
                     _collect_links_from_html(
                         page, "Johnson & Johnson",
-                        r"careers\.jnj\.com/en/job(?:s)?/",
+                        r"careers\.jnj\.com/en/jobs?/[^\"'<>?#]+",
                         "jnj_browser", results, "Ireland")
                     for txt in ("Load more", "Show more", "See more", "Next"):
                         try:
@@ -2722,7 +2778,7 @@ def scrape_johnson_controls_ireland(session):
     url = "https://jobs.johnsoncontrols.com/job-search?" + params
     try:
         with sync_playwright() as pw:
-            browser = pw.chromium.launch(headless=True)
+            browser = pw.chromium.launch(headless=True, args=["--disable-http2"])
             page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
             page.goto(url, wait_until="domcontentloaded", timeout=60000)
             page.wait_for_timeout(1400)
@@ -2768,7 +2824,7 @@ def scrape_hsbc_ireland(session):
     results = {}
     try:
         with sync_playwright() as pw:
-            browser = pw.chromium.launch(headless=True)
+            browser = pw.chromium.launch(headless=True, args=["--disable-http2"])
             page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
             for search_url in search_urls:
                 page.goto(search_url, wait_until="domcontentloaded", timeout=60000)
@@ -2831,7 +2887,7 @@ def scrape_dxc_ireland(session):
     results = {}
     try:
         with sync_playwright() as pw:
-            browser = pw.chromium.launch(headless=True)
+            browser = pw.chromium.launch(headless=True, args=["--disable-http2"])
             page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
             for url in urls:
                 page.goto(url, wait_until="domcontentloaded", timeout=60000)
@@ -2966,7 +3022,7 @@ def scrape_aon_ireland(session):
     results = {}
     try:
         with sync_playwright() as pw:
-            browser = pw.chromium.launch(headless=True)
+            browser = pw.chromium.launch(headless=True, args=["--disable-http2"])
             page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
             for url in urls:
                 try:
@@ -2983,9 +3039,20 @@ def scrape_aon_ireland(session):
                                 break
                         except Exception:
                             pass
+                    try:
+                        all_links = page.locator("a[href]")
+                        hrefs = [all_links.nth(i).get_attribute("href") or "" for i in range(all_links.count())]
+                        matching = sum(1 for h in hrefs if re.search(r"jobs\.aon\.com/(?:jobs|signin/jobs|sign-up/jobs)/\d+", h, re.I))
+                        print(f"      [aon] {url}: page title={page.title()!r}, total links={len(hrefs)}, matching={matching}")
+                        print(f"      [aon] sample real hrefs: {[h for h in hrefs if h and 'aon' in h.lower()][:8]}")
+                    except Exception as e:
+                        print(f"      [aon] diagnostic read failed: {e}")
                     _browser_collect_job_links_with_retries(
                         page, "Aon", [r"jobs\.aon\.com/(?:jobs|signin/jobs|sign-up/jobs)/\d+"],
                         "aon_browser", results, "Ireland", rounds=35)
+                    _collect_links_from_html(
+                        page, "Aon", r"jobs\.aon\.com/(?:jobs|signin/jobs|sign-up/jobs)/\d+[^\"'<>?#]*",
+                        "aon_browser_html", results, "Ireland")
                 except Exception as e:
                     print(f"      [aon] page failed {url}: {e}")
             browser.close()
@@ -2996,65 +3063,25 @@ def scrape_aon_ireland(session):
 
 
 def scrape_eaton_ireland(session):
-    """Eaton's public careers entry point is jobs.eaton.com.  The marketing
-    site links into that applicant portal, so use a real browser, follow the
-    Search Jobs entry point, search for Ireland/Dublin when possible, and
-    verify Ireland on each rendered job card."""
-    if not HAS_PLAYWRIGHT:
-        print("      [eaton] playwright not installed — skipping")
-        return []
-    urls = [
-        "https://jobs.eaton.com/",
-        "https://www.eaton.com/ie/en-gb/company/careers.html",
-        "https://www.eaton.com/ie/en-gb/company/careers/life-at-eaton/dublin.html",
-    ]
-    results = {}
+    """Eaton's current Ireland careers entry point links to its Eightfold
+    applicant portal (eaton.eightfold.ai) — real evidence this replaced
+    what used to be direct access to eaton.com, which is why the old
+    approach kept timing out. Use the existing Eightfold normalization
+    path (already proven for Netflix/NVIDIA) and keep the Ireland
+    client-side check."""
+    results = []
     try:
-        with sync_playwright() as pw:
-            browser = pw.chromium.launch(headless=True)
-            page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
-            for url in urls:
-                try:
-                    page.goto(url, wait_until="domcontentloaded", timeout=30000)
-                    page.wait_for_timeout(1800)
-                    _browser_accept_consent(page)
-                    # Click the site's search/apply entry point if present.
-                    for label in (r"Search jobs", r"Search and apply", r"Find Jobs", r"Search Careers"):
-                        try:
-                            el = page.get_by_role("link", name=re.compile(label, re.I))
-                            if el.count():
-                                href = el.first.get_attribute("href") or ""
-                                if href:
-                                    page.goto(urllib.parse.urljoin(page.url, href), wait_until="domcontentloaded", timeout=30000)
-                                    page.wait_for_timeout(1500)
-                                else:
-                                    el.first.click(timeout=3000)
-                                    page.wait_for_timeout(1500)
-                                break
-                        except Exception:
-                            pass
-                    # Best-effort location/search box.
-                    for selector in ("input[placeholder*='Location' i]", "input[placeholder*='Search' i]", "input[type='search']"):
-                        try:
-                            inp = page.locator(selector)
-                            if inp.count():
-                                inp.first.fill("Ireland")
-                                inp.first.press("Enter")
-                                page.wait_for_timeout(1500)
-                                break
-                        except Exception:
-                            pass
-                    _browser_collect_job_links_with_retries(
-                        page, "Eaton",
-                        [r"jobs\.eaton\.com/[^#?]*(?:job|jobs)[^#?]*", r"jobs\.eaton\.com/[^#?]*\d{4,}"],
-                        "eaton_browser", results, "Ireland", rounds=35)
-                except Exception as e:
-                    print(f"      [eaton] page failed {url}: {e}")
-            browser.close()
+        positions = try_eightfold("eaton", session)
+        if positions:
+            for job in positions:
+                norm = normalize_eightfold_job("Eaton", "eaton", job)
+                if norm:
+                    results.append(norm)
     except Exception as e:
-        print(f"      [eaton] browser scrape failed: {e}")
+        print(f"      [eaton] Eightfold scrape failed: {e}")
     print(f"      [eaton] {len(results)} unique Ireland jobs accumulated")
-    return list(results.values())
+    return results
+
 
 
 def scrape_nvidia_ireland(session):
@@ -3100,7 +3127,7 @@ def scrape_nvidia_ireland(session):
     # explicitly reported rather than converted into a false zero.
     try:
         with sync_playwright() as pw:
-            browser = pw.chromium.launch(headless=True)
+            browser = pw.chromium.launch(headless=True, args=["--disable-http2"])
             page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
             page.goto("https://jobs.nvidia.com/careers", wait_until="domcontentloaded", timeout=30000)
             page.wait_for_timeout(2500)
@@ -3175,40 +3202,61 @@ def _scrape_public_careers_page(company_name, url, href_hints, session, default_
         })
     return results
 def scrape_cognizant_ireland(session):
-    """Cognizant's global jobs board is server-rendered — visits each
-    candidate job's own detail page to verify Ireland, since the list
-    page itself doesn't show location clearly. Capped at a reasonable
-    number of detail-page checks to keep this bounded."""
-    search_url = "https://careers.cognizant.com/global-en/jobs/"
+    """Real evidence disproved the earlier region-prefix approach: a
+    genuine Dublin, Ireland job was found listed under the "india-en"
+    URL prefix, and direct diagnostics showed candidates from "uki-en"
+    pointing to Bhubaneswar and Bangalore, India. The uki-en/emea-en/
+    global-en prefixes are purely LANGUAGE/DISPLAY settings, not location
+    filters. The real filter is a keyword query parameter, confirmed
+    directly from Cognizant's own site navigation ("See jobs" links for
+    each office use ?keyword=<city>)."""
+    search_urls = [
+        "https://careers.cognizant.com/uki-en/jobs/?keyword=dublin&location=&radius=100&lat=&lng=&cname=&ccode=&pagesize=50",
+        "https://careers.cognizant.com/uki-en/jobs/?keyword=cork&location=&radius=100&lat=&lng=&cname=&ccode=&pagesize=50",
+        "https://careers.cognizant.com/uki-en/jobs/?keyword=ireland&location=&radius=100&lat=&lng=&cname=&ccode=&pagesize=50",
+    ]
     results = {}
-    try:
-        resp = session.get(search_url, headers=HEADERS, timeout=20)
-        if resp.status_code != 200:
-            return []
-        page = resp.text
-    except Exception:
-        return []
     links = []
-    for m in re.finditer(r'<a\b[^>]*href=["\']([^"\']+)["\'][^>]*>(.*?)</a>', page, re.I | re.S):
-        href = urllib.parse.urljoin(search_url, m.group(1))
-        if re.search(r"/global-en/jobs/\d+/[^/]+/?$", href):
-            links.append((href, _html_to_text(m.group(2))))
-    for href, anchor_title in links[:120]:  # bounded — real evidence this can run to hundreds otherwise
-        if href in results:
+    seen_candidates = set()
+    for search_url in search_urls:
+        try:
+            resp = session.get(search_url, headers=HEADERS, timeout=20)
+            if resp.status_code != 200:
+                continue
+            page = resp.text
+        except Exception:
             continue
+        for m in re.finditer(r'<a\b[^>]*href=["\']([^"\']+)["\'][^>]*>(.*?)</a>', page, re.I | re.S):
+            href = urllib.parse.urljoin(search_url, m.group(1))
+            if re.search(r"/(?:global-en|emea-en|uki-en|india-en|us-en)/jobs/\d+/[^/?#]+/?$", href):
+                if href not in seen_candidates:
+                    seen_candidates.add(href)
+                    links.append((href, _html_to_text(m.group(2))))
+    print(f"      [cognizant] {len(links)} candidate job links found via keyword-filtered search")
+    links = links[:200]
+
+    diag_count = [0]
+
+    def check_one(item):
+        href, anchor_title = item
         try:
             resp2 = session.get(href, headers=HEADERS, timeout=15)
             if resp2.status_code != 200:
-                continue
+                return None
             text = _html_to_text(resp2.text)
         except Exception:
-            continue
+            return None
         if not is_ireland_location(text):
-            continue
+            if diag_count[0] < 3:
+                diag_count[0] += 1
+                loc_match = re.search(r".{40}Location\b.{80}", text, re.I)
+                print(f"      [cognizant] diag (still non-Ireland): {href}")
+                print(f"      [cognizant] diag: {loc_match.group(0)[:150] if loc_match else 'NOT FOUND'!r}")
+            return None
         title = anchor_title or "Cognizant role"
         posted_text, posted_days = extract_posted_from_text(text)
         sponsorship, snippet = classify_sponsorship(text[:5000])
-        results[href] = {
+        return href, {
             "company": "Cognizant", "title": title[:300],
             "location": _extract_location_from_card(text, "Ireland"),
             "posted_text": posted_text, "posted_days_ago": posted_days,
@@ -3216,8 +3264,25 @@ def scrape_cognizant_ireland(session):
             "url": href, "source": "cognizant_direct",
             "visa_sponsorship": sponsorship, "visa_snippet": snippet,
         }
+
+    if links:
+        pool = ThreadPoolExecutor(max_workers=min(PROBE_WORKERS, len(links)))
+        try:
+            future_map = {pool.submit(check_one, item): item for item in links}
+            for fut, item in future_map.items():
+                try:
+                    result = fut.result(timeout=20)
+                except Exception:
+                    result = None
+                if result:
+                    href, job = result
+                    results[href] = job
+        finally:
+            pool.shutdown(wait=False)
     print(f"      [cognizant] {len(results)} unique Ireland jobs accumulated")
     return list(results.values())
+
+
 
 
 def scrape_aib_ireland(session):
@@ -3229,7 +3294,7 @@ def scrape_aib_ireland(session):
     results = {}
     try:
         with sync_playwright() as pw:
-            browser = pw.chromium.launch(headless=True)
+            browser = pw.chromium.launch(headless=True, args=["--disable-http2"])
             page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
             page.goto("https://jobs.aib.ie/go/Search-All-Jobs/3834700/", wait_until="domcontentloaded", timeout=30000)
             page.wait_for_timeout(1200)
@@ -3255,7 +3320,8 @@ def scrape_bnp_paribas_ireland(session):
     """BNP's Dublin listing is server-rendered — plain HTTP first, real
     browser fallback only if that comes back empty."""
     company = "BNP Paribas Ireland"
-    urls = ["https://group.bnpparibas/en/careers/all-job-offers/dublin",
+    urls = ["https://group.bnpparibas/en/careers/all-job-offers/county-dublin",
+            "https://group.bnpparibas/en/careers/all-job-offers/dublin",
             "https://group.bnpparibas/en/careers/all-job-offers/permanent/ireland"]
     results = {}
     for url in urls:
@@ -3291,7 +3357,7 @@ def scrape_bnp_paribas_ireland(session):
     if not results and HAS_PLAYWRIGHT:
         try:
             with sync_playwright() as pw:
-                browser = pw.chromium.launch(headless=True)
+                browser = pw.chromium.launch(headless=True, args=["--disable-http2"])
                 page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
                 page.goto(urls[0], wait_until="domcontentloaded", timeout=30000)
                 page.wait_for_timeout(1200)
@@ -3321,7 +3387,7 @@ def scrape_blackrock_ireland(session):
     results = {}
     try:
         with sync_playwright() as pw:
-            browser = pw.chromium.launch(headless=True)
+            browser = pw.chromium.launch(headless=True, args=["--disable-http2"])
             page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
             for url in urls:
                 try:
@@ -3351,7 +3417,7 @@ def scrape_bank_of_ireland_direct(session):
     results = {}
     try:
         with sync_playwright() as pw:
-            browser = pw.chromium.launch(headless=True)
+            browser = pw.chromium.launch(headless=True, args=["--disable-http2"])
             page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
             page.goto("https://careers.bankofireland.com/jobs/search", wait_until="domcontentloaded", timeout=30000)
             page.wait_for_timeout(1200)
@@ -3384,7 +3450,7 @@ def scrape_ing_ireland(session):
     results = {}
     try:
         with sync_playwright() as pw:
-            browser = pw.chromium.launch(headless=True)
+            browser = pw.chromium.launch(headless=True, args=["--disable-http2"])
             page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
             page.goto("https://careers.ing.com/en/location/dublin-jobs/2618/2963597-7521314-2964574/4",
                        wait_until="domcontentloaded", timeout=30000)
@@ -3409,7 +3475,7 @@ def scrape_deutsche_bank_ireland(session):
     results = {}
     try:
         with sync_playwright() as pw:
-            browser = pw.chromium.launch(headless=True)
+            browser = pw.chromium.launch(headless=True, args=["--disable-http2"])
             page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
             for url in urls:
                 page.goto(url, wait_until="domcontentloaded", timeout=30000)
@@ -3476,7 +3542,7 @@ def scrape_central_bank_ireland_direct(session):
     results = {}
     try:
         with sync_playwright() as pw:
-            browser = pw.chromium.launch(headless=True)
+            browser = pw.chromium.launch(headless=True, args=["--disable-http2"])
             page = browser.new_page(viewport={"width": 1400, "height": 1000}, locale="en-IE")
             page.goto(url, wait_until="domcontentloaded", timeout=30000)
             page.wait_for_timeout(900)
@@ -3513,7 +3579,7 @@ def scrape_irish_life_ireland(session):
     results = {}
     try:
         with sync_playwright() as pw:
-            browser = pw.chromium.launch(headless=True)
+            browser = pw.chromium.launch(headless=True, args=["--disable-http2"])
             page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
             page.goto("https://life-careers.com/irishlife/go/irishlife/3805801",
                        wait_until="domcontentloaded", timeout=30000)
@@ -3540,7 +3606,7 @@ def scrape_ups_ireland(session):
     results = {}
     try:
         with sync_playwright() as pw:
-            browser = pw.chromium.launch(headless=True)
+            browser = pw.chromium.launch(headless=True, args=["--disable-http2"])
             page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
             page.goto(url, wait_until="domcontentloaded", timeout=30000)
             page.wait_for_timeout(1800)
@@ -3563,7 +3629,7 @@ def scrape_three_ireland_direct(session):
     results = {}
     try:
         with sync_playwright() as pw:
-            browser = pw.chromium.launch(headless=True)
+            browser = pw.chromium.launch(headless=True, args=["--disable-http2"])
             page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
             page.goto("https://three-ireland.csod.com/ux/ats/careersite/5/home?c=three-ireland&country=ie",
                        wait_until="domcontentloaded", timeout=30000)
@@ -3622,7 +3688,7 @@ def scrape_huawei_ireland(session):
     results = {}
     try:
         with sync_playwright() as pw:
-            browser = pw.chromium.launch(headless=True)
+            browser = pw.chromium.launch(headless=True, args=["--disable-http2"])
             page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
             page.goto("https://huaweiireland.teamtailor.com/jobs", wait_until="domcontentloaded", timeout=30000)
             page.wait_for_timeout(1200)
@@ -3645,7 +3711,7 @@ def scrape_ge_healthcare_ireland(session):
     results = {}
     try:
         with sync_playwright() as pw:
-            browser = pw.chromium.launch(headless=True)
+            browser = pw.chromium.launch(headless=True, args=["--disable-http2"])
             page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
             page.goto("https://careers.gehealthcare.com/global/en/search-results?keywords=Ireland",
                        wait_until="domcontentloaded", timeout=30000)
@@ -3678,7 +3744,7 @@ def scrape_ntt_data_ireland(session):
     results = {}
     try:
         with sync_playwright() as pw:
-            browser = pw.chromium.launch(headless=True)
+            browser = pw.chromium.launch(headless=True, args=["--disable-http2"])
             page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
             for url in urls:
                 page.goto(url, wait_until="domcontentloaded", timeout=30000)
@@ -3702,7 +3768,7 @@ def scrape_guidewire_ireland(session):
     results = {}
     try:
         with sync_playwright() as pw:
-            browser = pw.chromium.launch(headless=True)
+            browser = pw.chromium.launch(headless=True, args=["--disable-http2"])
             page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
             page.goto("https://www.guidewire.com/about/careers/jobs", wait_until="domcontentloaded", timeout=30000)
             page.wait_for_timeout(1500)
@@ -3729,7 +3795,7 @@ def scrape_hcltech_ireland(session):
     results = {}
     try:
         with sync_playwright() as pw:
-            browser = pw.chromium.launch(headless=True)
+            browser = pw.chromium.launch(headless=True, args=["--disable-http2"])
             page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
             for url in urls:
                 page.goto(url, wait_until="domcontentloaded", timeout=30000)
@@ -3753,7 +3819,7 @@ def scrape_allianz_ireland(session):
     results = {}
     try:
         with sync_playwright() as pw:
-            browser = pw.chromium.launch(headless=True)
+            browser = pw.chromium.launch(headless=True, args=["--disable-http2"])
             page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
             page.goto("https://careers.allianz.com/ie/en/allianz-ireland", wait_until="domcontentloaded", timeout=30000)
             page.wait_for_timeout(1500)
@@ -3776,7 +3842,7 @@ def scrape_siemens_ireland(session):
     results = {}
     try:
         with sync_playwright() as pw:
-            browser = pw.chromium.launch(headless=True)
+            browser = pw.chromium.launch(headless=True, args=["--disable-http2"])
             page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
             page.goto("https://jobs.siemens.com/en_US/externaljobs/SearchJobs/?jobRecordsPerPage=25&searchKeyword=Ireland",
                        wait_until="domcontentloaded", timeout=30000)
@@ -3793,7 +3859,14 @@ def scrape_siemens_ireland(session):
 
 
 def scrape_pepsico_ireland(session):
-    """PepsiCo's official careers search."""
+    """PepsiCo's official careers search. NOTE: real evidence showed this
+    site returning HTTP 403 (active bot-blocking, not a data-extraction
+    problem) — removing --disable-http2 here is a genuine attempt, not a
+    confirmed fix, since that flag itself is an unusual browser
+    configuration that could plausibly be part of what's getting
+    flagged. If this still 403s, the real cause is likely IP-based
+    blocking of cloud/datacenter traffic, which no browser-arg tweak can
+    fix."""
     if not HAS_PLAYWRIGHT:
         print("      [pepsico] playwright not installed — skipping")
         return []
@@ -3801,14 +3874,30 @@ def scrape_pepsico_ireland(session):
     try:
         with sync_playwright() as pw:
             browser = pw.chromium.launch(headless=True)
-            page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
+            page = browser.new_page(
+                viewport={"width": 1440, "height": 1100}, locale="en-IE",
+                user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+                           "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36")
             page.goto("https://www.pepsicojobs.com/main/jobs?stretchUnit=MILES&stretch=25&page=1&location=Ireland",
                        wait_until="domcontentloaded", timeout=30000)
             page.wait_for_timeout(1800)
             _browser_accept_consent(page)
+            try:
+                all_links = page.locator("a[href]")
+                hrefs = [all_links.nth(i).get_attribute("href") or "" for i in range(all_links.count())]
+                matching = sum(1 for h in hrefs if re.search(r"pepsicojobs\.com/main/jobs/", h, re.I))
+                print(f"      [pepsico] page title={page.title()!r}, total links={len(hrefs)}, "
+                      f"matching job-pattern links={matching}")
+                sample = [h for h in hrefs if h and "pepsicojobs" in h.lower()][:10]
+                print(f"      [pepsico] sample real hrefs on page: {sample}")
+            except Exception as e:
+                print(f"      [pepsico] diagnostic read failed: {e}")
             _browser_collect_job_links_with_retries(
                 page, "PepsiCo", [r"pepsicojobs\.com/main/jobs/"],
                 "pepsico_browser", results, "Ireland", rounds=25)
+            _collect_links_from_html(
+                page, "PepsiCo", r"pepsicojobs\.com/main/jobs/[^\"'<>?#]+",
+                "pepsico_browser_html", results, "Ireland")
             browser.close()
     except Exception as e:
         print(f"      [pepsico] browser scrape failed: {e}")
@@ -4111,7 +4200,8 @@ def probe_ats_for_manual_companies(manual_companies, session, cache_path, fetch_
           f"{' — running in parallel' if freshly_probed else ''}...")
 
     if needs_probe:
-        with ThreadPoolExecutor(max_workers=PROBE_WORKERS) as pool:
+        pool = ThreadPoolExecutor(max_workers=PROBE_WORKERS)
+        try:
             futures = {pool.submit(_probe_one_company_platform, e): e for e in needs_probe}
             done_count = 0
             for fut in futures:
@@ -4135,6 +4225,8 @@ def probe_ats_for_manual_companies(manual_companies, session, cache_path, fetch_
                 done_count += 1
                 if done_count % 50 == 0:
                     print(f"      [probe] {done_count}/{freshly_probed} companies checked so far...")
+        finally:
+            pool.shutdown(wait=False)
 
     # Fetch confirmed platform boards concurrently. Each worker gets its own
     # requests.Session, so there is no shared-session race and the per-company
@@ -4209,15 +4301,21 @@ def probe_ats_for_manual_companies(manual_companies, session, cache_path, fetch_
         return entry, platform, slug, company_jobs
 
     if confirmed_platform_entries:
-        print(f"  Fetching {len(confirmed_platform_entries)} confirmed ATS boards in parallel...")
-        with ThreadPoolExecutor(max_workers=min(PARALLEL_WORKERS, len(confirmed_platform_entries))) as pool:
+        print(f"  Fetching {len(confirmed_platform_entries)} confirmed ATS boards in parallel "
+              f"(plain HTTP requests, not browsers — using higher concurrency)...")
+        pool = ThreadPoolExecutor(max_workers=min(PROBE_WORKERS, len(confirmed_platform_entries)))
+        try:
             future_map = {
                 pool.submit(_fetch_confirmed, item): item
                 for item in confirmed_platform_entries
             }
             for fut, original in future_map.items():
                 try:
-                    entry, platform, slug, company_jobs = fut.result()
+                    entry, platform, slug, company_jobs = fut.result(timeout=30)
+                except FuturesTimeoutError:
+                    entry, platform, slug = original
+                    company_jobs = []
+                    print(f"      [ATS] {entry['company']}: timed out after 30s")
                 except Exception as exc:
                     # Preserve the existing behavior for a failed board: it remains manual.
                     entry, platform, slug = original
@@ -4229,6 +4327,8 @@ def probe_ats_for_manual_companies(manual_companies, session, cache_path, fetch_
                 else:
                     still_manual.append({"company": name, "url": url,
                                           "platform": f"{platform} (no Ireland postings found right now)"})
+        finally:
+            pool.shutdown(wait=False)
 
     cache["__probe_version__"] = PROBE_VERSION
     with open(cache_path, "w", encoding="utf-8") as f:
@@ -4387,6 +4487,7 @@ def test_single_company(name):
         "aon": lambda: scrape_aon_ireland(session),
         "eaton": lambda: scrape_eaton_ireland(session),
         "cognizant": lambda: scrape_cognizant_ireland(session),
+        "pepsico": lambda: scrape_pepsico_ireland(session),
         "aib": lambda: scrape_aib_ireland(session),
         "bnp paribas": lambda: scrape_bnp_paribas_ireland(session),
         "blackrock": lambda: scrape_blackrock_ireland(session),
@@ -4515,13 +4616,17 @@ def main():
         return name, url, jobs, err
 
     if workday_rows:
-        with ThreadPoolExecutor(max_workers=min(WORKDAY_WORKERS, len(workday_rows))) as pool:
+        pool = ThreadPoolExecutor(max_workers=min(WORKDAY_WORKERS, len(workday_rows)))
+        try:
             futures = {pool.submit(_fetch_one_workday, row): row for row in workday_rows}
             done = 0
             for fut in futures:
                 row = futures[fut]
                 try:
-                    name, url, jobs, err = fut.result()
+                    name, url, jobs, err = fut.result(timeout=120)
+                except FuturesTimeoutError:
+                    name, url = row["company_name"].strip(), row["career_url"].strip()
+                    jobs, err = [], "timed out after 120s"
                 except Exception as exc:
                     name, url = row["company_name"].strip(), row["career_url"].strip()
                     jobs, err = [], str(exc)
@@ -4533,6 +4638,8 @@ def main():
                 if not jobs:
                     reason = "fetch error, verify manually" if err else "no Ireland postings found right now"
                     manual_check.append({"company": name, "url": url, "platform": f"workday ({reason})"})
+        finally:
+            pool.shutdown(wait=False)
 
     for row in other_rows:
         name = row["company_name"].strip()
@@ -4702,11 +4809,27 @@ def main():
         )
 
     if jsonld_tasks:
-        with ThreadPoolExecutor(max_workers=min(PARALLEL_WORKERS, len(jsonld_tasks))) as pool:
+        print(f"  Checking {len(jsonld_tasks)} companies for JobPosting structured data "
+              f"(plain HTTP requests, not browsers — using higher concurrency than the "
+              f"dedicated-company phase)...")
+        pool = ThreadPoolExecutor(max_workers=min(PROBE_WORKERS, len(jsonld_tasks)))
+        try:
             future_map = {pool.submit(_run_jsonld, item): item for item in jsonld_tasks}
+            done = 0
             for fut, item in future_map.items():
-                entry, had_cached_data, jsonld_jobs = fut.result()
+                entry = item[0]
+                try:
+                    entry, had_cached_data, jsonld_jobs = fut.result(timeout=20)
+                except FuturesTimeoutError:
+                    print(f"      [jsonld] {entry['company']}: timed out, treating as no data this run")
+                    had_cached_data, jsonld_jobs = item[1], []
+                except Exception as exc:
+                    print(f"      [jsonld] {entry['company']}: failed ({exc})")
+                    had_cached_data, jsonld_jobs = item[1], []
                 name = entry["company"]
+                done += 1
+                if done % 50 == 0:
+                    print(f"      [jsonld] {done}/{len(jsonld_tasks)} checked so far...")
                 if jsonld_jobs:
                     live_jobs.extend(jsonld_jobs)
                     jsonld_found_companies.append(name)
@@ -4717,6 +4840,8 @@ def main():
                     # failed to produce jobs; this matches the prior behavior
                     # of leaving the company manual for this run.
                     jsonld_cache[name] = {"has_data": had_cached_data}
+        finally:
+            pool.shutdown(wait=False)
 
     manual_check = still_manual_after_jsonld
     jsonld_cache["__version__"] = JSONLD_CACHE_VERSION
