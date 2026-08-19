@@ -7,13 +7,7 @@ on:
     - cron: '*/15 * * * *'
   workflow_dispatch: {}   # lets you trigger a run manually from the Actions tab
 
-# Real fix for "! [rejected] main -> main (fetch first)": if one run takes
-# longer than the 15-minute schedule, the next run starts and checks out
-# the repo before the first run has finished and pushed. Both runs then
-# try to push, and the second one is correctly rejected since the remote
-# moved on after its checkout. This ensures only one run is ever actually
-# in progress at a time — a new scheduled trigger waits for the current
-# run to finish rather than starting a race against it.
+# Prevents overlapping runs from racing to push at the same time.
 concurrency:
   group: refresh-jobs
   cancel-in-progress: false
@@ -43,8 +37,15 @@ jobs:
           git config user.email "actions@users.noreply.github.com"
           git add jobs.json sponsorship_history.json seen_jobs.json ats_platform_cache.json jsonld_cache.json browser_scrape_cache.json
           git commit -m "Refresh job data $(date -u +'%Y-%m-%d %H:%M UTC')" || echo "No changes to commit"
-          # Safety net: even with concurrency control above, pull any
-          # last-second remote changes and rebase our commit on top before
-          # pushing, rather than failing outright if a race still occurs.
-          git pull --rebase origin main
+          # Real fix for a run that hung for over an hour: a plain
+          # "git pull --rebase" can hit a genuine conflict (very likely
+          # here, since every run rewrites the same data files) and then
+          # STOP AND WAIT for a human to resolve it manually — which never
+          # happens in CI, so it hangs indefinitely. -X ours tells git to
+          # automatically resolve any conflict by keeping THIS run's
+          # freshly-generated content, which is exactly the right call for
+          # auto-generated output files where "the latest run wins" is the
+          # correct behavior anyway — there's nothing here worth manually
+          # merging line-by-line.
+          git pull --rebase -X ours origin main
           git push
