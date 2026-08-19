@@ -48,7 +48,7 @@ import sys
 import time
 import uuid
 import signal
-from concurrent.futures import ThreadPoolExecutor, TimeoutError as FuturesTimeoutError
+from concurrent.futures import ThreadPoolExecutor, as_completed, TimeoutError as FuturesTimeoutError
 import html
 import urllib.parse
 import xml.etree.ElementTree as ET
@@ -307,22 +307,53 @@ def run_company_tasks_in_parallel(tasks, workers=None):
     pool = ThreadPoolExecutor(max_workers=workers or PARALLEL_WORKERS)
     try:
         future_map = {pool.submit(fn): (label, company, timeout_s) for label, company, fn, timeout_s in tasks}
-        for fut in future_map:
-            label, company, timeout_s = future_map[fut]
+        start_time = time.time()
+        deadlines = {fut: start_time + timeout_s for fut, (_, _, timeout_s) in future_map.items()}
+        pending = set(future_map)
+        # Report in TRUE completion order, not submission order — a task
+        # near the front of the list that happens to be slow (DXC, in a
+        # real run) was blocking the reported results of faster companies
+        # that had already quietly finished behind it. Real work was
+        # already parallel; only the reporting order was misleading.
+        #
+        # BUG FIXED HERE, confirmed via direct test: an earlier version of
+        # this fix used one shared overall timeout (the longest individual
+        # value in the batch) instead of each task's own specific budget —
+        # a company meant to give up after 60s could run the full 240s
+        # instead, since nothing enforced its own shorter deadline anymore.
+        # Poll in short intervals and check each still-pending task against
+        # its OWN deadline, not just one shared ceiling.
+        while pending:
+            now = time.time()
+            soonest_deadline = min(deadlines[f] for f in pending)
+            poll_window = max(0.1, min(soonest_deadline - now, 5.0))
             try:
-                jobs = fut.result(timeout=timeout_s) or []
-                if jobs:
-                    print(f"  -> {company}: {len(jobs)} Ireland postings found")
-                else:
-                    print(f"  -> {company}: found nothing this time")
-                results.append((company, jobs))
+                for fut in as_completed(pending, timeout=poll_window):
+                    pending.discard(fut)
+                    label, company, timeout_s = future_map[fut]
+                    try:
+                        jobs = fut.result() or []
+                        if jobs:
+                            print(f"  -> {company}: {len(jobs)} Ireland postings found")
+                        else:
+                            print(f"  -> {company}: found nothing this time")
+                        results.append((company, jobs))
+                    except Exception as exc:
+                        print(f"  -> {company}: task failed ({exc})")
+                        errors.append(f"{label}/{company}: {exc}")
             except FuturesTimeoutError:
+                pass  # normal — just means nothing finished within this poll window
+            # Anything still pending whose OWN deadline has now passed is
+            # reported as timed out, even if the shared poll loop continues
+            # for other tasks with a later deadline.
+            now = time.time()
+            timed_out_now = [f for f in pending if deadlines[f] <= now]
+            for fut in timed_out_now:
+                pending.discard(fut)
+                label, company, timeout_s = future_map[fut]
                 print(f"  -> {company}: HARD TIMEOUT after {timeout_s}s "
                       f"(pipeline continues normally with whatever else it already found)")
                 errors.append(f"{label}/{company}: timed out after {timeout_s}s")
-            except Exception as exc:
-                print(f"  -> {company}: task failed ({exc})")
-                errors.append(f"{label}/{company}: {exc}")
     finally:
         pool.shutdown(wait=False)
     return results, errors
