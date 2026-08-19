@@ -2254,78 +2254,131 @@ def scrape_ey_ireland(session):
 
 
 def scrape_kpmg_ireland(session):
-    """KPMG Ireland's live experienced-hire board is Avature. Real evidence
-    showed navigating directly to a folderOffset URL loads an EMPTY,
-    unsubmitted search form ("No jobs found" with blank Keywords/Location
-    dropdowns) — the URL parameter alone does not trigger real results.
-    Click the actual "Search" button (with no filters = search everything)
-    to trigger a genuine search, then collect and paginate from there."""
+    """Real evidence (a genuinely different, working reference) showed
+    KPMG's live board is under /experiencedhires/, not /careers/ — and
+    that individual pre-filtered category URLs (reverse-engineered facet
+    IDs) return real results directly, unlike a blank search + clicking
+    Search on the /careers/ path, which kept returning "No jobs found."
+    Job links use /FolderDetail/ specifically. Belfast/Northern Ireland
+    roles are explicitly excluded, since Avature can mix them into the
+    same experienced-hire search."""
     if not HAS_PLAYWRIGHT:
         print("      [kpmg] playwright not installed — skipping")
         return []
-    base = "https://kpmgireland.avature.net/careers/SearchJobs/"
+    source_urls = [
+        "https://kpmgireland.avature.net/experiencedhires/SearchJobs/?folderOffset=0",
+        "https://kpmgireland.avature.net/experiencedhires/SearchJobs/?3_33_3=91",
+        "https://kpmgireland.avature.net/experiencedhires/SearchJobs/?3_33_3=92",
+        "https://kpmgireland.avature.net/experiencedhires/SearchJobs/?3_33_3=93",
+        "https://kpmgireland.avature.net/experiencedhires/SearchJobs/?3_33_3=95",
+        "https://kpmgireland.avature.net/experiencedhires/SearchJobs/?3_33_3=918",
+        "https://kpmgireland.avature.net/experiencedhires/SearchJobs/?5339=1416336&5339_format=2564&listFilterMode=1",
+    ]
     results = {}
     try:
         with sync_playwright() as pw:
             browser = pw.chromium.launch(headless=True, args=["--disable-http2"])
-            page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
-            page.goto(base, wait_until="domcontentloaded", timeout=60000)
-            page.wait_for_timeout(1500)
-            _browser_accept_consent(page)
-            try:
-                search_btn = page.get_by_role("button", name=re.compile(r"^search$", re.I))
-                if search_btn.count():
-                    search_btn.first.click(timeout=5000)
-                    page.wait_for_timeout(2500)
-                    print("      [kpmg] clicked real Search button")
-                else:
-                    print("      [kpmg] no Search button found by role — trying input[type=submit]")
-                    alt = page.locator("input[type=submit], button[type=submit]")
-                    if alt.count():
-                        alt.first.click(timeout=5000)
-                        page.wait_for_timeout(2500)
-            except Exception as e:
-                print(f"      [kpmg] search click failed: {e}")
+            page = browser.new_page(viewport={"width": 1440, "height": 1300}, locale="en-IE")
+            for source_url in source_urls:
+                try:
+                    page.goto(source_url, wait_until="domcontentloaded", timeout=90000)
+                    page.wait_for_timeout(1800)
+                    _browser_accept_consent(page)
+                except Exception:
+                    continue
 
-            try:
-                body_text = _browser_text(page.locator("body"))[:300]
-                print(f"      [kpmg] body text after search click: {body_text!r}")
-            except Exception:
-                pass
+                stagnant, prev = 0, len(results)
+                for _ in range(60):
+                    anchors = page.locator('a[href*="/FolderDetail/"]')
+                    for i in range(anchors.count()):
+                        a = anchors.nth(i)
+                        try:
+                            raw = a.get_attribute("href") or ""
+                            href = urllib.parse.urljoin(page.url, raw).split("#")[0]
+                        except Exception:
+                            continue
 
-            stagnant, previous = 0, 0
-            for _ in range(40):
-                before = len(results)
-                _collect_filtered_page_jobs(
-                    page, "KPMG Ireland",
-                    r"kpmgireland\.avature\.net/careers/(?!SearchJobs(?:/|\?|$)|CreateAccount(?:/|\?|$)|Login(?:/|\?|$)|TalentCommunity)[^\"\'<>?#]+",
-                    "kpmg_avature", results, "Ireland")
-                _collect_links_from_html(
-                    page, "KPMG Ireland",
-                    r"kpmgireland\.avature\.net/careers/(?!SearchJobs(?:/|\?|$)|CreateAccount(?:/|\?|$)|Login(?:/|\?|$)|TalentCommunity)[^\"\'<>?#]+",
-                    "kpmg_avature", results, "Ireland")
-                added = len(results) - before
-                print(f"      [kpmg] pass: +{added} jobs ({len(results)} total)")
-                for txt in ("Load more", "Show more", "Next", "Next page"):
-                    try:
-                        b = page.get_by_role("button", name=txt, exact=False)
-                        if b.count() and b.first.is_visible():
-                            b.first.click(timeout=1000)
-                            page.wait_for_timeout(700)
-                    except Exception:
-                        pass
-                page.mouse.wheel(0, 3000)
-                page.wait_for_timeout(500)
-                current = len(results)
-                stagnant = stagnant + 1 if current == previous else 0
-                previous = current
-                if stagnant >= 4:
-                    break
+                        title = _browser_text(a).strip()
+                        node, card = a, ""
+                        for _up in range(6):
+                            try:
+                                candidate = _browser_text(node)
+                            except Exception:
+                                candidate = ""
+                            if candidate and len(candidate) <= 2800:
+                                card = candidate
+                            if re.search(r"\b(?:Dublin|Ireland|Cork|Galway|Limerick)\b", card, re.I):
+                                break
+                            try:
+                                node = node.locator("..")
+                            except Exception:
+                                break
+
+                        blob = f"{title}\n{card}\n{href}"
+                        # Republic of Ireland only — Avature can mix Belfast
+                        # vacancies into the same experienced-hire search.
+                        if re.search(r"\bBelfast\b|\bNorthern Ireland\b", blob, re.I):
+                            continue
+                        if not re.search(r"\b(?:Dublin|Ireland|Cork|Galway|Limerick)\b", blob, re.I):
+                            continue
+
+                        if not title or len(title) > 300:
+                            lines = [re.sub(r"\s+", " ", x).strip() for x in card.splitlines()
+                                     if 4 <= len(x.strip()) <= 220]
+                            title = next((x for x in lines
+                                          if x.lower() not in {"dublin -", "dublin", "apply now", "view job"}), "")
+                        if not title:
+                            continue
+
+                        location = "Ireland"
+                        for city in ("Dublin", "Cork", "Galway", "Limerick"):
+                            if re.search(rf"\b{city}\b", blob, re.I):
+                                location = f"{city}, Ireland"
+                                break
+
+                        key = href.rstrip("/").lower()
+                        posted_text, posted_days = extract_posted_from_text(card)
+                        sponsorship, snippet = classify_sponsorship(card[:5000])
+                        results[key] = {
+                            "company": "KPMG Ireland",
+                            "title": re.sub(r"\s+", " ", title).strip()[:300],
+                            "location": location,
+                            "posted_text": posted_text,
+                            "posted_days_ago": posted_days,
+                            "employment_type": normalize_employment_type(None, title),
+                            "url": href,
+                            "source": "kpmg_avature_folderdetail",
+                            "visa_sponsorship": sponsorship,
+                            "visa_snippet": snippet,
+                        }
+
+                    clicked = False
+                    for selector in ('a:has-text("Next")', 'button:has-text("Next")', 'a[rel="next"]'):
+                        try:
+                            nxt = page.locator(selector)
+                            if nxt.count() and nxt.first.is_visible():
+                                nxt.first.click(timeout=1200)
+                                page.wait_for_timeout(500)
+                                clicked = True
+                                break
+                        except Exception:
+                            pass
+
+                    page.mouse.wheel(0, 3000)
+                    page.wait_for_timeout(300)
+
+                    cur = len(results)
+                    stagnant = stagnant + 1 if cur == prev else 0
+                    prev = cur
+                    if stagnant >= 6 and not clicked:
+                        break
             browser.close()
     except Exception as e:
         print(f"      [kpmg] browser scrape failed: {e}")
     print(f"      [kpmg] {len(results)} unique Ireland jobs accumulated")
     return list(results.values())
+
+
 
 
 
