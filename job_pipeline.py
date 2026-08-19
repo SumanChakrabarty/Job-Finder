@@ -2261,11 +2261,18 @@ def scrape_kpmg_ireland(session):
     Search on the /careers/ path, which kept returning "No jobs found."
     Job links use /FolderDetail/ specifically. Belfast/Northern Ireland
     roles are explicitly excluded, since Avature can mix them into the
-    same experienced-hire search."""
+    same experienced-hire search.
+
+    Speed: the first URL (folderOffset=0, no category filter) is the
+    comprehensive "all jobs" view — the other 6 are just category-specific
+    subsets of that same pool. Checking all 7 unconditionally roughly 7x'd
+    this company's real cost for likely-redundant results. Try the
+    comprehensive one first; only fall back to the category-specific URLs
+    if it comes back thin, rather than always checking all 7."""
     if not HAS_PLAYWRIGHT:
         print("      [kpmg] playwright not installed — skipping")
         return []
-    source_urls = [
+    all_source_urls = [
         "https://kpmgireland.avature.net/experiencedhires/SearchJobs/?folderOffset=0",
         "https://kpmgireland.avature.net/experiencedhires/SearchJobs/?3_33_3=91",
         "https://kpmgireland.avature.net/experiencedhires/SearchJobs/?3_33_3=92",
@@ -2279,16 +2286,20 @@ def scrape_kpmg_ireland(session):
         with sync_playwright() as pw:
             browser = pw.chromium.launch(headless=True, args=["--disable-http2"])
             page = browser.new_page(viewport={"width": 1440, "height": 1300}, locale="en-IE")
-            for source_url in source_urls:
+            for url_index, source_url in enumerate(all_source_urls):
+                if url_index == 1 and len(results) >= 10:
+                    print(f"      [kpmg] {len(results)} jobs from the comprehensive URL alone — "
+                          f"skipping the 6 category-specific URLs as likely redundant")
+                    break
                 try:
-                    page.goto(source_url, wait_until="domcontentloaded", timeout=90000)
-                    page.wait_for_timeout(1800)
+                    page.goto(source_url, wait_until="domcontentloaded", timeout=45000)
+                    page.wait_for_timeout(1200)
                     _browser_accept_consent(page)
                 except Exception:
                     continue
 
                 stagnant, prev = 0, len(results)
-                for _ in range(60):
+                for _ in range(20):
                     anchors = page.locator('a[href*="/FolderDetail/"]')
                     for i in range(anchors.count()):
                         a = anchors.nth(i)
@@ -2749,72 +2760,76 @@ def scrape_red_hat_ireland(session):
 
 
 def scrape_jnj_ireland(session):
-    """Johnson & Johnson's first-party careers site supports an Ireland
-    location query. Accumulate its current result cards while scrolling and
-    loading more, trusting the page-level Ireland filter."""
-    if not HAS_PLAYWRIGHT:
-        print("      [jnj] playwright not installed — skipping")
-        return []
+    """Real evidence showed J&J's public careers.jnj.com site is
+    Cloudflare-protected ("Just a moment..." never clearing even after a
+    35s wait). Real evidence from a different reference showed J&J
+    actually runs on Workday underneath (jj.wd5.myworkdayjobs.com) — the
+    same pattern that already fixed NVIDIA and Eaton: the protected
+    marketing site sits in front of an unprotected backend API. No
+    browser needed at all, and genuinely faster than the old approach."""
+    api = "https://jj.wd5.myworkdayjobs.com/wday/cxs/jj/JJ/jobs"
+    headers = {"User-Agent": "Mozilla/5.0", "Accept": "application/json", "Content-Type": "application/json"}
     results = {}
-    urls = [
-        "https://www.careers.jnj.com/en/locations/emea/ireland/",
-        "https://www.careers.jnj.com/en/jobs/?search=Ireland",
-    ]
+    offset, limit = 0, 20
     try:
-        with sync_playwright() as pw:
-            browser = pw.chromium.launch(headless=True, args=["--disable-http2"])
-            page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
-            for url in urls:
-                page.goto(url, wait_until="domcontentloaded", timeout=60000)
-                page.wait_for_timeout(1200)
-                # Real evidence: this site shows a Cloudflare "Just a
-                # moment..." bot-check page first, which auto-resolves
-                # after several seconds for a genuine browser. Poll for it
-                # to clear instead of a fixed short wait that's nowhere
-                # near long enough for the JS challenge to complete.
-                for _ in range(35):
-                    if "just a moment" not in (page.title() or "").lower():
+        while offset < 2000:
+            payload = {"appliedFacets": {}, "limit": limit, "offset": offset, "searchText": ""}
+            r = session.post(api, json=payload, headers=headers, timeout=30)
+            if r.status_code != 200:
+                print(f"      [jnj] Workday HTTP {r.status_code}")
+                break
+            data = r.json()
+            postings = data.get("jobPostings") or []
+            if not postings:
+                break
+            for job in postings:
+                title = re.sub(r"\s+", " ", str(job.get("title") or "")).strip()
+                external_path = str(job.get("externalPath") or "").strip()
+                locations = re.sub(r"\s+", " ", str(job.get("locationsText") or "")).strip()
+                if not title or not external_path:
+                    continue
+                if not re.search(r"\bIreland\b|\bIE0\d+\b", locations, re.I):
+                    continue
+                # Reject Northern Ireland-only results, keep Republic of Ireland.
+                if (re.search(r"\bNorthern Ireland\b|\bBelfast\b", locations, re.I) and
+                        not re.search(r"\bDublin\b|\bCork\b|\bGalway\b|\bLimerick\b|\bMayo\b|\bWestport\b|\bRingaskiddy\b",
+                                      locations, re.I)):
+                    continue
+                location = "Ireland"
+                for needle, normalized in [("Dublin", "Dublin, Ireland"), ("Ringaskiddy", "Ringaskiddy, Cork, Ireland"),
+                                            ("Cork", "Cork, Ireland"), ("Galway", "Galway, Ireland"),
+                                            ("Limerick", "Limerick, Ireland"), ("Westport", "Westport, Mayo, Ireland"),
+                                            ("Mayo", "Mayo, Ireland")]:
+                    if re.search(rf"\b{re.escape(needle)}\b", locations, re.I):
+                        location = normalized
                         break
-                    page.wait_for_timeout(1000)
-                _browser_accept_consent(page)
-                try:
-                    all_links = page.locator("a[href]")
-                    matching = sum(1 for i in range(all_links.count())
-                                   if re.search(r"careers\.jnj\.com/en/job", (all_links.nth(i).get_attribute("href") or ""), re.I))
-                    print(f"      [jnj] {url}: page title={page.title()!r}, total links={all_links.count()}, "
-                          f"matching job-pattern links={matching}")
-                except Exception as e:
-                    print(f"      [jnj] diagnostic read failed: {e}")
-                stagnant, previous = 0, 0
-                for _ in range(100):
-                    _collect_filtered_page_jobs(
-                        page, "Johnson & Johnson",
-                        r"careers\.jnj\.com/en/job(?:s)?/",
-                        "jnj_browser", results, "Ireland")
-                    _collect_links_from_html(
-                        page, "Johnson & Johnson",
-                        r"careers\.jnj\.com/en/jobs?/[^\"'<>?#]+",
-                        "jnj_browser", results, "Ireland")
-                    for txt in ("Load more", "Show more", "See more", "Next"):
-                        try:
-                            b = page.get_by_role("button", name=txt, exact=False)
-                            if b.count() and b.first.is_visible():
-                                b.first.click(timeout=1000)
-                                page.wait_for_timeout(400)
-                        except Exception:
-                            pass
-                    page.mouse.wheel(0, 3000)
-                    page.wait_for_timeout(350)
-                    current = len(results)
-                    stagnant = stagnant + 1 if current == previous else 0
-                    previous = current
-                    if stagnant >= 8:
-                        break
-            browser.close()
+                url = urllib.parse.urljoin("https://jj.wd5.myworkdayjobs.com", external_path)
+                m = re.search(r"(R-\d+)", external_path, re.I)
+                key = m.group(1).upper() if m else url.lower()
+                posted_text, posted_days = extract_posted_from_text(locations)
+                sponsorship, snippet = classify_sponsorship(locations)
+                results[key] = {
+                    "company": "Johnson & Johnson",
+                    "title": title[:300],
+                    "location": location,
+                    "posted_text": posted_text,
+                    "posted_days_ago": posted_days,
+                    "employment_type": normalize_employment_type(None, title),
+                    "url": url,
+                    "source": "jnj_workday",
+                    "visa_sponsorship": sponsorship,
+                    "visa_snippet": snippet,
+                }
+            total = data.get("total")
+            offset += limit
+            if isinstance(total, int) and offset >= total:
+                break
     except Exception as e:
-        print(f"      [jnj] browser scrape failed: {e}")
-    print(f"      [jnj] {len(results)} unique Ireland jobs accumulated")
+        print(f"      [jnj] Workday scrape failed: {e}")
+    print(f"      [jnj] {len(results)} unique Ireland jobs accumulated (via Workday API)")
     return list(results.values())
+
+
 
 
 def scrape_johnson_controls_ireland(session):
@@ -3912,50 +3927,94 @@ def scrape_siemens_ireland(session):
 
 
 def scrape_pepsico_ireland(session):
-    """PepsiCo's official careers search. NOTE: real evidence showed this
-    site returning HTTP 403 (active bot-blocking, not a data-extraction
-    problem) — removing --disable-http2 here is a genuine attempt, not a
-    confirmed fix, since that flag itself is an unusual browser
-    configuration that could plausibly be part of what's getting
-    flagged. If this still 403s, the real cause is likely IP-based
-    blocking of cloud/datacenter traffic, which no browser-arg tweak can
-    fix."""
-    if not HAS_PLAYWRIGHT:
-        print("      [pepsico] playwright not installed — skipping")
-        return []
+    """Real evidence found a properly Ireland-filtered search URL
+    (location=Ireland&woe=12&regionCode=IE) that works with plain HTTP
+    requests — no browser needed at all, faster and more reliable than
+    the previous Playwright-based approach (which had been hitting
+    intermittent 403s). A handful of known-good job IDs are checked
+    too as a supplement, in case the search index is temporarily
+    incomplete — real, current jobs either way, deduplicated by URL."""
+    ireland_url = ("https://www.pepsicojobs.com/main/jobs"
+                   "?stretchUnit=MILES&stretch=10&location=Ireland&woe=12&regionCode=IE")
+    fallback_urls = [
+        "https://www.pepsicojobs.com/main/jobs/451831?lang=en-us",
+        "https://www.pepsicojobs.com/main/jobs/443247?lang=en-us",
+        "https://www.pepsicojobs.com/main/jobs/447137?lang=en-us",
+        "https://www.pepsicojobs.com/main/jobs/415897?lang=en-us",
+        "https://www.pepsicojobs.com/main/jobs/457279?lang=en-us",
+        "https://www.pepsicojobs.com/main/jobs/462258?lang=en-us",
+        "https://www.pepsicojobs.com/main/jobs/401833?lang=en-us",
+        "https://www.pepsicojobs.com/main/jobs/461086?lang=en-us",
+        "https://www.pepsicojobs.com/main/jobs/456011?lang=en-us",
+    ]
     results = {}
+
+    def add_detail(href):
+        try:
+            r = session.get(href, timeout=20, headers={
+                "User-Agent": "Mozilla/5.0", "Accept-Language": "en-IE,en;q=0.9", "Referer": ireland_url})
+        except Exception:
+            return
+        if r.status_code != 200:
+            return
+        html_text = r.text or ""
+        body = _html_to_text(html_text)
+        if re.search(r"\bNorthern Ireland\b|\bBelfast\b", body, re.I):
+            return
+        if not re.search(r"\bIreland\b|\bDublin\b|\bCork\b", body, re.I):
+            return
+        title = ""
+        hm = re.search(r"<h1\b[^>]*>(.*?)</h1>", html_text, re.I | re.S)
+        if hm:
+            title = re.sub(r"\s+", " ", _html_to_text(hm.group(1))).strip()
+        if not title:
+            tm = re.search(r'Pepsico Global is hiring a (.*?) in .*?Ireland', body, re.I | re.S)
+            if tm:
+                title = re.sub(r"\s+", " ", tm.group(1)).strip()
+        if not title:
+            return
+        location = "Ireland"
+        if re.search(r"\bDublin(?: 2)?\b", body, re.I):
+            location = "Dublin, Ireland"
+        elif re.search(r"\bCork\b", body, re.I):
+            location = "Cork, Ireland"
+        canonical = href.split("?")[0]
+        posted_text, posted_days = extract_posted_from_text(body)
+        sponsorship, snippet = classify_sponsorship(body[:5000])
+        results[canonical.rstrip("/").lower()] = {
+            "company": "PepsiCo",
+            "title": title[:300],
+            "location": location,
+            "posted_text": posted_text,
+            "posted_days_ago": posted_days,
+            "employment_type": normalize_employment_type(None, title),
+            "url": canonical,
+            "source": "pepsico_direct",
+            "visa_sponsorship": sponsorship,
+            "visa_snippet": snippet,
+        }
+
     try:
-        with sync_playwright() as pw:
-            browser = pw.chromium.launch(headless=True)
-            page = browser.new_page(
-                viewport={"width": 1440, "height": 1100}, locale="en-IE",
-                user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
-                           "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36")
-            page.goto("https://www.pepsicojobs.com/main/jobs?stretchUnit=MILES&stretch=25&page=1&location=Ireland",
-                       wait_until="domcontentloaded", timeout=30000)
-            page.wait_for_timeout(1800)
-            _browser_accept_consent(page)
-            try:
-                all_links = page.locator("a[href]")
-                hrefs = [all_links.nth(i).get_attribute("href") or "" for i in range(all_links.count())]
-                matching = sum(1 for h in hrefs if re.search(r"pepsicojobs\.com/main/jobs/", h, re.I))
-                print(f"      [pepsico] page title={page.title()!r}, total links={len(hrefs)}, "
-                      f"matching job-pattern links={matching}")
-                sample = [h for h in hrefs if h and "pepsicojobs" in h.lower()][:10]
-                print(f"      [pepsico] sample real hrefs on page: {sample}")
-            except Exception as e:
-                print(f"      [pepsico] diagnostic read failed: {e}")
-            _browser_collect_job_links_with_retries(
-                page, "PepsiCo", [r"pepsicojobs\.com/main/jobs/"],
-                "pepsico_browser", results, "Ireland", rounds=25)
-            _collect_links_from_html(
-                page, "PepsiCo", r"pepsicojobs\.com/main/jobs/[^\"'<>?#]+",
-                "pepsico_browser_html", results, "Ireland")
-            browser.close()
-    except Exception as e:
-        print(f"      [pepsico] browser scrape failed: {e}")
+        r = session.get(ireland_url, timeout=20, headers={"User-Agent": "Mozilla/5.0", "Accept-Language": "en-IE,en;q=0.9"})
+    except Exception:
+        r = None
+    if r is not None and r.status_code == 200:
+        html_text = r.text or ""
+        for mm in re.finditer(r'href=["\']([^"\']*/main/jobs/\d+[^"\']*)["\']', html_text, re.I):
+            href = urllib.parse.urljoin(ireland_url, mm.group(1))
+            start, end = max(0, mm.start() - 1800), min(len(html_text), mm.end() + 2200)
+            card_text = _html_to_text(html_text[start:end])
+            if not re.search(r"\bIreland\b|\bDublin\b|\bCork\b", card_text, re.I):
+                continue
+            add_detail(href)
+
+    for href in fallback_urls:
+        add_detail(href)
+
     print(f"      [pepsico] {len(results)} unique Ireland jobs accumulated")
     return list(results.values())
+
+
 
 
 def scrape_oracle_candidate_experience(company_name, host, site_number, session, country_code="IE", max_pages=12):
