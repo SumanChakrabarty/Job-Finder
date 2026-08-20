@@ -4066,6 +4066,407 @@ def scrape_pepsico_ireland(session):
 
 
 
+def scrape_esb_ireland(session):
+    """ESB (Ireland's national utility) — real SuccessFactors board, no
+    browser needed. Excludes Northern Ireland/UK-only postings."""
+    base = "https://careers.esb.ie"
+    urls = [
+        f"{base}/go/All-Jobs/882102/",
+        f"{base}/go/All-Jobs/882102/20/",
+        f"{base}/search/?q=&q2=&locationsearch=ireland&location=dublin",
+    ]
+    results = {}
+    for url in urls:
+        try:
+            resp = session.get(url, headers=HEADERS, timeout=20)
+            if resp.status_code != 200:
+                continue
+            page = resp.text
+        except Exception:
+            continue
+        for m in re.finditer(r'<a\b[^>]*href=["\']([^"\']*?/job/[^"\']+)["\'][^>]*>(.*?)</a>', page, re.I | re.S):
+            href = urllib.parse.urljoin(base, m.group(1)).split("?")[0]
+            title = re.sub(r"\s+", " ", _html_to_text(m.group(2))).strip()
+            if not href or not title:
+                continue
+            start, end = max(0, m.start() - 1000), min(len(page), m.end() + 1800)
+            card = re.sub(r"\s+", " ", _html_to_text(page[start:end])).strip()
+            if not is_ireland_location(card):
+                continue
+            if re.search(r"\bBelfast\b|\bNorthern Ireland\b", card, re.I) and not re.search(r"\bIE\b|\bIreland\b", card, re.I):
+                continue
+            location = _extract_location_from_card(card, "Ireland")
+            key = href.rstrip("/").lower()
+            posted_text, posted_days = extract_posted_from_text(card)
+            sponsorship, snippet = classify_sponsorship(card[:5000])
+            results[key] = {
+                "company": "ESB", "title": title[:300], "location": location,
+                "posted_text": posted_text, "posted_days_ago": posted_days,
+                "employment_type": normalize_employment_type(None, title),
+                "url": href, "source": "esb_successfactors",
+                "visa_sponsorship": sponsorship, "visa_snippet": snippet,
+            }
+    print(f"      [esb] {len(results)} unique Ireland jobs accumulated")
+    return list(results.values())
+
+
+def scrape_irish_rail_ireland(session):
+    """Irish Rail (Iarnród Éireann) — direct, server-rendered careers page."""
+    company = "Irish Rail (Iarnród Éireann)"
+    base = "https://www.irishrail.ie"
+    source_url = f"{base}/en-ie/about-us/company-information/career-opportunities-at-iarnrod-eireann"
+    results = {}
+    try:
+        resp = session.get(source_url, headers=HEADERS, timeout=20)
+        if resp.status_code != 200:
+            print("      [irish-rail] page failed to load")
+            return []
+        page = resp.text
+    except Exception as e:
+        print(f"      [irish-rail] failed: {e}")
+        return []
+    skip_titles = {"career opportunities", "graduate programme", "apprenticeship programme",
+                    "print page", "company information", "safety and security"}
+    role_words = re.compile(r"\b(analyst|architect|engineer|manager|specialist|officer|administrator|"
+                             r"supervisor|planner|technician|advisor|executive|controller|accountant|"
+                             r"lead|director|coordinator|project|commercial|security|revenue)\b", re.I)
+    for m in re.finditer(r'<a\b[^>]*href=["\']([^"\']+)["\'][^>]*>(.*?)</a>', page, re.I | re.S):
+        href = urllib.parse.urljoin(base, m.group(1))
+        title = re.sub(r"\s+", " ", _html_to_text(m.group(2))).strip()
+        if not href or not title or title.lower() in skip_titles:
+            continue
+        if "/career-opportunities-at-iarnrod-eireann/" not in href.lower():
+            continue
+        if not role_words.search(f"{title} {href}"):
+            continue
+        key = href.split("#")[0].rstrip("/").lower()
+        sponsorship, snippet = classify_sponsorship(title)
+        results[key] = {
+            "company": company, "title": title[:300], "location": "Ireland",
+            "posted_text": "Unknown", "posted_days_ago": None,
+            "employment_type": normalize_employment_type(None, title),
+            "url": href.split("#")[0], "source": "irish_rail_direct",
+            "visa_sponsorship": sponsorship, "visa_snippet": snippet,
+        }
+    print(f"      [irish-rail] {len(results)} unique Ireland jobs accumulated")
+    return list(results.values())
+
+
+def scrape_avolon_ireland(session):
+    """Avolon (aircraft leasing) — real Salesforce-hosted job listings."""
+    url = "https://www.avolon.aero/careers"
+    results = {}
+    try:
+        resp = session.get(url, headers=HEADERS, timeout=25)
+        if resp.status_code != 200:
+            return []
+        page = resp.text
+    except Exception:
+        return []
+    for m in re.finditer(r'<a\b[^>]*href=["\']([^"\']+)["\'][^>]*>', page, re.I):
+        href = urllib.parse.urljoin(url, m.group(1))
+        if "mytribe.my.salesforce-sites.com" not in href or "vacancyNo=" not in href:
+            continue
+        start, end = max(0, m.start() - 1200), min(len(page), m.end() + 800)
+        card = re.sub(r"\s+", " ", _html_to_text(page[start:end])).strip()
+        if not re.search(r"\bDublin\b|\bIreland\b", card, re.I):
+            continue
+        title_m = re.search(r"(.+?)\s+Dublin\s*,\s*Ireland\s+APPLY\s+NOW", card, re.I)
+        title = title_m.group(1).strip() if title_m else ""
+        if not title:
+            lines = [x.strip() for x in card.splitlines() if 4 <= len(x.strip()) <= 180]
+            title = lines[0] if lines else ""
+        if not title:
+            continue
+        key = href.split("?")[0].rstrip("/").lower() + "?" + (re.search(r"vacancyNo=(\d+)", href) or [None, ""])[1]
+        posted_text, posted_days = extract_posted_from_text(card)
+        sponsorship, snippet = classify_sponsorship(card[:5000])
+        results[key] = {
+            "company": "Avolon", "title": title[:300], "location": "Dublin, Ireland",
+            "posted_text": posted_text, "posted_days_ago": posted_days,
+            "employment_type": normalize_employment_type(None, title),
+            "url": href, "source": "avolon_direct",
+            "visa_sponsorship": sponsorship, "visa_snippet": snippet,
+        }
+    print(f"      [avolon] {len(results)} unique Ireland jobs accumulated")
+    return list(results.values())
+
+
+def scrape_bloomberg_ireland(session):
+    """Bloomberg — real Avature board with pagination."""
+    base = "https://bloomberg.avature.net"
+    search_base = (f"{base}/careers/SearchJobs/?1845=%5B162465%5D&1845_format=3996"
+                    f"&listFilterMode=1&jobRecordsPerPage=12")
+    results = {}
+    for offset in range(0, 300, 12):
+        url = f"{search_base}&jobOffset={offset}"
+        try:
+            resp = session.get(url, headers=HEADERS, timeout=20)
+            if resp.status_code != 200:
+                break
+            page = resp.text
+        except Exception:
+            break
+        before = len(results)
+        matches = re.findall(r'bloomberg\.avature\.net/careers/JobDetail/([^/"<>]+)/(\d+)', page, re.I)
+        matches += re.findall(r'href=["\']\/careers\/JobDetail\/([^/"\']+)\/(\d+)["\']', page, re.I)
+        for slug, job_id in matches:
+            key = job_id
+            if key in results:
+                continue
+            title = re.sub(r"[-_]+", " ", urllib.parse.unquote(slug)).strip()
+            href = f"{base}/careers/JobDetail/{slug}/{job_id}"
+            idx = page.find(job_id)
+            start, end = max(0, idx - 800), min(len(page), idx + 800)
+            card = re.sub(r"\s+", " ", _html_to_text(page[start:end])).strip()
+            posted_text, posted_days = extract_posted_from_text(card)
+            sponsorship, snippet = classify_sponsorship(card[:5000])
+            results[key] = {
+                "company": "Bloomberg", "title": title[:300], "location": "Dublin, Ireland",
+                "posted_text": posted_text, "posted_days_ago": posted_days,
+                "employment_type": normalize_employment_type(None, title),
+                "url": href, "source": "bloomberg_avature",
+                "visa_sponsorship": sponsorship, "visa_snippet": snippet,
+            }
+        if len(results) == before:
+            break
+    print(f"      [bloomberg] {len(results)} unique Ireland jobs accumulated")
+    return list(results.values())
+
+
+def scrape_amcs_ireland(session):
+    """AMCS Group — verifies Ireland on each individual vacancy page,
+    not just the listing card, since neighbouring cards could otherwise
+    leak their location into another job."""
+    base = "https://www.amcsgroup.com/careers/"
+    results = {}
+    candidate_urls = set()
+    for page_no in range(1, 6):
+        url = base if page_no == 1 else f"{base}page/{page_no}/"
+        try:
+            resp = session.get(url, headers=HEADERS, timeout=20)
+            if resp.status_code != 200:
+                break
+            page = resp.text
+        except Exception:
+            break
+        found = 0
+        for m in re.finditer(r'<a\b[^>]*href=["\']([^"\']+)["\']', page, re.I):
+            href = urllib.parse.urljoin(url, m.group(1)).split("?")[0].split("#")[0]
+            if re.match(r"^https://www\.amcsgroup\.com/careers/[^/]+/?$", href, re.I) and href.rstrip("/") != base.rstrip("/"):
+                if href not in candidate_urls:
+                    candidate_urls.add(href)
+                    found += 1
+        if found == 0:
+            break
+    for href in list(candidate_urls)[:80]:
+        try:
+            resp = session.get(href, headers=HEADERS, timeout=15)
+            if resp.status_code != 200:
+                continue
+            text = re.sub(r"\s+", " ", _html_to_text(resp.text)).strip()
+        except Exception:
+            continue
+        if not is_ireland_location(text):
+            continue
+        title_m = re.search(r"<h1\b[^>]*>(.*?)</h1>", resp.text, re.I | re.S)
+        title = re.sub(r"\s+", " ", _html_to_text(title_m.group(1))).strip() if title_m else ""
+        if not title:
+            continue
+        location = _extract_location_from_card(text, "Ireland")
+        key = href.rstrip("/").lower()
+        posted_text, posted_days = extract_posted_from_text(text)
+        sponsorship, snippet = classify_sponsorship(text[:5000])
+        results[key] = {
+            "company": "AMCS Group", "title": title[:300], "location": location,
+            "posted_text": posted_text, "posted_days_ago": posted_days,
+            "employment_type": normalize_employment_type(None, title),
+            "url": href, "source": "amcs_direct",
+            "visa_sponsorship": sponsorship, "visa_snippet": snippet,
+        }
+    print(f"      [amcs] {len(results)} unique Ireland jobs accumulated")
+    return list(results.values())
+
+
+def scrape_dawn_meats_ireland(session):
+    """Dawn Meats — real iCIMS-hosted board."""
+    sources = [
+        "https://careers-dawnmeats.icims.com/jobs/search?pr=0&schemaId=&o=",
+        "https://c-12895-20230316-www-dawnmeats-com.i.icims.com/careers/current-opportunities/",
+    ]
+    results = {}
+    for url in sources:
+        try:
+            resp = session.get(url, headers=HEADERS, timeout=25, allow_redirects=True)
+            if resp.status_code >= 400:
+                continue
+            page = resp.text
+            final_url = resp.url
+        except Exception:
+            continue
+        for m in re.finditer(r'<a\b[^>]*href=["\']([^"\']*?/jobs?/[^"\']+)["\'][^>]*>(.*?)</a>', page, re.I | re.S):
+            href = urllib.parse.urljoin(final_url, m.group(1)).split("?")[0]
+            title = re.sub(r"\s+", " ", _html_to_text(m.group(2))).strip()
+            if not title or len(title) < 4 or "icims.com" not in href:
+                continue
+            start, end = max(0, m.start() - 800), min(len(page), m.end() + 800)
+            card = re.sub(r"\s+", " ", _html_to_text(page[start:end])).strip()
+            if not is_ireland_location(card):
+                continue
+            key = href.rstrip("/").lower()
+            posted_text, posted_days = extract_posted_from_text(card)
+            sponsorship, snippet = classify_sponsorship(card[:5000])
+            results[key] = {
+                "company": "Dawn Meats", "title": title[:300],
+                "location": _extract_location_from_card(card, "Ireland"),
+                "posted_text": posted_text, "posted_days_ago": posted_days,
+                "employment_type": normalize_employment_type(None, title),
+                "url": href, "source": "dawn_meats_icims",
+                "visa_sponsorship": sponsorship, "visa_snippet": snippet,
+            }
+    print(f"      [dawn-meats] {len(results)} unique Ireland jobs accumulated")
+    return list(results.values())
+
+
+def scrape_auxilion_ireland(session):
+    """Auxilion — Irish IT services company, direct careers page."""
+    source = "https://www.auxilion.com/auxilion-careers"
+    results = {}
+    try:
+        resp = session.get(source, headers=HEADERS, timeout=20)
+        if resp.status_code != 200:
+            return []
+        page = resp.text
+    except Exception:
+        return []
+    candidates = set()
+    for m in re.finditer(r'<a\b[^>]*href=["\']([^"\']+)["\']', page, re.I):
+        href = urllib.parse.urljoin(source, m.group(1)).split("?")[0].split("#")[0]
+        if "/careers/" in href and href.rstrip("/") != source.rstrip("/"):
+            candidates.add(href)
+    for href in list(candidates)[:40]:
+        try:
+            resp = session.get(href, headers=HEADERS, timeout=15)
+            if resp.status_code >= 400:
+                continue
+            text = re.sub(r"\s+", " ", _html_to_text(resp.text)).strip()
+        except Exception:
+            continue
+        if not is_ireland_location(text):
+            continue
+        title_m = re.search(r"<h1\b[^>]*>(.*?)</h1>", resp.text, re.I | re.S)
+        title = re.sub(r"\s+", " ", _html_to_text(title_m.group(1))).strip() if title_m else ""
+        if not title:
+            continue
+        key = href.rstrip("/").lower()
+        posted_text, posted_days = extract_posted_from_text(text)
+        sponsorship, snippet = classify_sponsorship(text[:5000])
+        results[key] = {
+            "company": "Auxilion", "title": title[:300],
+            "location": _extract_location_from_card(text, "Ireland"),
+            "posted_text": posted_text, "posted_days_ago": posted_days,
+            "employment_type": normalize_employment_type(None, title),
+            "url": href, "source": "auxilion_direct",
+            "visa_sponsorship": sponsorship, "visa_snippet": snippet,
+        }
+    print(f"      [auxilion] {len(results)} unique Ireland jobs accumulated")
+    return list(results.values())
+
+
+def scrape_biomarin_ireland(session):
+    """BioMarin — real careers listing (biomarin.com/job/<slug>)."""
+    source = "https://www.biomarin.com/careers/jobs/"
+    results = {}
+    try:
+        resp = session.get(source, headers=HEADERS, timeout=20)
+        if resp.status_code != 200:
+            return []
+        page = resp.text
+    except Exception:
+        return []
+    job_links = set()
+    for m in re.finditer(r'href=["\']([^"\']+)["\']', page, re.I):
+        href = urllib.parse.urljoin(source, m.group(1))
+        if re.search(r"https://www\.biomarin\.com/job/[^/?#]+/?$", href, re.I):
+            job_links.add(href.split("?")[0].split("#")[0])
+    for href in list(job_links)[:60]:
+        try:
+            resp = session.get(href, headers=HEADERS, timeout=15)
+            if resp.status_code >= 400:
+                continue
+            text = re.sub(r"\s+", " ", _html_to_text(resp.text)).strip()
+        except Exception:
+            continue
+        if not is_ireland_location(text):
+            continue
+        title_m = re.search(r"<h1\b[^>]*>(.*?)</h1>", resp.text, re.I | re.S)
+        title = re.sub(r"\s+", " ", _html_to_text(title_m.group(1))).strip() if title_m else ""
+        if not title:
+            slug = href.rstrip("/").rsplit("/", 1)[-1]
+            title = re.sub(r"[-_]+", " ", slug).strip().title()
+        key = href.rstrip("/").lower()
+        posted_text, posted_days = extract_posted_from_text(text)
+        sponsorship, snippet = classify_sponsorship(text[:5000])
+        results[key] = {
+            "company": "BioMarin", "title": title[:300],
+            "location": _extract_location_from_card(text, "Ireland"),
+            "posted_text": posted_text, "posted_days_ago": posted_days,
+            "employment_type": normalize_employment_type(None, title),
+            "url": href, "source": "biomarin_direct",
+            "visa_sponsorship": sponsorship, "visa_snippet": snippet,
+        }
+    print(f"      [biomarin] {len(results)} unique Ireland jobs accumulated")
+    return list(results.values())
+
+
+def scrape_asl_aviation_ireland(session):
+    """ASL Aviation Holdings — Cezanne OnDemand ATS. Only accepts a vacancy
+    when its OWN detail page explicitly names an Irish city — corporate
+    boilerplate mentioning Dublin/Ireland elsewhere is not sufficient."""
+    base = "https://cezanneondemand.intervieweb.it/aslaviationgroup/en/career"
+    results = {}
+    try:
+        resp = session.get(base, headers=HEADERS, timeout=25)
+        if resp.status_code != 200:
+            return []
+        page = resp.text
+    except Exception:
+        return []
+    vacancy_urls = set()
+    for m in re.finditer(r'href=["\']([^"\']+)["\']', page, re.I):
+        href = urllib.parse.urljoin(resp.url, m.group(1)).split("#")[0].split("?")[0]
+        if re.search(r"/career/\w*job\w*/", href, re.I) or re.search(r"/career/[^/]+/\d+", href):
+            vacancy_urls.add(href)
+    for href in list(vacancy_urls)[:60]:
+        try:
+            resp2 = session.get(href, headers=HEADERS, timeout=15)
+            if resp2.status_code >= 400:
+                continue
+            text = re.sub(r"\s+", " ", _html_to_text(resp2.text)).strip()
+        except Exception:
+            continue
+        loc_match = re.search(r"\b(Dublin|Cork|Shannon|Galway)\b", text, re.I)
+        if not loc_match:
+            continue
+        title_m = re.search(r"<h1\b[^>]*>(.*?)</h1>", resp2.text, re.I | re.S)
+        title = re.sub(r"\s+", " ", _html_to_text(title_m.group(1))).strip() if title_m else ""
+        if not title:
+            continue
+        key = href.rstrip("/").lower()
+        posted_text, posted_days = extract_posted_from_text(text)
+        sponsorship, snippet = classify_sponsorship(text[:5000])
+        results[key] = {
+            "company": "ASL Aviation Holdings", "title": title[:300],
+            "location": f"{loc_match.group(1)}, Ireland",
+            "posted_text": posted_text, "posted_days_ago": posted_days,
+            "employment_type": normalize_employment_type(None, title),
+            "url": href, "source": "asl_aviation_cezanne",
+            "visa_sponsorship": sponsorship, "visa_snippet": snippet,
+        }
+    print(f"      [asl-aviation] {len(results)} unique Ireland jobs accumulated")
+    return list(results.values())
+
+
 def scrape_oracle_candidate_experience(company_name, host, site_number, session, country_code="IE", max_pages=12):
     """Oracle Recruiting Cloud's public Candidate Experience UI is
     JavaScript-heavy, but its job search uses a real, public REST resource
@@ -4649,6 +5050,15 @@ def test_single_company(name):
         "eaton": lambda: scrape_eaton_ireland(session),
         "cognizant": lambda: scrape_cognizant_ireland(session),
         "pepsico": lambda: scrape_pepsico_ireland(session),
+        "esb": lambda: scrape_esb_ireland(session),
+        "irish rail": lambda: scrape_irish_rail_ireland(session),
+        "avolon": lambda: scrape_avolon_ireland(session),
+        "bloomberg": lambda: scrape_bloomberg_ireland(session),
+        "amcs": lambda: scrape_amcs_ireland(session),
+        "dawn meats": lambda: scrape_dawn_meats_ireland(session),
+        "auxilion": lambda: scrape_auxilion_ireland(session),
+        "biomarin": lambda: scrape_biomarin_ireland(session),
+        "asl aviation": lambda: scrape_asl_aviation_ireland(session),
         "aib": lambda: scrape_aib_ireland(session),
         "bnp paribas": lambda: scrape_bnp_paribas_ireland(session),
         "blackrock": lambda: scrape_blackrock_ireland(session),
@@ -4911,6 +5321,32 @@ def main():
                 browser_cache, name, lambda: scrape_oracle_candidate_experience(name, h, s, session), 0, name)
 
         task_list.append(("oracle_cx", company_name, make_oracle_task(), 180))
+
+    # 9 new companies, all lightweight (plain HTTP requests, no browser) —
+    # deliberately chosen this way to avoid adding real cost to runtime.
+    lightweight_specs = [
+        ("esb", "ESB", scrape_esb_ireland, 60),
+        ("irish rail", "Irish Rail (Iarnród Éireann)", scrape_irish_rail_ireland, 45),
+        ("avolon", "Avolon", scrape_avolon_ireland, 60),
+        ("bloomberg", "Bloomberg", scrape_bloomberg_ireland, 90),
+        ("amcs group", "AMCS Group", scrape_amcs_ireland, 90),
+        ("dawn meats", "Dawn Meats", scrape_dawn_meats_ireland, 60),
+        ("auxilion", "Auxilion", scrape_auxilion_ireland, 60),
+        ("biomarin", "BioMarin", scrape_biomarin_ireland, 90),
+        ("asl aviation holdings", "ASL Aviation Holdings", scrape_asl_aviation_ireland, 90),
+    ]
+    for key, display_name, scraper_fn, base_timeout in lightweight_specs:
+        entry = next((c for c in manual_check if c["company"].strip().lower() == key), None)
+        if not entry:
+            continue
+        company_name = entry["company"]
+        matched_entries[company_name] = entry
+
+        def make_light_task(fn=scraper_fn, name=company_name):
+            return lambda: cached_browser_scrape(browser_cache, name, lambda: fn(session), 0, name)
+
+        actual_timeout = effective_timeout(browser_cache, company_name, base_timeout)
+        task_list.append((key, company_name, make_light_task(), actual_timeout))
 
     print(f"\n=== Running {len(task_list)} dedicated company scrapers in parallel "
           f"(up to {PARALLEL_WORKERS} at once) ===")
