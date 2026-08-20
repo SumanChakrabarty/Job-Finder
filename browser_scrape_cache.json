@@ -7954,8 +7954,8 @@
   },
   "DXC Technology": {
     "jobs": [],
-    "checked_at": 1787229231.3896596,
-    "consecutive_failures": 2
+    "checked_at": 1787235264.0717022,
+    "consecutive_failures": 3
   },
   "HSBC Ireland": {
     "jobs": [
@@ -8010,13 +8010,13 @@
   },
   "NVIDIA": {
     "jobs": [],
-    "checked_at": 1787232862.4768565,
-    "consecutive_failures": 3
+    "checked_at": 1787235263.6644073,
+    "consecutive_failures": 4
   },
   "Eaton": {
     "jobs": [],
-    "checked_at": 1787232848.5603476,
-    "consecutive_failures": 3
+    "checked_at": 1787235257.2688663,
+    "consecutive_failures": 4
   },
   "Cognizant": {
     "jobs": [
@@ -8596,13 +8596,13 @@
   },
   "Aon": {
     "jobs": [],
-    "checked_at": 1787232861.129264,
-    "consecutive_failures": 3
+    "checked_at": 1787235261.3570879,
+    "consecutive_failures": 4
   },
   "BNP Paribas Ireland": {
     "jobs": [],
-    "checked_at": 1787232857.193152,
-    "consecutive_failures": 3
+    "checked_at": 1787235257.5300698,
+    "consecutive_failures": 4
   },
   "AIB (Allied Irish Banks)": {
     "jobs": [
@@ -9026,13 +9026,13 @@
   },
   "Central Bank of Ireland": {
     "jobs": [],
-    "checked_at": 1787232856.9526422,
-    "consecutive_failures": 3
+    "checked_at": 1787235260.4650512,
+    "consecutive_failures": 4
   },
   "Deutsche Bank": {
     "jobs": [],
-    "checked_at": 1787232858.1606684,
-    "consecutive_failures": 3
+    "checked_at": 1787235259.0803764,
+    "consecutive_failures": 4
   },
   "Meta": {
     "jobs": [
@@ -9192,13 +9192,13 @@
   },
   "Netflix": {
     "jobs": [],
-    "checked_at": 1787232857.7985694,
-    "consecutive_failures": 3
+    "checked_at": 1787235259.6536217,
+    "consecutive_failures": 4
   },
   "Red Hat": {
     "jobs": [],
-    "checked_at": 1787232864.7517626,
-    "consecutive_failures": 3
+    "checked_at": 1787235266.1944394,
+    "consecutive_failures": 4
   },
   "Johnson Controls": {
     "jobs": [
@@ -10159,8 +10159,8 @@
   },
   "Three Ireland": {
     "jobs": [],
-    "checked_at": 1787232863.895851,
-    "consecutive_failures": 3
+    "checked_at": 1787235266.4221742,
+    "consecutive_failures": 4
   },
   "Aiven": {
     "jobs": [
@@ -11094,8 +11094,8 @@
   },
   "Guidewire": {
     "jobs": [],
-    "checked_at": 1787232867.0734453,
-    "consecutive_failures": 3
+    "checked_at": 1787235269.6192663,
+    "consecutive_failures": 4
   },
   "EXL": {
     "jobs": [
@@ -11417,18 +11417,18 @@
   },
   "UPS Ireland": {
     "jobs": [],
-    "checked_at": 1787232864.6782107,
-    "consecutive_failures": 3
+    "checked_at": 1787235265.6865628,
+    "consecutive_failures": 4
   },
   "Siemens": {
     "jobs": [],
-    "checked_at": 1787232873.3091605,
-    "consecutive_failures": 3
+    "checked_at": 1787235273.7067907,
+    "consecutive_failures": 4
   },
   "HCLTech": {
     "jobs": [],
-    "checked_at": 1787232880.9912937,
-    "consecutive_failures": 3
+    "checked_at": 1787235282.8204541,
+    "consecutive_failures": 4
   },
   "PepsiCo": {
     "jobs": [
@@ -12232,6 +12232,682 @@
       }
     ],
     "checked_at": 1787226126.9268322,
+    "consecutive_failures": 0
+  },
+  "ESB": {
+    "jobs": [
+      {
+        "company": "ESB",
+        "title": "Electrical Engineer",
+        "location": "Dublin, Ireland",
+        "posted_text": "19 Aug 2026",
+        "posted_days_ago": 1.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.esb.ie/job/Dublin-Electrical-Engineer-D/1353643557/",
+        "source": "esb_successfactors",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-20T14:14:43.434428+00:00",
+        "posted_age_known": true
+      },
+      {
+        "company": "ESB",
+        "title": "Solution Architecture Manager",
+        "location": "Dublin, Ireland",
+        "posted_text": "4 Aug 2026",
+        "posted_days_ago": 16.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.esb.ie/job/Dublin-Solution-Architecture-Manager-D/1369875057/",
+        "source": "esb_successfactors",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-20T14:14:43.434428+00:00",
+        "posted_age_known": true
+      },
+      {
+        "company": "ESB",
+        "title": "Deployment South Team Member - Telecoms",
+        "location": "Wilton, Ireland",
+        "posted_text": "19 Aug 2026",
+        "posted_days_ago": 1.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.esb.ie/job/Wilton-Deployment-South-Team-Member-Telecoms-C/1369912657/",
+        "source": "esb_successfactors",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-20T14:14:43.434428+00:00",
+        "posted_age_known": true
+      },
+      {
+        "company": "ESB",
+        "title": "Civils Construction Lead, Customer Projects and Delivery Dublin",
+        "location": "Dublin, Ireland",
+        "posted_text": "14 Aug 2026",
+        "posted_days_ago": 6.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.esb.ie/job/Dublin-Civils-Construction-Lead%2C-Customer-Projects-and-Delivery-Dublin-D/1369865357/",
+        "source": "esb_successfactors",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-20T14:14:43.434428+00:00",
+        "posted_age_known": true
+      },
+      {
+        "company": "ESB",
+        "title": "Distributed Generation Site Manager (South-East), Renewable Operations",
+        "location": "South, Ireland",
+        "posted_text": "19 Aug 2026",
+        "posted_days_ago": 1.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.esb.ie/job/South-East-region-Distributed-Generation-Site-Manager-%28South-East%29%2C-Renewable-Operations-KK/1363465457/",
+        "source": "esb_successfactors",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-20T14:14:43.434428+00:00",
+        "posted_age_known": true
+      },
+      {
+        "company": "ESB",
+        "title": "GF&C - Treasury & Group Trading Risk Manager",
+        "location": "Dublin, Ireland",
+        "posted_text": "18 Aug 2026",
+        "posted_days_ago": 2.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.esb.ie/job/Dublin-GF&amp;C-Treasury-&amp;-Group-Trading-Risk-Manager-D/1369729657/",
+        "source": "esb_successfactors",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-20T14:14:43.434428+00:00",
+        "posted_age_known": true
+      },
+      {
+        "company": "ESB",
+        "title": "Communication, Engagement and People Experience Specialist",
+        "location": "Dublin, Ireland",
+        "posted_text": "12 Aug 2026",
+        "posted_days_ago": 8.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.esb.ie/job/Dublin-Communication%2C-Engagement-and-People-Experience-Specialist-D/1369539057/",
+        "source": "esb_successfactors",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-20T14:14:43.434428+00:00",
+        "posted_age_known": true
+      },
+      {
+        "company": "ESB",
+        "title": "Site Supervisor",
+        "location": "Dublin, Ireland",
+        "posted_text": "10 Aug 2026",
+        "posted_days_ago": 10.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.esb.ie/job/Dublin-Site-Supervisor-D/1369265757/",
+        "source": "esb_successfactors",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-20T14:14:43.434428+00:00",
+        "posted_age_known": true
+      },
+      {
+        "company": "ESB",
+        "title": "Contractor Safety Compliance Auditor (Station Electrical / Civils)",
+        "location": "Ireland",
+        "posted_text": "12 Aug 2026",
+        "posted_days_ago": 8.0,
+        "employment_type": "Contract",
+        "url": "https://careers.esb.ie/job/Flexible-Contractor-Safety-Compliance-Auditor-%28Station-Electrical-Civils%29-D/1369069757/",
+        "source": "esb_successfactors",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-20T14:14:43.434428+00:00",
+        "posted_age_known": true
+      },
+      {
+        "company": "ESB",
+        "title": "Planning & Reporting Specialist Lead",
+        "location": "Dublin, Ireland",
+        "posted_text": "19 Aug 2026",
+        "posted_days_ago": 1.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.esb.ie/job/Dublin-Planning-&amp;-Reporting-Specialist-Lead-D/1369037657/",
+        "source": "esb_successfactors",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-20T14:14:43.434428+00:00",
+        "posted_age_known": true
+      },
+      {
+        "company": "ESB",
+        "title": "Distributed Generation Site Manager (Dublin), Renewable Operations",
+        "location": "Dublin, Ireland",
+        "posted_text": "19 Aug 2026",
+        "posted_days_ago": 1.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.esb.ie/job/Dublin-Region-Distributed-Generation-Site-Manager-%28Dublin%29%2C-Renewable-Operations-D/1368912357/",
+        "source": "esb_successfactors",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-20T14:14:43.434428+00:00",
+        "posted_age_known": true
+      },
+      {
+        "company": "ESB",
+        "title": "Renewables Control Centre Operator",
+        "location": "ESB, Ireland",
+        "posted_text": "7 Aug 2026",
+        "posted_days_ago": 13.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.esb.ie/job/ESB-Renewables-Operations-Cont-Renewables-Control-Centre-Operator-D/1368786357/",
+        "source": "esb_successfactors",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-20T14:14:43.434428+00:00",
+        "posted_age_known": true
+      },
+      {
+        "company": "ESB",
+        "title": "Qualified Electricians",
+        "location": "Dublin, Ireland",
+        "posted_text": "18 Aug 2026",
+        "posted_days_ago": 2.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.esb.ie/job/Dublin-Qualified-Electricians-D/1368571157/",
+        "source": "esb_successfactors",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-20T14:14:43.434428+00:00",
+        "posted_age_known": true
+      },
+      {
+        "company": "ESB",
+        "title": "Contact Centre Performance Analyst",
+        "location": "Wilton%2C, Ireland",
+        "posted_text": "4 Aug 2026",
+        "posted_days_ago": 16.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.esb.ie/job/Wilton%2C-Cork-Contact-Centre-Performance-Analyst-D/1367529357/",
+        "source": "esb_successfactors",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-20T14:14:43.434428+00:00",
+        "posted_age_known": true
+      }
+    ],
+    "checked_at": 1787235266.8937094,
+    "consecutive_failures": 0
+  },
+  "Avolon": {
+    "jobs": [
+      {
+        "company": "Avolon",
+        "title": "n class=\"avolon-52 wow slideInUp\" data-wow-delay=\"0ms\" id=\"jobs\" style=\"margin-top: 0px; margin-bottom: 0px;\"> TITLE LOCATION VP Technical - Asset Management",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://mytribe.my.salesforce-sites.com/recruit/fRecruit__ApplyJob?vacancyNo=VN240",
+        "source": "avolon_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-20T14:14:43.434428+00:00",
+        "posted_age_known": false
+      }
+    ],
+    "checked_at": 1787235266.9040956,
+    "consecutive_failures": 0
+  },
+  "Dawn Meats": {
+    "jobs": [],
+    "checked_at": 1787235267.7289517,
+    "consecutive_failures": 1
+  },
+  "Auxilion": {
+    "jobs": [
+      {
+        "company": "Auxilion",
+        "title": "Deskside Engineer L2",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://www.auxilion.com/careers/deskside-engineer-l2",
+        "source": "auxilion_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-20T14:14:43.434428+00:00",
+        "posted_age_known": false
+      }
+    ],
+    "checked_at": 1787235268.144317,
+    "consecutive_failures": 0
+  },
+  "Bloomberg": {
+    "jobs": [
+      {
+        "company": "Bloomberg",
+        "title": "ESG Ratings Operations Officer",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://bloomberg.avature.net/careers/JobDetail/ESG-Ratings-Operations-Officer/21277",
+        "source": "bloomberg_avature",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-20T14:14:43.434428+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Bloomberg",
+        "title": "Senior iOS Engineer Mobile Professional",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://bloomberg.avature.net/careers/JobDetail/Senior-iOS-Engineer-Mobile-Professional/21229",
+        "source": "bloomberg_avature",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-20T14:14:43.434428+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Bloomberg",
+        "title": "Senior Android Engineer Mobile Professional",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://bloomberg.avature.net/careers/JobDetail/Senior-Android-Engineer-Mobile-Professional/21230",
+        "source": "bloomberg_avature",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-20T14:14:43.434428+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Bloomberg",
+        "title": "Team Leader Sustainable Finance Data Governance Controls",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://bloomberg.avature.net/careers/JobDetail/Team-Leader-Sustainable-Finance-Data-Governance-Controls/21241",
+        "source": "bloomberg_avature",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-20T14:14:43.434428+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Bloomberg",
+        "title": "Data Platform Engineer Data License Plus",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://bloomberg.avature.net/careers/JobDetail/Data-Platform-Engineer-Data-License-Plus/21122",
+        "source": "bloomberg_avature",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-20T14:14:43.434428+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Bloomberg",
+        "title": "Senior Platform Engineer Data License Plus",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://bloomberg.avature.net/careers/JobDetail/Senior-Platform-Engineer-Data-License-Plus/20925",
+        "source": "bloomberg_avature",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-20T14:14:43.434428+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Bloomberg",
+        "title": "Electronic Communications Surveillance Analyst",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://bloomberg.avature.net/careers/JobDetail/Electronic-Communications-Surveillance-Analyst/20855",
+        "source": "bloomberg_avature",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-20T14:14:43.434428+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Bloomberg",
+        "title": "Senior Software Engineer Proxy Connectivity Platform",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://bloomberg.avature.net/careers/JobDetail/Senior-Software-Engineer-Proxy-Connectivity-Platform/20753",
+        "source": "bloomberg_avature",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-20T14:14:43.434428+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Bloomberg",
+        "title": "Senior Software Engineer Platform Engineering",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://bloomberg.avature.net/careers/JobDetail/Senior-Software-Engineer-Platform-Engineering/20755",
+        "source": "bloomberg_avature",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-20T14:14:43.434428+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Bloomberg",
+        "title": "Senior Software Engineer Data License Plus",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://bloomberg.avature.net/careers/JobDetail/Senior-Software-Engineer-Data-License-Plus/20644",
+        "source": "bloomberg_avature",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-20T14:14:43.434428+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Bloomberg",
+        "title": "Cyber Security Analyst CSOC Analysis",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://bloomberg.avature.net/careers/JobDetail/Cyber-Security-Analyst-CSOC-Analysis/20595",
+        "source": "bloomberg_avature",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-20T14:14:43.434428+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Bloomberg",
+        "title": "Senior Software Engineer Database Platforms",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://bloomberg.avature.net/careers/JobDetail/Senior-Software-Engineer-Database-Platforms/20558",
+        "source": "bloomberg_avature",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-20T14:14:43.434428+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Bloomberg",
+        "title": "Senior Software Engineer News Content Platform",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://bloomberg.avature.net/careers/JobDetail/Senior-Software-Engineer-News-Content-Platform/20300",
+        "source": "bloomberg_avature",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-20T14:14:43.434428+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Bloomberg",
+        "title": "Chief Compliance Officer Bloomberg Scores Europe Limited BSEL",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://bloomberg.avature.net/careers/JobDetail/Chief-Compliance-Officer-Bloomberg-Scores-Europe-Limited-BSEL/18276",
+        "source": "bloomberg_avature",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-20T14:14:43.434428+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Bloomberg",
+        "title": "Senior Software Engineer Fixed Income Derivatives",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://bloomberg.avature.net/careers/JobDetail/Senior-Software-Engineer-Fixed-Income-Derivatives/16150",
+        "source": "bloomberg_avature",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-20T14:14:43.434428+00:00",
+        "posted_age_known": false
+      }
+    ],
+    "checked_at": 1787235269.794395,
+    "consecutive_failures": 0
+  },
+  "ASL Aviation Holdings": {
+    "jobs": [],
+    "checked_at": 1787235270.4094586,
+    "consecutive_failures": 1
+  },
+  "AMCS Group": {
+    "jobs": [
+      {
+        "company": "AMCS Group",
+        "title": "Inside Sales Representative - EHS",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://www.amcsgroup.com/careers/inside-sales-representative-ehs-200198/",
+        "source": "amcs_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-20T14:14:43.434428+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "AMCS Group",
+        "title": "Inside Sales Representative (m/w/d)",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://www.amcsgroup.com/careers/business-development-representative-wmd-201763/",
+        "source": "amcs_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-20T14:14:43.434428+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "AMCS Group",
+        "title": "Account Executive",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://www.amcsgroup.com/careers/account-executive-201744/",
+        "source": "amcs_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-20T14:14:43.434428+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "AMCS Group",
+        "title": "Account Executive Enterprise Sales DACH",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://www.amcsgroup.com/careers/account-executive-enterprise-sales-dach-199422/",
+        "source": "amcs_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-20T14:14:43.434428+00:00",
+        "posted_age_known": false
+      }
+    ],
+    "checked_at": 1787235275.4900978,
+    "consecutive_failures": 0
+  },
+  "BioMarin": {
+    "jobs": [
+      {
+        "company": "BioMarin",
+        "title": "Director, Payroll",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://www.biomarin.com/job/director-payroll/",
+        "source": "biomarin_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-20T14:14:43.434428+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "BioMarin",
+        "title": "OTC – Credit and Collection Analyst",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://www.biomarin.com/job/otc-credit-and-collection-analyst/",
+        "source": "biomarin_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-20T14:14:43.434428+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "BioMarin",
+        "title": "Senior Financial Accountant",
+        "location": "Cork, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://www.biomarin.com/job/senior-financial-accountant-2/",
+        "source": "biomarin_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-20T14:14:43.434428+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "BioMarin",
+        "title": "Associate Director, Health Economics & Outcomes Research (HEOR)",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://www.biomarin.com/job/associate-director-health-economics-outcomes-research-heor/",
+        "source": "biomarin_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-20T14:14:43.434428+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "BioMarin",
+        "title": "Principal Application Lead, Digital Platform – Veeva RIM",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://www.biomarin.com/job/principal-application-lead-digital-platform-veeva-rim/",
+        "source": "biomarin_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-20T14:14:43.434428+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "BioMarin",
+        "title": "Senior Vendor Laboratory Manager Clinical Laboratory & Biospecimen Management",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://www.biomarin.com/job/senior-vendor-laboratory-manager-clinical-laboratory-biospecimen-management/",
+        "source": "biomarin_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-20T14:14:43.434428+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "BioMarin",
+        "title": "Senior Director, Health Economics & Outcomes Research (HEOR)",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://www.biomarin.com/job/senior-director-health-economics-outcomes-research-heor/",
+        "source": "biomarin_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-20T14:14:43.434428+00:00",
+        "posted_age_known": false
+      }
+    ],
+    "checked_at": 1787235277.727345,
     "consecutive_failures": 0
   }
 }
