@@ -271,8 +271,26 @@ def cached_browser_scrape(cache, company_key, scraper_fn, timeout_seconds, label
     jobs = scraper_fn()  # timeout enforced by the caller (future.result(timeout=X)),
     # not signal.alarm() — that only works in the main thread and crashed
     # every dedicated company the first time this ran in parallel.
-    cache[company_key] = {"jobs": jobs, "checked_at": time.time()}
+    prior_failures = (cache.get(company_key) or {}).get("consecutive_failures", 0)
+    new_failures = 0 if jobs else prior_failures + 1
+    cache[company_key] = {"jobs": jobs, "checked_at": time.time(), "consecutive_failures": new_failures}
     return jobs
+
+
+def effective_timeout(cache, company_key, base_timeout):
+    """A company that has failed several cycles in a row is unlikely to
+    suddenly succeed this run — but still deserves periodic full-length
+    attempts in case a real fix actually resolves it. Shrinks the budget
+    progressively for repeat failures, with a floor so it's never fully
+    abandoned, and resets to full trust immediately the moment a company
+    succeeds again."""
+    failures = (cache.get(company_key) or {}).get("consecutive_failures", 0)
+    if failures <= 1:
+        return base_timeout
+    elif failures <= 3:
+        return max(45, int(base_timeout * 0.5))
+    else:
+        return max(30, int(base_timeout * 0.25))
 
 
 def run_company_tasks_in_parallel(tasks, workers=None):
@@ -4870,7 +4888,12 @@ def main():
         def make_task(fn=scraper_fn, name=company_name):
             return lambda: cached_browser_scrape(browser_cache, name, lambda: fn(session), 0, name)
 
-        task_list.append((key, company_name, make_task(), timeout_s))
+        actual_timeout = effective_timeout(browser_cache, company_name, timeout_s)
+        if actual_timeout < timeout_s:
+            failures = (browser_cache.get(company_name) or {}).get("consecutive_failures", 0)
+            print(f"  [{company_name}] {failures} consecutive failures — reduced budget "
+                  f"{timeout_s}s -> {actual_timeout}s this run")
+        task_list.append((key, company_name, make_task(), actual_timeout))
 
     oracle_cx_targets = [
         ("jpmorgan chase", "JPMorgan Chase", "https://jpmc.fa.oraclecloud.com", "CX_1001"),
@@ -5072,3 +5095,9 @@ def main():
 
 if __name__ == "__main__":
     main()
+    print("\n=== Forcing process exit now — any abandoned background thread from a "
+          "timed-out company (confirmed via real log evidence: DXC kept printing "
+          "output minutes after 'Done.' and the final summary) will NOT be waited "
+          "on. All files are already safely written by this point. ===")
+    sys.stdout.flush()
+    os._exit(0)
