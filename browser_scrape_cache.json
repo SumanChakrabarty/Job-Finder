@@ -318,7 +318,7 @@
         "source": "amazon_json",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-20T21:14:31.766278+00:00",
         "posted_age_known": false
       },
@@ -4020,7 +4020,7 @@
         "source": "tiktok_browser",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-20T21:14:31.766278+00:00",
         "posted_age_known": false
       }
@@ -8070,13 +8070,13 @@
   },
   "NVIDIA": {
     "jobs": [],
-    "checked_at": 1787259128.8487308,
-    "consecutive_failures": 12
+    "checked_at": 1787262569.0794644,
+    "consecutive_failures": 13
   },
   "Eaton": {
     "jobs": [],
-    "checked_at": 1787259117.4784698,
-    "consecutive_failures": 12
+    "checked_at": 1787262558.0734026,
+    "consecutive_failures": 13
   },
   "Cognizant": {
     "jobs": [
@@ -8641,13 +8641,13 @@
   },
   "Aon": {
     "jobs": [],
-    "checked_at": 1787259124.8299026,
-    "consecutive_failures": 12
+    "checked_at": 1787262567.0203195,
+    "consecutive_failures": 13
   },
   "BNP Paribas Ireland": {
     "jobs": [],
-    "checked_at": 1787259121.1541684,
-    "consecutive_failures": 12
+    "checked_at": 1787262563.300865,
+    "consecutive_failures": 13
   },
   "AIB (Allied Irish Banks)": {
     "jobs": [
@@ -9116,13 +9116,13 @@
   },
   "Central Bank of Ireland": {
     "jobs": [],
-    "checked_at": 1787259120.7095935,
-    "consecutive_failures": 12
+    "checked_at": 1787262565.8452916,
+    "consecutive_failures": 13
   },
   "Deutsche Bank": {
     "jobs": [],
-    "checked_at": 1787259126.011391,
-    "consecutive_failures": 12
+    "checked_at": 1787262565.1974616,
+    "consecutive_failures": 13
   },
   "Meta": {
     "jobs": [
@@ -9282,13 +9282,13 @@
   },
   "Netflix": {
     "jobs": [],
-    "checked_at": 1787259121.6934185,
-    "consecutive_failures": 12
+    "checked_at": 1787262565.5284016,
+    "consecutive_failures": 13
   },
   "Red Hat": {
     "jobs": [],
-    "checked_at": 1787259130.677634,
-    "consecutive_failures": 11
+    "checked_at": 1787262570.8228087,
+    "consecutive_failures": 12
   },
   "Johnson Controls": {
     "jobs": [
@@ -10249,8 +10249,8 @@
   },
   "Three Ireland": {
     "jobs": [],
-    "checked_at": 1787259132.070921,
-    "consecutive_failures": 12
+    "checked_at": 1787262572.7591577,
+    "consecutive_failures": 13
   },
   "Aiven": {
     "jobs": [
@@ -11169,8 +11169,8 @@
   },
   "Guidewire": {
     "jobs": [],
-    "checked_at": 1787259134.5656486,
-    "consecutive_failures": 12
+    "checked_at": 1787262573.9570131,
+    "consecutive_failures": 13
   },
   "EXL": {
     "jobs": [
@@ -11522,18 +11522,18 @@
   },
   "UPS Ireland": {
     "jobs": [],
-    "checked_at": 1787259130.7539234,
-    "consecutive_failures": 12
+    "checked_at": 1787262571.8759155,
+    "consecutive_failures": 13
   },
   "Siemens": {
     "jobs": [],
-    "checked_at": 1787259140.3778005,
-    "consecutive_failures": 11
+    "checked_at": 1787262580.106435,
+    "consecutive_failures": 12
   },
   "HCLTech": {
     "jobs": [],
-    "checked_at": 1787259149.80198,
-    "consecutive_failures": 11
+    "checked_at": 1787262588.2903416,
+    "consecutive_failures": 12
   },
   "PepsiCo": {
     "jobs": [
@@ -12533,8 +12533,8 @@
   },
   "Dawn Meats": {
     "jobs": [],
-    "checked_at": 1787259135.486995,
-    "consecutive_failures": 8
+    "checked_at": 1787262572.854437,
+    "consecutive_failures": 9
   },
   "Auxilion": {
     "jobs": [
@@ -12790,8 +12790,8 @@
   },
   "ASL Aviation Holdings": {
     "jobs": [],
-    "checked_at": 1787259137.0585043,
-    "consecutive_failures": 8
+    "checked_at": 1787262573.9760065,
+    "consecutive_failures": 9
   },
   "AMCS Group": {
     "jobs": [
