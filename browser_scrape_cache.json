@@ -302,11 +302,26 @@
         "posted_age_known": true
       }
     ],
-    "checked_at": 1787238038.7835484,
+    "checked_at": 1787249151.6305385,
     "consecutive_failures": 0
   },
   "Amazon": {
     "jobs": [
+      {
+        "company": "Amazon",
+        "title": "Software Development Engineer, AWS Networking, Network Lifecycle Management",
+        "location": "Dublin, IRL",
+        "posted_text": "August 20, 2026",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://www.amazon.jobs/en/jobs/10508192/software-development-engineer-aws-networking-network-lifecycle-management",
+        "source": "amazon_json",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-20T18:07:52.490130+00:00",
+        "posted_age_known": false
+      },
       {
         "company": "Amazon",
         "title": "Systems Engineer, Amazon Foundational Security Services",
@@ -2124,21 +2139,6 @@
       },
       {
         "company": "Amazon",
-        "title": "BIM Designer - MEP, Design Services",
-        "location": "Dublin, IRL",
-        "posted_text": "June 29, 2026",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://www.amazon.jobs/en/jobs/10461623/bim-designer-mep-design-services",
-        "source": "amazon_json",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-08T23:02:49.876731+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Amazon",
         "title": "Engineering Technician (Shifts) - Electrical or Mechanical, Data Cetner Engineering Operations ",
         "location": "Dublin, IRL",
         "posted_text": "June 17, 2026",
@@ -3233,7 +3233,7 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1787238040.1940103,
+    "checked_at": 1787249153.2551064,
     "consecutive_failures": 0
   },
   "KPMG Ireland": {
@@ -3809,7 +3809,7 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1787238055.652389,
+    "checked_at": 1787249167.0228715,
     "consecutive_failures": 0
   },
   "TikTok": {
@@ -3921,21 +3921,6 @@
       },
       {
         "company": "TikTok",
-        "title": "Data Center Operations Engineer - Dublin Dublin Technology Regular",
-        "location": "Dublin, Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://lifeattiktok.com/search/7647904186668665093",
-        "source": "tiktok_browser",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-09T15:48:07.106946+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "TikTok",
         "title": "Quality & Training Specialist - Dutch Speaker, Video Safety Operations (Dublin) Dublin Global Operations Regular",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
@@ -3966,6 +3951,36 @@
       },
       {
         "company": "TikTok",
+        "title": "Data Center Operations Engineer - Dublin Dublin Technology Regular",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://lifeattiktok.com/search/7647904186668665093",
+        "source": "tiktok_browser",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-09T15:48:07.106946+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "TikTok",
+        "title": "Quality & Training Specialist - German Speaker, Video Safety Operations (Dublin) Dublin Global Operations Regular",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://lifeattiktok.com/search/7657161146902808837",
+        "source": "tiktok_browser",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-14T21:52:59.255463+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "TikTok",
         "title": "Quality & Training Specialist - Greek Speaker, Video Safety Operations (Dublin) Dublin Global Operations Regular",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
@@ -3978,24 +3993,9 @@
         "new_since_last_check": false,
         "first_seen_at": "2026-08-13T05:38:38.171334+00:00",
         "posted_age_known": false
-      },
-      {
-        "company": "TikTok",
-        "title": "Quality & Training Specialist - Ukrainian Speaker, Video Safety Operations (Dublin) Dublin Global Operations Regular",
-        "location": "Dublin, Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://lifeattiktok.com/search/7657170468446046517",
-        "source": "tiktok_browser",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-13T05:38:38.171334+00:00",
-        "posted_age_known": false
       }
     ],
-    "checked_at": 1787238052.0663316,
+    "checked_at": 1787249161.3011405,
     "consecutive_failures": 0
   },
   "Boston Scientific": {
@@ -4271,7 +4271,7 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1787238055.056865,
+    "checked_at": 1787249165.1370857,
     "consecutive_failures": 0
   },
   "Google": {
@@ -5253,21 +5253,6 @@
       },
       {
         "company": "Google",
-        "title": "Shopping Partner Development Manager (English, German)",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://www.google.com/about/careers/applications/jobs/results?location=Ireland&page=4",
-        "source": "google_browser",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-09T15:48:07.106946+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Google",
         "title": "Account Manager, Customer Onboarding, GCS Kickstart+ (English, Hebrew)",
         "location": "Ireland",
         "posted_text": "Unknown",
@@ -5483,7 +5468,7 @@
         "posted_text": "Unknown",
         "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
-        "url": "https://www.google.com/about/careers/applications/jobs/results?location=Ireland&page=5",
+        "url": "https://www.google.com/about/careers/applications/jobs/results?location=Ireland&page=4",
         "source": "google_browser",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
@@ -5643,21 +5628,6 @@
       },
       {
         "company": "Google",
-        "title": "Software Engineering Manager, Site Reliability Engineering, AI Security",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://www.google.com/about/careers/applications/jobs/results?location=Ireland&page=5",
-        "source": "google_browser",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-09T15:48:07.106946+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Google",
         "title": "Security Sales Specialist, Google Cloud Fraud Defense",
         "location": "Ireland",
         "posted_text": "Unknown",
@@ -5783,7 +5753,7 @@
         "posted_text": "Unknown",
         "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
-        "url": "https://www.google.com/about/careers/applications/jobs/results?location=Ireland&page=6",
+        "url": "https://www.google.com/about/careers/applications/jobs/results?location=Ireland&page=5",
         "source": "google_browser",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
@@ -5798,7 +5768,7 @@
         "posted_text": "Unknown",
         "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
-        "url": "https://www.google.com/about/careers/applications/jobs/results?location=Ireland&page=6",
+        "url": "https://www.google.com/about/careers/applications/jobs/results?location=Ireland&page=5",
         "source": "google_browser",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
@@ -5957,7 +5927,7 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1787238060.0788977,
+    "checked_at": 1787249167.9662902,
     "consecutive_failures": 0
   },
   "EY Ireland": {
@@ -6159,21 +6129,6 @@
       },
       {
         "company": "EY Ireland",
-        "title": "UKI People Consulting - HR Technology and Transformation (HRT&T), Senior Manager/Director",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.ey.com/ey/job/Dublin-2-UKI-People-Consulting-HR-Technology-and-Transformation-%28HRT&T%29%2C-Senior-ManagerDirector/1427019833/",
-        "source": "ey_successfactors",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-17T13:25:13.356845+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "EY Ireland",
         "title": "UKI People Consulting - HR Technology and Transformation (HRT&T), Manager",
         "location": "Ireland",
         "posted_text": "Unknown",
@@ -6255,21 +6210,6 @@
         "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.ey.com/ey/job/Dublin-2-UKI-Technology-Consulting-Business-Analyst%2C-Senior-Consultant/1249538101/",
-        "source": "ey_successfactors",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-09T15:48:07.106946+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "EY Ireland",
-        "title": "Sustainability Manager",
-        "location": "Sustainability Manager Dublin 2, IE",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.ey.com/ey/job/Dublin-2-Sustainability-Manager/1416883233/",
         "source": "ey_successfactors",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
@@ -7494,6 +7434,51 @@
       },
       {
         "company": "EY Ireland",
+        "title": "UKI People Consulting - HR Technology and Transformation (HRT&T), Senior Manager/Director",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.ey.com/ey/job/Dublin-2-UKI-People-Consulting-HR-Technology-and-Transformation-%28HRT&T%29%2C-Senior-ManagerDirector/1427019833/",
+        "source": "ey_successfactors",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-17T13:25:13.356845+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "EY Ireland",
+        "title": "AI & Data - AI Lab: Data Scientist - Agentic & Predictive Intelligence - Manager",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.ey.com/ey/job/Dublin-2-AI-&-Data-AI-Lab-Data-Scientist-Agentic-&-Predictive-Intelligence-Manager/1412771333/",
+        "source": "ey_successfactors",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-20T18:07:52.490130+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "EY Ireland",
+        "title": "AI & Data - AI Lab: Full-Stack Engineer - Agentic AI Platform - Manager",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.ey.com/ey/job/Dublin-2-AI-&-Data-AI-Lab-Full-Stack-Engineer-Agentic-AI-Platform-Manager/1412765833/",
+        "source": "ey_successfactors",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-20T18:07:52.490130+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "EY Ireland",
         "title": "Executive Director - Pensions Actuary",
         "location": "Ireland",
         "posted_text": "Unknown",
@@ -7674,6 +7659,66 @@
       },
       {
         "company": "EY Ireland",
+        "title": "AI & Data - Data Architect - Senior Manager",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.ey.com/ey/job/Dublin-2-AI-&-Data-Data-Architect-Senior-Manager/1412997833/",
+        "source": "ey_successfactors",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-20T18:07:52.490130+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "EY Ireland",
+        "title": "AI & Data - AI Analyst - Senior Consultant",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.ey.com/ey/job/Dublin-2-AI-&-Data-AI-Analyst-Senior-Consultant/1412996933/",
+        "source": "ey_successfactors",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-20T18:07:52.490130+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "EY Ireland",
+        "title": "AI & Data - Analytics Delivery - Senior Manager",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.ey.com/ey/job/Dublin-2-AI-&-Data-Analytics-Delivery-Senior-Manager/1412778933/",
+        "source": "ey_successfactors",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-20T18:07:52.490130+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "EY Ireland",
+        "title": "AI & Data - Data Governance - Senior Manager",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.ey.com/ey/job/Dublin-2-AI-&-Data-Data-Governance-Senior-Manager/1412998633/",
+        "source": "ey_successfactors",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-20T18:07:52.490130+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "EY Ireland",
         "title": "UKI BMC Procurement Lead Associate Director",
         "location": "Ireland",
         "posted_text": "Unknown",
@@ -7838,7 +7883,7 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1787238060.5891876,
+    "checked_at": 1787249173.5045865,
     "consecutive_failures": 0
   },
   "Grant Thornton Ireland": {
@@ -7964,7 +8009,7 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1787238062.2226002,
+    "checked_at": 1787249175.4428196,
     "consecutive_failures": 0
   },
   "DXC Technology": {
@@ -8020,336 +8065,21 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1787238072.192,
+    "checked_at": 1787249182.621087,
     "consecutive_failures": 0
   },
   "NVIDIA": {
     "jobs": [],
-    "checked_at": 1787245725.683622,
-    "consecutive_failures": 8
+    "checked_at": 1787249182.8175802,
+    "consecutive_failures": 9
   },
   "Eaton": {
     "jobs": [],
-    "checked_at": 1787245712.2838848,
-    "consecutive_failures": 8
+    "checked_at": 1787249183.880009,
+    "consecutive_failures": 9
   },
   "Cognizant": {
     "jobs": [
-      {
-        "company": "Cognizant",
-        "title": "Maps Data Moderator with Dutch",
-        "location": "Dublin, Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.cognizant.com/uki-en/jobs/46249/maps-data-moderator-with-dutch/",
-        "source": "cognizant_direct",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-18T12:46:45.440849+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Cognizant",
-        "title": "Maps Data Moderator with Flemish",
-        "location": "Dublin, Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.cognizant.com/uki-en/jobs/47526/maps-data-moderator-with-flemish/",
-        "source": "cognizant_direct",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-18T12:46:45.440849+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Cognizant",
-        "title": "Automation Engineer DeltaV",
-        "location": "Dublin, Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.cognizant.com/uki-en/jobs/00066487404/automation-engineer-deltav/",
-        "source": "cognizant_direct",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-18T12:46:45.440849+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Cognizant",
-        "title": "Linguistics Expert with German Language",
-        "location": "Dublin, Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.cognizant.com/uki-en/jobs/46103/linguistics-expert-with-german-language/",
-        "source": "cognizant_direct",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-18T12:46:45.440849+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Cognizant",
-        "title": "Outreach Operations Specialist with Spanish Language",
-        "location": "Dublin, Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.cognizant.com/uki-en/jobs/47161/outreach-operations-specialist-with-spanish-language/",
-        "source": "cognizant_direct",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-18T12:46:45.440849+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Cognizant",
-        "title": "Operator with Spanish [LATAM]",
-        "location": "Dublin, Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.cognizant.com/uki-en/jobs/46907/operator-with-spanish-latam/",
-        "source": "cognizant_direct",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-18T12:46:45.440849+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Cognizant",
-        "title": "DeltaV Engineer",
-        "location": "Dublin, Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.cognizant.com/uki-en/jobs/00066487403/deltav-engineer/",
-        "source": "cognizant_direct",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-18T12:46:45.440849+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Cognizant",
-        "title": "Linguistics Expert with THAI Language",
-        "location": "Dublin, Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.cognizant.com/uki-en/jobs/46002/linguistics-expert-with-thai-language/",
-        "source": "cognizant_direct",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-18T12:46:45.440849+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Cognizant",
-        "title": "Linguistics Expert with Italian Language",
-        "location": "Dublin, Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.cognizant.com/uki-en/jobs/46102/linguistics-expert-with-italian-language/",
-        "source": "cognizant_direct",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-18T12:46:45.440849+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Cognizant",
-        "title": "Outreach Operations Specialist with Portuguese Language",
-        "location": "Dublin, Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.cognizant.com/uki-en/jobs/47162/outreach-operations-specialist-with-portuguese-language/",
-        "source": "cognizant_direct",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-18T12:46:45.440849+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Cognizant",
-        "title": "Linguistics Expert with FRENCH Language",
-        "location": "Dublin, Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.cognizant.com/uki-en/jobs/45992/linguistics-expert-with-french-language/",
-        "source": "cognizant_direct",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-18T12:46:45.440849+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Cognizant",
-        "title": "Linguistics Expert with TURKISH Language",
-        "location": "Dublin, Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.cognizant.com/uki-en/jobs/45748/linguistics-expert-with-turkish-language/",
-        "source": "cognizant_direct",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-18T12:46:45.440849+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Cognizant",
-        "title": "Outreach Operations Subject Matter Expert (With either Portuguese, French, German , Italian , Spanish or Arabic)",
-        "location": "Dublin, Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.cognizant.com/uki-en/jobs/47057/outreach-operations-subject-matter-expert-with-either-portuguese-french-german-italian-spanish-or-arabic/",
-        "source": "cognizant_direct",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-18T12:46:45.440849+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Cognizant",
-        "title": "Ads Optimiser - DUTCH",
-        "location": "Dublin, Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.cognizant.com/uki-en/jobs/46106/ads-optimiser-dutch/",
-        "source": "cognizant_direct",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-18T12:46:45.440849+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Cognizant",
-        "title": "Ads Optimiser - GERMAN",
-        "location": "Dublin, Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.cognizant.com/uki-en/jobs/46105/ads-optimiser-german/",
-        "source": "cognizant_direct",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-18T12:46:45.440849+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Cognizant",
-        "title": "Ads Quality Evaluator with DUTCH",
-        "location": "Dublin, Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.cognizant.com/uki-en/jobs/46076/ads-quality-evaluator-with-dutch/",
-        "source": "cognizant_direct",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-18T12:46:45.440849+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Cognizant",
-        "title": "Ads Quality Evaluator with ARABIC",
-        "location": "Dublin, Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.cognizant.com/uki-en/jobs/46077/ads-quality-evaluator-with-arabic/",
-        "source": "cognizant_direct",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-18T12:46:45.440849+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Cognizant",
-        "title": "S3 Subject Matter Expert (SME) and Country Technical Lead",
-        "location": "Dublin, Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.cognizant.com/uki-en/jobs/00069838621/s3-subject-matter-expert-sme-and-country-technical-lead/",
-        "source": "cognizant_direct",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-18T12:46:45.440849+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Cognizant",
-        "title": "Ads Optimiser - FRENCH",
-        "location": "Dublin, Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.cognizant.com/uki-en/jobs/46108/ads-optimiser-french/",
-        "source": "cognizant_direct",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-18T12:46:45.440849+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Cognizant",
-        "title": "Ads Optimiser - NORWEGIAN",
-        "location": "Dublin, Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.cognizant.com/uki-en/jobs/46248/ads-optimiser-norwegian/",
-        "source": "cognizant_direct",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-18T12:46:45.440849+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Cognizant",
-        "title": "Gen AI Process Expert with German DR",
-        "location": "Dublin, Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.cognizant.com/uki-en/jobs/47573/gen-ai-process-expert-with-german-dr/",
-        "source": "cognizant_direct",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-18T12:46:45.440849+00:00",
-        "posted_age_known": false
-      },
       {
         "company": "Cognizant",
         "title": "Sr. Automation Engineer Cork",
@@ -8367,12 +8097,12 @@
       },
       {
         "company": "Cognizant",
-        "title": "IT Support Engineer (MES)",
+        "title": "Automation Engineer DeltaV",
         "location": "Cork, Ireland",
         "posted_text": "Unknown",
         "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
-        "url": "https://careers.cognizant.com/uki-en/jobs/00070082311/it-support-engineer-mes/",
+        "url": "https://careers.cognizant.com/uki-en/jobs/00069344001/automation-engineer-deltav/",
         "source": "cognizant_direct",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
@@ -8382,12 +8112,12 @@
       },
       {
         "company": "Cognizant",
-        "title": "Automation Engineer DeltaV",
+        "title": "IT Support Engineer (MES)",
         "location": "Cork, Ireland",
         "posted_text": "Unknown",
         "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
-        "url": "https://careers.cognizant.com/uki-en/jobs/00069344001/automation-engineer-deltav/",
+        "url": "https://careers.cognizant.com/uki-en/jobs/00070082311/it-support-engineer-mes/",
         "source": "cognizant_direct",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
@@ -8472,12 +8202,12 @@
       },
       {
         "company": "Cognizant",
-        "title": "Deskside Support Engineer",
+        "title": "AIQ Engineer",
         "location": "Cork, Ireland",
         "posted_text": "Unknown",
         "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
-        "url": "https://careers.cognizant.com/uki-en/jobs/00070112241/deskside-support-engineer/",
+        "url": "https://careers.cognizant.com/uki-en/jobs/00067639791/aiq-engineer/",
         "source": "cognizant_direct",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
@@ -8487,12 +8217,12 @@
       },
       {
         "company": "Cognizant",
-        "title": "AIQ Engineer",
+        "title": "Deskside Support Engineer",
         "location": "Cork, Ireland",
         "posted_text": "Unknown",
         "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
-        "url": "https://careers.cognizant.com/uki-en/jobs/00067639791/aiq-engineer/",
+        "url": "https://careers.cognizant.com/uki-en/jobs/00070112241/deskside-support-engineer/",
         "source": "cognizant_direct",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
@@ -8562,12 +8292,192 @@
       },
       {
         "company": "Cognizant",
+        "title": "Maps Data Moderator with Flemish",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.cognizant.com/uki-en/jobs/47526/maps-data-moderator-with-flemish/",
+        "source": "cognizant_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-18T12:46:45.440849+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Cognizant",
+        "title": "Maps Data Moderator with Dutch",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.cognizant.com/uki-en/jobs/46249/maps-data-moderator-with-dutch/",
+        "source": "cognizant_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-18T12:46:45.440849+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Cognizant",
+        "title": "Automation Engineer DeltaV",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.cognizant.com/uki-en/jobs/00066487404/automation-engineer-deltav/",
+        "source": "cognizant_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-18T12:46:45.440849+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Cognizant",
+        "title": "DeltaV Engineer",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.cognizant.com/uki-en/jobs/00066487403/deltav-engineer/",
+        "source": "cognizant_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-18T12:46:45.440849+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Cognizant",
+        "title": "Ads Quality Evaluator with ARABIC",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.cognizant.com/uki-en/jobs/46077/ads-quality-evaluator-with-arabic/",
+        "source": "cognizant_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-18T12:46:45.440849+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Cognizant",
+        "title": "Operator with Spanish [LATAM]",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.cognizant.com/uki-en/jobs/46907/operator-with-spanish-latam/",
+        "source": "cognizant_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-18T12:46:45.440849+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Cognizant",
+        "title": "Outreach Operations Specialist with Portuguese Language",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.cognizant.com/uki-en/jobs/47162/outreach-operations-specialist-with-portuguese-language/",
+        "source": "cognizant_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-18T12:46:45.440849+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Cognizant",
+        "title": "Ads Optimiser - DUTCH",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.cognizant.com/uki-en/jobs/46106/ads-optimiser-dutch/",
+        "source": "cognizant_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-18T12:46:45.440849+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Cognizant",
+        "title": "S3 Subject Matter Expert (SME) and Country Technical Lead",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.cognizant.com/uki-en/jobs/00069838621/s3-subject-matter-expert-sme-and-country-technical-lead/",
+        "source": "cognizant_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-18T12:46:45.440849+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Cognizant",
+        "title": "Ads Optimiser - FRENCH",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.cognizant.com/uki-en/jobs/46108/ads-optimiser-french/",
+        "source": "cognizant_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-18T12:46:45.440849+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Cognizant",
+        "title": "Ads Optimiser - NORWEGIAN",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.cognizant.com/uki-en/jobs/46248/ads-optimiser-norwegian/",
+        "source": "cognizant_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-18T12:46:45.440849+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Cognizant",
         "title": "PI Engineer",
         "location": "Waterford, Ireland",
         "posted_text": "Unknown",
         "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.cognizant.com/uki-en/jobs/00069544001/pi-engineer/",
+        "source": "cognizant_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-18T12:46:45.440849+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Cognizant",
+        "title": "Linguistics Expert with German Language",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.cognizant.com/uki-en/jobs/46103/linguistics-expert-with-german-language/",
         "source": "cognizant_direct",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
@@ -8592,6 +8502,126 @@
       },
       {
         "company": "Cognizant",
+        "title": "Ads Optimiser - GERMAN",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.cognizant.com/uki-en/jobs/46105/ads-optimiser-german/",
+        "source": "cognizant_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-18T12:46:45.440849+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Cognizant",
+        "title": "Linguistics Expert with TURKISH Language",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.cognizant.com/uki-en/jobs/45748/linguistics-expert-with-turkish-language/",
+        "source": "cognizant_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-18T12:46:45.440849+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Cognizant",
+        "title": "Outreach Operations Subject Matter Expert (With either Portuguese, French, German , Italian , Spanish or Arabic)",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.cognizant.com/uki-en/jobs/47057/outreach-operations-subject-matter-expert-with-either-portuguese-french-german-italian-spanish-or-arabic/",
+        "source": "cognizant_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-18T12:46:45.440849+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Cognizant",
+        "title": "Linguistics Expert with FRENCH Language",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.cognizant.com/uki-en/jobs/45992/linguistics-expert-with-french-language/",
+        "source": "cognizant_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-18T12:46:45.440849+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Cognizant",
+        "title": "Gen AI Process Expert with German DR",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.cognizant.com/uki-en/jobs/47573/gen-ai-process-expert-with-german-dr/",
+        "source": "cognizant_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-18T12:46:45.440849+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Cognizant",
+        "title": "Linguistics Expert with THAI Language",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.cognizant.com/uki-en/jobs/46002/linguistics-expert-with-thai-language/",
+        "source": "cognizant_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-18T12:46:45.440849+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Cognizant",
+        "title": "Linguistics Expert with Italian Language",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.cognizant.com/uki-en/jobs/46102/linguistics-expert-with-italian-language/",
+        "source": "cognizant_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-18T12:46:45.440849+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Cognizant",
+        "title": "Ads Quality Evaluator with DUTCH",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.cognizant.com/uki-en/jobs/46076/ads-quality-evaluator-with-dutch/",
+        "source": "cognizant_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-18T12:46:45.440849+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Cognizant",
         "title": "Sustaining Project Manager (DCS)",
         "location": "Limerick, Ireland",
         "posted_text": "Unknown",
@@ -8604,20 +8634,35 @@
         "new_since_last_check": false,
         "first_seen_at": "2026-08-18T12:46:45.440849+00:00",
         "posted_age_known": false
+      },
+      {
+        "company": "Cognizant",
+        "title": "Outreach Operations Specialist with Spanish Language",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.cognizant.com/uki-en/jobs/47161/outreach-operations-specialist-with-spanish-language/",
+        "source": "cognizant_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-18T12:46:45.440849+00:00",
+        "posted_age_known": false
       }
     ],
-    "checked_at": 1787238073.7063134,
+    "checked_at": 1787249185.469276,
     "consecutive_failures": 0
   },
   "Aon": {
     "jobs": [],
-    "checked_at": 1787245723.7583544,
-    "consecutive_failures": 8
+    "checked_at": 1787249189.5178475,
+    "consecutive_failures": 9
   },
   "BNP Paribas Ireland": {
     "jobs": [],
-    "checked_at": 1787245720.1819417,
-    "consecutive_failures": 8
+    "checked_at": 1787249192.9935026,
+    "consecutive_failures": 9
   },
   "AIB (Allied Irish Banks)": {
     "jobs": [
@@ -8742,7 +8787,7 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1787238079.4535146,
+    "checked_at": 1787249191.2965536,
     "consecutive_failures": 0
   },
   "Bank of Ireland": {
@@ -8823,7 +8868,7 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1787238084.2893813,
+    "checked_at": 1787249196.5271935,
     "consecutive_failures": 0
   },
   "BlackRock": {
@@ -8859,7 +8904,7 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1787238117.5651813,
+    "checked_at": 1787249200.385104,
     "consecutive_failures": 0
   },
   "Arup": {
@@ -9015,7 +9060,7 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1787238089.1909108,
+    "checked_at": 1787249197.8066506,
     "consecutive_failures": 0
   },
   "ING": {
@@ -9081,18 +9126,18 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1787238088.1491,
+    "checked_at": 1787249201.8352454,
     "consecutive_failures": 0
   },
   "Central Bank of Ireland": {
     "jobs": [],
-    "checked_at": 1787245719.9585767,
-    "consecutive_failures": 8
+    "checked_at": 1787249200.515682,
+    "consecutive_failures": 9
   },
   "Deutsche Bank": {
     "jobs": [],
-    "checked_at": 1787245722.0326025,
-    "consecutive_failures": 8
+    "checked_at": 1787249197.151168,
+    "consecutive_failures": 9
   },
   "Meta": {
     "jobs": [
@@ -9247,21 +9292,51 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1787238095.8351157,
+    "checked_at": 1787249191.8468711,
     "consecutive_failures": 0
   },
   "Netflix": {
     "jobs": [],
-    "checked_at": 1787245720.7987363,
-    "consecutive_failures": 8
+    "checked_at": 1787249202.228489,
+    "consecutive_failures": 9
   },
   "Red Hat": {
     "jobs": [],
-    "checked_at": 1787245728.2007728,
-    "consecutive_failures": 7
+    "checked_at": 1787249208.2611573,
+    "consecutive_failures": 8
   },
   "Johnson Controls": {
     "jobs": [
+      {
+        "company": "Johnson Controls",
+        "title": "Senior Manufacturing Engineer Ireland, Cork Apply",
+        "location": "Senior Manufacturing Engineer Ireland, Cork Apply",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jobs.johnsoncontrols.com/job/WD30276957",
+        "source": "johnson_controls_browser",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-20T18:07:52.490130+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Johnson Controls",
+        "title": "Project Engineer Ireland, Dublin Apply",
+        "location": "Project Engineer Ireland, Dublin Apply",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jobs.johnsoncontrols.com/job/WD30275364",
+        "source": "johnson_controls_browser",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-20T18:07:52.490130+00:00",
+        "posted_age_known": false
+      },
       {
         "company": "Johnson Controls",
         "title": "Mechanical Engineer - Design Validation Ireland, Dublin Apply",
@@ -9290,81 +9365,6 @@
         "visa_snippet": null,
         "new_since_last_check": false,
         "first_seen_at": "2026-08-19T14:12:06.080734+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Johnson Controls",
-        "title": "Senior Product Engineer Ireland, Dublin Apply",
-        "location": "Senior Product Engineer Ireland, Dublin Apply",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://jobs.johnsoncontrols.com/job/WD30277551",
-        "source": "johnson_controls_browser",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-18T17:35:38.847696+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Johnson Controls",
-        "title": "Principal Product Engineer Ireland, Dublin Apply",
-        "location": "Principal Product Engineer Ireland, Dublin Apply",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://jobs.johnsoncontrols.com/job/WD30277554",
-        "source": "johnson_controls_browser",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-18T17:35:38.847696+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Johnson Controls",
-        "title": "Senior Electrical Engineer Ireland, Dublin Apply",
-        "location": "Senior Electrical Engineer Ireland, Dublin Apply",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://jobs.johnsoncontrols.com/job/WD30277548",
-        "source": "johnson_controls_browser",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-18T17:35:38.847696+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Johnson Controls",
-        "title": "Electrical Engineer Ireland, Dublin Apply",
-        "location": "Electrical Engineer Ireland, Dublin Apply",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://jobs.johnsoncontrols.com/job/WD30277546",
-        "source": "johnson_controls_browser",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-18T17:35:38.847696+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Johnson Controls",
-        "title": "Small Business Sales Representative Ireland, Cork Apply",
-        "location": "Small Business Sales Representative Ireland, Cork Apply",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://jobs.johnsoncontrols.com/job/WD30276675",
-        "source": "johnson_controls_browser",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-17T13:25:13.356845+00:00",
         "posted_age_known": false
       },
       {
@@ -9534,36 +9534,81 @@
       },
       {
         "company": "Johnson Controls",
-        "title": "BMS Service Technician Ireland, Dublin Apply",
-        "location": "BMS Service Technician Ireland, Dublin Apply",
+        "title": "Senior Product Engineer Ireland, Dublin Apply",
+        "location": "Senior Product Engineer Ireland, Dublin Apply",
         "posted_text": "Unknown",
         "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
-        "url": "https://jobs.johnsoncontrols.com/job/WD30274454",
+        "url": "https://jobs.johnsoncontrols.com/job/WD30277551",
         "source": "johnson_controls_browser",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
         "new_since_last_check": false,
-        "first_seen_at": "2026-08-09T16:55:45.581921+00:00",
+        "first_seen_at": "2026-08-18T17:35:38.847696+00:00",
         "posted_age_known": false
       },
       {
         "company": "Johnson Controls",
-        "title": "BMS Service Technician Ireland, Dublin Apply",
-        "location": "BMS Service Technician Ireland, Dublin Apply",
+        "title": "Principal Product Engineer Ireland, Dublin Apply",
+        "location": "Principal Product Engineer Ireland, Dublin Apply",
         "posted_text": "Unknown",
         "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
-        "url": "https://jobs.johnsoncontrols.com/job/WD30274455",
+        "url": "https://jobs.johnsoncontrols.com/job/WD30277554",
         "source": "johnson_controls_browser",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
         "new_since_last_check": false,
-        "first_seen_at": "2026-08-09T16:55:45.581921+00:00",
+        "first_seen_at": "2026-08-18T17:35:38.847696+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Johnson Controls",
+        "title": "Senior Electrical Engineer Ireland, Dublin Apply",
+        "location": "Senior Electrical Engineer Ireland, Dublin Apply",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jobs.johnsoncontrols.com/job/WD30277548",
+        "source": "johnson_controls_browser",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-18T17:35:38.847696+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Johnson Controls",
+        "title": "Electrical Engineer Ireland, Dublin Apply",
+        "location": "Electrical Engineer Ireland, Dublin Apply",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jobs.johnsoncontrols.com/job/WD30277546",
+        "source": "johnson_controls_browser",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-18T17:35:38.847696+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Johnson Controls",
+        "title": "Small Business Sales Representative Ireland, Cork Apply",
+        "location": "Small Business Sales Representative Ireland, Cork Apply",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jobs.johnsoncontrols.com/job/WD30276675",
+        "source": "johnson_controls_browser",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-17T13:25:13.356845+00:00",
         "posted_age_known": false
       }
     ],
-    "checked_at": 1787238071.78564,
+    "checked_at": 1787249214.4794185,
     "consecutive_failures": 0
   },
   "Citi": {
@@ -10214,13 +10259,13 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1787238104.2638888,
+    "checked_at": 1787249212.591479,
     "consecutive_failures": 0
   },
   "Three Ireland": {
     "jobs": [],
-    "checked_at": 1787245727.1586964,
-    "consecutive_failures": 8
+    "checked_at": 1787249216.1998887,
+    "consecutive_failures": 9
   },
   "Aiven": {
     "jobs": [
@@ -10229,232 +10274,202 @@
         "title": "Aiven role",
         "location": "Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
+        "posted_days_ago": null,
         "employment_type": "Unspecified",
         "url": "https://aiven.io/careers/job/4715425101",
         "source": "aiven_direct",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-16T20:37:31.736251+00:00",
-        "posted_age_known": false
+        "visa_snippet": null
       },
       {
         "company": "Aiven",
         "title": "Aiven role",
         "location": "Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
+        "posted_days_ago": null,
         "employment_type": "Unspecified",
         "url": "https://aiven.io/careers/job/4838352101",
         "source": "aiven_direct",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-16T20:37:31.736251+00:00",
-        "posted_age_known": false
+        "visa_snippet": null
       },
       {
         "company": "Aiven",
         "title": "Aiven role",
         "location": "Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
+        "posted_days_ago": null,
         "employment_type": "Unspecified",
         "url": "https://aiven.io/careers/job/4951386101",
         "source": "aiven_direct",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-19T09:56:09.114432+00:00",
-        "posted_age_known": false
+        "visa_snippet": null
       },
       {
         "company": "Aiven",
         "title": "Aiven role",
         "location": "Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
+        "posted_days_ago": null,
         "employment_type": "Unspecified",
         "url": "https://aiven.io/careers/job/4838490101",
         "source": "aiven_direct",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-16T20:37:31.736251+00:00",
-        "posted_age_known": false
+        "visa_snippet": null
       },
       {
         "company": "Aiven",
         "title": "Aiven role",
         "location": "Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
+        "posted_days_ago": null,
         "employment_type": "Unspecified",
         "url": "https://aiven.io/careers/job/4770123101",
         "source": "aiven_direct",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-16T20:37:31.736251+00:00",
-        "posted_age_known": false
+        "visa_snippet": null
       },
       {
         "company": "Aiven",
         "title": "Aiven role",
         "location": "Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
+        "posted_days_ago": null,
         "employment_type": "Unspecified",
         "url": "https://aiven.io/careers/job/4944339101",
         "source": "aiven_direct",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-16T20:37:31.736251+00:00",
-        "posted_age_known": false
+        "visa_snippet": null
       },
       {
         "company": "Aiven",
         "title": "Aiven role",
         "location": "Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
+        "posted_days_ago": null,
         "employment_type": "Unspecified",
         "url": "https://aiven.io/careers/job/4878697101",
         "source": "aiven_direct",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-16T20:37:31.736251+00:00",
-        "posted_age_known": false
+        "visa_snippet": null
       },
       {
         "company": "Aiven",
         "title": "Aiven role",
         "location": "Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
+        "posted_days_ago": null,
         "employment_type": "Unspecified",
         "url": "https://aiven.io/careers/job/4870465101",
         "source": "aiven_direct",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-16T20:37:31.736251+00:00",
-        "posted_age_known": false
+        "visa_snippet": null
       },
       {
         "company": "Aiven",
         "title": "Aiven role",
         "location": "Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
+        "posted_days_ago": null,
         "employment_type": "Unspecified",
         "url": "https://aiven.io/careers/job/4938453101",
         "source": "aiven_direct",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-16T20:37:31.736251+00:00",
-        "posted_age_known": false
+        "visa_snippet": null
       },
       {
         "company": "Aiven",
         "title": "Aiven role",
         "location": "Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
+        "posted_days_ago": null,
         "employment_type": "Unspecified",
         "url": "https://aiven.io/careers/job/4912951101",
         "source": "aiven_direct",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-16T20:37:31.736251+00:00",
-        "posted_age_known": false
+        "visa_snippet": null
       },
       {
         "company": "Aiven",
         "title": "Aiven role",
         "location": "Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
+        "posted_days_ago": null,
         "employment_type": "Unspecified",
         "url": "https://aiven.io/careers/job/4792883101",
         "source": "aiven_direct",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-16T20:37:31.736251+00:00",
-        "posted_age_known": false
+        "visa_snippet": null
       },
       {
         "company": "Aiven",
         "title": "Aiven role",
         "location": "Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
+        "posted_days_ago": null,
         "employment_type": "Unspecified",
         "url": "https://aiven.io/careers/job/4900414101",
         "source": "aiven_direct",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-19T14:01:51.801445+00:00",
-        "posted_age_known": false
+        "visa_snippet": null
       },
       {
         "company": "Aiven",
         "title": "Aiven role",
         "location": "Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
+        "posted_days_ago": null,
         "employment_type": "Unspecified",
         "url": "https://aiven.io/careers/job/4955290101",
         "source": "aiven_direct",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-19T14:01:51.801445+00:00",
-        "posted_age_known": false
+        "visa_snippet": null
       },
       {
         "company": "Aiven",
         "title": "Aiven role",
         "location": "Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
+        "posted_days_ago": null,
         "employment_type": "Unspecified",
         "url": "https://aiven.io/careers/job/4833444101",
         "source": "aiven_direct",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-19T14:01:51.801445+00:00",
-        "posted_age_known": false
+        "visa_snippet": null
       },
       {
         "company": "Aiven",
         "title": "Aiven role",
         "location": "Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
+        "posted_days_ago": null,
         "employment_type": "Unspecified",
         "url": "https://aiven.io/careers/job/4911946101",
         "source": "aiven_direct",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-19T14:01:51.801445+00:00",
-        "posted_age_known": false
+        "visa_snippet": null
       }
     ],
-    "checked_at": 1787238110.2642527,
+    "checked_at": 1787249213.3687263,
     "consecutive_failures": 0
   },
   "Irish Life": {
     "jobs": [
+      {
+        "company": "Irish Life",
+        "title": "Technical Specialist - Claims/Underwriting",
+        "location": "Dublin, Ireland",
+        "posted_text": "20 Aug 2026",
+        "posted_days_ago": 0.0,
+        "employment_type": "Unspecified",
+        "url": "https://life-careers.com/irishlife/job/Dublin-Technical-Specialist-ClaimsUnderwriting/1428432133/",
+        "source": "irish_life_browser",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-20T18:07:52.490130+00:00",
+        "posted_age_known": true
+      },
       {
         "company": "Irish Life",
         "title": "Customer Service Representative Dundalk",
@@ -10501,7 +10516,7 @@
         "posted_age_known": true
       }
     ],
-    "checked_at": 1787238105.0940478,
+    "checked_at": 1787249211.1296778,
     "consecutive_failures": 0
   },
   "Huawei": {
@@ -10717,7 +10732,7 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1787238116.140312,
+    "checked_at": 1787249219.6646323,
     "consecutive_failures": 0
   },
   "GE HealthCare": {
@@ -10813,7 +10828,7 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1787238118.7066252,
+    "checked_at": 1787249220.739879,
     "consecutive_failures": 0
   },
   "NTT DATA": {
@@ -11015,21 +11030,6 @@
       },
       {
         "company": "NTT DATA",
-        "title": "Solution Architect - Risk and Compliance",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers-inc.nttdata.com/job/Dublin-Solution-Architect-Risk-and-Compliance-D/1386595100/",
-        "source": "ntt_data_browser",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-16T20:37:31.736251+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "NTT DATA",
         "title": "Lead Snowflake Architect",
         "location": "Ireland",
         "posted_text": "Unknown",
@@ -11134,13 +11134,13 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1787238123.3632762,
+    "checked_at": 1787249228.3547864,
     "consecutive_failures": 0
   },
   "Guidewire": {
     "jobs": [],
-    "checked_at": 1787245731.4564207,
-    "consecutive_failures": 8
+    "checked_at": 1787249225.1420379,
+    "consecutive_failures": 9
   },
   "EXL": {
     "jobs": [
@@ -11190,7 +11190,7 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1787238144.0488713,
+    "checked_at": 1787249244.4021654,
     "consecutive_failures": 0
   },
   "Allianz": {
@@ -11271,11 +11271,26 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1787238131.3332305,
+    "checked_at": 1787249233.1003747,
     "consecutive_failures": 0
   },
   "Johnson & Johnson": {
     "jobs": [
+      {
+        "company": "Johnson & Johnson",
+        "title": "Senior Finance Analyst, Orthopedics Inventory Management",
+        "location": "Ringaskiddy, Cork, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jj.wd5.myworkdayjobs.com/job/Ringaskiddy-Cork-Ireland/Senior-Finance-Analyst--Orthopedics-Inventory-Management_R-095118-1",
+        "source": "jnj_workday",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-20T18:07:52.490130+00:00",
+        "posted_age_known": false
+      },
       {
         "company": "Johnson & Johnson",
         "title": "Planning Manager",
@@ -11472,23 +11487,23 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1787238092.1120439,
+    "checked_at": 1787249193.4445164,
     "consecutive_failures": 0
   },
   "UPS Ireland": {
     "jobs": [],
-    "checked_at": 1787245726.7906063,
-    "consecutive_failures": 8
+    "checked_at": 1787249214.1147556,
+    "consecutive_failures": 9
   },
   "Siemens": {
     "jobs": [],
-    "checked_at": 1787245736.7962072,
-    "consecutive_failures": 7
+    "checked_at": 1787249237.8358178,
+    "consecutive_failures": 8
   },
   "HCLTech": {
     "jobs": [],
-    "checked_at": 1787245745.087915,
-    "consecutive_failures": 7
+    "checked_at": 1787249239.8249607,
+    "consecutive_failures": 8
   },
   "PepsiCo": {
     "jobs": [
@@ -11568,7 +11583,7 @@
         "posted_age_known": true
       }
     ],
-    "checked_at": 1787238144.2336977,
+    "checked_at": 1787249238.1974835,
     "consecutive_failures": 0
   },
   "Oracle": {
@@ -11619,7 +11634,7 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1787238153.3647048,
+    "checked_at": 1787249247.8834515,
     "consecutive_failures": 0
   },
   "Microsoft": {
@@ -11641,7 +11656,67 @@
       },
       {
         "company": "Microsoft",
-        "title": "AI Business Process Specialist Sales United Kingdom, London, Enfield Posted 34 minutes ago",
+        "title": "Go to Market Manager, AI Business Solutions United States, Multiple Locations, Multiple Locations Posted 3 hours ago",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://apply.careers.microsoft.com/careers/job/1970393556917739",
+        "source": "microsoft_browser",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-20T18:07:52.490130+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Microsoft",
+        "title": "Senior Software Engineer - Backend Canada, British Columbia, Vancouver Posted 3 hours ago",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://apply.careers.microsoft.com/careers/job/1970393556874614",
+        "source": "microsoft_browser",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-20T18:07:52.490130+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Microsoft",
+        "title": "Cloud Solution Architecture-Security United Arab Emirates, Abu Dhabi, Abu Dhabi Posted 3 hours ago",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://apply.careers.microsoft.com/careers/job/1970393556943657",
+        "source": "microsoft_browser",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-20T18:07:52.490130+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Microsoft",
+        "title": "Sr. Site Procurement Manager United States, Iowa, Des Moines + 2 more Posted 3 hours ago",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://apply.careers.microsoft.com/careers/job/1970393556971290",
+        "source": "microsoft_browser",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-20T18:07:52.490130+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Microsoft",
+        "title": "AI Business Process Specialist Sales United Kingdom, London, Enfield Posted 4 hours ago",
         "location": "Ireland",
         "posted_text": "Unknown",
         "posted_days_ago": 9999.0,
@@ -11656,7 +11731,7 @@
       },
       {
         "company": "Microsoft",
-        "title": "Government Affairs Director France, Paris, Paris Posted 35 minutes ago",
+        "title": "Government Affairs Director France, Paris, Paris Posted 4 hours ago",
         "location": "Ireland",
         "posted_text": "Unknown",
         "posted_days_ago": 9999.0,
@@ -11671,7 +11746,7 @@
       },
       {
         "company": "Microsoft",
-        "title": "Data Center Operations Specialist United States, Illinois, Chicago Posted 37 minutes ago",
+        "title": "Data Center Operations Specialist United States, Illinois, Chicago Posted 4 hours ago",
         "location": "Ireland",
         "posted_text": "Unknown",
         "posted_days_ago": 9999.0,
@@ -11686,7 +11761,7 @@
       },
       {
         "company": "Microsoft",
-        "title": "EMEA Regional Solution Area Sales Lead - Security Ireland, Dublin, Dublin Posted an hour ago",
+        "title": "EMEA Regional Solution Area Sales Lead - Security Ireland, Dublin, Dublin Posted 4 hours ago",
         "location": "Ireland",
         "posted_text": "Unknown",
         "posted_days_ago": 9999.0,
@@ -11701,7 +11776,7 @@
       },
       {
         "company": "Microsoft",
-        "title": "Senior Technical Program Manager, Datacenter Portfolio Management United States, Multiple Locations, Multiple Locations Posted an hour ago",
+        "title": "Senior Technical Program Manager, Datacenter Portfolio Management United States, Multiple Locations, Multiple Locations Posted 4 hours ago",
         "location": "Ireland",
         "posted_text": "Unknown",
         "posted_days_ago": 9999.0,
@@ -11716,72 +11791,12 @@
       },
       {
         "company": "Microsoft",
-        "title": "Service Engineer II - BizApps Productivity & Licensing United States, Washington, Redmond Posted an hour ago",
+        "title": "Service Engineer II - BizApps Productivity & Licensing United States, Washington, Redmond Posted 4 hours ago",
         "location": "Ireland",
         "posted_text": "Unknown",
         "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://apply.careers.microsoft.com/careers/job/1970393556944667",
-        "source": "microsoft_browser",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-20T15:02:41.529091+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Microsoft",
-        "title": "Senior Azure Customer Engineer (ACE) Manager Romania, Bucharest, Bucharest Posted an hour ago",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://apply.careers.microsoft.com/careers/job/1970393556971522",
-        "source": "microsoft_browser",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-20T15:02:41.529091+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Microsoft",
-        "title": "Israel Consulting Practice Lead Israel, Tel Aviv, Herzliya Posted 2 hours ago",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://apply.careers.microsoft.com/careers/job/1970393556914180",
-        "source": "microsoft_browser",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-20T15:02:41.529091+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Microsoft",
-        "title": "Senior Software Engineer United States, Washington, Redmond Posted 2 hours ago",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://apply.careers.microsoft.com/careers/job/1970393556962586",
-        "source": "microsoft_browser",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-20T15:02:41.529091+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Microsoft",
-        "title": "Senior Quantum Software Engineer - Bring-up Software Infrastructure Denmark, Copenhagen, Kongens Lyngby Posted 2 hours ago",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://apply.careers.microsoft.com/careers/job/1970393556962173",
         "source": "microsoft_browser",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
@@ -11821,21 +11836,6 @@
       },
       {
         "company": "Microsoft",
-        "title": "Technology Consultant: Graduate Opportunities - French, German or Spanish speaking Ireland, Dublin, Dublin Posted a month ago",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://apply.careers.microsoft.com/careers/job/1970393556887861",
-        "source": "microsoft_browser",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-10T01:17:11.583036+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Microsoft",
         "title": "Senior Director, EMEA Energy Markets Ireland, Dublin, Dublin + 1 more Posted 22 days ago",
         "location": "Ireland",
         "posted_text": "Posted 22 days ago",
@@ -11866,21 +11866,6 @@
       },
       {
         "company": "Microsoft",
-        "title": "Digital Enterprise Solution Sales Specialist - AI Workforce- Polish speaking Ireland, Dublin, Dublin Posted a month ago",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://apply.careers.microsoft.com/careers/job/1970393556929283",
-        "source": "microsoft_browser",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-10T01:17:11.583036+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Microsoft",
         "title": "Critical Environment Technician - Shift 24/7 Ireland, Dublin, Dublin Posted 24 days ago",
         "location": "Ireland",
         "posted_text": "Posted 24 days ago",
@@ -11896,17 +11881,47 @@
       },
       {
         "company": "Microsoft",
-        "title": "Senior Customer Experience Engineer Ireland, Dublin, Dublin Posted 8 days ago",
+        "title": "Lessor Relationship Manager Ireland, Dublin, Dublin + 1 more Posted 5 months ago",
         "location": "Ireland",
-        "posted_text": "Posted 8 days ago",
-        "posted_days_ago": 8.0,
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
-        "url": "https://apply.careers.microsoft.com/careers/job/1970393556956071",
+        "url": "https://apply.careers.microsoft.com/careers/job/1970393556656762",
         "source": "microsoft_browser",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
         "new_since_last_check": false,
-        "first_seen_at": "2026-08-12T16:11:09.237044+00:00",
+        "first_seen_at": "2026-08-10T01:17:11.583036+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Microsoft",
+        "title": "Digital Solution Engineer - German & French Speaking Ireland, Dublin, Dublin + 1 more Posted 9 days ago",
+        "location": "Ireland",
+        "posted_text": "Posted 9 days ago",
+        "posted_days_ago": 9.0,
+        "employment_type": "Unspecified",
+        "url": "https://apply.careers.microsoft.com/careers/job/1970393556938885",
+        "source": "microsoft_browser",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-10T01:17:11.583036+00:00",
+        "posted_age_known": true
+      },
+      {
+        "company": "Microsoft",
+        "title": "Digital Solution Engineer, Security - WE - Italian market Ireland, Dublin, Dublin + 1 more Posted 9 days ago",
+        "location": "Ireland",
+        "posted_text": "Posted 9 days ago",
+        "posted_days_ago": 9.0,
+        "employment_type": "Unspecified",
+        "url": "https://apply.careers.microsoft.com/careers/job/1970393556939307",
+        "source": "microsoft_browser",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-11T15:16:54.536258+00:00",
         "posted_age_known": true
       },
       {
@@ -11926,130 +11941,10 @@
       },
       {
         "company": "Microsoft",
-        "title": "Integrated Power Delivery Director United Kingdom, London, London + 2 more Posted 3 days ago",
+        "title": "EMEA Development & Permitting Lead United Kingdom, London, London + 4 more Posted 4 days ago",
         "location": "Ireland",
         "posted_text": "Posted 7 days ago",
         "posted_days_ago": 7.0,
-        "employment_type": "Unspecified",
-        "url": "https://apply.careers.microsoft.com/careers/job/1970393556956093",
-        "source": "microsoft_browser",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-10T01:17:11.583036+00:00",
-        "posted_age_known": true
-      },
-      {
-        "company": "Microsoft",
-        "title": "Software Engineer Ireland, Dublin, Dublin Posted 3 days ago",
-        "location": "Software Engineer Ireland, Dublin, Dublin Posted 3 days ago",
-        "posted_text": "Posted 3 days ago",
-        "posted_days_ago": 3.0,
-        "employment_type": "Unspecified",
-        "url": "https://apply.careers.microsoft.com/careers/job/1970393556971798",
-        "source": "microsoft_browser",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-17T18:41:44.365608+00:00",
-        "posted_age_known": true
-      },
-      {
-        "company": "Microsoft",
-        "title": "Senior Technical Program Manager - Windows Compatibility Ireland, Dublin, Dublin Posted 6 days ago",
-        "location": "Ireland",
-        "posted_text": "Posted 6 days ago",
-        "posted_days_ago": 6.0,
-        "employment_type": "Unspecified",
-        "url": "https://apply.careers.microsoft.com/careers/job/1970393556962155",
-        "source": "microsoft_browser",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-14T21:52:59.255463+00:00",
-        "posted_age_known": true
-      },
-      {
-        "company": "Microsoft",
-        "title": "Digital Solution Enterprise Sales Specialist - Cloud & AI - Hebrew or English Speaker Ireland, Dublin, Dublin Posted 9 days ago",
-        "location": "Ireland",
-        "posted_text": "Posted 9 days ago",
-        "posted_days_ago": 9.0,
-        "employment_type": "Unspecified",
-        "url": "https://apply.careers.microsoft.com/careers/job/1970393556956962",
-        "source": "microsoft_browser",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-11T15:16:54.536258+00:00",
-        "posted_age_known": true
-      },
-      {
-        "company": "Microsoft",
-        "title": "Principal Software Engineering Manager - SXG Ireland, Dublin, Dublin Posted 14 days ago",
-        "location": "Ireland",
-        "posted_text": "Posted 14 days ago",
-        "posted_days_ago": 14.0,
-        "employment_type": "Unspecified",
-        "url": "https://apply.careers.microsoft.com/careers/job/1970393556944430",
-        "source": "microsoft_browser",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-10T01:17:11.583036+00:00",
-        "posted_age_known": true
-      },
-      {
-        "company": "Microsoft",
-        "title": "Software Engineer - Observability Ireland, Dublin, Dublin Posted 3 days ago",
-        "location": "Ireland",
-        "posted_text": "Posted 3 days ago",
-        "posted_days_ago": 3.0,
-        "employment_type": "Unspecified",
-        "url": "https://apply.careers.microsoft.com/careers/job/1970393556914546",
-        "source": "microsoft_browser",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-10T01:17:11.583036+00:00",
-        "posted_age_known": true
-      },
-      {
-        "company": "Microsoft",
-        "title": "Metro Procurement Leader Denmark, Capital Region, Copenhagen + 4 more Posted 3 days ago",
-        "location": "Ireland",
-        "posted_text": "Posted 3 days ago",
-        "posted_days_ago": 3.0,
-        "employment_type": "Unspecified",
-        "url": "https://apply.careers.microsoft.com/careers/job/1970393556957386",
-        "source": "microsoft_browser",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-17T13:25:13.356845+00:00",
-        "posted_age_known": true
-      },
-      {
-        "company": "Microsoft",
-        "title": "Customer Success Finance Manager United Kingdom, Multiple Locations, Multiple Locations + 1 more Posted 2 days ago",
-        "location": "Ireland",
-        "posted_text": "Posted 2 days ago",
-        "posted_days_ago": 2.0,
-        "employment_type": "Unspecified",
-        "url": "https://apply.careers.microsoft.com/careers/job/1970393556950399",
-        "source": "microsoft_browser",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-18T17:35:38.847696+00:00",
-        "posted_age_known": true
-      },
-      {
-        "company": "Microsoft",
-        "title": "EMEA Development & Permitting Lead United Kingdom, London, London + 4 more Posted 4 days ago",
-        "location": "Ireland",
-        "posted_text": "Posted 2 days ago",
-        "posted_days_ago": 2.0,
         "employment_type": "Unspecified",
         "url": "https://apply.careers.microsoft.com/careers/job/1970393556957621",
         "source": "microsoft_browser",
@@ -12061,27 +11956,12 @@
       },
       {
         "company": "Microsoft",
-        "title": "Senior Account Manager, Microsoft Advertising (German Market) Dublin based Ireland, Dublin, Dublin Posted a month ago",
+        "title": "Principal Software Engineering Manager - SXG Ireland, Dublin, Dublin Posted 14 days ago",
         "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
+        "posted_text": "Posted 14 days ago",
+        "posted_days_ago": 14.0,
         "employment_type": "Unspecified",
-        "url": "https://apply.careers.microsoft.com/careers/job/1970393556918521",
-        "source": "microsoft_browser",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-10T01:17:11.583036+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Microsoft",
-        "title": "Enterprise Partner Solutions Lead, Ireland Ireland, Dublin, Dublin Posted 13 days ago",
-        "location": "Ireland",
-        "posted_text": "Posted 13 days ago",
-        "posted_days_ago": 13.0,
-        "employment_type": "Unspecified",
-        "url": "https://apply.careers.microsoft.com/careers/job/1970393556952265",
+        "url": "https://apply.careers.microsoft.com/careers/job/1970393556944430",
         "source": "microsoft_browser",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
@@ -12121,92 +12001,17 @@
       },
       {
         "company": "Microsoft",
-        "title": "Digital Solution Engineer - German Speaking Ireland, Dublin, Dublin + 1 more Posted 9 days ago",
+        "title": "*Sales Manager (German Market) - Microsoft Advertising Dublin based Ireland, Dublin, Dublin Posted 3 days ago",
         "location": "Ireland",
-        "posted_text": "Posted 9 days ago",
-        "posted_days_ago": 9.0,
+        "posted_text": "Posted 3 days ago",
+        "posted_days_ago": 3.0,
         "employment_type": "Unspecified",
-        "url": "https://apply.careers.microsoft.com/careers/job/1970393556938883",
+        "url": "https://apply.careers.microsoft.com/careers/job/1970393556947638",
         "source": "microsoft_browser",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
         "new_since_last_check": false,
-        "first_seen_at": "2026-08-10T01:17:11.583036+00:00",
-        "posted_age_known": true
-      },
-      {
-        "company": "Microsoft",
-        "title": "Digital Solution Engineer - German & French Speaking Ireland, Dublin, Dublin + 1 more Posted 9 days ago",
-        "location": "Ireland",
-        "posted_text": "Posted 9 days ago",
-        "posted_days_ago": 9.0,
-        "employment_type": "Unspecified",
-        "url": "https://apply.careers.microsoft.com/careers/job/1970393556938885",
-        "source": "microsoft_browser",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-10T01:17:11.583036+00:00",
-        "posted_age_known": true
-      },
-      {
-        "company": "Microsoft",
-        "title": "Digital Solution Engineer, Security - WE - Italian market Ireland, Dublin, Dublin + 1 more Posted 9 days ago",
-        "location": "Ireland",
-        "posted_text": "Posted 9 days ago",
-        "posted_days_ago": 9.0,
-        "employment_type": "Unspecified",
-        "url": "https://apply.careers.microsoft.com/careers/job/1970393556939307",
-        "source": "microsoft_browser",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-11T15:16:54.536258+00:00",
-        "posted_age_known": true
-      },
-      {
-        "company": "Microsoft",
-        "title": "Site Acquisition Director United Kingdom, London, London + 1 more Posted 13 days ago",
-        "location": "Ireland",
-        "posted_text": "Posted 2 days ago",
-        "posted_days_ago": 2.0,
-        "employment_type": "Unspecified",
-        "url": "https://apply.careers.microsoft.com/careers/job/1970393556950882",
-        "source": "microsoft_browser",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-10T01:17:11.583036+00:00",
-        "posted_age_known": true
-      },
-      {
-        "company": "Microsoft",
-        "title": "Site Reliability Engineer - SharePoint Online Ireland, Dublin, Dublin Posted 14 days ago",
-        "location": "Ireland",
-        "posted_text": "Posted 14 days ago",
-        "posted_days_ago": 14.0,
-        "employment_type": "Unspecified",
-        "url": "https://apply.careers.microsoft.com/careers/job/1970393556956398",
-        "source": "microsoft_browser",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-10T01:17:11.583036+00:00",
-        "posted_age_known": true
-      },
-      {
-        "company": "Microsoft",
-        "title": "Senior Software Engineer - Observability Ireland, Dublin, Dublin Posted 16 days ago",
-        "location": "Ireland",
-        "posted_text": "Posted 16 days ago",
-        "posted_days_ago": 16.0,
-        "employment_type": "Unspecified",
-        "url": "https://apply.careers.microsoft.com/careers/job/1970393556953528",
-        "source": "microsoft_browser",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-10T01:17:11.583036+00:00",
+        "first_seen_at": "2026-08-17T13:25:13.356845+00:00",
         "posted_age_known": true
       },
       {
@@ -12241,6 +12046,276 @@
       },
       {
         "company": "Microsoft",
+        "title": "Metro Construction EHS Manager - Ireland Ireland, Dublin, Dublin Posted 7 days ago",
+        "location": "Ireland",
+        "posted_text": "Posted 7 days ago",
+        "posted_days_ago": 7.0,
+        "employment_type": "Unspecified",
+        "url": "https://apply.careers.microsoft.com/careers/job/1970393556960459",
+        "source": "microsoft_browser",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-14T01:18:53.607537+00:00",
+        "posted_age_known": true
+      },
+      {
+        "company": "Microsoft",
+        "title": "Enterprise Partner Solutions Lead, Ireland Ireland, Dublin, Dublin Posted 13 days ago",
+        "location": "Ireland",
+        "posted_text": "Posted 13 days ago",
+        "posted_days_ago": 13.0,
+        "employment_type": "Unspecified",
+        "url": "https://apply.careers.microsoft.com/careers/job/1970393556952265",
+        "source": "microsoft_browser",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-10T01:17:11.583036+00:00",
+        "posted_age_known": true
+      },
+      {
+        "company": "Microsoft",
+        "title": "Software Engineer - Observability Ireland, Dublin, Dublin Posted 3 days ago",
+        "location": "Ireland",
+        "posted_text": "Posted 3 days ago",
+        "posted_days_ago": 3.0,
+        "employment_type": "Unspecified",
+        "url": "https://apply.careers.microsoft.com/careers/job/1970393556914546",
+        "source": "microsoft_browser",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-10T01:17:11.583036+00:00",
+        "posted_age_known": true
+      },
+      {
+        "company": "Microsoft",
+        "title": "Customer Success Finance Manager United Kingdom, Multiple Locations, Multiple Locations + 1 more Posted 2 days ago",
+        "location": "Ireland",
+        "posted_text": "Posted 9 days ago",
+        "posted_days_ago": 9.0,
+        "employment_type": "Unspecified",
+        "url": "https://apply.careers.microsoft.com/careers/job/1970393556950399",
+        "source": "microsoft_browser",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-18T17:35:38.847696+00:00",
+        "posted_age_known": true
+      },
+      {
+        "company": "Microsoft",
+        "title": "Integrated Power Delivery Director United Kingdom, London, London + 2 more Posted 3 days ago",
+        "location": "Ireland",
+        "posted_text": "Posted 9 days ago",
+        "posted_days_ago": 9.0,
+        "employment_type": "Unspecified",
+        "url": "https://apply.careers.microsoft.com/careers/job/1970393556956093",
+        "source": "microsoft_browser",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-10T01:17:11.583036+00:00",
+        "posted_age_known": true
+      },
+      {
+        "company": "Microsoft",
+        "title": "Regional Finance Manager Ireland, Dublin, Dublin Posted 8 days ago",
+        "location": "Ireland",
+        "posted_text": "Posted 8 days ago",
+        "posted_days_ago": 8.0,
+        "employment_type": "Unspecified",
+        "url": "https://apply.careers.microsoft.com/careers/job/1970393556959724",
+        "source": "microsoft_browser",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-13T05:38:38.171334+00:00",
+        "posted_age_known": true
+      },
+      {
+        "company": "Microsoft",
+        "title": "Senior Technical Program Manager - Windows Compatibility Ireland, Dublin, Dublin Posted 6 days ago",
+        "location": "Ireland",
+        "posted_text": "Posted 6 days ago",
+        "posted_days_ago": 6.0,
+        "employment_type": "Unspecified",
+        "url": "https://apply.careers.microsoft.com/careers/job/1970393556962155",
+        "source": "microsoft_browser",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-14T21:52:59.255463+00:00",
+        "posted_age_known": true
+      },
+      {
+        "company": "Microsoft",
+        "title": "Technology Consultant: Graduate Opportunities - French, German or Spanish speaking Ireland, Dublin, Dublin Posted a month ago",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://apply.careers.microsoft.com/careers/job/1970393556887861",
+        "source": "microsoft_browser",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-10T01:17:11.583036+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Microsoft",
+        "title": "Software Engineer II Ireland, Dublin, Dublin Posted 6 days ago",
+        "location": "Ireland",
+        "posted_text": "Posted 6 days ago",
+        "posted_days_ago": 6.0,
+        "employment_type": "Unspecified",
+        "url": "https://apply.careers.microsoft.com/careers/job/1970393556961703",
+        "source": "microsoft_browser",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-14T21:52:59.255463+00:00",
+        "posted_age_known": true
+      },
+      {
+        "company": "Microsoft",
+        "title": "Senior Software Engineer Ireland, Dublin, Dublin Posted 6 days ago",
+        "location": "Ireland",
+        "posted_text": "Posted 6 days ago",
+        "posted_days_ago": 6.0,
+        "employment_type": "Unspecified",
+        "url": "https://apply.careers.microsoft.com/careers/job/1970393556962456",
+        "source": "microsoft_browser",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-14T21:52:59.255463+00:00",
+        "posted_age_known": true
+      },
+      {
+        "company": "Microsoft",
+        "title": "Digital Cloud Solution Architect - People Manager Ireland, Dublin, Dublin Posted a day ago",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://apply.careers.microsoft.com/careers/job/1970393556971801",
+        "source": "microsoft_browser",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-20T08:25:58.330094+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Microsoft",
+        "title": "Site Acquisition Director United Kingdom, London, London + 1 more Posted 13 days ago",
+        "location": "Ireland",
+        "posted_text": "Posted 13 days ago",
+        "posted_days_ago": 13.0,
+        "employment_type": "Unspecified",
+        "url": "https://apply.careers.microsoft.com/careers/job/1970393556950882",
+        "source": "microsoft_browser",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-10T01:17:11.583036+00:00",
+        "posted_age_known": true
+      },
+      {
+        "company": "Microsoft",
+        "title": "Metro Procurement Leader Denmark, Capital Region, Copenhagen + 4 more Posted 3 days ago",
+        "location": "Ireland",
+        "posted_text": "Posted 13 days ago",
+        "posted_days_ago": 13.0,
+        "employment_type": "Unspecified",
+        "url": "https://apply.careers.microsoft.com/careers/job/1970393556957386",
+        "source": "microsoft_browser",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-17T13:25:13.356845+00:00",
+        "posted_age_known": true
+      },
+      {
+        "company": "Microsoft",
+        "title": "Senior Software Engineer - Observability Ireland, Dublin, Dublin Posted 16 days ago",
+        "location": "Ireland",
+        "posted_text": "Posted 16 days ago",
+        "posted_days_ago": 16.0,
+        "employment_type": "Unspecified",
+        "url": "https://apply.careers.microsoft.com/careers/job/1970393556953528",
+        "source": "microsoft_browser",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-10T01:17:11.583036+00:00",
+        "posted_age_known": true
+      },
+      {
+        "company": "Microsoft",
+        "title": "Senior Software Engineering Manager Ireland, Dublin, Dublin Posted 7 days ago",
+        "location": "Ireland",
+        "posted_text": "Posted 7 days ago",
+        "posted_days_ago": 7.0,
+        "employment_type": "Unspecified",
+        "url": "https://apply.careers.microsoft.com/careers/job/1970393556958351",
+        "source": "microsoft_browser",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-14T01:18:53.607537+00:00",
+        "posted_age_known": true
+      },
+      {
+        "company": "Microsoft",
+        "title": "Site Reliability Engineer - SharePoint Online Ireland, Dublin, Dublin Posted 14 days ago",
+        "location": "Ireland",
+        "posted_text": "Posted 14 days ago",
+        "posted_days_ago": 14.0,
+        "employment_type": "Unspecified",
+        "url": "https://apply.careers.microsoft.com/careers/job/1970393556956398",
+        "source": "microsoft_browser",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-10T01:17:11.583036+00:00",
+        "posted_age_known": true
+      },
+      {
+        "company": "Microsoft",
+        "title": "Senior Customer Experience Engineer Ireland, Dublin, Dublin Posted 8 days ago",
+        "location": "Ireland",
+        "posted_text": "Posted 8 days ago",
+        "posted_days_ago": 8.0,
+        "employment_type": "Unspecified",
+        "url": "https://apply.careers.microsoft.com/careers/job/1970393556956071",
+        "source": "microsoft_browser",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-12T16:11:09.237044+00:00",
+        "posted_age_known": true
+      },
+      {
+        "company": "Microsoft",
+        "title": "Digital Enterprise Solution Sales Specialist - AI Workforce- Polish speaking Ireland, Dublin, Dublin Posted a month ago",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://apply.careers.microsoft.com/careers/job/1970393556929283",
+        "source": "microsoft_browser",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-10T01:17:11.583036+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Microsoft",
         "title": "Apply now",
         "location": "Ireland",
         "posted_text": "Unknown",
@@ -12255,7 +12330,7 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1787238148.5656686,
+    "checked_at": 1787249259.7331226,
     "consecutive_failures": 0
   },
   "JPMorgan Chase": {
@@ -12379,24 +12454,9 @@
         "new_since_last_check": false,
         "first_seen_at": "2026-08-14T01:18:53.607537+00:00",
         "posted_age_known": false
-      },
-      {
-        "company": "JPMorgan Chase",
-        "title": "Applied AI / ML Lead Software Engineer",
-        "location": "Dublin, Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://jpmc.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1001/job/210776152/",
-        "source": "oracle_cx",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-09T18:43:04.318242+00:00",
-        "posted_age_known": false
       }
     ],
-    "checked_at": 1787238161.3508606,
+    "checked_at": 1787249258.5722263,
     "consecutive_failures": 0
   },
   "ESB": {
@@ -12638,8 +12698,8 @@
   },
   "Dawn Meats": {
     "jobs": [],
-    "checked_at": 1787245727.9782715,
-    "consecutive_failures": 4
+    "checked_at": 1787249240.5055835,
+    "consecutive_failures": 5
   },
   "Auxilion": {
     "jobs": [
@@ -12895,8 +12955,8 @@
   },
   "ASL Aviation Holdings": {
     "jobs": [],
-    "checked_at": 1787245729.1654754,
-    "consecutive_failures": 4
+    "checked_at": 1787249241.6991937,
+    "consecutive_failures": 5
   },
   "AMCS Group": {
     "jobs": [
@@ -13052,7 +13112,7 @@
         "source": "biomarin_direct",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-20T17:39:07.198391+00:00",
         "posted_age_known": false
       },
