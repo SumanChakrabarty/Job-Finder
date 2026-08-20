@@ -381,6 +381,26 @@ def parse_posted_text(posted_text: str):
     if not posted_text:
         return None
     t = posted_text.lower()
+    # Try a real, exact date first — a raw ISO date, or a bare "DD Mon
+    # YYYY" (confirmed real format from ESB's listings, e.g. "19 Aug
+    # 2026", with no preceding keyword like "posted") would otherwise
+    # silently fall through every check below and return None.
+    try:
+        parsed = datetime.fromisoformat(str(posted_text).replace("Z", "+00:00"))
+        if parsed.tzinfo is None:
+            parsed = parsed.replace(tzinfo=timezone.utc)
+        days = (datetime.now(timezone.utc) - parsed).days
+        return max(0, days)
+    except (ValueError, TypeError):
+        pass
+    dm = re.search(r"\b(\d{1,2})\s+([A-Za-z]{3,9})\s+(\d{4})\b", str(posted_text))
+    if dm:
+        try:
+            parsed = datetime.strptime(f"{dm.group(1)} {dm.group(2)[:3]} {dm.group(3)}", "%d %b %Y")
+            days = (datetime.now(timezone.utc).replace(tzinfo=None) - parsed).days
+            return max(0, days)
+        except ValueError:
+            pass
     if "today" in t:
         return 0
     if "yesterday" in t:
@@ -405,6 +425,7 @@ def extract_posted_from_text(text: str):
         r"(?:posted\s+)?(?:just now|just posted|today|yesterday)",
         r"(?:posted\s+)?\d+(?:\.\d+)?\s*(?:minutes?|mins?|hours?|hrs?|days?|weeks?|months?)\s+ago",
         r"(?:posted|date posted|published)\s*[:\-]?\s*(?:\d{4}-\d{2}-\d{2}|[A-Za-z]{3,9}\s+\d{1,2},\s+\d{4}|\d{1,2}\s+[A-Za-z]{3,9}\s+\d{4})",
+        r"\b\d{1,2}\s+[A-Za-z]{3,9}\s+\d{4}\b",
     ]
     for pat in patterns:
         m = re.search(pat, compact, re.I)
@@ -1961,11 +1982,42 @@ def _extract_location_from_card(card_text, default="Ireland"):
     visible location text is NOT a reason to discard the posting — this
     was the actual bug that made real Meta postings disappear (location
     hidden behind a collapsed '+N locations' control). Prefers a specific
-    city when visible, otherwise safely falls back to the default."""
+    city when visible, otherwise safely falls back to the default.
+
+    Real evidence (Avolon, AMCS, Auxilion, BioMarin) showed this returning
+    huge blobs of raw CSS/JavaScript/JSON-LD as "location" — the original
+    version returned a whole matching LINE unconditionally, which is fine
+    for genuinely multi-line input but breaks badly once a caller has
+    already collapsed everything to one giant line (common in newer
+    functions that whitespace-normalize card text first). Now caps how
+    much of a match is ever returned, and prefers a narrow "City, Ireland"
+    -style substring over the raw line whenever the line looks suspiciously
+    long to be a real location on its own."""
     lines = [x.strip() for x in (card_text or "").splitlines() if x.strip()]
+    # Whitelist-based match, not "any capitalized word before the comma" —
+    # that looser version still occasionally grabbed an adjacent word from
+    # surrounding junk text (confirmed via direct test). Irish city names
+    # are essentially all single-word, so no real need to risk it.
+    city_pattern = re.compile(
+        r"\b(Dublin|Cork|Galway|Limerick|Waterford|Kilkenny|Kildare|Athlone|"
+        r"Sligo|Wexford|Wicklow|Drogheda|Dundalk|Bray|Navan|Ennis|Tralee|"
+        r"Carlow|Naas|Athy|Portlaoise|Mullingar|Letterkenny)\s*,\s*"
+        r"(?:Co\.?\s*)?(?:Ireland|IE)\b", re.I)
+    ireland_word = re.compile(r"\bIreland\b", re.I)
     for line in lines:
-        if is_ireland_location(line):
+        if not is_ireland_location(line):
+            continue
+        if len(line) <= 60:
             return line[:180]
+        # The line technically contains an Ireland keyword but is far too
+        # long to genuinely just be a location — look for a narrow,
+        # bounded match inside it instead of returning the whole thing.
+        m = city_pattern.search(line)
+        if m:
+            return f"{m.group(1).title()}, Ireland"
+        m2 = ireland_word.search(line)
+        if m2:
+            return "Ireland"
     return default
 
 
@@ -4086,7 +4138,13 @@ def scrape_esb_ireland(session):
             continue
         for m in re.finditer(r'<a\b[^>]*href=["\']([^"\']*?/job/[^"\']+)["\'][^>]*>(.*?)</a>', page, re.I | re.S):
             href = urllib.parse.urljoin(base, m.group(1)).split("?")[0]
-            title = re.sub(r"\s+", " ", _html_to_text(m.group(2))).strip()
+            raw_anchor_text = re.sub(r"\s+", " ", _html_to_text(m.group(2))).strip()
+            # Real evidence: ESB's markup wraps a whole table row in the
+            # link, not just the title — but the genuine title appears
+            # twice in a row within that blob (a SuccessFactors quirk).
+            # Detect that repeat and use just one copy of it.
+            repeat_match = re.search(r'([A-Z][A-Za-z0-9,&()/\- ]{4,120}?)\s+\1(?=\s|$)', raw_anchor_text)
+            title = repeat_match.group(1).strip() if repeat_match else raw_anchor_text
             if not href or not title:
                 continue
             start, end = max(0, m.start() - 1000), min(len(page), m.end() + 1800)
@@ -4095,7 +4153,18 @@ def scrape_esb_ireland(session):
                 continue
             if re.search(r"\bBelfast\b|\bNorthern Ireland\b", card, re.I) and not re.search(r"\bIE\b|\bIreland\b", card, re.I):
                 continue
-            location = _extract_location_from_card(card, "Ireland")
+            # Real evidence: the generic card-text location extraction can
+            # pick up an unrelated Dublin mention from elsewhere in the
+            # same blob (a Cork/Wilton job was showing "Dublin" as its
+            # location). The URL's own slug reliably encodes the real
+            # location as its first segment instead.
+            slug = href.rsplit("/job/", 1)[-1].split("/")[0] if "/job/" in href else ""
+            first_token = slug.split("-")[0] if slug else ""
+            non_place_tokens = {"flexible", "remote", "various", "multiple", "national"}
+            if first_token and first_token.lower() not in non_place_tokens:
+                location = f"{first_token}, Ireland"
+            else:
+                location = "Ireland"
             key = href.rstrip("/").lower()
             posted_text, posted_days = extract_posted_from_text(card)
             sponsorship, snippet = classify_sponsorship(card[:5000])
@@ -4121,6 +4190,8 @@ def scrape_irish_rail_ireland(session):
         if resp.status_code != 200:
             print("      [irish-rail] page failed to load")
             return []
+        resp.encoding = "utf-8"  # real evidence: server doesn't declare charset correctly,
+        # causing requests to guess wrong and produce mojibake in titles
         page = resp.text
     except Exception as e:
         print(f"      [irish-rail] failed: {e}")
@@ -4299,10 +4370,15 @@ def scrape_dawn_meats_ireland(session):
         try:
             resp = session.get(url, headers=HEADERS, timeout=25, allow_redirects=True)
             if resp.status_code >= 400:
+                print(f"      [dawn-meats] {url}: HTTP {resp.status_code}")
                 continue
             page = resp.text
             final_url = resp.url
-        except Exception:
+            job_link_count = len(re.findall(r'/jobs?/[^"\']+', page, re.I))
+            print(f"      [dawn-meats] {url} -> {final_url}: {len(page)} chars, "
+                  f"{job_link_count} raw job-path mentions")
+        except Exception as e:
+            print(f"      [dawn-meats] {url}: failed ({e})")
             continue
         for m in re.finditer(r'<a\b[^>]*href=["\']([^"\']*?/jobs?/[^"\']+)["\'][^>]*>(.*?)</a>', page, re.I | re.S):
             href = urllib.parse.urljoin(final_url, m.group(1)).split("?")[0]
@@ -4428,9 +4504,13 @@ def scrape_asl_aviation_ireland(session):
     try:
         resp = session.get(base, headers=HEADERS, timeout=25)
         if resp.status_code != 200:
+            print(f"      [asl-aviation] HTTP {resp.status_code}")
             return []
         page = resp.text
-    except Exception:
+        print(f"      [asl-aviation] page fetched OK: {len(page)} chars, "
+              f"page title snippet: {_html_to_text(page[:2000])[:150]!r}")
+    except Exception as e:
+        print(f"      [asl-aviation] failed: {e}")
         return []
     vacancy_urls = set()
     for m in re.finditer(r'href=["\']([^"\']+)["\']', page, re.I):
