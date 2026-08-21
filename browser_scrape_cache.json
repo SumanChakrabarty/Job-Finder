@@ -348,7 +348,7 @@
         "source": "amazon_json",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-21T14:14:34.676183+00:00",
         "posted_age_known": false
       },
@@ -3885,7 +3885,7 @@
         "source": "tiktok_browser",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-21T14:14:34.676183+00:00",
         "posted_age_known": false
       },
@@ -3900,7 +3900,7 @@
         "source": "tiktok_browser",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-21T14:14:34.676183+00:00",
         "posted_age_known": false
       },
@@ -3915,7 +3915,7 @@
         "source": "tiktok_browser",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-21T14:14:34.676183+00:00",
         "posted_age_known": false
       },
@@ -3930,7 +3930,7 @@
         "source": "tiktok_browser",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-21T14:14:34.676183+00:00",
         "posted_age_known": false
       },
@@ -3945,7 +3945,7 @@
         "source": "tiktok_browser",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-21T14:14:34.676183+00:00",
         "posted_age_known": false
       },
@@ -3975,7 +3975,7 @@
         "source": "tiktok_browser",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-21T14:14:34.676183+00:00",
         "posted_age_known": false
       },
@@ -3990,7 +3990,7 @@
         "source": "tiktok_browser",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-21T14:14:34.676183+00:00",
         "posted_age_known": false
       },
@@ -4020,7 +4020,7 @@
         "source": "tiktok_browser",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-21T14:14:34.676183+00:00",
         "posted_age_known": false
       },
@@ -4035,7 +4035,7 @@
         "source": "tiktok_browser",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-21T14:14:34.676183+00:00",
         "posted_age_known": false
       }
@@ -8070,13 +8070,13 @@
   },
   "NVIDIA": {
     "jobs": [],
-    "checked_at": 1787321596.06345,
-    "consecutive_failures": 32
+    "checked_at": 1787324387.472753,
+    "consecutive_failures": 33
   },
   "Eaton": {
     "jobs": [],
-    "checked_at": 1787321600.5528405,
-    "consecutive_failures": 32
+    "checked_at": 1787324377.337378,
+    "consecutive_failures": 33
   },
   "Cognizant": {
     "jobs": [
@@ -8566,13 +8566,13 @@
   },
   "Aon": {
     "jobs": [],
-    "checked_at": 1787321603.3571954,
-    "consecutive_failures": 32
+    "checked_at": 1787324384.5921915,
+    "consecutive_failures": 33
   },
   "BNP Paribas Ireland": {
     "jobs": [],
-    "checked_at": 1787321607.2967966,
-    "consecutive_failures": 32
+    "checked_at": 1787324381.8293464,
+    "consecutive_failures": 33
   },
   "AIB (Allied Irish Banks)": {
     "jobs": [
@@ -8707,7 +8707,7 @@
         "source": "aib_browser",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-21T14:14:34.676183+00:00",
         "posted_age_known": true
       }
@@ -9056,13 +9056,13 @@
   },
   "Central Bank of Ireland": {
     "jobs": [],
-    "checked_at": 1787321619.6885056,
-    "consecutive_failures": 32
+    "checked_at": 1787324383.1181407,
+    "consecutive_failures": 33
   },
   "Deutsche Bank": {
     "jobs": [],
-    "checked_at": 1787321620.7857423,
-    "consecutive_failures": 32
+    "checked_at": 1787324385.0540147,
+    "consecutive_failures": 33
   },
   "Meta": {
     "jobs": [
@@ -9222,13 +9222,13 @@
   },
   "Netflix": {
     "jobs": [],
-    "checked_at": 1787321621.2687545,
-    "consecutive_failures": 32
+    "checked_at": 1787324385.013404,
+    "consecutive_failures": 33
   },
   "Red Hat": {
     "jobs": [],
-    "checked_at": 1787321627.824752,
-    "consecutive_failures": 30
+    "checked_at": 1787324393.221853,
+    "consecutive_failures": 31
   },
   "Johnson Controls": {
     "jobs": [
@@ -9540,6 +9540,81 @@
     "jobs": [
       {
         "company": "Citi",
+        "title": "Senior Audit Manager – Methodology – Training & Communication - Senior Vice President",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jobs.citi.com/job/dublin/senior-audit-manager-methodology-training-and-communication-senior-vice-president/287/99532173296",
+        "source": "citi_browser",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-21T15:00:36.531368+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Citi",
+        "title": "Director, Services Operations AI Governance & AI-First Ways of Working",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jobs.citi.com/job/dublin/director-services-operations-ai-governance-and-ai-first-ways-of-working/287/99532141184",
+        "source": "citi_browser",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-21T15:00:36.531368+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Citi",
+        "title": "Director, Services Operations Agentic Workflow & Implementation",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jobs.citi.com/job/dublin/director-services-operations-agentic-workflow-and-implementation/287/99532141152",
+        "source": "citi_browser",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-21T15:00:36.531368+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Citi",
+        "title": "Asset Servicing Intermediate Analyst",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jobs.citi.com/job/dublin/asset-servicing-intermediate-analyst/287/99532107584",
+        "source": "citi_browser",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-21T15:00:36.531368+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Citi",
+        "title": "Middle Office – Core Trade Desk Manager (UK & Europe), SVP",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jobs.citi.com/job/dublin/middle-office-core-trade-desk-manager-uk-and-europe-svp/287/93794962992",
+        "source": "citi_browser",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-09T18:43:04.318242+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Citi",
         "title": "Reengineering and Project Lead Analyst",
         "location": "Ireland",
         "posted_text": "Unknown",
@@ -9750,21 +9825,6 @@
       },
       {
         "company": "Citi",
-        "title": "Transaction Manager",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://jobs.citi.com/job/dublin/transaction-manager/287/98904650336",
-        "source": "citi_browser",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-09T18:43:04.318242+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Citi",
         "title": "Stress Testing Analyst - AVP",
         "location": "Ireland",
         "posted_text": "Unknown",
@@ -9861,21 +9921,6 @@
         "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://jobs.citi.com/job/dublin/business-execution-manager-services-vice-president/287/98562516480",
-        "source": "citi_browser",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-09T18:43:04.318242+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Citi",
-        "title": "Middle Office – Core Trade Desk Manager (UK & Europe), SVP",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://jobs.citi.com/job/dublin/middle-office-core-trade-desk-manager-uk-and-europe-svp/287/93794962992",
         "source": "citi_browser",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
@@ -10065,21 +10110,6 @@
       },
       {
         "company": "Citi",
-        "title": "Dublin Secure Room Clerk",
-        "location": "Dublin Secure Room Clerk",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://jobs.citi.com/job/dublin/dublin-secure-room-clerk/287/96917252064",
-        "source": "citi_browser",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-09T20:05:39.590675+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Citi",
         "title": "Business Command Center Major Incident/Cyber Lead (VP)",
         "location": "Ireland",
         "posted_text": "Unknown",
@@ -10184,13 +10214,13 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1787311859.6140037,
+    "checked_at": 1787324429.3514,
     "consecutive_failures": 0
   },
   "Three Ireland": {
     "jobs": [],
-    "checked_at": 1787321632.7754827,
-    "consecutive_failures": 32
+    "checked_at": 1787324391.6562786,
+    "consecutive_failures": 33
   },
   "Aiven": {
     "jobs": [
@@ -10199,180 +10229,225 @@
         "title": "Aiven role",
         "location": "Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://aiven.io/careers/job/4715425101",
         "source": "aiven_direct",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-16T20:37:31.736251+00:00",
+        "posted_age_known": false
       },
       {
         "company": "Aiven",
         "title": "Aiven role",
         "location": "Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://aiven.io/careers/job/4838352101",
         "source": "aiven_direct",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-16T20:37:31.736251+00:00",
+        "posted_age_known": false
       },
       {
         "company": "Aiven",
         "title": "Aiven role",
         "location": "Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://aiven.io/careers/job/4951386101",
         "source": "aiven_direct",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-19T09:56:09.114432+00:00",
+        "posted_age_known": false
       },
       {
         "company": "Aiven",
         "title": "Aiven role",
         "location": "Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://aiven.io/careers/job/4838490101",
         "source": "aiven_direct",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-16T20:37:31.736251+00:00",
+        "posted_age_known": false
       },
       {
         "company": "Aiven",
         "title": "Aiven role",
         "location": "Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://aiven.io/careers/job/4770123101",
         "source": "aiven_direct",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-16T20:37:31.736251+00:00",
+        "posted_age_known": false
       },
       {
         "company": "Aiven",
         "title": "Aiven role",
         "location": "Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://aiven.io/careers/job/4944339101",
         "source": "aiven_direct",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-16T20:37:31.736251+00:00",
+        "posted_age_known": false
       },
       {
         "company": "Aiven",
         "title": "Aiven role",
         "location": "Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://aiven.io/careers/job/4878697101",
         "source": "aiven_direct",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-16T20:37:31.736251+00:00",
+        "posted_age_known": false
       },
       {
         "company": "Aiven",
         "title": "Aiven role",
         "location": "Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://aiven.io/careers/job/4870465101",
         "source": "aiven_direct",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-16T20:37:31.736251+00:00",
+        "posted_age_known": false
       },
       {
         "company": "Aiven",
         "title": "Aiven role",
         "location": "Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://aiven.io/careers/job/4938453101",
         "source": "aiven_direct",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-16T20:37:31.736251+00:00",
+        "posted_age_known": false
       },
       {
         "company": "Aiven",
         "title": "Aiven role",
         "location": "Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://aiven.io/careers/job/4912951101",
         "source": "aiven_direct",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-16T20:37:31.736251+00:00",
+        "posted_age_known": false
       },
       {
         "company": "Aiven",
         "title": "Aiven role",
         "location": "Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://aiven.io/careers/job/4792883101",
         "source": "aiven_direct",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-16T20:37:31.736251+00:00",
+        "posted_age_known": false
       },
       {
         "company": "Aiven",
         "title": "Aiven role",
         "location": "Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://aiven.io/careers/job/4900414101",
         "source": "aiven_direct",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-19T14:01:51.801445+00:00",
+        "posted_age_known": false
       },
       {
         "company": "Aiven",
         "title": "Aiven role",
         "location": "Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://aiven.io/careers/job/4955290101",
         "source": "aiven_direct",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-19T14:01:51.801445+00:00",
+        "posted_age_known": false
       },
       {
         "company": "Aiven",
         "title": "Aiven role",
         "location": "Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://aiven.io/careers/job/4833444101",
         "source": "aiven_direct",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-19T14:01:51.801445+00:00",
+        "posted_age_known": false
       },
       {
         "company": "Aiven",
         "title": "Aiven role",
         "location": "Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://aiven.io/careers/job/4911946101",
         "source": "aiven_direct",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-19T14:01:51.801445+00:00",
+        "posted_age_known": false
       }
     ],
     "checked_at": 1787321631.5369694,
@@ -11049,8 +11124,8 @@
   },
   "Guidewire": {
     "jobs": [],
-    "checked_at": 1787321644.8842251,
-    "consecutive_failures": 32
+    "checked_at": 1787324397.0457284,
+    "consecutive_failures": 33
   },
   "EXL": {
     "jobs": [
@@ -11176,7 +11251,7 @@
         "source": "allianz_browser",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-21T14:14:34.676183+00:00",
         "posted_age_known": false
       }
@@ -11197,7 +11272,7 @@
         "source": "jnj_workday",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-21T14:14:34.676183+00:00",
         "posted_age_known": false
       },
@@ -11402,18 +11477,18 @@
   },
   "UPS Ireland": {
     "jobs": [],
-    "checked_at": 1787321633.2799032,
-    "consecutive_failures": 32
+    "checked_at": 1787324394.176317,
+    "consecutive_failures": 33
   },
   "Siemens": {
     "jobs": [],
-    "checked_at": 1787321654.332284,
-    "consecutive_failures": 31
+    "checked_at": 1787324404.0081954,
+    "consecutive_failures": 32
   },
   "HCLTech": {
     "jobs": [],
-    "checked_at": 1787321659.006161,
-    "consecutive_failures": 31
+    "checked_at": 1787324412.1215258,
+    "consecutive_failures": 32
   },
   "PepsiCo": {
     "jobs": [
@@ -12010,7 +12085,7 @@
         "source": "microsoft_browser",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-21T14:14:34.676183+00:00",
         "posted_age_known": false
       },
@@ -12136,7 +12211,7 @@
         "source": "oracle_cx",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-21T14:14:34.676183+00:00",
         "posted_age_known": false
       },
@@ -12458,8 +12533,8 @@
   },
   "Dawn Meats": {
     "jobs": [],
-    "checked_at": 1787321659.6252964,
-    "consecutive_failures": 28
+    "checked_at": 1787324395.090834,
+    "consecutive_failures": 29
   },
   "Auxilion": {
     "jobs": [
@@ -12715,8 +12790,8 @@
   },
   "ASL Aviation Holdings": {
     "jobs": [],
-    "checked_at": 1787321672.3902824,
-    "consecutive_failures": 28
+    "checked_at": 1787324409.3732967,
+    "consecutive_failures": 29
   },
   "AMCS Group": {
     "jobs": [
@@ -12812,7 +12887,7 @@
         "source": "biomarin_direct",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-21T13:34:04.470339+00:00",
         "posted_age_known": false
       },
@@ -12887,7 +12962,7 @@
         "source": "biomarin_direct",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-21T13:34:04.470339+00:00",
         "posted_age_known": true
       },
@@ -12902,7 +12977,7 @@
         "source": "biomarin_direct",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-21T13:34:04.470339+00:00",
         "posted_age_known": false
       },
@@ -12917,7 +12992,7 @@
         "source": "biomarin_direct",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-21T13:34:04.470339+00:00",
         "posted_age_known": false
       },
