@@ -8070,13 +8070,13 @@
   },
   "NVIDIA": {
     "jobs": [],
-    "checked_at": 1787315608.5106833,
-    "consecutive_failures": 30
+    "checked_at": 1787319197.601629,
+    "consecutive_failures": 31
   },
   "Eaton": {
     "jobs": [],
-    "checked_at": 1787315599.1092367,
-    "consecutive_failures": 30
+    "checked_at": 1787319185.1993299,
+    "consecutive_failures": 31
   },
   "Cognizant": {
     "jobs": [
@@ -8641,13 +8641,13 @@
   },
   "Aon": {
     "jobs": [],
-    "checked_at": 1787315606.009563,
-    "consecutive_failures": 30
+    "checked_at": 1787319194.1323838,
+    "consecutive_failures": 31
   },
   "BNP Paribas Ireland": {
     "jobs": [],
-    "checked_at": 1787315602.2395732,
-    "consecutive_failures": 30
+    "checked_at": 1787319189.9662216,
+    "consecutive_failures": 31
   },
   "AIB (Allied Irish Banks)": {
     "jobs": [
@@ -9116,13 +9116,13 @@
   },
   "Central Bank of Ireland": {
     "jobs": [],
-    "checked_at": 1787315602.364971,
-    "consecutive_failures": 30
+    "checked_at": 1787319189.6358423,
+    "consecutive_failures": 31
   },
   "Deutsche Bank": {
     "jobs": [],
-    "checked_at": 1787315605.2129073,
-    "consecutive_failures": 30
+    "checked_at": 1787319194.6438274,
+    "consecutive_failures": 31
   },
   "Meta": {
     "jobs": [
@@ -9282,13 +9282,13 @@
   },
   "Netflix": {
     "jobs": [],
-    "checked_at": 1787315602.9056313,
-    "consecutive_failures": 30
+    "checked_at": 1787319190.457813,
+    "consecutive_failures": 31
   },
   "Red Hat": {
     "jobs": [],
-    "checked_at": 1787315634.3322437,
-    "consecutive_failures": 28
+    "checked_at": 1787319200.8935642,
+    "consecutive_failures": 29
   },
   "Johnson Controls": {
     "jobs": [
@@ -10249,8 +10249,8 @@
   },
   "Three Ireland": {
     "jobs": [],
-    "checked_at": 1787315611.205471,
-    "consecutive_failures": 30
+    "checked_at": 1787319201.100623,
+    "consecutive_failures": 31
   },
   "Aiven": {
     "jobs": [
@@ -11154,8 +11154,8 @@
   },
   "Guidewire": {
     "jobs": [],
-    "checked_at": 1787315614.2375188,
-    "consecutive_failures": 30
+    "checked_at": 1787319204.4200127,
+    "consecutive_failures": 31
   },
   "EXL": {
     "jobs": [
@@ -11492,18 +11492,18 @@
   },
   "UPS Ireland": {
     "jobs": [],
-    "checked_at": 1787315608.9111753,
-    "consecutive_failures": 30
+    "checked_at": 1787319199.8793752,
+    "consecutive_failures": 31
   },
   "Siemens": {
     "jobs": [],
-    "checked_at": 1787315618.5593781,
-    "consecutive_failures": 29
+    "checked_at": 1787319211.5935595,
+    "consecutive_failures": 30
   },
   "HCLTech": {
     "jobs": [],
-    "checked_at": 1787315627.884137,
-    "consecutive_failures": 29
+    "checked_at": 1787319218.39901,
+    "consecutive_failures": 30
   },
   "PepsiCo": {
     "jobs": [
@@ -12255,25 +12255,10 @@
         "company": "ESB",
         "title": "Electrical Engineer",
         "location": "Dublin, Ireland",
-        "posted_text": "4 Aug 2026",
-        "posted_days_ago": 17.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.esb.ie/job/Dublin-Electrical-Engineer-D/1353643557/",
-        "source": "esb_successfactors",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-20T14:14:43.434428+00:00",
-        "posted_age_known": true
-      },
-      {
-        "company": "ESB",
-        "title": "Civils Construction Lead, Customer Projects and Delivery Dublin",
-        "location": "Dublin, Ireland",
         "posted_text": "19 Aug 2026",
         "posted_days_ago": 2.0,
         "employment_type": "Unspecified",
-        "url": "https://careers.esb.ie/job/Dublin-Civils-Construction-Lead%2C-Customer-Projects-and-Delivery-Dublin-D/1369865357/",
+        "url": "https://careers.esb.ie/job/Dublin-Electrical-Engineer-D/1353643557/",
         "source": "esb_successfactors",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
@@ -12300,10 +12285,25 @@
         "company": "ESB",
         "title": "Solution Architecture Manager",
         "location": "Dublin, Ireland",
-        "posted_text": "10 Aug 2026",
-        "posted_days_ago": 11.0,
+        "posted_text": "14 Aug 2026",
+        "posted_days_ago": 7.0,
         "employment_type": "Unspecified",
         "url": "https://careers.esb.ie/job/Dublin-Solution-Architecture-Manager-D/1369875057/",
+        "source": "esb_successfactors",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-20T14:14:43.434428+00:00",
+        "posted_age_known": true
+      },
+      {
+        "company": "ESB",
+        "title": "Civils Construction Lead, Customer Projects and Delivery Dublin",
+        "location": "Dublin, Ireland",
+        "posted_text": "19 Aug 2026",
+        "posted_days_ago": 2.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.esb.ie/job/Dublin-Civils-Construction-Lead%2C-Customer-Projects-and-Delivery-Dublin-D/1369865357/",
         "source": "esb_successfactors",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
@@ -12345,8 +12345,8 @@
         "company": "ESB",
         "title": "Communication, Engagement and People Experience Specialist",
         "location": "Dublin, Ireland",
-        "posted_text": "19 Aug 2026",
-        "posted_days_ago": 2.0,
+        "posted_text": "10 Aug 2026",
+        "posted_days_ago": 11.0,
         "employment_type": "Unspecified",
         "url": "https://careers.esb.ie/job/Dublin-Communication%2C-Engagement-and-People-Experience-Specialist-D/1369539057/",
         "source": "esb_successfactors",
@@ -12390,8 +12390,8 @@
         "company": "ESB",
         "title": "Planning & Reporting Specialist Lead",
         "location": "Dublin, Ireland",
-        "posted_text": "19 Aug 2026",
-        "posted_days_ago": 2.0,
+        "posted_text": "18 Aug 2026",
+        "posted_days_ago": 3.0,
         "employment_type": "Unspecified",
         "url": "https://careers.esb.ie/job/Dublin-Planning-&amp;-Reporting-Specialist-Lead-D/1369037657/",
         "source": "esb_successfactors",
@@ -12405,8 +12405,8 @@
         "company": "ESB",
         "title": "Distributed Generation Site Manager (Dublin), Renewable Operations",
         "location": "Dublin, Ireland",
-        "posted_text": "14 Aug 2026",
-        "posted_days_ago": 7.0,
+        "posted_text": "4 Aug 2026",
+        "posted_days_ago": 17.0,
         "employment_type": "Unspecified",
         "url": "https://careers.esb.ie/job/Dublin-Region-Distributed-Generation-Site-Manager-%28Dublin%29%2C-Renewable-Operations-D/1368912357/",
         "source": "esb_successfactors",
@@ -12420,8 +12420,8 @@
         "company": "ESB",
         "title": "Qualified Electricians",
         "location": "Dublin, Ireland",
-        "posted_text": "18 Aug 2026",
-        "posted_days_ago": 3.0,
+        "posted_text": "19 Aug 2026",
+        "posted_days_ago": 2.0,
         "employment_type": "Unspecified",
         "url": "https://careers.esb.ie/job/Dublin-Qualified-Electricians-D/1368571157/",
         "source": "esb_successfactors",
@@ -12432,14 +12432,14 @@
         "posted_age_known": true
       }
     ],
-    "checked_at": 1787306806.8540266,
+    "checked_at": 1787319202.448692,
     "consecutive_failures": 0
   },
   "Avolon": {
     "jobs": [
       {
         "company": "Avolon",
-        "title": "n class=\"avolon-52 wow slideInUp\" data-wow-delay=\"0ms\" id=\"jobs\" style=\"margin-top: 0px; margin-bottom: 0px;\"> TITLE LOCATION VP Technical - Asset Management",
+        "title": "LOCATION VP Technical - Asset Management",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
         "posted_days_ago": 9999.0,
@@ -12453,13 +12453,13 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1787306807.397986,
+    "checked_at": 1787319202.1921694,
     "consecutive_failures": 0
   },
   "Dawn Meats": {
     "jobs": [],
-    "checked_at": 1787315612.8685257,
-    "consecutive_failures": 26
+    "checked_at": 1787319205.167565,
+    "consecutive_failures": 27
   },
   "Auxilion": {
     "jobs": [
@@ -12479,7 +12479,7 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1787306809.5524335,
+    "checked_at": 1787319205.496469,
     "consecutive_failures": 0
   },
   "Bloomberg": {
@@ -12710,13 +12710,13 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1787306809.921489,
+    "checked_at": 1787319205.8756495,
     "consecutive_failures": 0
   },
   "ASL Aviation Holdings": {
     "jobs": [],
-    "checked_at": 1787315613.981928,
-    "consecutive_failures": 26
+    "checked_at": 1787319220.109574,
+    "consecutive_failures": 27
   },
   "AMCS Group": {
     "jobs": [
@@ -12728,6 +12728,21 @@
         "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://www.amcsgroup.com/careers/account-executive-enterprise-sales-dach-199422/",
+        "source": "amcs_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-20T14:14:43.434428+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "AMCS Group",
+        "title": "Account Executive",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://www.amcsgroup.com/careers/account-executive-201744/",
         "source": "amcs_direct",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
@@ -12764,56 +12779,41 @@
         "new_since_last_check": false,
         "first_seen_at": "2026-08-20T14:14:43.434428+00:00",
         "posted_age_known": false
-      },
-      {
-        "company": "AMCS Group",
-        "title": "Account Executive",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://www.amcsgroup.com/careers/account-executive-201744/",
-        "source": "amcs_direct",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-20T14:14:43.434428+00:00",
-        "posted_age_known": false
       }
     ],
-    "checked_at": 1787306815.2462058,
+    "checked_at": 1787319213.551364,
     "consecutive_failures": 0
   },
   "BioMarin": {
     "jobs": [
       {
         "company": "BioMarin",
-        "title": "QC Team Lead",
+        "title": "Director, Value Chain Product Leader, Global Supply Chain",
         "location": "Cork, Ireland",
         "posted_text": "Unknown",
         "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
-        "url": "https://www.biomarin.com/job/qc-team-lead/",
+        "url": "https://www.biomarin.com/job/director-value-chain-product-leader-global-supply-chain-2/",
         "source": "biomarin_direct",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
         "new_since_last_check": false,
-        "first_seen_at": "2026-08-21T10:07:28.443824+00:00",
+        "first_seen_at": "2026-08-20T17:39:07.198391+00:00",
         "posted_age_known": false
       },
       {
         "company": "BioMarin",
-        "title": "Associate Director, Health Economics & Outcomes Research (HEOR)",
+        "title": "Director, Business Unit Head, Skeletal Conditions – Brazil",
         "location": "Ireland",
         "posted_text": "Unknown",
         "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
-        "url": "https://www.biomarin.com/job/associate-director-health-economics-outcomes-research-heor/",
+        "url": "https://www.biomarin.com/job/director-business-unit-head-skeletal-conditions-brazil/",
         "source": "biomarin_direct",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-20T14:14:43.434428+00:00",
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-21T13:34:04.470339+00:00",
         "posted_age_known": false
       },
       {
@@ -12824,21 +12824,6 @@
         "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://www.biomarin.com/job/otc-credit-and-collection-analyst/",
-        "source": "biomarin_direct",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-20T14:14:43.434428+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "BioMarin",
-        "title": "Director, Payroll",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://www.biomarin.com/job/director-payroll/",
         "source": "biomarin_direct",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
@@ -12863,12 +12848,27 @@
       },
       {
         "company": "BioMarin",
-        "title": "Senior Vendor Laboratory Manager Clinical Laboratory & Biospecimen Management",
+        "title": "QC Team Lead",
+        "location": "Cork, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://www.biomarin.com/job/qc-team-lead/",
+        "source": "biomarin_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-21T10:07:28.443824+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "BioMarin",
+        "title": "Director, Payroll",
         "location": "Ireland",
         "posted_text": "Unknown",
         "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
-        "url": "https://www.biomarin.com/job/senior-vendor-laboratory-manager-clinical-laboratory-biospecimen-management/",
+        "url": "https://www.biomarin.com/job/director-payroll/",
         "source": "biomarin_direct",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
@@ -12878,27 +12878,57 @@
       },
       {
         "company": "BioMarin",
-        "title": "Director, Value Chain Product Leader, Global Supply Chain",
-        "location": "Cork, Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
+        "title": "Senior Director, Health Economics & Outcomes Research (HEOR)",
+        "location": "Ireland",
+        "posted_text": "31 August 2026",
+        "posted_days_ago": 0.0,
         "employment_type": "Unspecified",
-        "url": "https://www.biomarin.com/job/director-value-chain-product-leader-global-supply-chain-2/",
+        "url": "https://www.biomarin.com/job/senior-director-health-economics-outcomes-research-heor-2/",
         "source": "biomarin_direct",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-20T17:39:07.198391+00:00",
-        "posted_age_known": false
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-21T13:34:04.470339+00:00",
+        "posted_age_known": true
       },
       {
         "company": "BioMarin",
-        "title": "Principal Application Lead, Digital Platform – Veeva RIM",
+        "title": "Associate Director, Health Economics & Outcomes Research (HEOR)",
         "location": "Ireland",
         "posted_text": "Unknown",
         "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
-        "url": "https://www.biomarin.com/job/principal-application-lead-digital-platform-veeva-rim/",
+        "url": "https://www.biomarin.com/job/associate-director-health-economics-outcomes-research-heor-2/",
+        "source": "biomarin_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-21T13:34:04.470339+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "BioMarin",
+        "title": "Senior Manager, Commercial FP&A — Southern Cone & NOLA",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://www.biomarin.com/job/senior-manager-commercial-fpa-southern-cone-nola/",
+        "source": "biomarin_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-21T13:34:04.470339+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "BioMarin",
+        "title": "Associate Director, Health Economics & Outcomes Research (HEOR)",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://www.biomarin.com/job/associate-director-health-economics-outcomes-research-heor/",
         "source": "biomarin_direct",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
@@ -12907,7 +12937,7 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1787306816.7949035,
+    "checked_at": 1787319210.335841,
     "consecutive_failures": 0
   }
 }
