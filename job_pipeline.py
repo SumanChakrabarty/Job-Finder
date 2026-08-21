@@ -4239,11 +4239,22 @@ def scrape_avolon_ireland(session):
         if "mytribe.my.salesforce-sites.com" not in href or "vacancyNo=" not in href:
             continue
         start, end = max(0, m.start() - 1200), min(len(page), m.end() + 800)
-        card = re.sub(r"\s+", " ", _html_to_text(page[start:end])).strip()
+        raw_slice = page[start:end]
+        # Real evidence: a fixed-offset slice can cut through the middle of
+        # an HTML tag, leaving a broken fragment (no opening '<') that then
+        # leaks through as if it were visible text. Trim to the first
+        # genuine tag boundary instead of using the raw offset directly.
+        first_tag = raw_slice.find("<")
+        if first_tag > 0:
+            raw_slice = raw_slice[first_tag:]
+        card = re.sub(r"\s+", " ", _html_to_text(raw_slice)).strip()
         if not re.search(r"\bDublin\b|\bIreland\b", card, re.I):
             continue
-        title_m = re.search(r"(.+?)\s+Dublin\s*,\s*Ireland\s+APPLY\s+NOW", card, re.I)
+        title_m = re.search(r"(.+?)\s+Dublin\s*,\s*Ireland", card, re.I)
         title = title_m.group(1).strip() if title_m else ""
+        # Strip leaked table-header words (e.g. "TITLE LOCATION" preceding
+        # the real title in some card layouts) rather than including them.
+        title = re.sub(r"^(?:TITLE|LOCATION|JOB TITLE)\s+", "", title, flags=re.I).strip()
         if not title:
             lines = [x.strip() for x in card.splitlines() if 4 <= len(x.strip()) <= 180]
             title = lines[0] if lines else ""
@@ -4362,7 +4373,6 @@ def scrape_amcs_ireland(session):
 def scrape_dawn_meats_ireland(session):
     """Dawn Meats — real iCIMS-hosted board."""
     sources = [
-        "https://careers-dawnmeats.icims.com/jobs/search?pr=0&schemaId=&o=",
         "https://c-12895-20230316-www-dawnmeats-com.i.icims.com/careers/current-opportunities/",
     ]
     results = {}
@@ -4383,7 +4393,7 @@ def scrape_dawn_meats_ireland(session):
         for m in re.finditer(r'<a\b[^>]*href=["\']([^"\']*?/jobs?/[^"\']+)["\'][^>]*>(.*?)</a>', page, re.I | re.S):
             href = urllib.parse.urljoin(final_url, m.group(1)).split("?")[0]
             title = re.sub(r"\s+", " ", _html_to_text(m.group(2))).strip()
-            if not title or len(title) < 4 or "icims.com" not in href:
+            if not title or len(title) < 4:
                 continue
             start, end = max(0, m.start() - 800), min(len(page), m.end() + 800)
             card = re.sub(r"\s+", " ", _html_to_text(page[start:end])).strip()
@@ -4496,55 +4506,70 @@ def scrape_biomarin_ireland(session):
 
 
 def scrape_asl_aviation_ireland(session):
-    """ASL Aviation Holdings — Cezanne OnDemand ATS. Only accepts a vacancy
-    when its OWN detail page explicitly names an Irish city — corporate
+    """ASL Aviation Holdings — Cezanne OnDemand ATS. Real evidence showed
+    a plain HTTP fetch only returns JavaScript tracking code, not real
+    vacancy content — this site genuinely requires browser rendering,
+    unlike the other lightweight companies. Only accepts a vacancy when
+    its own detail page explicitly names an Irish city — corporate
     boilerplate mentioning Dublin/Ireland elsewhere is not sufficient."""
+    if not HAS_PLAYWRIGHT:
+        print("      [asl-aviation] playwright not installed — skipping")
+        return []
     base = "https://cezanneondemand.intervieweb.it/aslaviationgroup/en/career"
     results = {}
     try:
-        resp = session.get(base, headers=HEADERS, timeout=25)
-        if resp.status_code != 200:
-            print(f"      [asl-aviation] HTTP {resp.status_code}")
-            return []
-        page = resp.text
-        print(f"      [asl-aviation] page fetched OK: {len(page)} chars, "
-              f"page title snippet: {_html_to_text(page[:2000])[:150]!r}")
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch(headless=True, args=["--disable-http2"])
+            page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
+            page.goto(base, wait_until="domcontentloaded", timeout=45000)
+            page.wait_for_timeout(2500)
+            _browser_accept_consent(page)
+            vacancy_urls = set()
+            for _ in range(15):
+                anchors = page.locator("a[href]")
+                for i in range(anchors.count()):
+                    try:
+                        raw = anchors.nth(i).get_attribute("href") or ""
+                    except Exception:
+                        continue
+                    href = urllib.parse.urljoin(page.url, raw).split("#")[0].split("?")[0]
+                    if re.search(r"/career/\w*job\w*/", href, re.I) or re.search(r"/career/[^/]+/\d+", href):
+                        vacancy_urls.add(href)
+                page.mouse.wheel(0, 3000)
+                page.wait_for_timeout(400)
+            print(f"      [asl-aviation] {len(vacancy_urls)} candidate vacancy links found")
+            for href in list(vacancy_urls)[:60]:
+                try:
+                    resp2 = session.get(href, headers=HEADERS, timeout=15)
+                    if resp2.status_code >= 400:
+                        continue
+                    text = re.sub(r"\s+", " ", _html_to_text(resp2.text)).strip()
+                except Exception:
+                    continue
+                loc_match = re.search(r"\b(Dublin|Cork|Shannon|Galway)\b", text, re.I)
+                if not loc_match:
+                    continue
+                title_m = re.search(r"<h1\b[^>]*>(.*?)</h1>", resp2.text, re.I | re.S)
+                title = re.sub(r"\s+", " ", _html_to_text(title_m.group(1))).strip() if title_m else ""
+                if not title:
+                    continue
+                key = href.rstrip("/").lower()
+                posted_text, posted_days = extract_posted_from_text(text)
+                sponsorship, snippet = classify_sponsorship(text[:5000])
+                results[key] = {
+                    "company": "ASL Aviation Holdings", "title": title[:300],
+                    "location": f"{loc_match.group(1)}, Ireland",
+                    "posted_text": posted_text, "posted_days_ago": posted_days,
+                    "employment_type": normalize_employment_type(None, title),
+                    "url": href, "source": "asl_aviation_cezanne_browser",
+                    "visa_sponsorship": sponsorship, "visa_snippet": snippet,
+                }
+            browser.close()
     except Exception as e:
-        print(f"      [asl-aviation] failed: {e}")
-        return []
-    vacancy_urls = set()
-    for m in re.finditer(r'href=["\']([^"\']+)["\']', page, re.I):
-        href = urllib.parse.urljoin(resp.url, m.group(1)).split("#")[0].split("?")[0]
-        if re.search(r"/career/\w*job\w*/", href, re.I) or re.search(r"/career/[^/]+/\d+", href):
-            vacancy_urls.add(href)
-    for href in list(vacancy_urls)[:60]:
-        try:
-            resp2 = session.get(href, headers=HEADERS, timeout=15)
-            if resp2.status_code >= 400:
-                continue
-            text = re.sub(r"\s+", " ", _html_to_text(resp2.text)).strip()
-        except Exception:
-            continue
-        loc_match = re.search(r"\b(Dublin|Cork|Shannon|Galway)\b", text, re.I)
-        if not loc_match:
-            continue
-        title_m = re.search(r"<h1\b[^>]*>(.*?)</h1>", resp2.text, re.I | re.S)
-        title = re.sub(r"\s+", " ", _html_to_text(title_m.group(1))).strip() if title_m else ""
-        if not title:
-            continue
-        key = href.rstrip("/").lower()
-        posted_text, posted_days = extract_posted_from_text(text)
-        sponsorship, snippet = classify_sponsorship(text[:5000])
-        results[key] = {
-            "company": "ASL Aviation Holdings", "title": title[:300],
-            "location": f"{loc_match.group(1)}, Ireland",
-            "posted_text": posted_text, "posted_days_ago": posted_days,
-            "employment_type": normalize_employment_type(None, title),
-            "url": href, "source": "asl_aviation_cezanne",
-            "visa_sponsorship": sponsorship, "visa_snippet": snippet,
-        }
+        print(f"      [asl-aviation] browser scrape failed: {e}")
     print(f"      [asl-aviation] {len(results)} unique Ireland jobs accumulated")
     return list(results.values())
+
 
 
 def scrape_oracle_candidate_experience(company_name, host, site_number, session, country_code="IE", max_pages=12):
@@ -5413,7 +5438,7 @@ def main():
         ("dawn meats", "Dawn Meats", scrape_dawn_meats_ireland, 60),
         ("auxilion", "Auxilion", scrape_auxilion_ireland, 60),
         ("biomarin", "BioMarin", scrape_biomarin_ireland, 90),
-        ("asl aviation holdings", "ASL Aviation Holdings", scrape_asl_aviation_ireland, 90),
+        ("asl aviation holdings", "ASL Aviation Holdings", scrape_asl_aviation_ireland, 150),
     ]
     for key, display_name, scraper_fn, base_timeout in lightweight_specs:
         entry = next((c for c in manual_check if c["company"].strip().lower() == key), None)
