@@ -5105,6 +5105,7 @@ def probe_ats_for_manual_companies(manual_companies, session, cache_path, fetch_
         print(f"  Fetching {len(confirmed_platform_entries)} confirmed ATS boards in parallel "
               f"(plain HTTP requests, not browsers — using higher concurrency)...")
         pool = ThreadPoolExecutor(max_workers=min(PROBE_WORKERS, len(confirmed_platform_entries)))
+        failed_first_pass = []
         try:
             future_map = {
                 pool.submit(_fetch_confirmed, item): item
@@ -5113,21 +5114,47 @@ def probe_ats_for_manual_companies(manual_companies, session, cache_path, fetch_
             for fut, original in future_map.items():
                 try:
                     entry, platform, slug, company_jobs = fut.result(timeout=30)
-                except FuturesTimeoutError:
-                    entry, platform, slug = original
-                    company_jobs = []
-                    print(f"      [ATS] {entry['company']}: timed out after 30s")
-                except Exception as exc:
-                    # Preserve the existing behavior for a failed board: it remains manual.
-                    entry, platform, slug = original
-                    company_jobs = []
-                    print(f"      [ATS] {entry['company']}: fetch failed ({exc})")
+                except (FuturesTimeoutError, Exception):
+                    # Real evidence: a company that reliably works every
+                    # other run (Version 1) lost all its jobs for one
+                    # entire run because of a single transient timeout,
+                    # with nothing to fall back on. Retry once before
+                    # accepting the failure, rather than immediately
+                    # writing off a company that's normally fine.
+                    failed_first_pass.append(original)
+                    continue
                 name, url = entry["company"], entry["url"]
                 if company_jobs:
                     discovered_jobs.extend(company_jobs)
                 else:
                     still_manual.append({"company": name, "url": url,
                                           "platform": f"{platform} (no Ireland postings found right now)"})
+
+            if failed_first_pass:
+                print(f"      [ATS] retrying {len(failed_first_pass)} companies that failed "
+                      f"on the first attempt...")
+                retry_map = {
+                    pool.submit(_fetch_confirmed, item): item
+                    for item in failed_first_pass
+                }
+                for fut, original in retry_map.items():
+                    try:
+                        entry, platform, slug, company_jobs = fut.result(timeout=30)
+                    except FuturesTimeoutError:
+                        entry, platform, slug = original
+                        company_jobs = []
+                        print(f"      [ATS] {entry['company']}: timed out again on retry")
+                    except Exception as exc:
+                        entry, platform, slug = original
+                        company_jobs = []
+                        print(f"      [ATS] {entry['company']}: failed again on retry ({exc})")
+                    name, url = entry["company"], entry["url"]
+                    if company_jobs:
+                        discovered_jobs.extend(company_jobs)
+                        print(f"      [ATS] {name}: recovered on retry ({len(company_jobs)} jobs)")
+                    else:
+                        still_manual.append({"company": name, "url": url,
+                                              "platform": f"{platform} (no Ireland postings found right now)"})
         finally:
             pool.shutdown(wait=False)
 
