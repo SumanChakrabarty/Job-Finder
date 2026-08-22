@@ -5433,9 +5433,50 @@ PRIORITY_SHEET2_COMPANIES = {
     "haleon",
     "hewlett packard enterprise (hpe)",
     "hollister incorporated",
-    # Note: this is the 119-company combined priority set (125 requested,
-    # minus hcltech, plus these 4 exact-URL duplicates skipped above);
-    # the next Sheet-2 entries will be added in a later batch.
+    # Sixth batch — 25 companies requested from Sheet 2 (rows 132-156),
+    # 22 actually added below. Three were skipped:
+    #   - "netflix" — identical CSV row/URL to the "netflix" key already
+    #     in dedicated_company_specs (scrape_netflix_ireland). Adding it
+    #     here too would double-scrape the same page under two labels.
+    #   - "nvidia" — NOT in Job_Automation.csv at all right now. Per the
+    #     project history, NVIDIA was deliberately removed earlier after
+    #     verifying (SEC 10-K) it has no genuine Ireland presence — this
+    #     string would just never match anything and sit as dead weight.
+    #     If you've since found evidence NVIDIA does hire in Ireland now,
+    #     say so and I'll re-add the CSV row and wire it back in properly
+    #     — otherwise leaving it out is consistent with that earlier call.
+    #   - "irish rail (iarnród éireann)" — turned out to expose a real,
+    #     separate bug: the existing dedicated lightweight scraper for
+    #     Irish Rail was keyed on "irish rail", but your CSV's actual
+    #     company_name is "Irish Rail (Iarnród Éireann)" — an exact-match
+    #     mismatch, so that scraper has likely never actually fired.
+    #     Fixed the key directly in lightweight_specs below instead of
+    #     adding a duplicate generic entry here.
+    "icon plc",
+    "iqvia",
+    "illumina",
+    "insulet corporation",
+    "integra lifesciences",
+    "intel",
+    "irish distillers (pernod ricard)",
+    "irish ferries",
+    "jazz pharmaceuticals",
+    "kepak group",
+    "kuehne+nagel ireland",
+    "linkedin",
+    "lonza",
+    "marvell technology",
+    "medpace",
+    "medtronic",
+    "merck group",
+    "merit medical",
+    "micron technology",
+    "nxp semiconductors",
+    "netapp",
+    "nokia",
+    # Note: this is the 141-company combined priority set (150 requested,
+    # minus hcltech, plus the 3 skipped above); the next Sheet-2 entries
+    # will be added in a later batch.
 }
 
 
@@ -5807,7 +5848,7 @@ def main():
     # deliberately chosen this way to avoid adding real cost to runtime.
     lightweight_specs = [
         ("esb", "ESB", scrape_esb_ireland, 60),
-        ("irish rail", "Irish Rail (Iarnród Éireann)", scrape_irish_rail_ireland, 45),
+        ("irish rail (iarnród éireann)", "Irish Rail (Iarnród Éireann)", scrape_irish_rail_ireland, 45),
         ("avolon", "Avolon", scrape_avolon_ireland, 60),
         ("bloomberg", "Bloomberg", scrape_bloomberg_ireland, 90),
         ("amcs group", "AMCS Group", scrape_amcs_ireland, 90),
