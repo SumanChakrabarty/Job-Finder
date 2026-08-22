@@ -13896,8 +13896,8 @@
   },
   "Databricks": {
     "jobs": [],
-    "checked_at": 1787428454.674978,
-    "consecutive_failures": 23
+    "checked_at": 1787432809.8495736,
+    "consecutive_failures": 24
   },
   "Infosys": {
     "jobs": [],
@@ -14771,7 +14771,7 @@
         "source": "priority_sheet2_generic",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-22T20:50:25.416682+00:00",
         "posted_age_known": false
       },
@@ -15308,7 +15308,7 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1787421474.8426776,
+    "checked_at": 1787432779.8129032,
     "consecutive_failures": 0
   },
   "Susquehanna International Group (SIG)": {
@@ -15394,7 +15394,7 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1787421475.5992403,
+    "checked_at": 1787432781.3683436,
     "consecutive_failures": 0
   },
   "Willis Towers Watson (WTW)": {
@@ -15426,7 +15426,7 @@
     "jobs": [
       {
         "company": "Zurich Insurance",
-        "title": "Skip to main content Personal Corporate Broker Claims Funds Sustainability Careers Blog Contact us Insurance Pensions Protection Investments Customers Quotes Login",
+        "title": "Skip to main content",
         "location": "Ireland",
         "posted_text": "Unknown",
         "posted_days_ago": 9999.0,
@@ -15515,7 +15515,7 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1787421480.271935,
+    "checked_at": 1787432786.4844224,
     "consecutive_failures": 0
   },
   "AerCap": {
@@ -15530,6 +15530,21 @@
   },
   "Wipro": {
     "jobs": [
+      {
+        "company": "Wipro",
+        "title": "Home",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.wipro.com/",
+        "source": "priority_sheet2_generic",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-22T11:49:34.357935+00:00",
+        "posted_age_known": false
+      },
       {
         "company": "Wipro",
         "title": "Life at Wipro",
@@ -15553,21 +15568,6 @@
         "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.wipro.com/content/Experienced-Professionals/?locale=en_US",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-22T11:49:34.357935+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Wipro",
-        "title": "Locations",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.wipro.com/",
         "source": "priority_sheet2_generic",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
@@ -15771,7 +15771,7 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1787421481.360604,
+    "checked_at": 1787432787.182092,
     "consecutive_failures": 0
   },
   "ASML": {
@@ -15793,7 +15793,7 @@
     "jobs": [
       {
         "company": "Abbott",
-        "title": "Skip to main content Science and Innovation Responsibility Investors PRODUCTS AND SOLUTIONS CAREERS ABOUT ABBOTT NEWSROOM EMPLOYEE LOGIN Login UNITED STATES FAVORITES (0)",
+        "title": "Skip to main content",
         "location": "Ireland",
         "posted_text": "Unknown",
         "posted_days_ago": 9999.0,
@@ -16138,6 +16138,21 @@
       },
       {
         "company": "Abbott",
+        "title": "READ MORE",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://www.abbott.com/careers/working-with-us.html",
+        "source": "priority_sheet2_generic",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-22T11:49:34.357935+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Abbott",
         "title": "EEO (ENGLISH)",
         "location": "Ireland",
         "posted_text": "Unknown",
@@ -16227,7 +16242,7 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1787421480.7154083,
+    "checked_at": 1787432785.8521311,
     "consecutive_failures": 0
   },
   "Alkermes": {
@@ -16237,6 +16252,21 @@
   },
   "Alexion Pharmaceuticals": {
     "jobs": [
+      {
+        "company": "Alexion Pharmaceuticals",
+        "title": "Skip to main content",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.astrazeneca.com/location/ireland-jobs/7684/2963597/2",
+        "source": "priority_sheet2_generic",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-22T11:49:34.357935+00:00",
+        "posted_age_known": false
+      },
       {
         "company": "Alexion Pharmaceuticals",
         "title": "Language Navigation About Us Business Areas Early Talent Our People Application Process Join Talent Network Search jobs by keyword(s) Search jobs by location SEARCH ROLES",
@@ -16614,7 +16644,7 @@
       },
       {
         "company": "Alexion Pharmaceuticals",
-        "title": "About Us Business Areas Early Talent Our People Application Process Join Talent Network Search jobs by keyword(s) Search jobs by location SEARCH ROLES",
+        "title": "FAQs",
         "location": "Ireland",
         "posted_text": "Unknown",
         "posted_days_ago": 9999.0,
@@ -16635,21 +16665,6 @@
         "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://astrazeneca.eightfold.ai/careers/join?domain=astrazeneca.com&hl=en",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-22T11:49:34.357935+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Alexion Pharmaceuticals",
-        "title": "SEARCH ROLES",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.astrazeneca.com/location/ireland-jobs/7684/2963597/2",
         "source": "priority_sheet2_generic",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
@@ -16973,7 +16988,7 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1787421477.4633298,
+    "checked_at": 1787432783.14408,
     "consecutive_failures": 0
   },
   "Visa": {
@@ -16983,6 +16998,21 @@
   },
   "AstraZeneca": {
     "jobs": [
+      {
+        "company": "AstraZeneca",
+        "title": "Skip to main content",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.astrazeneca.com/search-jobs/Ireland",
+        "source": "priority_sheet2_generic",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-22T11:49:34.357935+00:00",
+        "posted_age_known": false
+      },
       {
         "company": "AstraZeneca",
         "title": "Language Navigation About Us Business Areas Early Talent Our People Application Process Join Talent Network Search jobs by keyword(s) Search jobs by location SEARCH ROLES",
@@ -17360,7 +17390,7 @@
       },
       {
         "company": "AstraZeneca",
-        "title": "About Us Business Areas Early Talent Our People Application Process Join Talent Network Search jobs by keyword(s) Search jobs by location SEARCH ROLES",
+        "title": "FAQs",
         "location": "Ireland",
         "posted_text": "Unknown",
         "posted_days_ago": 9999.0,
@@ -17381,21 +17411,6 @@
         "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://astrazeneca.eightfold.ai/careers/join?domain=astrazeneca.com&hl=en",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-22T11:49:34.357935+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "AstraZeneca",
-        "title": "SEARCH ROLES",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.astrazeneca.com/search-jobs/Ireland",
         "source": "priority_sheet2_generic",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
@@ -17719,7 +17734,7 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1787421482.8743887,
+    "checked_at": 1787432788.193843,
     "consecutive_failures": 0
   },
   "Applied Materials": {
@@ -17729,6 +17744,21 @@
   },
   "Amgen": {
     "jobs": [
+      {
+        "company": "Amgen",
+        "title": "Skip to main content",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.amgen.com/en/search-jobs/Ireland",
+        "source": "priority_sheet2_generic",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-22T11:49:34.357935+00:00",
+        "posted_age_known": false
+      },
       {
         "company": "Amgen",
         "title": "Join Talent Network Returning Applicants Saved Jobs Employees FAQ OPPORTUNITIES STUDENTS AND GRADUATES VETERAN RESOURCES ABOUT US LOCATIONS SEARCH",
@@ -17776,7 +17806,7 @@
       },
       {
         "company": "Amgen",
-        "title": "Join Talent Network Returning Applicants Saved Jobs Employees FAQ OPPORTUNITIES STUDENTS AND GRADUATES VETERAN RESOURCES ABOUT US LOCATIONS",
+        "title": "FAQ",
         "location": "Ireland",
         "posted_text": "Unknown",
         "posted_days_ago": 9999.0,
@@ -18346,21 +18376,6 @@
       },
       {
         "company": "Amgen",
-        "title": "Join Talent Network Returning Applicants Saved Jobs Employees FAQ OPPORTUNITIES STUDENTS AND GRADUATES VETERAN RESOURCES ABOUT US LOCATIONS SEARCH",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.amgen.com/en/search-jobs/Ireland",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-22T11:49:34.357935+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Amgen",
         "title": "KEYWORD LOCATION RADIUS Select Miles 5 miles 15 miles 25 miles 35 miles 50 miles SEARCH JOBS",
         "location": "Ireland",
         "posted_text": "Unknown",
@@ -18556,7 +18571,7 @@
       },
       {
         "company": "Amgen",
-        "title": "Prev Next Prev Page/ 2Go Next Show All",
+        "title": "Next",
         "location": "Ireland",
         "posted_text": "Unknown",
         "posted_days_ago": 9999.0,
@@ -18586,7 +18601,7 @@
       },
       {
         "company": "Amgen",
-        "title": "By submitting your information, you acknowledge that you have read our privacy policy (this content opens in new window) and consent to receive email communication from Amgen.",
+        "title": "privacy policy",
         "location": "Ireland",
         "posted_text": "Unknown",
         "posted_days_ago": 9999.0,
@@ -18630,7 +18645,7 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1787421485.9707394,
+    "checked_at": 1787432787.9351692,
     "consecutive_failures": 0
   },
   "Bausch + Lomb": {
