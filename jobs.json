@@ -10895,8 +10895,8 @@
       "company": "Notion",
       "title": "Demand & Campaigns Lead, EMEA",
       "location": "Dublin, Ireland",
-      "posted_text": "Posted 43 days ago",
-      "posted_days_ago": 43.0,
+      "posted_text": "Posted 44 days ago",
+      "posted_days_ago": 44.0,
       "employment_type": "Full-time",
       "url": "https://jobs.ashbyhq.com/notion/edb12109-aa32-461a-b764-1850a2314e0d/application",
       "source": "ashby_api",
@@ -11855,8 +11855,8 @@
       "company": "Twilio",
       "title": "DevOps Engineer (Observability)",
       "location": "Remote - Ireland",
-      "posted_text": "Posted Today",
-      "posted_days_ago": 0.0,
+      "posted_text": "Posted 1 days ago",
+      "posted_days_ago": 1.0,
       "employment_type": "Unspecified",
       "url": "https://job-boards.greenhouse.io/twilio/jobs/8108771",
       "source": "greenhouse_api",
@@ -36394,6 +36394,16 @@
       "platform": "phenom (no Ireland postings found right now)"
     },
     {
+      "company": "NTT DATA",
+      "url": "https://careers-inc.nttdata.com",
+      "platform": "pinpoint (no Ireland postings found right now)"
+    },
+    {
+      "company": "Huawei",
+      "url": "https://huaweiireland.teamtailor.com/jobs",
+      "platform": "pinpoint (no Ireland postings found right now)"
+    },
+    {
       "company": "Databricks",
       "url": "https://www.databricks.com/company/careers/open-positions",
       "platform": "greenhouse (no Ireland postings found right now)"
@@ -36484,9 +36494,19 @@
       "platform": "ashby (no Ireland postings found right now)"
     },
     {
+      "company": "HSE (Health Service Executive)",
+      "url": "https://about.hse.ie/jobs/job-search/",
+      "platform": "recruitee (no Ireland postings found right now)"
+    },
+    {
       "company": "Horizon Therapeutics (Amgen)",
       "url": "https://careers.amgen.com/search-jobs/Ireland",
       "platform": "lever (no Ireland postings found right now)"
+    },
+    {
+      "company": "ICON plc",
+      "url": "https://careers.iconplc.com/search-jobs/Ireland",
+      "platform": "ashby (no Ireland postings found right now)"
     },
     {
       "company": "Integra LifeSciences",
@@ -36497,6 +36517,11 @@
       "company": "Kuehne+Nagel Ireland",
       "url": "https://jobs.kuehne-nagel.com/global/en/search-results?m=3&location=Ireland",
       "platform": "phenom (no Ireland postings found right now)"
+    },
+    {
+      "company": "LinkedIn",
+      "url": "https://careers.linkedin.com/Locations/Dublin",
+      "platform": "greenhouse (no Ireland postings found right now)"
     },
     {
       "company": "Lonza",
@@ -37913,9 +37938,9 @@
     "Zurich Insurance": {
       "sponsors": 0,
       "no_sponsorship": 0,
-      "not_mentioned": 48,
-      "total": 48,
-      "label": "No sponsorship info found (48 postings scanned)",
+      "not_mentioned": 64,
+      "total": 64,
+      "label": "No sponsorship info found (64 postings scanned)",
       "category": "no_data"
     },
     "Wipro": {
