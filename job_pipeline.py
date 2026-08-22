@@ -553,6 +553,48 @@ def is_ireland_location(location_text: str) -> bool:
     return any(hint in lt for hint in IRELAND_LOCATION_HINTS)
 
 
+# Generic UI microcopy that link-scraping can easily mistake for a job
+# title — a "Connect" button, a bare "Here" link, a "Learn more" CTA sitting
+# inside a card that otherwise has real Ireland/job signals. Real evidence:
+# IBM's Sheet 2 generic-scraped listings included entries titled literally
+# "Connect" and "Here" — the anchor's own link text was accepted as the job
+# title with no check that it was actually a job title at all, since it
+# didn't match the (unrelated) "is this URL/text job-ish" pattern used to
+# decide whether to even look at the link in the first place. This is an
+# EXACT-match blocklist (after lowercasing and stripping trailing
+# punctuation), not a substring or word-count check — a substring check
+# would risk rejecting genuine short titles like "Recruiter" or "Analyst"
+# (e.g. "Recruiter" contains no blocklisted phrase, so it's untouched; but
+# "view" as a whole title is rejected while "Viewer Experience Analyst"
+# is not, since the check is against the FULL normalized title, not a
+# fragment of it).
+GENERIC_UI_LINK_TEXT = {
+    "connect", "here", "click here", "learn more", "read more", "view", "view job",
+    "view jobs", "view details", "view all", "view all jobs", "view role", "view position",
+    "apply", "apply now", "apply here", "apply today", "see more", "see details", "see job",
+    "more info", "more information", "find out more", "home", "back", "next", "previous",
+    "share", "save", "save job", "print", "close", "menu", "search", "filter", "sign in",
+    "sign up", "log in", "login", "logout", "register", "contact us", "contact", "about us",
+    "about", "homepage", "home page", "skip to content", "skip to main content",
+    "cookie policy", "privacy policy", "terms of use", "terms of service", "explore",
+    "explore jobs", "discover", "join us", "join our team", "find jobs", "search jobs",
+    "browse jobs", "all jobs", "job search", "careers home", "load more", "show more",
+    "expand", "details", "info", "more", "new", "featured", "top", "faq", "faqs", "help",
+    "get started", "start now", "start here", "continue", "submit", "submit application",
+    "start application", "begin", "select", "select location", "choose location",
+}
+
+
+def is_generic_ui_text(text: str) -> bool:
+    """True if `text` is just UI chrome (a button/link label) rather than
+    an actual job title — see GENERIC_UI_LINK_TEXT above for real examples
+    this was built from."""
+    if not text:
+        return True
+    normalized = re.sub(r"[.\u2026:!?\u2192\u203a]+$", "", text.strip().lower()).strip()
+    return normalized in GENERIC_UI_LINK_TEXT
+
+
 def normalize_employment_type(raw, title=""):
     """Every platform describes employment type in its own wording —
     Ashby uses 'FullTime' (no space), Lever uses 'Full-time', SmartRecruiters
@@ -2155,11 +2197,19 @@ def scrape_priority_sheet2_generic(company_name, url, session=None):
                     continue
 
                 title = text.strip()
-                if not title or len(title) > 300 or jobish.search(title):
+                # FIX: real evidence from IBM's listings — "Connect" and
+                # "Here" were both accepted as job titles here, since this
+                # check only ever looked at whether the text was empty,
+                # too long, or itself matched the job/career keyword
+                # pattern (which generic button text like "Connect" never
+                # does — so it sailed straight through). Now explicitly
+                # rejects known UI microcopy too, on both this primary
+                # path and the card-line fallback below.
+                if not title or len(title) > 300 or jobish.search(title) or is_generic_ui_text(title):
                     lines = [x.strip() for x in card.splitlines() if x.strip()]
                     title = next(
                         (x for x in lines if 4 <= len(x) <= 180 and not is_ireland_location(x)
-                         and not re.search(r"^(apply|view|learn more|read more)$", x, re.I)),
+                         and not is_generic_ui_text(x)),
                         "",
                     )
                 if not title:
@@ -2654,11 +2704,12 @@ def scrape_kpmg_ireland(session):
                         if not re.search(r"\b(?:Dublin|Ireland|Cork|Galway|Limerick)\b", blob, re.I):
                             continue
 
-                        if not title or len(title) > 300:
+                        if not title or len(title) > 300 or is_generic_ui_text(title):
                             lines = [re.sub(r"\s+", " ", x).strip() for x in card.splitlines()
                                      if 4 <= len(x.strip()) <= 220]
                             title = next((x for x in lines
-                                          if x.lower() not in {"dublin -", "dublin", "apply now", "view job"}), "")
+                                          if x.lower() not in {"dublin -", "dublin"}
+                                          and not is_generic_ui_text(x)), "")
                         if not title:
                             continue
 
@@ -5359,6 +5410,8 @@ def sponsorship_rarity_label(h):
 # with an Ireland-filtered search URL. Including it here too would scrape
 # it twice every run (once generic, once dedicated) for no benefit, wasting
 # a worker slot in the fixed 10-worker pool.
+
+
 PRIORITY_SHEET2_COMPANIES = {
     "axa ireland",
     "aldi ireland",
@@ -5635,10 +5688,18 @@ PRIORITY_SHEET2_COMPANIES = {
     "zendesk",
     "zimmer biomet",
     "daa (dublin airport authority)",
-    # Note: this is the 178-company combined priority set (this batch was
-    # the final 16 from Sheet 2, for 191 total requested across all
-    # batches; minus hcltech, plus the 7 skipped exact-scraper duplicates
-    # across all batches). This is the full Sheet 2 list.
+    # Tenth entry — Rockwell Automation. Your friend's suggestion correctly
+    # spotted that this one has genuinely NO existing coverage anywhere
+    # (unlike the other 17 they listed, which already get this exact same
+    # generic-fallback treatment via this set, or already have their own
+    # dedicated scraper) — see the full explanation given alongside this
+    # file for why it's added here instead of as separate new code.
+    "rockwell automation",
+    # Note: this is the 179-company combined priority set (this batch was
+    # the final 16 from Sheet 2 plus Rockwell Automation, for 191 total
+    # requested across all batches; minus hcltech, plus the 7 skipped
+    # exact-scraper duplicates across all batches). This is the full
+    # Sheet 2 list.
 }
 
 
@@ -5823,6 +5884,7 @@ def main():
         url = row["career_url"].strip()
         local_workday_session = make_workday_session()
         jobs, err = fetch_workday_jobs(name, url, local_workday_session, fetch_descriptions=not args.no_descriptions)
+
         return name, url, jobs, err
 
     if workday_rows:
