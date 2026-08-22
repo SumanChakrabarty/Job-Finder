@@ -8401,13 +8401,13 @@
   },
   "Aon": {
     "jobs": [],
-    "checked_at": 1787382694.531432,
-    "consecutive_failures": 53
+    "checked_at": 1787385060.5399609,
+    "consecutive_failures": 54
   },
   "BNP Paribas Ireland": {
     "jobs": [],
-    "checked_at": 1787382703.4438934,
-    "consecutive_failures": 53
+    "checked_at": 1787385056.175321,
+    "consecutive_failures": 54
   },
   "AIB (Allied Irish Banks)": {
     "jobs": [
@@ -8891,13 +8891,13 @@
   },
   "Central Bank of Ireland": {
     "jobs": [],
-    "checked_at": 1787382708.7883177,
-    "consecutive_failures": 53
+    "checked_at": 1787385055.5122392,
+    "consecutive_failures": 54
   },
   "Deutsche Bank": {
     "jobs": [],
-    "checked_at": 1787382713.0453396,
-    "consecutive_failures": 53
+    "checked_at": 1787385064.5994802,
+    "consecutive_failures": 54
   },
   "Meta": {
     "jobs": [
@@ -9057,13 +9057,13 @@
   },
   "Netflix": {
     "jobs": [],
-    "checked_at": 1787382709.7498426,
-    "consecutive_failures": 53
+    "checked_at": 1787385050.1043787,
+    "consecutive_failures": 54
   },
   "Red Hat": {
     "jobs": [],
-    "checked_at": 1787382718.7761853,
-    "consecutive_failures": 51
+    "checked_at": 1787385062.991643,
+    "consecutive_failures": 52
   },
   "Johnson Controls": {
     "jobs": [
@@ -10054,8 +10054,8 @@
   },
   "Three Ireland": {
     "jobs": [],
-    "checked_at": 1787382719.3539393,
-    "consecutive_failures": 53
+    "checked_at": 1787385059.3935432,
+    "consecutive_failures": 54
   },
   "Aiven": {
     "jobs": [
@@ -10959,8 +10959,8 @@
   },
   "Guidewire": {
     "jobs": [],
-    "checked_at": 1787382727.8886144,
-    "consecutive_failures": 53
+    "checked_at": 1787385070.567724,
+    "consecutive_failures": 54
   },
   "EXL": {
     "jobs": [
@@ -11095,24 +11095,235 @@
     "consecutive_failures": 0
   },
   "Johnson & Johnson": {
-    "jobs": [],
-    "checked_at": 1787382681.8736446,
-    "consecutive_failures": 1
+    "jobs": [
+      {
+        "company": "Johnson & Johnson",
+        "title": "Maintenance Supervisor",
+        "location": "Ringaskiddy, Cork, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jj.wd5.myworkdayjobs.com/job/Ringaskiddy-Cork-Ireland/Maintenance-Supervisor_R-094264",
+        "source": "jnj_workday",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-21T14:14:34.676183+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Johnson & Johnson",
+        "title": "Senior Manager, Facilities Management – EMEA",
+        "location": "Ringaskiddy, Cork, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jj.wd5.myworkdayjobs.com/job/Ringaskiddy-Cork-Ireland/Senior-Manager--Facilities-Management---EMEA_R-091958-1",
+        "source": "jnj_workday",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-21T00:50:54.675068+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Johnson & Johnson",
+        "title": "Senior Finance Analyst, Orthopedics Inventory Management",
+        "location": "Ringaskiddy, Cork, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jj.wd5.myworkdayjobs.com/job/Ringaskiddy-Cork-Ireland/Senior-Finance-Analyst--Orthopedics-Inventory-Management_R-095118-1",
+        "source": "jnj_workday",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-20T18:07:52.490130+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Johnson & Johnson",
+        "title": "Planning Manager",
+        "location": "Ringaskiddy, Cork, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jj.wd5.myworkdayjobs.com/job/Ringaskiddy-Cork-Ireland/Planning-Manager_R-094475",
+        "source": "jnj_workday",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-20T15:02:41.529091+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Johnson & Johnson",
+        "title": "Process Technician (Operations)",
+        "location": "Limerick, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jj.wd5.myworkdayjobs.com/job/Limerick-Ireland/Process-Technician--Operations-_R-083408",
+        "source": "jnj_workday",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-20T01:20:41.902917+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Johnson & Johnson",
+        "title": "Manufacturing Engineering Team Lead (Repack)",
+        "location": "Limerick, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jj.wd5.myworkdayjobs.com/job/Limerick-Ireland/Manufacturing-Engineering-Team-Lead--Repack-_R-094326",
+        "source": "jnj_workday",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-19T21:46:26.444616+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Johnson & Johnson",
+        "title": "GET Automation Principal Engineer",
+        "location": "Ringaskiddy, Cork, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jj.wd5.myworkdayjobs.com/job/Ringaskiddy-Cork-Ireland/GET-Automation-Principal-Engineer_R-093865-1",
+        "source": "jnj_workday",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-19T21:46:26.444616+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Johnson & Johnson",
+        "title": "Senior Manufacturing Engineer",
+        "location": "Limerick, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jj.wd5.myworkdayjobs.com/job/Limerick-Ireland/Senior-Manufacturing-Engineer_R-083021",
+        "source": "jnj_workday",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-19T21:46:26.444616+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Johnson & Johnson",
+        "title": "Staff Design Quality Engineer",
+        "location": "Galway, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jj.wd5.myworkdayjobs.com/job/Galway-Ireland/Staff-Design-Quality-Engineer_R-091127",
+        "source": "jnj_workday",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-19T21:46:26.444616+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Johnson & Johnson",
+        "title": "Senior Design Quality Engineer",
+        "location": "Galway, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jj.wd5.myworkdayjobs.com/job/Galway-Ireland/Senior-Design-Quality-Engineer_R-091126",
+        "source": "jnj_workday",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-19T21:46:26.444616+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Johnson & Johnson",
+        "title": "Senior Manager, External Manufacturing MSM Operations",
+        "location": "Limerick, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jj.wd5.myworkdayjobs.com/job/Limerick-Ireland/Senior-Manager--External-Manufacturing-MSM-Operations_R-094126-1",
+        "source": "jnj_workday",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-19T21:46:26.444616+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Johnson & Johnson",
+        "title": "Moulding Engineering Team Lead",
+        "location": "Limerick, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jj.wd5.myworkdayjobs.com/job/Limerick-Ireland/Moulding-Engineering-Team-Lead_R-088546",
+        "source": "jnj_workday",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-19T21:46:26.444616+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Johnson & Johnson",
+        "title": "Sales Specialist Endomech&Energy | Johnson & Johnson MedTech | Dublin & South East",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jj.wd5.myworkdayjobs.com/job/Dublin-Ireland/Sales-Specialist-Endomech-Energy---Johnson---Johnson-MedTech---Dublin---South-East_R-092145",
+        "source": "jnj_workday",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-19T21:46:26.444616+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Johnson & Johnson",
+        "title": "Technology Sr. Manager, EMEA Commercial",
+        "location": "Ringaskiddy, Cork, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jj.wd5.myworkdayjobs.com/job/Ringaskiddy-Cork-Ireland/Technology-Sr-Manager--EMEA-Commercial_R-078446-2",
+        "source": "jnj_workday",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-19T21:46:26.444616+00:00",
+        "posted_age_known": false
+      }
+    ],
+    "checked_at": 1787385078.476632,
+    "consecutive_failures": 0
   },
   "UPS Ireland": {
     "jobs": [],
-    "checked_at": 1787382716.8505793,
-    "consecutive_failures": 53
+    "checked_at": 1787385061.385957,
+    "consecutive_failures": 54
   },
   "Siemens": {
     "jobs": [],
-    "checked_at": 1787382734.879609,
-    "consecutive_failures": 52
+    "checked_at": 1787385073.9641886,
+    "consecutive_failures": 53
   },
   "HCLTech": {
     "jobs": [],
-    "checked_at": 1787382742.0531938,
-    "consecutive_failures": 52
+    "checked_at": 1787385082.001553,
+    "consecutive_failures": 53
   },
   "PepsiCo": {
     "jobs": [
@@ -11182,8 +11393,8 @@
   },
   "Oracle": {
     "jobs": [],
-    "checked_at": 1787382741.6415358,
-    "consecutive_failures": 6
+    "checked_at": 1787385068.2939358,
+    "consecutive_failures": 7
   },
   "Microsoft": {
     "jobs": [
@@ -12141,8 +12352,8 @@
   },
   "Dawn Meats": {
     "jobs": [],
-    "checked_at": 1787382740.6315997,
-    "consecutive_failures": 49
+    "checked_at": 1787385061.6708193,
+    "consecutive_failures": 50
   },
   "Auxilion": {
     "jobs": [
@@ -12946,18 +13157,18 @@
   },
   "Alvarez & Marsal": {
     "jobs": [],
-    "checked_at": 1787382745.8649623,
-    "consecutive_failures": 8
+    "checked_at": 1787385067.3312538,
+    "consecutive_failures": 9
   },
   "AXA Ireland": {
     "jobs": [],
-    "checked_at": 1787382744.6949556,
-    "consecutive_failures": 8
+    "checked_at": 1787385067.116263,
+    "consecutive_failures": 9
   },
   "Coca-Cola HBC Ireland": {
     "jobs": [],
-    "checked_at": 1787382749.6877177,
-    "consecutive_failures": 8
+    "checked_at": 1787385073.084806,
+    "consecutive_failures": 9
   },
   "Aldi Ireland": {
     "jobs": [
@@ -13153,8 +13364,8 @@
   },
   "FactSet": {
     "jobs": [],
-    "checked_at": 1787382763.4976635,
-    "consecutive_failures": 8
+    "checked_at": 1787385094.1370902,
+    "consecutive_failures": 9
   },
   "Aviva Ireland": {
     "jobs": [
@@ -13179,18 +13390,18 @@
   },
   "FBD Insurance": {
     "jobs": [],
-    "checked_at": 1787382757.2869177,
-    "consecutive_failures": 8
+    "checked_at": 1787385082.0581295,
+    "consecutive_failures": 9
   },
   "Dunnes Stores": {
     "jobs": [],
-    "checked_at": 1787382753.9454665,
-    "consecutive_failures": 8
+    "checked_at": 1787385083.1614745,
+    "consecutive_failures": 9
   },
   "Fidelity Investments": {
     "jobs": [],
-    "checked_at": 1787382759.3748045,
-    "consecutive_failures": 8
+    "checked_at": 1787385086.414755,
+    "consecutive_failures": 9
   },
   "BDO Ireland": {
     "jobs": [
@@ -13743,8 +13954,8 @@
   },
   "Bain & Company": {
     "jobs": [],
-    "checked_at": 1787382754.8906949,
-    "consecutive_failures": 8
+    "checked_at": 1787385092.912374,
+    "consecutive_failures": 9
   },
   "Baker Tilly Ireland": {
     "jobs": [
@@ -13904,23 +14115,23 @@
   },
   "FTI Consulting": {
     "jobs": [],
-    "checked_at": 1787382763.4891393,
-    "consecutive_failures": 8
+    "checked_at": 1787385096.2807214,
+    "consecutive_failures": 9
   },
   "Goldman Sachs": {
     "jobs": [],
-    "checked_at": 1787382764.256953,
-    "consecutive_failures": 8
+    "checked_at": 1787385097.0835586,
+    "consecutive_failures": 9
   },
   "Fiserv": {
     "jobs": [],
-    "checked_at": 1787382767.7139606,
-    "consecutive_failures": 8
+    "checked_at": 1787385096.5195608,
+    "consecutive_failures": 9
   },
   "Boston Consulting Group (BCG)": {
     "jobs": [],
-    "checked_at": 1787382763.9186711,
-    "consecutive_failures": 8
+    "checked_at": 1787385097.8260834,
+    "consecutive_failures": 9
   },
   "Davy": {
     "jobs": [
@@ -14146,8 +14357,8 @@
   },
   "Dynatrace": {
     "jobs": [],
-    "checked_at": 1787382785.3021107,
-    "consecutive_failures": 7
+    "checked_at": 1787385109.237602,
+    "consecutive_failures": 8
   },
   "Databricks": {
     "jobs": [],
