@@ -5324,7 +5324,41 @@ PRIORITY_SHEET2_COMPANIES = {
     "slalom",
     "societe generale",
     "splunk",
-    # Note: this is the 49-company combined priority set (50 requested,
+    # Third batch — next 25 companies from Sheet 2 (rows 57-81).
+    # NOTE: "supervalu / musgrave" is a separate CSV row from "musgrave
+    # group (supervalu / centra)" above (different career_url — one is
+    # musgravegroup.com/careers/, the other careers.musgravegroup.com) but
+    # both point at the same real employer. Left both in for now since
+    # they use different URLs and one might work where the other doesn't,
+    # but flagged here as a likely consolidation candidate once you see
+    # which (if either) actually returns jobs — running both every cycle
+    # burns two worker slots for what's probably the same postings.
+    "supervalu / musgrave",
+    "susquehanna international group (sig)",
+    "tata consultancy services (tcs)",
+    "tesco ireland",
+    "ubs",
+    "vhi healthcare",
+    "version 1",
+    "visa",
+    "willis towers watson (wtw)",
+    "wipro",
+    "zurich insurance",
+    "abp food group",
+    "asml",
+    "abbott",
+    "advanced micro devices (amd)",
+    "aer lingus",
+    "aercap",
+    "agilent technologies",
+    "akamai",
+    "alexion pharmaceuticals",
+    "alkermes",
+    "amgen",
+    "an post",
+    "applied materials",
+    "astrazeneca",
+    # Note: this is the 74-company combined priority set (75 requested,
     # minus hcltech since it's already covered by a dedicated scraper);
     # the next Sheet-2 entries will be added in a later batch.
 }
