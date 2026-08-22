@@ -4073,7 +4073,7 @@ def scrape_guidewire_ireland(session):
         with sync_playwright() as pw:
             browser = pw.chromium.launch(headless=True, args=["--disable-http2"])
             page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
-            page.goto("https://www.guidewire.com/about/careers/jobs", wait_until="domcontentloaded", timeout=30000)
+            page.goto("https://careers.guidewire.com/location/dublin", wait_until="domcontentloaded", timeout=30000)
             page.wait_for_timeout(1500)
             _browser_accept_consent(page)
             _browser_collect_job_links_with_retries(
@@ -5284,7 +5284,7 @@ def test_single_company(name):
         "hsbc": lambda: scrape_hsbc_ireland(session),
         "dxc": lambda: scrape_dxc_ireland(session),
         "grant thornton": lambda: scrape_grant_thornton_direct(session),
-        "nvidia": lambda: scrape_nvidia_ireland(session),
+        # NVIDIA removed — confirmed no genuine Ireland office/market presence
         "aon": lambda: scrape_aon_ireland(session),
         "eaton": lambda: scrape_eaton_ireland(session),
         "cognizant": lambda: scrape_cognizant_ireland(session),
@@ -5514,7 +5514,11 @@ def main():
         ("exact", "hsbc ireland", scrape_hsbc_ireland, 240, "SuccessFactors"),
         ("exact", "dxc technology", scrape_dxc_ireland, 240, "bypasses stuck Workday tenant"),
         ("exact", "grant thornton ireland", scrape_grant_thornton_direct, 240, "real current careers site"),
-        ("exact", "nvidia", scrape_nvidia_ireland, 240, "public Eightfold feed"),
+        # NVIDIA removed — confirmed via their own SEC 10-K filing that
+        # Ireland is not among their disclosed international offices, and
+        # a real forum thread confirmed NVIDIA's own store/distributor
+        # system doesn't recognize Ireland as a market. 45 consecutive
+        # failures in this pipeline is consistent with that, not a bug.
         ("exact", "aon", scrape_aon_ireland, 240, "first-party jobs.aon.com"),
         ("exact", "eaton", scrape_eaton_ireland, 240, "first-party jobs.eaton.com"),
         ("exact", "cognizant", scrape_cognizant_ireland, 240, "verifies Ireland per job detail page"),
