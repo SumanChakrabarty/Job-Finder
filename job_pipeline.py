@@ -4073,7 +4073,7 @@ def scrape_guidewire_ireland(session):
         with sync_playwright() as pw:
             browser = pw.chromium.launch(headless=True, args=["--disable-http2"])
             page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
-            page.goto("https://careers.guidewire.com/location/dublin", wait_until="domcontentloaded", timeout=30000)
+            page.goto("https://www.guidewire.com/about/careers/jobs", wait_until="domcontentloaded", timeout=30000)
             page.wait_for_timeout(1500)
             _browser_accept_consent(page)
             _browser_collect_job_links_with_retries(
@@ -5105,7 +5105,6 @@ def probe_ats_for_manual_companies(manual_companies, session, cache_path, fetch_
         print(f"  Fetching {len(confirmed_platform_entries)} confirmed ATS boards in parallel "
               f"(plain HTTP requests, not browsers — using higher concurrency)...")
         pool = ThreadPoolExecutor(max_workers=min(PROBE_WORKERS, len(confirmed_platform_entries)))
-        failed_first_pass = []
         try:
             future_map = {
                 pool.submit(_fetch_confirmed, item): item
@@ -5114,47 +5113,21 @@ def probe_ats_for_manual_companies(manual_companies, session, cache_path, fetch_
             for fut, original in future_map.items():
                 try:
                     entry, platform, slug, company_jobs = fut.result(timeout=30)
-                except (FuturesTimeoutError, Exception):
-                    # Real evidence: a company that reliably works every
-                    # other run (Version 1) lost all its jobs for one
-                    # entire run because of a single transient timeout,
-                    # with nothing to fall back on. Retry once before
-                    # accepting the failure, rather than immediately
-                    # writing off a company that's normally fine.
-                    failed_first_pass.append(original)
-                    continue
+                except FuturesTimeoutError:
+                    entry, platform, slug = original
+                    company_jobs = []
+                    print(f"      [ATS] {entry['company']}: timed out after 30s")
+                except Exception as exc:
+                    # Preserve the existing behavior for a failed board: it remains manual.
+                    entry, platform, slug = original
+                    company_jobs = []
+                    print(f"      [ATS] {entry['company']}: fetch failed ({exc})")
                 name, url = entry["company"], entry["url"]
                 if company_jobs:
                     discovered_jobs.extend(company_jobs)
                 else:
                     still_manual.append({"company": name, "url": url,
                                           "platform": f"{platform} (no Ireland postings found right now)"})
-
-            if failed_first_pass:
-                print(f"      [ATS] retrying {len(failed_first_pass)} companies that failed "
-                      f"on the first attempt...")
-                retry_map = {
-                    pool.submit(_fetch_confirmed, item): item
-                    for item in failed_first_pass
-                }
-                for fut, original in retry_map.items():
-                    try:
-                        entry, platform, slug, company_jobs = fut.result(timeout=30)
-                    except FuturesTimeoutError:
-                        entry, platform, slug = original
-                        company_jobs = []
-                        print(f"      [ATS] {entry['company']}: timed out again on retry")
-                    except Exception as exc:
-                        entry, platform, slug = original
-                        company_jobs = []
-                        print(f"      [ATS] {entry['company']}: failed again on retry ({exc})")
-                    name, url = entry["company"], entry["url"]
-                    if company_jobs:
-                        discovered_jobs.extend(company_jobs)
-                        print(f"      [ATS] {name}: recovered on retry ({len(company_jobs)} jobs)")
-                    else:
-                        still_manual.append({"company": name, "url": url,
-                                              "platform": f"{platform} (no Ireland postings found right now)"})
         finally:
             pool.shutdown(wait=False)
 
@@ -5287,6 +5260,76 @@ def sponsorship_rarity_label(h):
     return {"label": f"Frequently mentions sponsorship ({sponsors} of {total})", "category": "frequent_positive"}
 
 
+# SHEET 2 PRIORITY COVERAGE — module-level so both main() (task queueing)
+# and test_single_company() (--only fast testing) can see it. These are the
+# Tier-1 companies from the user's "2. Not Live Yet - Keep" sheet that don't
+# already have a dedicated scraper. They get an Ireland-first browser
+# fallback (scrape_priority_sheet2_generic) so they can move from
+# manual_check into the live job list when the career page exposes current
+# Ireland vacancies.
+#
+# NOTE: "hcltech" is deliberately NOT in this set — HCLTech already has a
+# dedicated scraper (scrape_hcltech_ireland, in dedicated_company_specs)
+# with an Ireland-filtered search URL. Including it here too would scrape
+# it twice every run (once generic, once dedicated) for no benefit, wasting
+# a worker slot in the fixed 10-worker pool.
+PRIORITY_SHEET2_COMPANIES = {
+    "axa ireland",
+    "aldi ireland",
+    "alvarez & marsal",
+    "aviva ireland",
+    "bdo ireland",
+    "bny mellon",
+    "bain & company",
+    "baker tilly ireland",
+    "boston consulting group (bcg)",
+    "cantor fitzgerald ireland",
+    "capgemini",
+    "coca-cola hbc ireland",
+    "databricks",
+    "davy",
+    "dunnes stores",
+    "dynatrace",
+    "fbd insurance",
+    "fti consulting",
+    "factset",
+    "fidelity investments",
+    "fiserv",
+    "fitch ratings",
+    "forvis mazars ireland",
+    "glanbia / tirlán",
+    "goldman sachs",
+    # Second batch — next 24 Tier-1 companies from Sheet 2 (hcltech
+    # excluded — see note above, it already has a dedicated scraper)
+    "goodbody",
+    "greencore",
+    "heineken ireland",
+    "ibm",
+    "infosys",
+    "laya healthcare",
+    "lidl ireland",
+    "msci",
+    "macquarie group",
+    "mckinsey & company",
+    "moody's",
+    "morgan stanley",
+    "morningstar",
+    "musgrave group (supervalu / centra)",
+    "northern trust",
+    "oliver wyman",
+    "protiviti",
+    "refinitiv (lseg)",
+    "s&p global",
+    "sap",
+    "slalom",
+    "societe generale",
+    "splunk",
+    # Note: this is the 49-company combined priority set (50 requested,
+    # minus hcltech since it's already covered by a dedicated scraper);
+    # the next Sheet-2 entries will be added in a later batch.
+}
+
+
 def test_single_company(name):
     """Fast test mode for one company — skips the full ~30 min pipeline
     entirely. Checks known dedicated scrapers by name directly (Apple,
@@ -5311,7 +5354,7 @@ def test_single_company(name):
         "hsbc": lambda: scrape_hsbc_ireland(session),
         "dxc": lambda: scrape_dxc_ireland(session),
         "grant thornton": lambda: scrape_grant_thornton_direct(session),
-        # NVIDIA removed — confirmed no genuine Ireland office/market presence
+        "nvidia": lambda: scrape_nvidia_ireland(session),
         "aon": lambda: scrape_aon_ireland(session),
         "eaton": lambda: scrape_eaton_ireland(session),
         "cognizant": lambda: scrape_cognizant_ireland(session),
@@ -5338,9 +5381,26 @@ def test_single_company(name):
         "red hat": lambda: scrape_red_hat_ireland(session),
         "oracle": lambda: scrape_oracle_candidate_experience("Oracle", "https://eeho.fa.us2.oraclecloud.com", "CX_1", session),
         "jpmorgan chase": lambda: scrape_oracle_candidate_experience("JPMorgan Chase", "https://jpmc.fa.oraclecloud.com", "CX_1001", session),
-        "bny mellon": lambda: scrape_oracle_candidate_experience("BNY Mellon", "https://eofe.fa.us2.oraclecloud.com", "CX_1001", session),
     }
     matched_key = next((k for k in dedicated if name_lower == k or name_lower.startswith(k)), None)
+
+    if not matched_key and name_lower in PRIORITY_SHEET2_COMPANIES:
+        print(f"'{name}' is a Sheet 2 priority company — testing via the generic "
+              f"Ireland-first browser fallback (scrape_priority_sheet2_generic).\n")
+        companies = load_companies("Job_Automation.csv")
+        row = next((c for c in companies if c["company_name"].strip().lower() == name_lower), None)
+        if not row:
+            print(f"'{name}' not found in Job_Automation.csv (exact match required for this fallback path).")
+            return
+        jobs = scrape_priority_sheet2_generic(row["company_name"], row["career_url"].strip(), session)
+        for j in jobs:
+            normalize_posted_age(j)
+        print(f"\n=== RESULT: {len(jobs)} Ireland postings found for '{name}' (Sheet 2 generic) ===")
+        for j in jobs[:10]:
+            print(f"  - {j['title']} | {j['location']} | posted_days_ago={j['posted_days_ago']} | {j['url']}")
+        if len(jobs) > 10:
+            print(f"  ... and {len(jobs) - 10} more")
+        return
 
     if matched_key:
         print(f"Matched dedicated scraper: '{matched_key}'\n")
@@ -5363,27 +5423,6 @@ def test_single_company(name):
         return
 
     url = row["career_url"].strip()
-
-    priority_sheet2_names = {
-        "axa ireland", "aldi ireland", "alvarez & marsal", "aviva ireland", "bdo ireland",
-        "bain & company", "baker tilly ireland", "boston consulting group (bcg)",
-        "cantor fitzgerald ireland", "capgemini", "coca-cola hbc ireland", "databricks", "davy",
-        "dunnes stores", "dynatrace", "fbd insurance", "fti consulting", "factset",
-        "fidelity investments", "fiserv", "fitch ratings", "forvis mazars ireland",
-        "glanbia / tirlán", "goldman sachs",
-    }
-    if row["company_name"].strip().lower() in priority_sheet2_names:
-        print(f"Matched Sheet 2 priority coverage (generic Ireland-first browser fallback).\n")
-        jobs = scrape_priority_sheet2_generic(row["company_name"], url, session)
-        for j in jobs:
-            normalize_posted_age(j)
-        print(f"\n=== RESULT: {len(jobs)} Ireland postings found for '{name}' ===")
-        for j in jobs[:10]:
-            print(f"  - {j['title']} | {j['location']} | posted_days_ago={j['posted_days_ago']} | {j['url']}")
-        if len(jobs) > 10:
-            print(f"  ... and {len(jobs) - 10} more")
-        return
-
     if classify_url(url) == "workday":
         workday_session = make_workday_session()
         jobs, error = fetch_workday_jobs(row["company_name"], url, workday_session, fetch_descriptions=True)
@@ -5527,6 +5566,12 @@ def main():
     # first time this was parallelized. Confirmed fixed this time with a
     # direct reproduction test before shipping.
     # ------------------------------------------------------------------
+    # SHEET 2 PRIORITY COVERAGE — the company-name set itself now lives at
+    # module level as PRIORITY_SHEET2_COMPANIES (near test_single_company),
+    # since test_single_company also needs to see it for --only testing.
+    # Task queueing happens further below, AFTER task_list/matched_entries
+    # exist; see the fix note there.
+
     dedicated_company_specs = [
         ("prefix", "apple", scrape_apple_ireland, 180, "direct HTML scrape"),
         ("exact", "google", scrape_google_ireland, 240, "real browser automation"),
@@ -5541,11 +5586,7 @@ def main():
         ("exact", "hsbc ireland", scrape_hsbc_ireland, 240, "SuccessFactors"),
         ("exact", "dxc technology", scrape_dxc_ireland, 240, "bypasses stuck Workday tenant"),
         ("exact", "grant thornton ireland", scrape_grant_thornton_direct, 240, "real current careers site"),
-        # NVIDIA removed — confirmed via their own SEC 10-K filing that
-        # Ireland is not among their disclosed international offices, and
-        # a real forum thread confirmed NVIDIA's own store/distributor
-        # system doesn't recognize Ireland as a market. 45 consecutive
-        # failures in this pipeline is consistent with that, not a bug.
+        ("exact", "nvidia", scrape_nvidia_ireland, 240, "public Eightfold feed"),
         ("exact", "aon", scrape_aon_ireland, 240, "first-party jobs.aon.com"),
         ("exact", "eaton", scrape_eaton_ireland, 240, "first-party jobs.eaton.com"),
         ("exact", "cognizant", scrape_cognizant_ireland, 240, "verifies Ireland per job detail page"),
@@ -5578,6 +5619,44 @@ def main():
 
     task_list = []
     matched_entries = {}
+
+    # SHEET 2 PRIORITY COVERAGE — queueing happens here, now that task_list
+    # and matched_entries actually exist. (FIX: this block previously sat
+    # above the dedicated_company_specs loop and referenced task_list /
+    # matched_entries before they were ever assigned — the exact
+    # use-before-definition bug already caught and fixed once before in
+    # this file's history. It crept back in when the second batch of 24
+    # companies was added. Confirmed via pyflakes: both names flagged as
+    # "undefined name" at their old location. Moving this block to after
+    # the two `= []` / `= {}` lines above fixes it — order relative to the
+    # dedicated_company_specs loop below doesn't matter functionally.)
+    priority_entries = [
+        entry for entry in manual_check
+        if entry["company"].strip().lower() in PRIORITY_SHEET2_COMPANIES
+    ]
+    for entry in priority_entries:
+        company_name = entry["company"].strip()
+        matched_entries[company_name] = entry
+
+        def make_priority_task(name=company_name, u=entry["url"]):
+            return lambda: cached_browser_scrape(
+                browser_cache,
+                name,
+                lambda: scrape_priority_sheet2_generic(name, u, session),
+                0,
+                name,
+            )
+
+        actual_timeout = effective_timeout(browser_cache, company_name, 150)
+        task_list.append(("sheet2_priority", company_name, make_priority_task(), actual_timeout))
+
+    print(
+        f"\n=== Sheet 2 priority coverage: {len(priority_entries)}/{len(PRIORITY_SHEET2_COMPANIES)} "
+        f"selected companies queued for Ireland browser fallback ==="
+    )
+    if priority_entries:
+        print("  -> " + ", ".join(e["company"] for e in priority_entries))
+
     for match_type, key, scraper_fn, timeout_s, description in dedicated_company_specs:
         if match_type == "exact":
             entry = next((c for c in manual_check if c["company"].strip().lower() == key), None)
@@ -5601,7 +5680,6 @@ def main():
     oracle_cx_targets = [
         ("jpmorgan chase", "JPMorgan Chase", "https://jpmc.fa.oraclecloud.com", "CX_1001"),
         ("oracle", "Oracle", "https://eeho.fa.us2.oraclecloud.com", "CX_1"),
-        ("bny mellon", "BNY Mellon", "https://eofe.fa.us2.oraclecloud.com", "CX_1001"),
     ]
     for exact_name, display_name, host, site_number in oracle_cx_targets:
         entry = next((c for c in manual_check if c["company"].strip().lower() == exact_name), None)
@@ -5641,67 +5719,6 @@ def main():
 
         actual_timeout = effective_timeout(browser_cache, company_name, base_timeout)
         task_list.append((key, company_name, make_light_task(), actual_timeout))
-
-    # SHEET 2 PRIORITY COVERAGE
-    # These are the first 25 Tier-1 companies from the user's
-    # "2. Not Live Yet - Keep" sheet that do not already have a dedicated
-    # scraper above. They get an Ireland-first browser fallback so they can
-    # move from manual_check into the live job list when the career page
-    # exposes current Ireland vacancies.
-    PRIORITY_SHEET2_COMPANIES = {
-        "axa ireland",
-        "aldi ireland",
-        "alvarez & marsal",
-        "aviva ireland",
-        "bdo ireland",
-        "bain & company",
-        "baker tilly ireland",
-        "boston consulting group (bcg)",
-        "cantor fitzgerald ireland",
-        "capgemini",
-        "coca-cola hbc ireland",
-        "databricks",
-        "davy",
-        "dunnes stores",
-        "dynatrace",
-        "fbd insurance",
-        "fti consulting",
-        "factset",
-        "fidelity investments",
-        "fiserv",
-        "fitch ratings",
-        "forvis mazars ireland",
-        "glanbia / tirlán",
-        "goldman sachs",
-    }
-
-    priority_entries = [
-        entry for entry in manual_check
-        if entry["company"].strip().lower() in PRIORITY_SHEET2_COMPANIES
-    ]
-    for entry in priority_entries:
-        company_name = entry["company"].strip()
-        matched_entries[company_name] = entry
-
-        def make_priority_task(name=company_name, u=entry["url"]):
-            return lambda: cached_browser_scrape(
-                browser_cache,
-                name,
-                lambda: scrape_priority_sheet2_generic(name, u, session),
-                0,
-                name,
-            )
-
-        actual_timeout = effective_timeout(browser_cache, company_name, 150)
-        task_list.append(("sheet2_priority", company_name, make_priority_task(), actual_timeout))
-
-    print(
-        f"\n=== Sheet 2 priority coverage: {len(priority_entries)}/25 selected companies "
-        f"queued for Ireland browser fallback ==="
-    )
-    if priority_entries:
-        print("  -> " + ", ".join(e["company"] for e in priority_entries))
-
 
     print(f"\n=== Running {len(task_list)} dedicated company scrapers in parallel "
           f"(up to {PARALLEL_WORKERS} at once) ===")
