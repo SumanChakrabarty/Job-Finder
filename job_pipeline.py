@@ -227,7 +227,7 @@ BROWSER_SCRAPE_CACHE_PATH = "browser_scrape_cache.json"
 BROWSER_SCRAPE_MAX_AGE_HOURS = 3  # only actually re-run a real browser scrape this often
 EMPTY_RESULT_MAX_AGE_HOURS = 0.5  # empty results retried much sooner — could be a real "no jobs",
 # or could be a one-time failure (crash, resource contention); don't lock in a failure for 3 hours
-PARALLEL_WORKERS = int(os.environ.get("SCRAPE_WORKERS", "6"))  # conservative — GitHub Actions'
+PARALLEL_WORKERS = int(os.environ.get("SCRAPE_WORKERS", "10"))  # conservative — GitHub Actions'
 # free-tier runners have limited CPU/memory (~2 cores, 7GB RAM); too many simultaneous real
 # Chrome instances can crash or silently fail
 
@@ -1972,6 +1972,140 @@ def _browser_scrape_jobs(company_name, url, link_fragment, source_tag):
     except Exception as e:
         print(f"      [browser] {company_name} failed: {e}")
     return results
+
+
+
+def scrape_priority_sheet2_generic(company_name, url, session=None):
+    """Generic Ireland-first browser fallback for selected high-priority companies
+    from the user's Sheet 2. It does not change the existing company/platform
+    scrapers; it only adds a fallback path for companies that otherwise remain
+    manual. The page is rendered in an Ireland locale, job-looking links are
+    collected from the rendered page, and only cards/details with an Ireland
+    signal are emitted."""
+    if not HAS_PLAYWRIGHT:
+        print(f"      [priority-generic] {company_name}: Playwright not installed")
+        return []
+
+    results = {}
+    try:
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch(headless=True, args=["--disable-http2"])
+            page = browser.new_page(
+                viewport={"width": 1440, "height": 1000},
+                locale="en-IE",
+                timezone_id="Europe/Dublin",
+            )
+            page.goto(url, wait_until="domcontentloaded", timeout=45000)
+            page.wait_for_timeout(1800)
+
+            # Dismiss common consent banners without assuming a specific vendor.
+            for consent_text in (
+                "Accept all", "Accept All", "I agree", "I Agree",
+                "Accept", "Allow all", "Allow All", "Got it", "OK",
+            ):
+                try:
+                    btn = page.get_by_role("button", name=consent_text, exact=False)
+                    if btn.count():
+                        btn.first.click(timeout=1500)
+                        page.wait_for_timeout(600)
+                        break
+                except Exception:
+                    pass
+
+            # Let lazy-loaded career results appear, but keep this bounded.
+            last_count = -1
+            stable = 0
+            for _ in range(10):
+                try:
+                    count = page.locator("a[href]").count()
+                except Exception:
+                    count = 0
+                if count == last_count:
+                    stable += 1
+                else:
+                    stable = 0
+                last_count = count
+                if stable >= 2:
+                    break
+                page.mouse.wheel(0, 4500)
+                page.wait_for_timeout(700)
+
+            anchors = page.locator("a[href]")
+            jobish = re.compile(
+                r"(job|jobs|career|careers|vacanc|position|opening|opportunit|requisition|"
+                r"apply|jobdetail|job-detail|jobdetailpage|searchresult|jobposting|"
+                r"employment|talent)",
+                re.I,
+            )
+
+            seen = set()
+            candidate_count = 0
+            for i in range(min(anchors.count(), 5000)):
+                a = anchors.nth(i)
+                try:
+                    raw = a.get_attribute("href") or ""
+                    href = urllib.parse.urljoin(page.url, raw).split("#")[0]
+                    text = _browser_text(a)
+                except Exception:
+                    continue
+                if not href or href in seen or href.startswith(("mailto:", "tel:", "javascript:")):
+                    continue
+                if not jobish.search(href) and not jobish.search(text):
+                    continue
+                # Skip obvious navigation/account/social links.
+                if re.search(r"/(login|signin|register|account|privacy|terms|contact|about)(?:/|$)", href, re.I):
+                    continue
+
+                card = _browser_card(a)
+                if not card:
+                    card = text
+
+                ireland = is_ireland_location(card)
+                # If the page itself is explicitly Ireland-filtered, trust that
+                # page-level signal when the card hides the location.
+                page_text = _browser_text(page.locator("body"))[:12000]
+                ireland_page = bool(re.search(r"\b(Ireland|Dublin|Cork|Galway|Limerick)\b", page_text, re.I))
+                if not ireland and not ireland_page:
+                    continue
+
+                title = text.strip()
+                if not title or len(title) > 300 or jobish.search(title):
+                    lines = [x.strip() for x in card.splitlines() if x.strip()]
+                    title = next(
+                        (x for x in lines if 4 <= len(x) <= 180 and not is_ireland_location(x)
+                         and not re.search(r"^(apply|view|learn more|read more)$", x, re.I)),
+                        "",
+                    )
+                if not title:
+                    continue
+
+                seen.add(href)
+                candidate_count += 1
+                posted_text, posted_days = extract_posted_from_text(card)
+                sponsorship, snippet = classify_sponsorship(card[:5000])
+                location = _extract_location_from_card(card, "Ireland")
+                results[href.rstrip("/").lower()] = {
+                    "company": company_name,
+                    "title": title[:300],
+                    "location": location,
+                    "posted_text": posted_text,
+                    "posted_days_ago": posted_days,
+                    "employment_type": normalize_employment_type(None, title),
+                    "url": href,
+                    "source": "priority_sheet2_generic",
+                    "visa_sponsorship": sponsorship,
+                    "visa_snippet": snippet,
+                }
+
+                if len(results) >= 80:
+                    break
+
+            print(f"      [priority-generic] {company_name}: {len(results)} Ireland candidates "
+                  f"from {candidate_count} job-like links")
+            browser.close()
+    except Exception as e:
+        print(f"      [priority-generic] {company_name} failed: {e}")
+    return list(results.values())
 
 
 def _extract_location_from_card(card_text, default="Ireland"):
@@ -5201,6 +5335,27 @@ def test_single_company(name):
         return
 
     url = row["career_url"].strip()
+
+    priority_sheet2_names = {
+        "axa ireland", "aldi ireland", "alvarez & marsal", "aviva ireland", "bdo ireland",
+        "bny mellon", "bain & company", "baker tilly ireland", "boston consulting group (bcg)",
+        "cantor fitzgerald ireland", "capgemini", "coca-cola hbc ireland", "databricks", "davy",
+        "dunnes stores", "dynatrace", "fbd insurance", "fti consulting", "factset",
+        "fidelity investments", "fiserv", "fitch ratings", "forvis mazars ireland",
+        "glanbia / tirlán", "goldman sachs",
+    }
+    if row["company_name"].strip().lower() in priority_sheet2_names:
+        print(f"Matched Sheet 2 priority coverage (generic Ireland-first browser fallback).\n")
+        jobs = scrape_priority_sheet2_generic(row["company_name"], url, session)
+        for j in jobs:
+            normalize_posted_age(j)
+        print(f"\n=== RESULT: {len(jobs)} Ireland postings found for '{name}' ===")
+        for j in jobs[:10]:
+            print(f"  - {j['title']} | {j['location']} | posted_days_ago={j['posted_days_ago']} | {j['url']}")
+        if len(jobs) > 10:
+            print(f"  ... and {len(jobs) - 10} more")
+        return
+
     if classify_url(url) == "workday":
         workday_session = make_workday_session()
         jobs, error = fetch_workday_jobs(row["company_name"], url, workday_session, fetch_descriptions=True)
@@ -5343,6 +5498,7 @@ def main():
     # the main thread and crashed every single one of these companies the
     # first time this was parallelized. Confirmed fixed this time with a
     # direct reproduction test before shipping.
+    # ------------------------------------------------------------------
     dedicated_company_specs = [
         ("prefix", "apple", scrape_apple_ireland, 180, "direct HTML scrape"),
         ("exact", "google", scrape_google_ireland, 240, "real browser automation"),
@@ -5452,6 +5608,68 @@ def main():
 
         actual_timeout = effective_timeout(browser_cache, company_name, base_timeout)
         task_list.append((key, company_name, make_light_task(), actual_timeout))
+
+    # SHEET 2 PRIORITY COVERAGE
+    # These are the first 25 Tier-1 companies from the user's
+    # "2. Not Live Yet - Keep" sheet that do not already have a dedicated
+    # scraper above. They get an Ireland-first browser fallback so they can
+    # move from manual_check into the live job list when the career page
+    # exposes current Ireland vacancies.
+    PRIORITY_SHEET2_COMPANIES = {
+        "axa ireland",
+        "aldi ireland",
+        "alvarez & marsal",
+        "aviva ireland",
+        "bdo ireland",
+        "bny mellon",
+        "bain & company",
+        "baker tilly ireland",
+        "boston consulting group (bcg)",
+        "cantor fitzgerald ireland",
+        "capgemini",
+        "coca-cola hbc ireland",
+        "databricks",
+        "davy",
+        "dunnes stores",
+        "dynatrace",
+        "fbd insurance",
+        "fti consulting",
+        "factset",
+        "fidelity investments",
+        "fiserv",
+        "fitch ratings",
+        "forvis mazars ireland",
+        "glanbia / tirlán",
+        "goldman sachs",
+    }
+
+    priority_entries = [
+        entry for entry in manual_check
+        if entry["company"].strip().lower() in PRIORITY_SHEET2_COMPANIES
+    ]
+    for entry in priority_entries:
+        company_name = entry["company"].strip()
+        matched_entries[company_name] = entry
+
+        def make_priority_task(name=company_name, u=entry["url"]):
+            return lambda: cached_browser_scrape(
+                browser_cache,
+                name,
+                lambda: scrape_priority_sheet2_generic(name, u, session),
+                0,
+                name,
+            )
+
+        actual_timeout = effective_timeout(browser_cache, company_name, 150)
+        task_list.append(("sheet2_priority", company_name, make_priority_task(), actual_timeout))
+
+    print(
+        f"\n=== Sheet 2 priority coverage: {len(priority_entries)}/25 selected companies "
+        f"queued for Ireland browser fallback ==="
+    )
+    if priority_entries:
+        print("  -> " + ", ".join(e["company"] for e in priority_entries))
+
 
     print(f"\n=== Running {len(task_list)} dedicated company scrapers in parallel "
           f"(up to {PARALLEL_WORKERS} at once) ===")
