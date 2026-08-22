@@ -5507,9 +5507,54 @@ PRIORITY_SHEET2_COMPANIES = {
     "nxp semiconductors",
     "netapp",
     "nokia",
-    # Note: this is the 141-company combined priority set (150 requested,
-    # minus hcltech, plus the 3 skipped above); the next Sheet-2 entries
-    # will be added in a later batch.
+    # Eighth batch — 25 companies requested from Sheet 2 (rows 157-181),
+    # 23 actually added below. Two were skipped:
+    #   - "red hat" — identical CSV row to the "red hat" key already in
+    #     dedicated_company_specs (scrape_red_hat_ireland). It already has
+    #     a purpose-built scraper; the generic fallback wouldn't add
+    #     anything, just burn a worker slot re-hitting the same page.
+    #   - "siemens" — same reasoning, identical CSV row to the existing
+    #     "siemens" dedicated scraper (which is also one of the companies
+    #     currently on a reduced failure-budget in recent runs).
+    # Four are worth flagging even though they're KEPT in, not skipped:
+    # "qualcomm", "resmed", "takeda", "teleflex" all already get checked
+    # every run via the Workday phase and came back with 0 Ireland
+    # postings there (confirmed in your own run logs) — but that's a
+    # different mechanism (Workday's JSON API) than this generic fallback
+    # (rendering the page and scanning links), and your logs show Workday's
+    # API-side Ireland filter is unreliable for some companies (the
+    # "total=361 implausibly high, filter didn't apply" pattern seen on
+    # Broadcom/VMware). So there's a genuine chance the generic scraper
+    # succeeds where the Workday API parse doesn't — unlike Red Hat/Siemens,
+    # these four don't have a purpose-built scraper standing in for this
+    # already. Worth watching whether they actually turn up anything new;
+    # if they don't after a few runs, they're better dropped too.
+    "novartis",
+    "ornua",
+    "palo alto networks",
+    "qiagen",
+    "qualcomm",
+    "regeneron",
+    "resmed",
+    "revvity (perkinelmer)",
+    "roche",
+    "ryanair",
+    "smbc aviation capital",
+    "sse airtricity / sse",
+    "shannon airport group",
+    "sky ireland",
+    "slack",
+    "smith & nephew",
+    "smurfit westrock",
+    "stena line ireland",
+    "stryker",
+    "syneos health",
+    "takeda",
+    "tandem diabetes care",
+    "teleflex",
+    # Note: this is the 164-company combined priority set (175 requested,
+    # minus hcltech, plus the 5 skipped duplicates across all batches);
+    # the next Sheet-2 entries will be added in a later batch.
 }
 
 
@@ -5803,42 +5848,20 @@ def main():
     task_list = []
     matched_entries = {}
 
-    # SHEET 2 PRIORITY COVERAGE — queueing happens here, now that task_list
-    # and matched_entries actually exist. (FIX: this block previously sat
-    # above the dedicated_company_specs loop and referenced task_list /
-    # matched_entries before they were ever assigned — the exact
-    # use-before-definition bug already caught and fixed once before in
-    # this file's history. It crept back in when the second batch of 24
-    # companies was added. Confirmed via pyflakes: both names flagged as
-    # "undefined name" at their old location. Moving this block to after
-    # the two `= []` / `= {}` lines above fixes it — order relative to the
-    # dedicated_company_specs loop below doesn't matter functionally.)
-    priority_entries = [
-        entry for entry in manual_check
-        if entry["company"].strip().lower() in PRIORITY_SHEET2_COMPANIES
-    ]
-    for entry in priority_entries:
-        company_name = entry["company"].strip()
-        matched_entries[company_name] = entry
-
-        def make_priority_task(name=company_name, u=entry["url"]):
-            return lambda: cached_browser_scrape(
-                browser_cache,
-                name,
-                lambda: scrape_priority_sheet2_generic(name, u, session),
-                0,
-                name,
-            )
-
-        actual_timeout = effective_timeout(browser_cache, company_name, 150)
-        task_list.append(("sheet2_priority", company_name, make_priority_task(), actual_timeout, True))
-
-    print(
-        f"\n=== Sheet 2 priority coverage: {len(priority_entries)}/{len(PRIORITY_SHEET2_COMPANIES)} "
-        f"selected companies queued for Ireland browser fallback ==="
-    )
-    if priority_entries:
-        print("  -> " + ", ".join(e["company"] for e in priority_entries))
+    # ------------------------------------------------------------------
+    # ORDERING FIX: dedicated/oracle_cx/lightweight scrapers (all
+    # long-proven, reliable companies — Microsoft, Google, Citi, JPMorgan
+    # Chase, etc.) are queued FIRST, and the 141 more speculative Sheet 2
+    # priority companies are queued LAST. This matters because
+    # ThreadPoolExecutor serves submitted tasks roughly in submission
+    # order as workers free up — with the browser pool capped at
+    # BROWSER_WORKERS, if Sheet 2's ~140 companies were submitted first
+    # (as they were before this fix), an established company like
+    # Microsoft could sit behind well over a hundred speculative new
+    # entries before ever getting a worker, and time out before its own
+    # scrape even started. Queuing proven companies first means new
+    # additions can never crowd out or delay existing working coverage —
+    # they only ever queue behind it.
 
     # Functions confirmed (by direct source-code check for sync_playwright)
     # to launch a real Chrome instance — everything else in
@@ -5928,6 +5951,42 @@ def main():
         actual_timeout = effective_timeout(browser_cache, company_name, base_timeout)
         is_browser = scraper_fn.__name__ in LIGHTWEIGHT_BROWSER_EXCEPTIONS
         task_list.append((key, company_name, make_light_task(), actual_timeout, is_browser))
+
+    # SHEET 2 PRIORITY COVERAGE — queued LAST, deliberately (see ordering
+    # note above). Also now that task_list/matched_entries actually exist:
+    # this block previously sat above the dedicated_company_specs loop and
+    # referenced task_list/matched_entries before they were ever assigned —
+    # the exact use-before-definition bug already caught and fixed once
+    # before in this file's history, and it crept back in more than once
+    # when new batches of companies were added on top of an un-fixed base
+    # file. Confirmed via pyflakes each time: both names flagged as
+    # "undefined name" at their old location.
+    priority_entries = [
+        entry for entry in manual_check
+        if entry["company"].strip().lower() in PRIORITY_SHEET2_COMPANIES
+    ]
+    for entry in priority_entries:
+        company_name = entry["company"].strip()
+        matched_entries[company_name] = entry
+
+        def make_priority_task(name=company_name, u=entry["url"]):
+            return lambda: cached_browser_scrape(
+                browser_cache,
+                name,
+                lambda: scrape_priority_sheet2_generic(name, u, session),
+                0,
+                name,
+            )
+
+        actual_timeout = effective_timeout(browser_cache, company_name, 150)
+        task_list.append(("sheet2_priority", company_name, make_priority_task(), actual_timeout, True))
+
+    print(
+        f"\n=== Sheet 2 priority coverage: {len(priority_entries)}/{len(PRIORITY_SHEET2_COMPANIES)} "
+        f"selected companies queued for Ireland browser fallback ==="
+    )
+    if priority_entries:
+        print("  -> " + ", ".join(e["company"] for e in priority_entries))
 
     browser_count = sum(1 for t in task_list if t[4])
     http_count = len(task_list) - browser_count
