@@ -5311,6 +5311,7 @@ def test_single_company(name):
         "red hat": lambda: scrape_red_hat_ireland(session),
         "oracle": lambda: scrape_oracle_candidate_experience("Oracle", "https://eeho.fa.us2.oraclecloud.com", "CX_1", session),
         "jpmorgan chase": lambda: scrape_oracle_candidate_experience("JPMorgan Chase", "https://jpmc.fa.oraclecloud.com", "CX_1001", session),
+        "bny mellon": lambda: scrape_oracle_candidate_experience("BNY Mellon", "https://eofe.fa.us2.oraclecloud.com", "CX_1001", session),
     }
     matched_key = next((k for k in dedicated if name_lower == k or name_lower.startswith(k)), None)
 
@@ -5338,7 +5339,7 @@ def test_single_company(name):
 
     priority_sheet2_names = {
         "axa ireland", "aldi ireland", "alvarez & marsal", "aviva ireland", "bdo ireland",
-        "bny mellon", "bain & company", "baker tilly ireland", "boston consulting group (bcg)",
+        "bain & company", "baker tilly ireland", "boston consulting group (bcg)",
         "cantor fitzgerald ireland", "capgemini", "coca-cola hbc ireland", "databricks", "davy",
         "dunnes stores", "dynatrace", "fbd insurance", "fti consulting", "factset",
         "fidelity investments", "fiserv", "fitch ratings", "forvis mazars ireland",
@@ -5569,6 +5570,7 @@ def main():
     oracle_cx_targets = [
         ("jpmorgan chase", "JPMorgan Chase", "https://jpmc.fa.oraclecloud.com", "CX_1001"),
         ("oracle", "Oracle", "https://eeho.fa.us2.oraclecloud.com", "CX_1"),
+        ("bny mellon", "BNY Mellon", "https://eofe.fa.us2.oraclecloud.com", "CX_1001"),
     ]
     for exact_name, display_name, host, site_number in oracle_cx_targets:
         entry = next((c for c in manual_check if c["company"].strip().lower() == exact_name), None)
@@ -5621,7 +5623,6 @@ def main():
         "alvarez & marsal",
         "aviva ireland",
         "bdo ireland",
-        "bny mellon",
         "bain & company",
         "baker tilly ireland",
         "boston consulting group (bcg)",
