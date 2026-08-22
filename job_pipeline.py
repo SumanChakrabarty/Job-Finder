@@ -5384,8 +5384,57 @@ PRIORITY_SHEET2_COMPANIES = {
     "cook medical",
     "dhl ireland",
     "dsv ireland",
-    # Note: this is the 99-company combined priority set (100 requested,
-    # minus hcltech since it's already covered by a dedicated scraper);
+    # Fifth batch — 25 companies requested from Sheet 2 (rows 107-131),
+    # 21 actually added below. Four were skipped because their CSV
+    # career_url is IDENTICAL to a company already covered elsewhere —
+    # running the generic scraper on them again would just re-scrape the
+    # exact same page under a second label, producing duplicate-looking
+    # job entries in the dashboard for zero new information, and burning
+    # a worker slot for nothing:
+    #   - "dawn meats" — identical CSV row/URL to the "dawn meats" key
+    #     already in lightweight_specs (dawnmeats.com/careers/).
+    #   - "guidewire" — identical CSV row/URL to the "guidewire" key
+    #     already in dedicated_company_specs (guidewire.com/about/careers/jobs).
+    #   - "depuy synthes" — its CSV career_url is jobs.jnj.com/en/jobs/?search=Ireland,
+    #     the exact same URL "johnson & johnson" already scrapes (DePuy
+    #     Synthes is J&J MedTech) — its jobs are already being picked up,
+    #     just labeled "Johnson & Johnson".
+    #   - "horizon therapeutics (amgen)" — its CSV career_url is
+    #     careers.amgen.com/search-jobs/Ireland, the exact same URL "amgen"
+    #     (added in the third batch) already scrapes — same reasoning.
+    # If you want these under their own distinct company name in the
+    # dashboard rather than folded into the parent company's listing, say
+    # so and I'll add them back with a note instead of skipping.
+    "dairygold",
+    "danaher corporation",
+    "dell technologies",
+    "dexcom",
+    "docusign",
+    "dublin bus",
+    # NOTE: "esb (electricity supply board)" is a separate CSV row from
+    # the existing "esb" (lightweight_specs) with a DIFFERENT career_url
+    # (esb.ie/careers vs careers.esb.ie/go/All-Jobs/882102/) — same real
+    # company, but since the URLs genuinely differ this is kept in rather
+    # than dropped like the four above, same treatment as the earlier
+    # SuperValu/Musgrave case. Worth consolidating once you see which URL
+    # actually returns results.
+    "esb (electricity supply board)",
+    "edwards lifesciences",
+    "eir",
+    "eirgrid group",
+    "eli lilly",
+    "energia group",
+    "fastway couriers ireland",
+    "fedex express ireland",
+    "gas networks ireland",
+    "glaxosmithkline (gsk)",
+    "hp (hewlett-packard)",
+    "hse (health service executive)",
+    "haleon",
+    "hewlett packard enterprise (hpe)",
+    "hollister incorporated",
+    # Note: this is the 119-company combined priority set (125 requested,
+    # minus hcltech, plus these 4 exact-URL duplicates skipped above);
     # the next Sheet-2 entries will be added in a later batch.
 }
 
