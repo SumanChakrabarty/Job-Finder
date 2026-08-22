@@ -230,6 +230,21 @@ EMPTY_RESULT_MAX_AGE_HOURS = 0.5  # empty results retried much sooner — could 
 PARALLEL_WORKERS = int(os.environ.get("SCRAPE_WORKERS", "10"))  # conservative — GitHub Actions'
 # free-tier runners have limited CPU/memory (~2 cores, 7GB RAM); too many simultaneous real
 # Chrome instances can crash or silently fail
+#
+# FIX: as the Sheet 2 priority list grew (now 141 companies, most routed through the same
+# Playwright-based generic fallback) the single 10-worker pool above started mixing dozens of
+# real-browser tasks with plain HTTP-request tasks in one queue. A real run showed the fallout
+# directly: 94 fetch errors (vs. 34 on a normal run) and a cluster of HARD TIMEOUTs on companies
+# that reliably succeed otherwise (Microsoft, BlackRock, JPMorgan Chase, Huawei, NTT DATA,
+# GE HealthCare, Oracle, Irish Life, EXL, PepsiCo, Allianz) — all timing out late in the run,
+# consistent with the runner running low on CPU/memory under ~10 concurrent real Chrome
+# instances. Splitting into two separate pools means plain HTTP-only tasks (cheap, no Chrome)
+# get real concurrency, while browser-based tasks are capped lower so they don't collectively
+# exhaust the runner and starve whatever gets scheduled late.
+BROWSER_WORKERS = int(os.environ.get("BROWSER_WORKERS", "5"))   # real Chrome instances — kept
+# low deliberately; this is the resource-heavy pool that was causing the cascading timeouts
+HTTP_WORKERS = int(os.environ.get("HTTP_WORKERS", "15"))  # plain requests — cheap, can run
+# with much higher concurrency than real browser tasks without risking the runner's memory
 
 
 def _load_browser_scrape_cache():
@@ -293,10 +308,10 @@ def effective_timeout(cache, company_key, base_timeout):
         return max(30, int(base_timeout * 0.25))
 
 
-def run_company_tasks_in_parallel(tasks, workers=None):
+def run_company_tasks_in_parallel(tasks, browser_workers=None, http_workers=None):
     """Runs company scrapers concurrently instead of one at a time — the
     real fix for a multi-hour runtime. Each task is (label, company_name,
-    callable, timeout_seconds).
+    callable, timeout_seconds, is_browser).
 
     Timeout is enforced via future.result(timeout=X) — the thread-safe
     way to do this. signal.alarm() (the previous mechanism, used
@@ -318,13 +333,30 @@ def run_company_tasks_in_parallel(tasks, workers=None):
     task to actually complete before the pool would let the program move
     on. Explicitly shutting down with wait=False avoids this — any
     genuinely stuck background thread is abandoned (Python has no clean
-    way to force-kill a thread) rather than blocking everything else."""
+    way to force-kill a thread) rather than blocking everything else.
+
+    FIX: tasks now run in TWO separate pools instead of one shared one —
+    real-browser (Playwright/Chrome) tasks in a small pool, plain-HTTP
+    tasks in a larger one. A real run showed why this matters: with every
+    task sharing one 10-worker pool, a wave of legitimate companies
+    (Microsoft, BlackRock, JPMorgan Chase, Huawei, NTT DATA, GE HealthCare,
+    Oracle, Irish Life, EXL, PepsiCo, Allianz) hit HARD TIMEOUT purely
+    because the runner ran low on resources under too many concurrent real
+    Chrome instances — not because those companies had no jobs. Both pools
+    are submitted together and polled through the same deadline logic
+    below, so timeout/reporting behavior is unchanged; only how much
+    Chrome-heavy work can run at once is capped separately from cheap HTTP
+    work."""
     results, errors = [], []
     if not tasks:
         return results, errors
-    pool = ThreadPoolExecutor(max_workers=workers or PARALLEL_WORKERS)
+    browser_pool = ThreadPoolExecutor(max_workers=browser_workers or BROWSER_WORKERS)
+    http_pool = ThreadPoolExecutor(max_workers=http_workers or HTTP_WORKERS)
     try:
-        future_map = {pool.submit(fn): (label, company, timeout_s) for label, company, fn, timeout_s in tasks}
+        future_map = {}
+        for label, company, fn, timeout_s, is_browser in tasks:
+            pool = browser_pool if is_browser else http_pool
+            future_map[pool.submit(fn)] = (label, company, timeout_s)
         start_time = time.time()
         deadlines = {fut: start_time + timeout_s for fut, (_, _, timeout_s) in future_map.items()}
         pending = set(future_map)
@@ -373,7 +405,8 @@ def run_company_tasks_in_parallel(tasks, workers=None):
                       f"(pipeline continues normally with whatever else it already found)")
                 errors.append(f"{label}/{company}: timed out after {timeout_s}s")
     finally:
-        pool.shutdown(wait=False)
+        browser_pool.shutdown(wait=False)
+        http_pool.shutdown(wait=False)
     return results, errors
 
 
@@ -5798,7 +5831,7 @@ def main():
             )
 
         actual_timeout = effective_timeout(browser_cache, company_name, 150)
-        task_list.append(("sheet2_priority", company_name, make_priority_task(), actual_timeout))
+        task_list.append(("sheet2_priority", company_name, make_priority_task(), actual_timeout, True))
 
     print(
         f"\n=== Sheet 2 priority coverage: {len(priority_entries)}/{len(PRIORITY_SHEET2_COMPANIES)} "
@@ -5806,6 +5839,24 @@ def main():
     )
     if priority_entries:
         print("  -> " + ", ".join(e["company"] for e in priority_entries))
+
+    # Functions confirmed (by direct source-code check for sync_playwright)
+    # to launch a real Chrome instance — everything else in
+    # dedicated_company_specs is plain HTTP requests. Used below to route
+    # each task into the right pool (see run_company_tasks_in_parallel).
+    BROWSER_BASED_SCRAPER_NAMES = {
+        "scrape_google_ireland", "scrape_meta_ireland", "scrape_ey_ireland",
+        "scrape_kpmg_ireland", "scrape_tiktok_ireland", "scrape_boston_scientific_ireland",
+        "scrape_microsoft_ireland", "scrape_citi_ireland", "scrape_red_hat_ireland",
+        "scrape_johnson_controls_ireland", "scrape_hsbc_ireland", "scrape_dxc_ireland",
+        "scrape_aon_ireland", "scrape_nvidia_ireland", "scrape_aib_ireland",
+        "scrape_bnp_paribas_ireland", "scrape_blackrock_ireland", "scrape_bank_of_ireland_direct",
+        "scrape_ing_ireland", "scrape_deutsche_bank_ireland", "scrape_central_bank_ireland_direct",
+        "scrape_irish_life_ireland", "scrape_ups_ireland", "scrape_three_ireland_direct",
+        "scrape_huawei_ireland", "scrape_ge_healthcare_ireland", "scrape_ntt_data_ireland",
+        "scrape_guidewire_ireland", "scrape_hcltech_ireland", "scrape_allianz_ireland",
+        "scrape_siemens_ireland",
+    }
 
     for match_type, key, scraper_fn, timeout_s, description in dedicated_company_specs:
         if match_type == "exact":
@@ -5825,7 +5876,8 @@ def main():
             failures = (browser_cache.get(company_name) or {}).get("consecutive_failures", 0)
             print(f"  [{company_name}] {failures} consecutive failures — reduced budget "
                   f"{timeout_s}s -> {actual_timeout}s this run")
-        task_list.append((key, company_name, make_task(), actual_timeout))
+        is_browser = scraper_fn.__name__ in BROWSER_BASED_SCRAPER_NAMES
+        task_list.append((key, company_name, make_task(), actual_timeout, is_browser))
 
     oracle_cx_targets = [
         ("jpmorgan chase", "JPMorgan Chase", "https://jpmc.fa.oraclecloud.com", "CX_1001"),
@@ -5842,10 +5894,15 @@ def main():
             return lambda: cached_browser_scrape(
                 browser_cache, name, lambda: scrape_oracle_candidate_experience(name, h, s, session), 0, name)
 
-        task_list.append(("oracle_cx", company_name, make_oracle_task(), 180))
+        task_list.append(("oracle_cx", company_name, make_oracle_task(), 180, False))
 
-    # 9 new companies, all lightweight (plain HTTP requests, no browser) —
-    # deliberately chosen this way to avoid adding real cost to runtime.
+    # 9 new companies — 8 are genuinely lightweight (plain HTTP requests, no
+    # browser), deliberately chosen that way to avoid adding real cost to
+    # runtime. ASL Aviation Holdings is the exception: despite the label,
+    # its scraper (scrape_asl_aviation_ireland) actually launches a real
+    # Playwright browser — confirmed by checking its source directly — so
+    # it's routed to the browser pool below, not the HTTP one, to keep this
+    # comment and the routing decision honest.
     lightweight_specs = [
         ("esb", "ESB", scrape_esb_ireland, 60),
         ("irish rail (iarnród éireann)", "Irish Rail (Iarnród Éireann)", scrape_irish_rail_ireland, 45),
@@ -5857,6 +5914,7 @@ def main():
         ("biomarin", "BioMarin", scrape_biomarin_ireland, 90),
         ("asl aviation holdings", "ASL Aviation Holdings", scrape_asl_aviation_ireland, 150),
     ]
+    LIGHTWEIGHT_BROWSER_EXCEPTIONS = {"scrape_asl_aviation_ireland"}
     for key, display_name, scraper_fn, base_timeout in lightweight_specs:
         entry = next((c for c in manual_check if c["company"].strip().lower() == key), None)
         if not entry:
@@ -5868,10 +5926,14 @@ def main():
             return lambda: cached_browser_scrape(browser_cache, name, lambda: fn(session), 0, name)
 
         actual_timeout = effective_timeout(browser_cache, company_name, base_timeout)
-        task_list.append((key, company_name, make_light_task(), actual_timeout))
+        is_browser = scraper_fn.__name__ in LIGHTWEIGHT_BROWSER_EXCEPTIONS
+        task_list.append((key, company_name, make_light_task(), actual_timeout, is_browser))
 
-    print(f"\n=== Running {len(task_list)} dedicated company scrapers in parallel "
-          f"(up to {PARALLEL_WORKERS} at once) ===")
+    browser_count = sum(1 for t in task_list if t[4])
+    http_count = len(task_list) - browser_count
+    print(f"\n=== Running {len(task_list)} dedicated company scrapers "
+          f"({browser_count} browser-based, up to {BROWSER_WORKERS} at once; "
+          f"{http_count} plain HTTP, up to {HTTP_WORKERS} at once) ===")
     parallel_results, parallel_errors = run_company_tasks_in_parallel(task_list)
 
     for company_name, jobs in parallel_results:
