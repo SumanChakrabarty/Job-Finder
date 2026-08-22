@@ -241,10 +241,23 @@ PARALLEL_WORKERS = int(os.environ.get("SCRAPE_WORKERS", "10"))  # conservative �
 # instances. Splitting into two separate pools means plain HTTP-only tasks (cheap, no Chrome)
 # get real concurrency, while browser-based tasks are capped lower so they don't collectively
 # exhaust the runner and starve whatever gets scheduled late.
-BROWSER_WORKERS = int(os.environ.get("BROWSER_WORKERS", "5"))   # real Chrome instances — kept
-# low deliberately; this is the resource-heavy pool that was causing the cascading timeouts
+BROWSER_WORKERS = int(os.environ.get("BROWSER_WORKERS", "7"))   # real Chrome instances — kept
+# low deliberately; this is the resource-heavy pool that was causing the cascading timeouts.
+# Raised from 5 to 7 once the Sheet 2 list grew to 207 browser tasks sharing this pool — 5 was
+# too little throughput for that queue depth even with fair per-task timing (see the NOT REACHED
+# fix below). Still well under the original single 10-worker pool that caused the first
+# Microsoft/JPMorgan incident. Watch the NOT REACHED count in real logs — raise further if it's
+# still high and the runner isn't showing memory/CPU strain, lower if timeouts start clustering
+# again.
 HTTP_WORKERS = int(os.environ.get("HTTP_WORKERS", "15"))  # plain requests — cheap, can run
 # with much higher concurrency than real browser tasks without risking the runner's memory
+OVERALL_BATCH_TIMEOUT_SECONDS = int(os.environ.get("BATCH_CEILING_SECONDS", "720"))  # 12 min —
+# a hard ceiling on the whole dedicated-scraper phase. Needed once per-task deadlines were
+# fixed to start counting from actual execution, not submission: without SOME overall cap,
+# a queue deeper than the pool can clear in one run would just hang forever waiting for
+# stragglers. Anything still not even started when this hits is reported as NOT REACHED
+# (not a real timeout) and picked up again next run — increase if full coverage matters more
+# than a fast run; decrease if runtime matters more than reaching every company every time.
 
 
 def _load_browser_scrape_cache():
@@ -342,45 +355,66 @@ def run_company_tasks_in_parallel(tasks, browser_workers=None, http_workers=None
     (Microsoft, BlackRock, JPMorgan Chase, Huawei, NTT DATA, GE HealthCare,
     Oracle, Irish Life, EXL, PepsiCo, Allianz) hit HARD TIMEOUT purely
     because the runner ran low on resources under too many concurrent real
-    Chrome instances — not because those companies had no jobs. Both pools
-    are submitted together and polled through the same deadline logic
-    below, so timeout/reporting behavior is unchanged; only how much
-    Chrome-heavy work can run at once is capped separately from cheap HTTP
-    work."""
+    Chrome instances — not because those companies had no jobs.
+
+    SECOND FIX, found from a real run right after the pool split shipped:
+    each task's deadline used to be calculated from when the WHOLE BATCH
+    started (a single shared `start_time`), not from when that specific
+    task actually got a worker and began running. With 207 browser tasks
+    sharing only 5 workers, anything queued deep in line had its 150s/240s
+    clock already ticking down before it ever got a turn — a real run
+    showed exactly this: 40 companies in a row hit "HARD TIMEOUT after
+    150s" back-to-back, purely from queue position, having never actually
+    started a scrape. Each task's own start time is now recorded the
+    moment it actually begins executing (first line inside the wrapped
+    callable, so it reflects real dispatch, not submission), and a task's
+    personal deadline is computed from THAT — so no task is punished for
+    time spent waiting in line; its timeout budget only starts counting
+    once it's actually running.
+
+    That alone isn't enough on its own, though — without any ceiling,
+    tasks that never even get a worker turn would sit in `pending`
+    forever and the whole run would hang. So there's now also an overall
+    ceiling (`overall_deadline`, default 12 minutes, configurable) on the
+    batch as a whole: once it's reached, anything that never got a chance
+    to start is reported as NOT REACHED (distinct from a real HARD
+    TIMEOUT, since it never actually ran) rather than silently vanishing
+    or hanging the run — so it's visible in the log which companies are
+    structurally being starved out, instead of that fact being invisible."""
     results, errors = [], []
     if not tasks:
         return results, errors
     browser_pool = ThreadPoolExecutor(max_workers=browser_workers or BROWSER_WORKERS)
     http_pool = ThreadPoolExecutor(max_workers=http_workers or HTTP_WORKERS)
+    task_started_at = {}
+
+    def wrap(fn, task_id):
+        def wrapped():
+            task_started_at[task_id] = time.time()
+            return fn()
+        return wrapped
+
     try:
         future_map = {}
-        for label, company, fn, timeout_s, is_browser in tasks:
+        for task_id, (label, company, fn, timeout_s, is_browser) in enumerate(tasks):
             pool = browser_pool if is_browser else http_pool
-            future_map[pool.submit(fn)] = (label, company, timeout_s)
-        start_time = time.time()
-        deadlines = {fut: start_time + timeout_s for fut, (_, _, timeout_s) in future_map.items()}
+            fut = pool.submit(wrap(fn, task_id))
+            future_map[fut] = (label, company, timeout_s, task_id)
+        batch_start = time.time()
+        overall_deadline = batch_start + OVERALL_BATCH_TIMEOUT_SECONDS
         pending = set(future_map)
         # Report in TRUE completion order, not submission order — a task
         # near the front of the list that happens to be slow (DXC, in a
         # real run) was blocking the reported results of faster companies
         # that had already quietly finished behind it. Real work was
         # already parallel; only the reporting order was misleading.
-        #
-        # BUG FIXED HERE, confirmed via direct test: an earlier version of
-        # this fix used one shared overall timeout (the longest individual
-        # value in the batch) instead of each task's own specific budget —
-        # a company meant to give up after 60s could run the full 240s
-        # instead, since nothing enforced its own shorter deadline anymore.
-        # Poll in short intervals and check each still-pending task against
-        # its OWN deadline, not just one shared ceiling.
         while pending:
             now = time.time()
-            soonest_deadline = min(deadlines[f] for f in pending)
-            poll_window = max(0.1, min(soonest_deadline - now, 5.0))
+            poll_window = 1.0
             try:
                 for fut in as_completed(pending, timeout=poll_window):
                     pending.discard(fut)
-                    label, company, timeout_s = future_map[fut]
+                    label, company, timeout_s, task_id = future_map[fut]
                     try:
                         jobs = fut.result() or []
                         if jobs:
@@ -393,17 +427,36 @@ def run_company_tasks_in_parallel(tasks, browser_workers=None, http_workers=None
                         errors.append(f"{label}/{company}: {exc}")
             except FuturesTimeoutError:
                 pass  # normal — just means nothing finished within this poll window
-            # Anything still pending whose OWN deadline has now passed is
-            # reported as timed out, even if the shared poll loop continues
-            # for other tasks with a later deadline.
+            # Anything still pending gets checked two ways: if it's actually
+            # STARTED and blown its OWN per-task budget, that's a real HARD
+            # TIMEOUT. If it hasn't started at all yet, it's not punished
+            # for queueing — UNLESS the overall batch ceiling has now been
+            # reached, in which case it's abandoned and reported as never
+            # having gotten a turn, so that fact is visible rather than
+            # silently hanging or vanishing.
             now = time.time()
-            timed_out_now = [f for f in pending if deadlines[f] <= now]
+            timed_out_now = []
+            not_reached_now = []
+            for fut in pending:
+                label, company, timeout_s, task_id = future_map[fut]
+                started = task_started_at.get(task_id)
+                if started is not None and now - started >= timeout_s:
+                    timed_out_now.append(fut)
+                elif started is None and now >= overall_deadline:
+                    not_reached_now.append(fut)
             for fut in timed_out_now:
                 pending.discard(fut)
-                label, company, timeout_s = future_map[fut]
+                label, company, timeout_s, task_id = future_map[fut]
                 print(f"  -> {company}: HARD TIMEOUT after {timeout_s}s "
                       f"(pipeline continues normally with whatever else it already found)")
                 errors.append(f"{label}/{company}: timed out after {timeout_s}s")
+            for fut in not_reached_now:
+                pending.discard(fut)
+                label, company, timeout_s, task_id = future_map[fut]
+                print(f"  -> {company}: NOT REACHED — pool still busy with earlier "
+                      f"companies when the {OVERALL_BATCH_TIMEOUT_SECONDS}s batch ceiling hit; "
+                      f"never actually started this run, will be retried next run")
+                errors.append(f"{label}/{company}: not reached before batch ceiling")
     finally:
         browser_pool.shutdown(wait=False)
         http_pool.shutdown(wait=False)
