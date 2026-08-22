@@ -5552,9 +5552,40 @@ PRIORITY_SHEET2_COMPANIES = {
     "takeda",
     "tandem diabetes care",
     "teleflex",
-    # Note: this is the 164-company combined priority set (175 requested,
-    # minus hcltech, plus the 5 skipped duplicates across all batches);
-    # the next Sheet-2 entries will be added in a later batch.
+    # Ninth batch — final 16 companies from Sheet 2, 14 actually added
+    # below. Two were skipped:
+    #   - "three ireland" — identical CSV row to the "three ireland" key
+    #     already in dedicated_company_specs (scrape_three_ireland_direct).
+    #   - "ups ireland" — identical CSV row to the "ups ireland" key
+    #     already in dedicated_company_specs (scrape_ups_ireland).
+    # Same reasoning as Red Hat/Siemens in the previous batch: both already
+    # have purpose-built scrapers, so the generic fallback adds nothing.
+    #
+    # Four more (same treatment as Qualcomm/ResMed/Takeda/Teleflex above)
+    # are Workday-tenant companies that came back with 0 Ireland postings
+    # via the Workday phase in your own logs, but have no dedicated
+    # scraper of their own — kept in since the generic fallback might
+    # succeed where Workday's own Ireland-location filter doesn't (the
+    # same "total=361 implausibly high" unreliability seen elsewhere):
+    # "teva pharmaceuticals", "vmware (broadcom)", "viatris", "zimmer biomet".
+    "terumo",
+    "teva pharmaceuticals",
+    "texas instruments",
+    "thermo fisher scientific",
+    "uisce éireann (irish water)",
+    "vmware (broadcom)",
+    "viatris",
+    "virgin media ireland",
+    "vodafone ireland",
+    "waters corporation",
+    "wuxi biologics",
+    "zendesk",
+    "zimmer biomet",
+    "daa (dublin airport authority)",
+    # Note: this is the 178-company combined priority set (this batch was
+    # the final 16 from Sheet 2, for 191 total requested across all
+    # batches; minus hcltech, plus the 7 skipped exact-scraper duplicates
+    # across all batches). This is the full Sheet 2 list.
 }
 
 
