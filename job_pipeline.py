@@ -224,6 +224,7 @@ def classify_url(url: str) -> str:
 
 
 BROWSER_SCRAPE_CACHE_PATH = "browser_scrape_cache.json"
+JOB_RECORD_QUALITY_FIX_VERSION = 1
 BROWSER_SCRAPE_MAX_AGE_HOURS = 3  # only actually re-run a real browser scrape this often
 EMPTY_RESULT_MAX_AGE_HOURS = 0.5  # empty results retried much sooner — could be a real "no jobs",
 # or could be a one-time failure (crash, resource contention); don't lock in a failure for 3 hours
@@ -2061,6 +2062,289 @@ def _browser_scrape_jobs(company_name, url, link_fragment, source_tag):
 
 
 
+
+# --- job-record quality guardrails -------------------------------------------
+# These helpers deliberately favour precision over raw count. The generic
+# browser fallback used to accept navigation links merely because their URL or
+# text contained "career", "apply", "opportunity", etc. That created dashboard
+# records such as "APPLY TODAY", "Explore Euroimmun", "Learn more", category
+# pages, language selectors and career landing pages. None of those are jobs.
+
+_NON_JOB_TITLE_RE = re.compile(
+    r"""^(?:
+        apply(?:\s+(?:now|today|here))? |
+        view(?:\s+(?:job|jobs|role|roles|open\s+roles|opportunities|vacancies))? |
+        view\s+all(?:\s+.*)? |
+        learn\s+more |
+        read\s+more |
+        find\s+out\s+more |
+        discover(?:\s+more)? |
+        explore(?:\s+.*)? |
+        join\s+us |
+        join\s+(?:our\s+)?(?:team|talent\s+network) |
+        click\s+here |
+        see\s+(?:all|jobs|roles|vacancies) |
+        search\s+(?:jobs|roles|vacancies) |
+        jobs? |
+        careers? |
+        opportunities |
+        vacancies |
+        saved\s+jobs |
+        home |
+        about\s+us |
+        locations? |
+        benefits? |
+        our\s+(?:people|culture|values|sites|teams?) |
+        life\s+at\s+.* |
+        early\s+careers? |
+        experienced\s+professionals? |
+        students?(?:\s+and\s+graduates?)? |
+        graduates?(?:\s+programme)? |
+        internships? |
+        language |
+        english |
+        deutsch |
+        français |
+        español |
+        italiano |
+        português |
+        skip\s+to\s+(?:main\s+)?content |
+        open\s+submenu |
+        contact(?:\s+us)? |
+        faq |
+        faqs
+    )$""",
+    re.I | re.X,
+)
+
+# Lines that are metadata/navigation rather than a public-facing role title.
+_NON_JOB_LINE_RE = re.compile(
+    r"""^(?:
+        posted\b|date\s+posted\b|today$|yesterday$|
+        full[\s-]?time$|part[\s-]?time$|contract$|temporary$|permanent$|
+        ireland$|dublin(?:,\s*ireland)?$|cork(?:,\s*ireland)?$|
+        galway(?:,\s*ireland)?$|limerick(?:,\s*ireland)?$|
+        job\s+id\b|requisition\b|req(?:uisition)?\s*#|
+        share\b|facebook$|linkedin$|twitter$|x$
+    )""",
+    re.I | re.X,
+)
+
+# Common words that are strong evidence a text string is an actual role title.
+_ROLE_TITLE_WORD_RE = re.compile(
+    r"\b(?:analyst|analytics|architect|associate|administrator|advisor|adviser|"
+    r"accountant|auditor|consultant|controller|coordinator|developer|director|"
+    r"engineer|engineering|executive|intern|manager|officer|operator|planner|"
+    r"recruiter|scientist|specialist|supervisor|technician|lead|head|partner|"
+    r"sales|finance|financial|marketing|product|project|program|programme|"
+    r"operations|support|research|data|software|cloud|security|risk|quality|"
+    r"manufacturing|procurement|supply|driver|nurse|therapist|pharmacist|"
+    r"counsel|solicitor|legal|HR|human\s+resources)\b",
+    re.I,
+)
+
+def _looks_like_non_job_title(title):
+    """True when *title* is visibly a CTA/navigation/category label, not a role."""
+    t = re.sub(r"\s+", " ", str(title or "")).strip(" \t\r\n-|•")
+    if not t or len(t) < 3 or len(t) > 220:
+        return True
+    if _NON_JOB_TITLE_RE.fullmatch(t):
+        return True
+    # Obvious navigation/header blobs should never become titles.
+    if len(t.split()) >= 12 and not _ROLE_TITLE_WORD_RE.search(t):
+        return True
+    return False
+
+def _explicit_ireland_filtered_url(url):
+    """Only trust page-level Ireland filtering when the URL itself proves it.
+
+    A page merely mentioning Ireland somewhere in its body is NOT sufficient:
+    global career homepages routinely mention every country and caused jobs
+    from Spain/US/etc. to be labelled Ireland.
+    """
+    u = str(url or "")
+    decoded = urllib.parse.unquote_plus(u).lower()
+    patterns = (
+        r"/ireland(?:/|$|\?|#)",
+        r"/ireland-jobs(?:/|$|\?|#)",
+        r"/search-jobs/ireland(?:/|$|\?|#)",
+        r"/location/ireland(?:/|$|\?|#)",
+        r"(?:[?&](?:location|locationsearch|country|region|q)=)[^&#]*ireland",
+        r"(?:[?&][^=&#]*location[^=&#]*=)[^&#]*ireland",
+    )
+    return any(re.search(p, decoded, re.I) for p in patterns)
+
+def _strong_job_detail_url(url):
+    """Return True only for URLs that look like an individual vacancy.
+
+    Career landing pages, category pages, search pages, talent communities,
+    saved-jobs pages, apply-only endpoints and generic navigation are excluded.
+    """
+    try:
+        parsed = urllib.parse.urlparse(str(url or ""))
+    except Exception:
+        return False
+
+    path = urllib.parse.unquote(parsed.path or "").lower()
+    query = urllib.parse.unquote_plus(parsed.query or "").lower()
+
+    if not path:
+        return False
+
+    # Never treat an action/navigation/search page itself as a vacancy.
+    hard_exclusions = (
+        r"/(?:saved-jobs?|jobcart|talent-community|join|login|signin|register)(?:/|$)",
+        r"/(?:career-areas?|benefits?|locations?|life-at-[^/]*|how-to-apply)(?:/|$)",
+        r"/(?:search|search-jobs|search-results|job-search)(?:/|$)",
+        r"/apply/?$",  # apply buttons often carry a job ID but not the job title/details
+        r"/(?:about|culture|values|students|graduates?|internships?|early-careers?)(?:/|$)",
+    )
+    if any(re.search(p, path, re.I) for p in hard_exclusions):
+        # HSE is a genuine exception: its vacancy detail route is
+        # /jobs/job-search/<role-slug>-<numeric-id>/.
+        if not re.search(r"/jobs/job-search/[^/]+-\d+/?$", path, re.I):
+            return False
+
+    strong_patterns = (
+        r"/j/[a-z0-9]{6,}/?$",                         # Workable
+        r"/jobs?/[a-z0-9][^/]{2,}/?$",                # common /job/<slug>, /jobs/<slug>
+        r"/job-detail(?:s)?/[a-z0-9][^/]*",            # job-detail routes
+        r"/jobdetail(?:page)?(?:/|$)",                 # IBM / Workday-style detail
+        r"/jobs/job-search/[^/]+-\d+/?$",              # HSE
+        r"/vacanc(?:y|ies)/[a-z0-9][^/]*",             # vacancy detail
+        r"/positions?/[a-z0-9][^/]*",
+        r"/requisitions?/[a-z0-9][^/]*",
+        r"/careersection/.*/jobdetail\.ftl",
+    )
+    if any(re.search(p, path, re.I) for p in strong_patterns):
+        return True
+
+    # Query-string job IDs are also a reliable detail signal, provided the
+    # path isn't an apply-only endpoint caught above.
+    if re.search(r"(?:^|&)(?:jobid|job_id|requisitionid|reqid|vacancyno)=([^&]+)", query, re.I):
+        return True
+
+    return False
+
+def _title_from_job_url(url):
+    """Last-resort title from a strongly job-specific URL slug."""
+    try:
+        path = urllib.parse.unquote(urllib.parse.urlparse(str(url or "")).path)
+    except Exception:
+        return ""
+    bits = [b for b in path.rstrip("/").split("/") if b]
+    if not bits:
+        return ""
+
+    # Prefer the segment after /job or /jobs, but skip pure numeric IDs.
+    candidate = ""
+    lower_bits = [b.lower() for b in bits]
+    for marker in ("job", "jobs", "job-detail", "jobdetail", "vacancy", "vacancies", "position", "positions"):
+        if marker in lower_bits:
+            idx = lower_bits.index(marker)
+            if idx + 1 < len(bits):
+                candidate = bits[idx + 1]
+                break
+    if not candidate:
+        candidate = bits[-1]
+
+    candidate = re.sub(r"\.(?:html?|aspx?)$", "", candidate, flags=re.I)
+    candidate = re.sub(r"[-_]+", " ", candidate)
+    candidate = re.sub(r"\b\d{5,}\b", " ", candidate)
+    candidate = re.sub(r"\s+", " ", candidate).strip()
+    if not candidate or _looks_like_non_job_title(candidate):
+        return ""
+    # URL slugs are mostly lowercase; title-casing is preferable to a CTA.
+    return candidate.title()[:220]
+
+def _choose_job_title(anchor_text, card_text, href):
+    """Pick the best real role title from an anchor/card/URL.
+
+    The old implementation accepted the anchor first, so CTA text such as
+    APPLY TODAY became the job title. This explicitly rejects CTA/navigation
+    labels and scores nearby card lines for role-title likelihood.
+    """
+    anchor = re.sub(r"\s+", " ", str(anchor_text or "")).strip()
+    if anchor and not _looks_like_non_job_title(anchor):
+        return anchor[:220]
+
+    lines = []
+    for raw in str(card_text or "").splitlines():
+        line = re.sub(r"\s+", " ", raw).strip(" \t\r\n-|•")
+        if not line or len(line) < 4 or len(line) > 220:
+            continue
+        if is_ireland_location(line) or _NON_JOB_LINE_RE.search(line):
+            continue
+        if _looks_like_non_job_title(line):
+            continue
+        lines.append(line)
+
+    if lines:
+        # Role-word matches first; otherwise take the shortest plausible line
+        # rather than a giant navigation/header blob.
+        lines.sort(key=lambda x: (0 if _ROLE_TITLE_WORD_RE.search(x) else 1, len(x)))
+        return lines[0][:220]
+
+    return _title_from_job_url(href)
+
+def _final_job_quality_filter(live_jobs):
+    """Final safety net before jobs.json/history are written.
+
+    This also cleans bad entries already sitting in browser_scrape_cache.json,
+    so users do not have to wait three hours for stale bogus cards to expire.
+    Existing API/dedicated results are left alone unless their *title itself*
+    is an obvious CTA/navigation label.
+    """
+    cleaned = []
+    removed = []
+    seen = set()
+
+    for job in live_jobs:
+        if not isinstance(job, dict):
+            continue
+        title = re.sub(r"\s+", " ", str(job.get("title") or "")).strip()
+        url = str(job.get("url") or "").strip()
+        source = str(job.get("source") or "")
+
+        # Generic fallback must point to a real vacancy detail page. This is
+        # the main false-positive source identified from the dashboard data.
+        if source == "priority_sheet2_generic" and not _strong_job_detail_url(url):
+            removed.append((job.get("company", ""), title, "generic non-job URL"))
+            continue
+
+        # Across every source, never display CTA/navigation text as a job title.
+        if _looks_like_non_job_title(title):
+            # For generic detail URLs we can safely recover from the vacancy
+            # slug. For other sources, dropping the malformed record is safer
+            # than inventing a role name.
+            recovered = _title_from_job_url(url) if source == "priority_sheet2_generic" else ""
+            if recovered and not _looks_like_non_job_title(recovered):
+                job = dict(job)
+                job["title"] = recovered
+                title = recovered
+                job["employment_type"] = normalize_employment_type(
+                    job.get("employment_type"), recovered
+                )
+            else:
+                removed.append((job.get("company", ""), title, "non-job title"))
+                continue
+
+        # De-duplicate identical company+URL records after normalization.
+        key = (str(job.get("company") or "").strip().lower(), url.rstrip("/").lower())
+        if key in seen:
+            continue
+        seen.add(key)
+        cleaned.append(job)
+
+    if removed:
+        print(f"=== Job quality filter removed {len(removed)} non-job/CTA records before output ===")
+        for company, title, why in removed[:20]:
+            print(f"      [quality-filter] {company}: {title!r} ({why})")
+        if len(removed) > 20:
+            print(f"      [quality-filter] ... plus {len(removed) - 20} more")
+    return cleaned
+
+
 def scrape_priority_sheet2_generic(company_name, url, session=None):
     """Generic Ireland-first browser fallback for selected high-priority companies
     from the user's Sheet 2. It does not change the existing company/platform
@@ -2136,10 +2420,10 @@ def scrape_priority_sheet2_generic(company_name, url, session=None):
                     continue
                 if not href or href in seen or href.startswith(("mailto:", "tel:", "javascript:")):
                     continue
-                if not jobish.search(href) and not jobish.search(text):
-                    continue
-                # Skip obvious navigation/account/social links.
-                if re.search(r"/(login|signin|register|account|privacy|terms|contact|about)(?:/|$)", href, re.I):
+
+                # Precision fix: a career/navigation link is not a vacancy.
+                # Only individual job-detail-looking URLs are eligible.
+                if not _strong_job_detail_url(href):
                     continue
 
                 card = _browser_card(a)
@@ -2147,22 +2431,15 @@ def scrape_priority_sheet2_generic(company_name, url, session=None):
                     card = text
 
                 ireland = is_ireland_location(card)
-                # If the page itself is explicitly Ireland-filtered, trust that
-                # page-level signal when the card hides the location.
-                page_text = _browser_text(page.locator("body"))[:12000]
-                ireland_page = bool(re.search(r"\b(Ireland|Dublin|Cork|Galway|Limerick)\b", page_text, re.I))
+                # Only trust page-level Ireland when the URL itself is clearly
+                # location-filtered. A global careers page merely mentioning
+                # Ireland somewhere is not evidence this particular job is Irish.
+                ireland_page = _explicit_ireland_filtered_url(page.url) or _explicit_ireland_filtered_url(url)
                 if not ireland and not ireland_page:
                     continue
 
-                title = text.strip()
-                if not title or len(title) > 300 or jobish.search(title):
-                    lines = [x.strip() for x in card.splitlines() if x.strip()]
-                    title = next(
-                        (x for x in lines if 4 <= len(x) <= 180 and not is_ireland_location(x)
-                         and not re.search(r"^(apply|view|learn more|read more)$", x, re.I)),
-                        "",
-                    )
-                if not title:
+                title = _choose_job_title(text, card, href)
+                if not title or _looks_like_non_job_title(title):
                     continue
 
                 seen.add(href)
@@ -6246,6 +6523,10 @@ def main():
         manual_check = [c for c in manual_check if c["company"] not in adzuna_companies]
         print(f"  -> Merged {len(adzuna_flat)} Adzuna-sourced postings across "
               f"{len(adzuna_companies)} companies (run adzuna_fallback.py separately, daily, to refresh this).")
+
+    # Final precision pass: removes career navigation / CTA pseudo-jobs,
+    # including stale bad records served from browser_scrape_cache.json.
+    live_jobs = _final_job_quality_filter(live_jobs)
 
     history = load_history(args.history)
     history = update_history(history, live_jobs)
