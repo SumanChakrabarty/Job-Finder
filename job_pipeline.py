@@ -7473,6 +7473,725 @@ def scrape_wipro_ireland(session):
 
 
 
+
+def _rendered_structural_board(company_name, search_urls, href_patterns, source_tag,
+                               session, location_terms=None, max_urls=180):
+    """Rendered discovery + strict detail-page ROI verification.
+
+    Used only for first-party boards that hide vacancy rows behind JavaScript.
+    No profession/title keywords are used.
+    """
+    if not HAS_PLAYWRIGHT:
+        print(f"      [{source_tag}] Playwright unavailable")
+        return []
+
+    patterns = [re.compile(p, re.I) for p in href_patterns]
+    candidate_urls = set()
+
+    try:
+        with sync_playwright() as p:
+            browser = p.chromium.launch(
+                headless=True,
+                args=["--no-sandbox", "--disable-dev-shm-usage", "--disable-gpu"],
+            )
+            page = browser.new_page(
+                viewport={"width": 1400, "height": 1000},
+                user_agent=HEADERS.get("User-Agent"),
+            )
+
+            for search_url in search_urls:
+                try:
+                    page.goto(search_url, wait_until="domcontentloaded", timeout=45000)
+                    page.wait_for_timeout(3500)
+                except Exception as exc:
+                    print(f"      [{source_tag}] {search_url}: {exc}")
+                    continue
+
+                # Optional location-box interaction for sites that ignore URL query filters.
+                for term in (location_terms or []):
+                    filled = False
+                    for sel in (
+                        'input[placeholder*="location" i]',
+                        'input[aria-label*="location" i]',
+                        'input[name*="location" i]',
+                    ):
+                        try:
+                            box = page.locator(sel).first
+                            if box.count() and box.is_visible():
+                                box.fill(term)
+                                box.press("Enter")
+                                page.wait_for_timeout(2500)
+                                filled = True
+                                break
+                        except Exception:
+                            pass
+                    if filled:
+                        break
+
+                try:
+                    page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
+                    page.wait_for_timeout(1200)
+                except Exception:
+                    pass
+
+                found = set()
+                links = page.locator("a[href]")
+                for i in range(min(links.count(), 1200)):
+                    try:
+                        href = links.nth(i).get_attribute("href")
+                    except Exception:
+                        continue
+                    if not href:
+                        continue
+                    href = urllib.parse.urljoin(page.url, href).split("#")[0]
+                    if any(pat.search(href) for pat in patterns):
+                        found.add(href)
+                        if len(candidate_urls) + len(found) >= max_urls:
+                            break
+
+                candidate_urls.update(found)
+                print(
+                    f"      [{source_tag}] {search_url}: "
+                    f"{len(found)} vacancy URLs ({len(candidate_urls)} unique)"
+                )
+                if len(candidate_urls) >= max_urls:
+                    break
+
+            browser.close()
+    except Exception as exc:
+        print(f"      [{source_tag}] rendered discovery failed: {exc}")
+        return []
+
+    if not candidate_urls:
+        return []
+
+    headers = {
+        **HEADERS,
+        "Accept": "text/html,application/xhtml+xml",
+        "Accept-Language": "en-IE,en;q=0.9",
+    }
+
+    def fetch_detail(url):
+        try:
+            r = requests.get(url, headers=headers, timeout=10, allow_redirects=True)
+            if r.status_code >= 400:
+                return None
+
+            meta = _extract_job_detail_metadata_from_html(r.text, r.url, company_name)
+            title = _clean_detail_page_title(meta.get("title"), company_name)
+            if not title or _looks_like_non_job_title(title):
+                return None
+
+            loc = str(meta.get("location") or "").strip()
+            desc = str(meta.get("description") or "")
+            if not (is_republic_of_ireland_location(loc)
+                    or (not loc and is_republic_of_ireland_location(desc))):
+                return None
+            if _ROI_NEGATIVE_RE.search(loc):
+                return None
+
+            location = loc if is_republic_of_ireland_location(loc) else "Republic of Ireland"
+            posted_text = str(meta.get("posted_text") or "").strip() or "Unknown"
+            posted_days = parse_posted_text(posted_text)
+            sponsorship, snippet = classify_sponsorship(desc[:16000])
+
+            return {
+                "company": company_name,
+                "title": title[:300],
+                "location": location,
+                "posted_text": posted_text,
+                "posted_days_ago": posted_days,
+                "employment_type": normalize_employment_type(
+                    meta.get("employment_type"), title
+                ),
+                "url": r.url,
+                "source": source_tag,
+                "visa_sponsorship": sponsorship,
+                "visa_snippet": snippet,
+            }
+        except Exception:
+            return None
+
+    results = {}
+    pool = ThreadPoolExecutor(max_workers=min(12, len(candidate_urls)))
+    try:
+        futs = {pool.submit(fetch_detail, u): u for u in candidate_urls}
+        for fut in as_completed(futs):
+            try:
+                job = fut.result()
+            except Exception:
+                job = None
+            if job:
+                results[job["url"].rstrip("/").lower()] = job
+    finally:
+        pool.shutdown(wait=False)
+
+    jobs = list(results.values())
+    print(f"      [{source_tag}] {len(jobs)} verified Republic-of-Ireland vacancies")
+    return jobs
+
+
+def scrape_iqvia_ireland(session):
+    """Dedicated IQVIA scraper via IQVIA's own Sitemap -> Ireland Jobs page.
+
+    The generic/global /en/jobs page does not reliably expose location on cards,
+    and query parameters were observed to be ignored. IQVIA's first-party
+    sitemap explicitly exposes an "Ireland Jobs" location page, which is the
+    correct country-scoped discovery surface.
+    """
+    if not HAS_PLAYWRIGHT:
+        print("      [iqvia] Playwright unavailable")
+        return []
+
+    base = "https://jobs.iqvia.com"
+    candidate_urls = set()
+    ireland_page_url = None
+
+    try:
+        with sync_playwright() as p:
+            browser = p.chromium.launch(
+                headless=True,
+                args=["--no-sandbox", "--disable-dev-shm-usage", "--disable-gpu"],
+            )
+            page = browser.new_page(
+                viewport={"width": 1400, "height": 1000},
+                user_agent=HEADERS.get("User-Agent"),
+            )
+
+            # 1) Resolve the current Ireland location page from IQVIA's own sitemap.
+            try:
+                page.goto(f"{base}/en/sitemap", wait_until="domcontentloaded", timeout=45000)
+                page.wait_for_timeout(2500)
+
+                links = page.locator("a[href]")
+                for i in range(min(links.count(), 2500)):
+                    a = links.nth(i)
+                    try:
+                        txt = re.sub(r"\s+", " ", a.inner_text()).strip()
+                        href = a.get_attribute("href")
+                    except Exception:
+                        continue
+                    if not href:
+                        continue
+                    if re.fullmatch(r"Ireland Jobs", txt, re.I):
+                        ireland_page_url = urllib.parse.urljoin(page.url, href).split("#")[0]
+                        break
+
+                # Fallback: search the sitemap HTML for a location URL containing Ireland.
+                if not ireland_page_url:
+                    sitemap_html = page.content()
+                    mm = re.search(
+                        r'href=["\']([^"\']*(?:ireland|%C3%A9ire)[^"\']*)["\'][^>]*>'
+                        r'[^<]*Ireland Jobs',
+                        sitemap_html,
+                        re.I,
+                    )
+                    if mm:
+                        ireland_page_url = urllib.parse.urljoin(
+                            page.url, html.unescape(mm.group(1))
+                        ).split("#")[0]
+            except Exception as exc:
+                print(f"      [iqvia] sitemap resolution failed: {exc}")
+
+            if not ireland_page_url:
+                print("      [iqvia] could not resolve first-party Ireland Jobs page from sitemap")
+                browser.close()
+                return []
+
+            print(f"      [iqvia] Ireland Jobs page: {ireland_page_url}")
+
+            # 2) Walk the Ireland-scoped location page.
+            # IQVIA location pages usually paginate with ?page=N.
+            no_new_pages = 0
+            for page_no in range(1, 21):
+                if page_no == 1:
+                    url = ireland_page_url
+                else:
+                    sep = "&" if "?" in ireland_page_url else "?"
+                    url = f"{ireland_page_url}{sep}page={page_no}"
+
+                try:
+                    page.goto(url, wait_until="domcontentloaded", timeout=45000)
+                    page.wait_for_timeout(1800)
+                except Exception:
+                    break
+
+                found = set()
+                links = page.locator('a[href*="/en/jobs/R"]')
+                for i in range(min(links.count(), 300)):
+                    try:
+                        href = links.nth(i).get_attribute("href")
+                    except Exception:
+                        continue
+                    if not href:
+                        continue
+                    href = urllib.parse.urljoin(page.url, href).split("#")[0]
+                    if re.search(
+                        r"^https://jobs\.iqvia\.com/en/jobs/R\d+(?:-\d+)?/?$",
+                        href,
+                        re.I,
+                    ):
+                        found.add(href)
+
+                # Current/legacy IQVIA detail format fallback:
+                # /en/job/<city>/<slug>/<numbers>/<numbers>
+                legacy = page.locator('a[href*="/en/job/"]')
+                for i in range(min(legacy.count(), 300)):
+                    try:
+                        href = legacy.nth(i).get_attribute("href")
+                    except Exception:
+                        continue
+                    if not href:
+                        continue
+                    href = urllib.parse.urljoin(page.url, href).split("#")[0]
+                    if "/en/job/" in href:
+                        found.add(href)
+
+                before = len(candidate_urls)
+                candidate_urls.update(found)
+
+                print(
+                    f"      [iqvia] Ireland page={page_no}: "
+                    f"{len(found)} vacancy URLs ({len(candidate_urls)} unique)"
+                )
+
+                if len(candidate_urls) == before:
+                    no_new_pages += 1
+                else:
+                    no_new_pages = 0
+
+                # Two consecutive pages with no new jobs means the location
+                # listing has ended or page=N is ignored.
+                if no_new_pages >= 2:
+                    break
+
+            if not candidate_urls:
+                browser.close()
+                print("      [iqvia] Ireland location page exposed 0 vacancy URLs")
+                return []
+
+            # 3) Verify each detail page in rendered DOM.
+            results = {}
+
+            for url in sorted(candidate_urls):
+                try:
+                    page.goto(url, wait_until="domcontentloaded", timeout=35000)
+                    page.wait_for_timeout(900)
+
+                    body = re.sub(r"\s+", " ", page.locator("body").inner_text()).strip()
+
+                    title = ""
+                    try:
+                        title = re.sub(
+                            r"\s+", " ",
+                            page.locator("h1").first.inner_text()
+                        ).strip()
+                    except Exception:
+                        pass
+
+                    if not title or _looks_like_non_job_title(title):
+                        continue
+
+                    # IQVIA header examples:
+                    # Dublin, Ireland | Full time | Hybrid | R...
+                    # Galway County, Ireland | Full time | Field-based | R...
+                    # Wexford, Ireland | Full time | Office-based | R...
+                    # IQVIA LOCATION CLEANUP
+                    # Extract a location from the vacancy detail itself, but
+                    # never allow surrounding job-title/navigation text to
+                    # become part of the location.
+                    #
+                    # Examples to normalize:
+                    #   "Unix Systems Engineer Dublin, Ireland"
+                    #       -> "Dublin, Ireland"
+                    #   "homebased Dublin, Ireland"
+                    #       -> "Dublin, Ireland"
+                    #   "Wexford, Ireland"
+                    #       -> "Wexford, Ireland"
+                    #
+                    # This is geographic parsing only. It does NOT use job-title
+                    # keywords and does not affect whether a vacancy is relevant
+                    # to the user's CV.
+                    loc = ""
+
+                    roi_place_patterns = [
+                        (r"\bDublin\b", "Dublin"),
+                        (r"\bCork\b", "Cork"),
+                        (r"\bGalway(?:\s+County)?\b", "Galway"),
+                        (r"\bLimerick\b", "Limerick"),
+                        (r"\bWexford\b", "Wexford"),
+                        (r"\bWaterford\b", "Waterford"),
+                        (r"\bAthlone\b", "Athlone"),
+                        (r"\bSligo\b", "Sligo"),
+                        (r"\bKildare\b", "Kildare"),
+                        (r"\bKilkenny\b", "Kilkenny"),
+                        (r"\bClare\b", "Clare"),
+                        (r"\bTipperary\b", "Tipperary"),
+                        (r"\bMeath\b", "Meath"),
+                        (r"\bLouth\b", "Louth"),
+                        (r"\bMayo\b", "Mayo"),
+                        (r"\bWicklow\b", "Wicklow"),
+                        (r"\bDonegal\b", "Donegal"),
+                    ]
+
+                    # Prefer the header/metadata area before the main description.
+                    # IQVIA normally presents:
+                    #   <location> | Full time | <work mode> | R...
+                    header_text = body[:3500]
+
+                    # First, look for an explicit Republic-of-Ireland place that
+                    # is immediately associated with ", Ireland".
+                    for place_re, canonical_place in roi_place_patterns:
+                        if re.search(
+                            rf"{place_re}\s*,\s*Ireland\b",
+                            header_text,
+                            re.I,
+                        ):
+                            loc = f"{canonical_place}, Ireland"
+                            break
+
+                    # Some multi-location IQVIA roles have the Ireland location
+                    # farther down the page. Search the whole vacancy only when
+                    # the header did not provide a clean ROI place.
+                    if not loc:
+                        for place_re, canonical_place in roi_place_patterns:
+                            if re.search(
+                                rf"{place_re}\s*,\s*Ireland\b",
+                                body,
+                                re.I,
+                            ):
+                                loc = f"{canonical_place}, Ireland"
+                                break
+
+                    # Last resort: a detail page explicitly scoped simply to
+                    # "Ireland | ..." with no city.
+                    if not loc and re.search(
+                        r"(?:^|\s)Ireland\s*\|\s*(?:Full|Part|Contract|Temporary|"
+                        r"Permanent|Remote|Hybrid|Office|Field)",
+                        header_text,
+                        re.I,
+                    ):
+                        loc = "Ireland"
+
+                    if not is_republic_of_ireland_location(loc):
+                        continue
+                    if _ROI_NEGATIVE_RE.search(loc):
+                        continue
+
+                    # Canonicalize whitespace and punctuation for dashboard use.
+                    loc = re.sub(r"\s+", " ", loc).strip(" ,|-")
+                    if loc.lower() != "ireland" and not loc.lower().endswith(", ireland"):
+                        # A named ROI city/county should always render uniformly.
+                        loc = f"{loc}, Ireland"
+
+                    posted_text = "Unknown"
+                    # IQVIA does not consistently expose a posting date.
+                    employment = "Unspecified"
+                    header_match = re.search(
+                        re.escape(loc) + r"\s*\|\s*([^|]{2,40})",
+                        body,
+                        re.I,
+                    )
+                    if header_match:
+                        employment = normalize_employment_type(
+                            header_match.group(1), title
+                        )
+
+                    sponsorship, snippet = classify_sponsorship(body[:18000])
+
+                    results[page.url.rstrip("/").lower()] = {
+                        "company": "IQVIA",
+                        "title": title[:300],
+                        "location": loc,
+                        "posted_text": posted_text,
+                        "posted_days_ago": None,
+                        "employment_type": employment,
+                        "url": page.url,
+                        "source": "iqvia_ireland_location_page",
+                        "visa_sponsorship": sponsorship,
+                        "visa_snippet": snippet,
+                    }
+                except Exception:
+                    continue
+
+            browser.close()
+
+    except Exception as exc:
+        print(f"      [iqvia] Ireland-location recovery failed: {exc}")
+        return []
+
+    jobs = list(results.values())
+    print(f"      [iqvia] {len(jobs)} verified Republic-of-Ireland vacancies")
+    return jobs
+
+
+
+def scrape_cook_medical_ireland(session):
+    """Dedicated Cook Medical iCIMS scraper with network-aware discovery.
+
+    In Codespaces, iCIMS may render an empty search shell while loading job
+    records asynchronously. Capture browser response bodies as well as DOM/
+    iframe content and extract only structural /jobs/<id>/<slug>/job URLs.
+    """
+    if not HAS_PLAYWRIGHT:
+        print("      [cook] Playwright unavailable")
+        return []
+
+    base = "https://emea-cookmedical.icims.com"
+    candidate_urls = set()
+    response_blobs = []
+
+    search_urls = [
+        (
+            f"{base}/jobs/search?"
+            "bga=true&height=500&jan1offset=-480&jun1offset=-420&mobile=false&"
+            "needsRedirect=false&searchLocation=13267--Limerick&"
+            "searchRelation=keyword_all&ss=1&width=889"
+        ),
+        f"{base}/jobs/search?ss=1&searchKeyword=Limerick",
+        f"{base}/jobs/search?ss=1",
+    ]
+
+    def extract_urls(text, base_url=base):
+        found = set()
+        if not text:
+            return found
+
+        # Absolute iCIMS job URLs.
+        for raw in re.findall(
+            r'https?://emea-cookmedical\.icims\.com/jobs/\d+/'
+            r'[^"\'<>\s\\\\]+/job(?:\?[^"\'<>\s\\\\]*)?',
+            text,
+            re.I,
+        ):
+            found.add(html.unescape(raw).replace("\\/", "/"))
+
+        # Relative job URLs in HTML or JSON strings.
+        for raw in re.findall(
+            r'(/jobs/\d+/[^"\'<>\s\\\\]+/job(?:\?[^"\'<>\s\\\\]*)?)',
+            text,
+            re.I,
+        ):
+            clean = html.unescape(raw).replace("\\/", "/")
+            found.add(urllib.parse.urljoin(base_url, clean))
+
+        return found
+
+    try:
+        with sync_playwright() as p:
+            browser = p.chromium.launch(
+                headless=True,
+                args=["--no-sandbox", "--disable-dev-shm-usage", "--disable-gpu"],
+            )
+            page = browser.new_page(
+                viewport={"width": 1400, "height": 1000},
+                user_agent=HEADERS.get("User-Agent"),
+            )
+
+            # Capture asynchronous iCIMS result payloads.
+            def on_response(resp):
+                try:
+                    u = resp.url.lower()
+                    ct = (resp.headers or {}).get("content-type", "").lower()
+                    if (
+                        "icims.com" in u
+                        and ("text/" in ct or "json" in ct or "javascript" in ct)
+                    ):
+                        body = resp.text()
+                        if body and ("/jobs/" in body or "\\/jobs\\/" in body):
+                            response_blobs.append((resp.url, body))
+                except Exception:
+                    pass
+
+            page.on("response", on_response)
+
+            for url in search_urls:
+                try:
+                    page.goto(url, wait_until="domcontentloaded", timeout=45000)
+                    page.wait_for_timeout(5000)
+
+                    # Scroll and wait once more for lazy/XHR result loading.
+                    page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
+                    page.wait_for_timeout(2500)
+                except Exception as exc:
+                    print(f"      [cook] search page failed: {exc}")
+                    continue
+
+                found = set()
+
+                # Top page + all child frames.
+                for frame in page.frames:
+                    try:
+                        frame_html = frame.content()
+                        found.update(extract_urls(frame_html, frame.url or page.url))
+                    except Exception:
+                        pass
+
+                    try:
+                        links = frame.locator("a[href]")
+                        for i in range(min(links.count(), 1800)):
+                            href = links.nth(i).get_attribute("href")
+                            if not href:
+                                continue
+                            href = urllib.parse.urljoin(
+                                frame.url or page.url, href
+                            ).split("#")[0]
+                            if re.search(
+                                r"^https://emea-cookmedical\.icims\.com/"
+                                r"jobs/\d+/[^/?#]+/job(?:\?.*)?$",
+                                href,
+                                re.I,
+                            ):
+                                found.add(href)
+                    except Exception:
+                        pass
+
+                # XHR/fetch response payloads captured so far.
+                for resp_url, blob in response_blobs:
+                    found.update(extract_urls(blob, resp_url))
+
+                candidate_urls.update(found)
+                print(
+                    f"      [cook] search surface: "
+                    f"{len(found)} vacancy URLs ({len(candidate_urls)} unique)"
+                )
+
+            if not candidate_urls:
+                browser.close()
+                print(
+                    f"      [cook] 0 iCIMS vacancy URLs after DOM + frames + "
+                    f"{len(response_blobs)} network payloads"
+                )
+                return []
+
+            results = {}
+
+            for url in sorted(candidate_urls):
+                try:
+                    parsed = urllib.parse.urlsplit(url)
+                    q = urllib.parse.parse_qs(parsed.query)
+                    q["in_iframe"] = ["1"]
+                    detail_url = urllib.parse.urlunsplit(
+                        (
+                            parsed.scheme,
+                            parsed.netloc,
+                            parsed.path,
+                            urllib.parse.urlencode(q, doseq=True),
+                            "",
+                        )
+                    )
+
+                    page.goto(detail_url, wait_until="domcontentloaded", timeout=30000)
+                    page.wait_for_timeout(700)
+
+                    body = re.sub(
+                        r"\s+", " ", page.locator("body").inner_text()
+                    ).strip()
+
+                    title = ""
+                    try:
+                        title = re.sub(
+                            r"\s+", " ",
+                            page.locator("h1").first.inner_text()
+                        ).strip()
+                    except Exception:
+                        pass
+
+                    if not title or _looks_like_non_job_title(title):
+                        continue
+
+                    # Cook's public detail page exposes:
+                    # Job Location(s)  Limerick Ireland
+                    loc = ""
+                    mm = re.search(
+                        r"\bJob Location\(s\)\s+(.{1,120}?)(?="
+                        r"\s+Job Locations|\s+Languages Required|\s+Travel|"
+                        r"\s+Company|\s+Position Type|\s+Category|\s+Education)",
+                        body,
+                        re.I,
+                    )
+                    if mm:
+                        loc = re.sub(r"\s+", " ", mm.group(1)).strip()
+
+                    if not loc and re.search(r"\bIE-Limerick\b", body, re.I):
+                        loc = "Limerick, Ireland"
+
+                    if not is_republic_of_ireland_location(loc):
+                        continue
+                    if _ROI_NEGATIVE_RE.search(loc):
+                        continue
+
+                    pos_type = ""
+                    mt = re.search(
+                        r"\bPosition Type\s+(.{1,40}?)(?="
+                        r"\s+Category|\s+Education|\s+Overview|\s+Responsibilities)",
+                        body,
+                        re.I,
+                    )
+                    if mt:
+                        pos_type = re.sub(r"\s+", " ", mt.group(1)).strip()
+
+                    sponsorship, snippet = classify_sponsorship(body[:18000])
+
+                    results[page.url.rstrip("/").lower()] = {
+                        "company": "Cook Medical",
+                        "title": title[:300],
+                        "location": loc,
+                        "posted_text": "Unknown",
+                        "posted_days_ago": None,
+                        "employment_type": normalize_employment_type(
+                            pos_type, title
+                        ),
+                        "url": page.url,
+                        "source": "cook_icims_network",
+                        "visa_sponsorship": sponsorship,
+                        "visa_snippet": snippet,
+                    }
+                except Exception:
+                    continue
+
+            browser.close()
+
+    except Exception as exc:
+        print(f"      [cook] network-aware iCIMS recovery failed: {exc}")
+        return []
+
+    jobs = list(results.values())
+    print(f"      [cook] {len(jobs)} verified Republic-of-Ireland vacancies")
+    return jobs
+
+
+
+def scrape_merit_medical_ireland(session):
+    # Verified current official board from Merit Medical's own careers page.
+    return _workday_override_scrape(
+        "Merit Medical",
+        "https://merit.wd503.myworkdayjobs.com/Merit",
+        session,
+    )
+
+
+def scrape_goodbody_ireland(session):
+    # Goodbody's own careers page routes Current Vacancies to jobs.aib.ie/goodbody/.
+    # The board is SuccessFactors-style and uses individual /job/.../<id>/ records.
+    return _rendered_structural_board(
+        "Goodbody",
+        [
+            "https://jobs.aib.ie/goodbody/search/?q=&locationsearch=Dublin",
+            "https://jobs.aib.ie/goodbody/search/?q=&locationsearch=Ireland",
+            "https://jobs.aib.ie/goodbody/",
+        ],
+        [
+            r"jobs\.aib\.ie/goodbody/job/[^?#]+/\d+(?:-[A-Za-z_]+)?/?(?:\?.*)?$",
+            r"jobs\.aib\.ie/goodbody/job/[^?#]+-\d+/?(?:\?.*)?$",
+        ],
+        "goodbody_first_party",
+        session,
+        location_terms=["Dublin"],
+        max_urls=100,
+    )
+
+
 def test_single_company(name):
     """Fast test mode for one company — skips the full ~30 min pipeline
     entirely. Checks known dedicated scrapers by name directly (Apple,
@@ -7502,6 +8221,10 @@ def test_single_company(name):
         "eaton": lambda: scrape_eaton_ireland(session),
         "cognizant": lambda: scrape_cognizant_ireland(session),
         "wipro": lambda: scrape_wipro_ireland(session),
+        "iqvia": lambda: scrape_iqvia_ireland(session),
+        "cook medical": lambda: scrape_cook_medical_ireland(session),
+        "merit medical": lambda: scrape_merit_medical_ireland(session),
+        "goodbody": lambda: scrape_goodbody_ireland(session),
         "pepsico": lambda: scrape_pepsico_ireland(session),
         "esb": lambda: scrape_esb_ireland(session),
         "irish rail": lambda: scrape_irish_rail_ireland(session),
@@ -7683,6 +8406,12 @@ def scrape_aer_lingus_ireland_recovery(session):
     )
 
 def main():
+    print("=== IQVIA_FINAL_FIX ACTIVE: 30-job Ireland discovery retained; location output canonicalized ===")
+    print("=== IQVIA_LOCATION_COOK_NETWORK_FIX ACTIVE: clean IQVIA locations + iCIMS network discovery ===")
+    print("=== IQVIA_SITEMAP_COOK_LOCATION_FIX ACTIVE: IQVIA Ireland Jobs page + correct Cook Limerick code ===")
+    print("=== IQVIA_COOK_FRAME_FIX ACTIVE: IQVIA card-level ROI + Cook iCIMS iframe discovery ===")
+    print("=== IQVIA_COOK_FIX ACTIVE: dedicated first-party pagination/iCIMS recovery ===")
+    print("=== DEDICATED_RECOVERY_4 ACTIVE: IQVIA / Cook Medical / Merit Medical / Goodbody use first-party job systems ===")
     print("=== WIPRO_UNKNOWN_DATE_FIX ACTIVE: rendered date if available; otherwise Unknown ===")
     print("=== WIPRO_DATE_FIX ACTIVE: SuccessFactors posting dates parsed from labels/HTML attributes ===")
     print("=== WIPRO_SEARCH_FIX ACTIVE: uses SuccessFactors /search/ endpoint, not /viewalljobs/ ===")
@@ -7936,6 +8665,10 @@ def main():
         ("exact", "eaton", scrape_eaton_ireland, 240, "first-party jobs.eaton.com"),
         ("exact", "cognizant", scrape_cognizant_ireland, 240, "verifies Ireland per job detail page"),
         ("exact", "wipro", scrape_wipro_ireland, 75, "first-party Wipro vacancy records + City/State verification"),
+        ("exact", "iqvia", scrape_iqvia_ireland, 90, "first-party IQVIA vacancy records"),
+        ("exact", "cook medical", scrape_cook_medical_ireland, 90, "official Cook Medical iCIMS"),
+        ("exact", "merit medical", scrape_merit_medical_ireland, 75, "official Merit Workday"),
+        ("exact", "goodbody", scrape_goodbody_ireland, 75, "official Goodbody jobs.aib.ie board"),
         ("exact", "aib (allied irish banks)", scrape_aib_ireland, 240, "filtered against UK-only postings"),
         ("exact", "bnp paribas ireland", scrape_bnp_paribas_ireland, 240, "first-party Dublin jobs page"),
         ("exact", "blackrock", scrape_blackrock_ireland, 240, "Phenom platform"),
@@ -8017,6 +8750,7 @@ def main():
         "scrape_siemens_ireland",
         "scrape_wtw_ireland_direct", "scrape_guidewire_ireland_direct_http",
         "scrape_wipro_ireland",
+        "scrape_iqvia_ireland", "scrape_cook_medical_ireland", "scrape_goodbody_ireland",
     }
 
     _live_company_names = {
@@ -8147,7 +8881,11 @@ def main():
         entry for entry in manual_check
         if entry["company"].strip().lower() in PRIORITY_SHEET2_COMPANIES
         and entry["company"].strip().lower() not in {
-            "wipro",  # dedicated first-party vacancy scraper
+            "wipro",
+            "iqvia",
+            "cook medical",
+            "merit medical",
+            "goodbody",
         }
     ]
     for entry in priority_entries:
