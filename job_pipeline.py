@@ -2281,6 +2281,11 @@ def _strong_job_detail_url(url):
         r"/positions?/[a-z0-9][^/]*",
         r"/requisitions?/[a-z0-9][^/]*",
         r"/careersection/.*/jobdetail\.ftl",
+        r"/job/\d+(?:/|$)",                            # numeric job record
+        r"/jobs?/[^/]+/\d+(?:/|$)",                   # slug + numeric ID
+        r"/job/[^/]*[-_]\d{4,}(?:/|$)",               # slug ending in req ID
+        r"/jobs?/[^/]*[-_]\d{4,}(?:/|$)",
+        r"/job/[^/]+/\d+(?:-[A-Za-z_]+)?/?$",         # SuccessFactors RMK / Wipro
     )
     if any(re.search(p, path, re.I) for p in strong_patterns):
         return True
@@ -2674,14 +2679,15 @@ def _enrich_generic_candidates_from_detail(company_name, candidates):
         # This restores valid Wipro/IQVIA/etc. jobs while still rejecting CTA
         # labels such as "BRANDS", "Apply now", "Explore careers", etc.
         listing_location = str(job.get("location") or "")
-        if current_bad or not is_republic_of_ireland_location(listing_location):
+        if (current_bad
+                or not _strong_job_detail_url(job.get("url", ""))
+                or not is_republic_of_ireland_location(listing_location)):
             dropped += 1
             continue
 
-        # _choose_job_title() already removed obvious CTA/navigation labels.
-        # Do not require the title to contain one of our limited role keywords;
-        # real titles such as bespoke consulting/technology roles can be valid
-        # without words like "manager", "engineer", "analyst", etc.
+        # No profession/title vocabulary is used here. The fallback survives
+        # solely because it is structurally an individual vacancy URL and the
+        # listing card itself explicitly proves Republic-of-Ireland location.
         job = dict(job)
         job["title_source"] = "listing_card_roi_verified"
         resolved.append(job)
@@ -2712,6 +2718,17 @@ def _final_job_quality_filter(live_jobs):
         title = re.sub(r"\s+", " ", str(job.get("title") or "")).strip()
         url = str(job.get("url") or "").strip()
         source = str(job.get("source") or "")
+
+        # Generic fallback records have the highest false-positive risk.
+        # Require structural vacancy URL evidence and an explicit ROI location
+        # even when the record came from browser cache.
+        if source == "priority_sheet2_generic":
+            if not _strong_job_detail_url(url):
+                removed.append((job.get("company", ""), title, "generic non-vacancy URL"))
+                continue
+            if not is_republic_of_ireland_location(job.get("location", "")):
+                removed.append((job.get("company", ""), title, "generic location not proven ROI"))
+                continue
 
         # High-confidence non-vacancy URLs only. Do not broadly reject paths
         # containing locations/teams/etc., because some real ATS detail routes
@@ -2839,10 +2856,12 @@ def scrape_priority_sheet2_generic(company_name, url, session=None):
                 if not href or href in seen or href.startswith(("mailto:", "tel:", "javascript:")):
                     continue
 
-                # Career systems use many legitimate opaque/SPA URL shapes.
-                # Require a job-like signal, but do NOT require one fixed URL
-                # convention. Obvious navigation/CTA titles are filtered below.
-                if not jobish.search(href) and not jobish.search(text):
+                # STRUCTURAL VACANCY RULE:
+                # Generic fallback may only emit links that look like an
+                # individual vacancy-detail record. Region/category/navigation
+                # links such as "Brazil", "Benelux", "Subscribe", "UK and
+                # Ireland", etc. are not jobs even if they live under /careers/.
+                if not _strong_job_detail_url(href):
                     continue
                 if re.search(r"/(login|signin|register|account|privacy|terms|contact|about)(?:/|$)", href, re.I):
                     continue
@@ -2851,10 +2870,12 @@ def scrape_priority_sheet2_generic(company_name, url, session=None):
                 if not card:
                     card = text
 
-                ireland = is_ireland_location(card)
-                # Only trust page-level Ireland when the URL itself is clearly
-                # location-filtered. A global careers page merely mentioning
-                # Ireland somewhere is not evidence this particular job is Irish.
+                ireland = is_republic_of_ireland_location(card)
+
+                # An explicitly Ireland-filtered listing page may be used only
+                # to DISCOVER strong vacancy URLs. It is not sufficient proof
+                # that an individual vacancy is in Ireland; the detail page
+                # must prove ROI unless this card itself does.
                 ireland_page = _explicit_ireland_filtered_url(page.url) or _explicit_ireland_filtered_url(url)
                 if not ireland and not ireland_page:
                     continue
@@ -2867,7 +2888,9 @@ def scrape_priority_sheet2_generic(company_name, url, session=None):
                 candidate_count += 1
                 posted_text, posted_days = extract_posted_from_text(card)
                 sponsorship, snippet = classify_sponsorship(card[:5000])
-                location = _extract_location_from_card(card, "Ireland")
+                # Do NOT default to "Ireland". That was the bug that turned
+                # region/navigation text into fake Irish vacancies.
+                location = _extract_location_from_card(card, "") if ireland else ""
                 results[href.rstrip("/").lower()] = {
                     "company": company_name,
                     "title": title[:300],
@@ -7121,6 +7144,335 @@ PRIORITY_SHEET2_COMPANIES = {
 }
 
 
+
+def scrape_wipro_ireland(session):
+    """Dedicated Wipro scraper using the actual SuccessFactors search route.
+
+    /viewalljobs/ is an SEO/category page and may expose no vacancy anchors.
+    The real result feed is /search/?q=&locationsearch=<place>. We query
+    Ireland plus major ROI cities, collect only individual /job/.../<id>/ URLs,
+    then verify each detail page's Job Title + City + State/Province.
+    """
+    base = "https://careers.wipro.com"
+    headers = {
+        **HEADERS,
+        "Accept": "text/html,application/xhtml+xml",
+        "Accept-Language": "en-IE,en;q=0.9",
+    }
+
+    if not HAS_PLAYWRIGHT:
+        print("      [wipro] Playwright unavailable")
+        return []
+
+    candidate_urls = set()
+    search_terms = ["Ireland", "Dublin", "Cork", "Galway", "Limerick"]
+
+    try:
+        with sync_playwright() as p:
+            browser = p.chromium.launch(
+                headless=True,
+                args=["--no-sandbox", "--disable-dev-shm-usage", "--disable-gpu"],
+            )
+            page = browser.new_page(
+                viewport={"width": 1400, "height": 1000},
+                user_agent=HEADERS.get("User-Agent"),
+            )
+
+            for term in search_terms:
+                search_url = (
+                    f"{base}/search/?createNewAlert=false&q="
+                    f"&locationsearch={urllib.parse.quote_plus(term)}"
+                    f"&searchResultView=LIST"
+                )
+
+                try:
+                    page.goto(search_url, wait_until="domcontentloaded", timeout=45000)
+                    page.wait_for_timeout(3500)
+                except Exception as exc:
+                    print(f"      [wipro] search {term!r} failed: {exc}")
+                    continue
+
+                # Cookie banners can obscure rows; dismiss when possible.
+                for txt in ("Accept All Cookies", "Confirm My Choices"):
+                    try:
+                        btn = page.get_by_text(txt, exact=False).first
+                        if btn.count() and btn.is_visible():
+                            btn.click(timeout=1500)
+                            page.wait_for_timeout(800)
+                            break
+                    except Exception:
+                        pass
+
+                # Trigger lazy rendering.
+                try:
+                    page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
+                    page.wait_for_timeout(1500)
+                except Exception:
+                    pass
+
+                found = set()
+
+                # DOM anchors
+                links = page.locator('a[href*="/job/"]')
+                for i in range(min(links.count(), 500)):
+                    try:
+                        href = links.nth(i).get_attribute("href")
+                    except Exception:
+                        continue
+                    if not href:
+                        continue
+                    href = urllib.parse.urljoin(page.url, href).split("#")[0]
+
+                    if re.search(
+                        r"^https://careers\.wipro\.com/job/.+/\d+(?:-[A-Za-z_]+)?/?(?:\?.*)?$",
+                        href,
+                        re.I,
+                    ):
+                        found.add(href)
+
+                # HTML fallback in case the links are present in markup but
+                # not represented as standard anchor locators.
+                try:
+                    html_text = page.content()
+                    for raw in re.findall(
+                        r'https?://careers\.wipro\.com/job/[^"\'<>\s]+',
+                        html_text,
+                        re.I,
+                    ):
+                        raw = html.unescape(raw)
+                        if re.search(
+                            r"/job/.+/\d+(?:-[A-Za-z_]+)?/?(?:\?.*)?$",
+                            raw,
+                            re.I,
+                        ):
+                            found.add(raw)
+                    for raw in re.findall(
+                        r'["\'](/job/[^"\']+/\d+(?:-[A-Za-z_]+)?/?)["\']',
+                        html_text,
+                        re.I,
+                    ):
+                        found.add(urllib.parse.urljoin(base, html.unescape(raw)))
+                except Exception:
+                    pass
+
+                candidate_urls.update(found)
+                print(
+                    f"      [wipro] search={term}: "
+                    f"{len(found)} vacancy URLs ({len(candidate_urls)} unique total)"
+                )
+
+            browser.close()
+
+    except Exception as exc:
+        print(f"      [wipro] search discovery failed: {exc}")
+        return []
+
+    if not candidate_urls:
+        print("      [wipro] no vacancy URLs found on SuccessFactors search pages")
+        return []
+
+    def fetch_detail(url):
+        try:
+            r = requests.get(url, headers=headers, timeout=10, allow_redirects=True)
+            if r.status_code >= 400:
+                return None
+
+            page_text = re.sub(r"\s+", " ", _html_to_text(r.text)).strip()
+
+            def field(label, following_labels):
+                end = "|".join(re.escape(x) for x in following_labels)
+                mm = re.search(
+                    rf"\b{re.escape(label)}\s*:\s*(.+?)(?=\s+(?:{end})\s*:|$)",
+                    page_text,
+                    re.I,
+                )
+                return re.sub(r"\s+", " ", mm.group(1)).strip() if mm else ""
+
+            title = field(
+                "Job Title",
+                ["City", "State/Province", "Posting Start Date", "Job Description"],
+            )
+            if not title:
+                title = field(
+                    "Title",
+                    ["Requisition ID", "City", "Country/Region", "State/Province"],
+                )
+
+            city = field(
+                "City",
+                ["State/Province", "Country/Region", "Posting Start Date",
+                 "Job Description", "Job Title", "Title"],
+            )
+            state = field(
+                "State/Province",
+                ["Country/Region", "Posting Start Date", "Job Description",
+                 "Job Title", "City"],
+            )
+            country = field(
+                "Country/Region",
+                ["Posting Start Date", "Job Description", "Job Title", "City"],
+            )
+            posted_raw = field(
+                "Posting Start Date",
+                ["Job Description", "Job Title", "City", "State/Province",
+                 "Country/Region"],
+            )
+
+            meta = _extract_job_detail_metadata_from_html(r.text, r.url, "Wipro")
+            if not title:
+                title = _clean_detail_page_title(meta.get("title"), "Wipro") or ""
+
+            if not title or _looks_like_non_job_title(title):
+                return None
+
+            location_evidence = ", ".join(
+                x for x in [city, state, country] if x
+            ).strip()
+
+            # Job detail itself must prove Republic of Ireland.
+            if not is_republic_of_ireland_location(location_evidence):
+                return None
+            if _ROI_NEGATIVE_RE.search(location_evidence):
+                return None
+
+            location = location_evidence
+            if country and country.upper() == "IE":
+                location = ", ".join(x for x in [city, state, "Ireland"] if x)
+            elif "ireland" not in location.lower():
+                location = f"{location}, Ireland"
+
+            posted_text = posted_raw or str(meta.get("posted_text") or "").strip()
+
+            # Wipro/SuccessFactors can expose the posting date in several
+            # formats and sometimes only in HTML attributes rather than the
+            # visible text labels.
+            if not posted_text:
+                html_date_match = re.search(
+                    r'(?:datetime|data-date|data-startdate)=["\']'
+                    r'(\d{4}-\d{2}-\d{2})(?:[T ][^"\']*)?["\']',
+                    r.text,
+                    re.I,
+                )
+                if html_date_match:
+                    posted_text = html_date_match.group(1)
+
+            if not posted_text:
+                text_date_match = re.search(
+                    r'\b(?:Posting Start Date|Posted|Date Posted|Date)\s*:?\s*'
+                    r'('
+                    r'\d{1,2}/\d{1,2}/\d{2,4}'
+                    r'|\d{4}-\d{2}-\d{2}'
+                    r'|[A-Za-z]{3,9}\s+\d{1,2},\s+\d{4}'
+                    r'|\d{1,2}\s+[A-Za-z]{3,9}\s+\d{4}'
+                    r'|\d{1,2}-[A-Za-z]{3,9}-\d{4}'
+                    r')',
+                    page_text,
+                    re.I,
+                )
+                if text_date_match:
+                    posted_text = text_date_match.group(1)
+
+            posted_text = posted_text or "Unknown"
+            posted_days = parse_posted_text(posted_text)
+
+            # SuccessFactors may inject the posting date only after rendering.
+            # If static HTML has no usable date, render this individual vacancy
+            # page once and inspect the visible body text.
+            if posted_days is None and posted_text == "Unknown" and HAS_PLAYWRIGHT:
+                try:
+                    with sync_playwright() as _p:
+                        _b = _p.chromium.launch(
+                            headless=True,
+                            args=["--no-sandbox", "--disable-dev-shm-usage", "--disable-gpu"],
+                        )
+                        _pg = _b.new_page(user_agent=HEADERS.get("User-Agent"))
+                        _pg.goto(r.url, wait_until="domcontentloaded", timeout=25000)
+                        _pg.wait_for_timeout(1500)
+                        _txt = re.sub(r"\s+", " ", _pg.locator("body").inner_text()).strip()
+                        _b.close()
+
+                    _mdate = re.search(
+                        r'\b(?:Posting Start Date|Posted|Date Posted|Date)\s*:?\s*'
+                        r'('
+                        r'\d{1,2}/\d{1,2}/\d{2,4}'
+                        r'|\d{4}-\d{2}-\d{2}'
+                        r'|[A-Za-z]{3,9}\s+\d{1,2},\s+\d{4}'
+                        r'|\d{1,2}\s+[A-Za-z]{3,9}\s+\d{4}'
+                        r'|\d{1,2}-[A-Za-z]{3,9}-\d{4}'
+                        r')',
+                        _txt,
+                        re.I,
+                    )
+                    if _mdate:
+                        posted_text = _mdate.group(1)
+                        posted_days = parse_posted_text(posted_text)
+                except Exception:
+                    pass
+
+            if posted_days is None and posted_text != "Unknown":
+                _wipro_date_formats = (
+                    "%m/%d/%y", "%m/%d/%Y",
+                    "%Y-%m-%d",
+                    "%b %d, %Y", "%B %d, %Y",
+                    "%d %b %Y", "%d %B %Y",
+                    "%d-%b-%Y", "%d-%B-%Y",
+                )
+                for fmt in _wipro_date_formats:
+                    try:
+                        d = datetime.strptime(posted_text.strip(), fmt).replace(tzinfo=timezone.utc)
+                        posted_days = max(
+                            0.0,
+                            float((datetime.now(timezone.utc).date() - d.date()).days),
+                        )
+                        break
+                    except Exception:
+                        pass
+
+            description = str(meta.get("description") or page_text)
+            sponsorship, snippet = classify_sponsorship(description[:16000])
+
+            return {
+                "company": "Wipro",
+                "title": title[:300],
+                "location": location,
+                "posted_text": posted_text,
+                "posted_days_ago": posted_days,
+                "posted_age_known": posted_days is not None,
+                "employment_type": normalize_employment_type(
+                    meta.get("employment_type"), title
+                ),
+                "url": r.url,
+                "source": "wipro_successfactors_search",
+                "visa_sponsorship": sponsorship,
+                "visa_snippet": snippet,
+            }
+        except Exception:
+            return None
+
+    results = {}
+    urls = sorted(candidate_urls)
+    pool = ThreadPoolExecutor(max_workers=min(12, len(urls)))
+    try:
+        futs = {pool.submit(fetch_detail, u): u for u in urls}
+        for fut in as_completed(futs):
+            try:
+                job = fut.result()
+            except Exception:
+                job = None
+            if job:
+                results[job["url"].rstrip("/").lower()] = job
+    finally:
+        pool.shutdown(wait=False)
+
+    jobs = list(results.values())
+    print(
+        f"      [wipro] {len(jobs)} verified Republic-of-Ireland vacancies "
+        f"from {len(candidate_urls)} SuccessFactors vacancy records"
+    )
+    return jobs
+
+
+
 def test_single_company(name):
     """Fast test mode for one company — skips the full ~30 min pipeline
     entirely. Checks known dedicated scrapers by name directly (Apple,
@@ -7149,6 +7501,7 @@ def test_single_company(name):
         "aon": lambda: scrape_aon_ireland(session),
         "eaton": lambda: scrape_eaton_ireland(session),
         "cognizant": lambda: scrape_cognizant_ireland(session),
+        "wipro": lambda: scrape_wipro_ireland(session),
         "pepsico": lambda: scrape_pepsico_ireland(session),
         "esb": lambda: scrape_esb_ireland(session),
         "irish rail": lambda: scrape_irish_rail_ireland(session),
@@ -7207,7 +7560,10 @@ def test_single_company(name):
             normalize_posted_age(j)
         print(f"\n=== RESULT: {len(jobs)} Ireland postings found for '{name}' (Sheet 2 generic) ===")
         for j in jobs[:10]:
-            print(f"  - {j['title']} | {j['location']} | posted_days_ago={j['posted_days_ago']} | {j['url']}")
+            _age = j.get("posted_days_ago")
+            _known = j.get("posted_age_known", _age is not None and _age < UNKNOWN_POSTED_DAYS)
+            _age_display = _age if _known else "Unknown"
+            print(f"  - {j['title']} | {j['location']} | posted_days_ago={_age_display} | {j['url']}")
         if len(jobs) > 10:
             print(f"  ... and {len(jobs) - 10} more")
         return
@@ -7219,7 +7575,10 @@ def test_single_company(name):
             normalize_posted_age(j)
         print(f"\n=== RESULT: {len(jobs)} Ireland postings found for '{name}' ===")
         for j in jobs[:10]:
-            print(f"  - {j['title']} | {j['location']} | posted_days_ago={j['posted_days_ago']} | {j['url']}")
+            _age = j.get("posted_days_ago")
+            _known = j.get("posted_age_known", _age is not None and _age < UNKNOWN_POSTED_DAYS)
+            _age_display = _age if _known else "Unknown"
+            print(f"  - {j['title']} | {j['location']} | posted_days_ago={_age_display} | {j['url']}")
         if len(jobs) > 10:
             print(f"  ... and {len(jobs) - 10} more")
         return
@@ -7324,6 +7683,12 @@ def scrape_aer_lingus_ireland_recovery(session):
     )
 
 def main():
+    print("=== WIPRO_UNKNOWN_DATE_FIX ACTIVE: rendered date if available; otherwise Unknown ===")
+    print("=== WIPRO_DATE_FIX ACTIVE: SuccessFactors posting dates parsed from labels/HTML attributes ===")
+    print("=== WIPRO_SEARCH_FIX ACTIVE: uses SuccessFactors /search/ endpoint, not /viewalljobs/ ===")
+    print("=== WIPRO_RENDERED_FIX ACTIVE: Playwright discovers rendered /job/ records; detail page verifies ROI ===")
+    print("=== WIPRO_DEDICATED ACTIVE: structural /job/ records + explicit City/State ROI verification ===")
+    print("=== STRUCTURAL_VACANCY_FIX ACTIVE: generic results require real job-detail URL + proven Republic-of-Ireland location ===")
     print("=== ROI_VACANCY_MODE ACTIVE: fetch real Republic-of-Ireland vacancies; no profession-title keyword filtering ===")
     print("=== FULL_RUN_COVERAGE_FIX ACTIVE: known company scrapers are scheduled from CSV, not status buckets ===")
     print("=== JOB_COUNT_REGRESSION_FIX ACTIVE: keep valid ROI listing jobs when detail parsing fails ===")
@@ -7570,6 +7935,7 @@ def main():
         ("exact", "aon", scrape_aon_ireland, 240, "first-party jobs.aon.com"),
         ("exact", "eaton", scrape_eaton_ireland, 240, "first-party jobs.eaton.com"),
         ("exact", "cognizant", scrape_cognizant_ireland, 240, "verifies Ireland per job detail page"),
+        ("exact", "wipro", scrape_wipro_ireland, 75, "first-party Wipro vacancy records + City/State verification"),
         ("exact", "aib (allied irish banks)", scrape_aib_ireland, 240, "filtered against UK-only postings"),
         ("exact", "bnp paribas ireland", scrape_bnp_paribas_ireland, 240, "first-party Dublin jobs page"),
         ("exact", "blackrock", scrape_blackrock_ireland, 240, "Phenom platform"),
@@ -7650,6 +8016,7 @@ def main():
         "scrape_guidewire_ireland", "scrape_hcltech_ireland", "scrape_allianz_ireland",
         "scrape_siemens_ireland",
         "scrape_wtw_ireland_direct", "scrape_guidewire_ireland_direct_http",
+        "scrape_wipro_ireland",
     }
 
     _live_company_names = {
@@ -7779,6 +8146,9 @@ def main():
     priority_entries = [
         entry for entry in manual_check
         if entry["company"].strip().lower() in PRIORITY_SHEET2_COMPANIES
+        and entry["company"].strip().lower() not in {
+            "wipro",  # dedicated first-party vacancy scraper
+        }
     ]
     for entry in priority_entries:
         company_name = entry["company"].strip()
