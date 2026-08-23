@@ -318,6 +318,41 @@ def _expected_scraper_cache_version(company_key):
     )
 
 
+
+def _has_dedicated_company_scraper(company_name):
+    """Return True when this company already has a dedicated scraper route.
+
+    Such companies must not also be scheduled through the weaker Sheet-2
+    generic browser fallback in the same run.
+    """
+    key = str(company_name or "").strip().lower()
+
+    # Keep this aligned with the dedicated dispatch used by --only/full runs.
+    dedicated_keys = {
+        "aon",
+        "dxc technology",
+        "grant thornton",
+        "nvidia",
+        "wipro",
+        "iqvia",
+        "cook medical",
+        "merit medical",
+        "goodbody",
+        "guidewire",
+        "willis towers watson (wtw)",
+        "wtw",
+        "viatris",
+        "medtronic",
+        "qiagen",
+        "fidelity investments",
+        "siemens",
+    }
+
+    # Also treat versioned dedicated scrapers as dedicated automatically.
+    dedicated_keys.update(DEDICATED_SCRAPER_CACHE_VERSION.keys())
+    return key in dedicated_keys
+
+
 def cached_browser_scrape(cache, company_key, scraper_fn, timeout_seconds, label):
     """The real fix for a run that took hours even with every individual
     company correctly time-bounded: running ~20 separate real browser
@@ -2823,6 +2858,15 @@ def _final_job_quality_filter(live_jobs):
 
 
 def scrape_priority_sheet2_generic(company_name, url, session=None):
+
+    # SYSTEMIC FIX: a company with a dedicated scraper must never fall through
+    # to this weaker generic route in the same/full run.
+    if _has_dedicated_company_scraper(company_name):
+        print(
+            f"      [priority-generic] {company_name}: skipped — dedicated scraper route exists"
+        )
+        return []
+
     """Generic Ireland-first browser fallback for selected high-priority companies
     from the user's Sheet 2. It does not change the existing company/platform
     scrapers; it only adds a fallback path for companies that otherwise remain
@@ -8448,6 +8492,7 @@ def scrape_aer_lingus_ireland_recovery(session):
     )
 
 def main():
+    print("=== DEDICATED_GENERIC_EXCLUSION ACTIVE: dedicated companies cannot run through Sheet-2 generic fallback ===")
     print("=== DEDICATED_CACHE_VERSION_FIX ACTIVE: old scraper results cannot survive after a dedicated scraper upgrade ===")
     print("=== IQVIA_FINAL_FIX ACTIVE: 30-job Ireland discovery retained; location output canonicalized ===")
     print("=== IQVIA_LOCATION_COOK_NETWORK_FIX ACTIVE: clean IQVIA locations + iCIMS network discovery ===")
