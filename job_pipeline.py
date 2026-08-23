@@ -7249,6 +7249,7 @@ def scrape_aer_lingus_ireland_recovery(session):
     )
 
 def main():
+    print("=== FULL_RUN_COVERAGE_FIX ACTIVE: known company scrapers are scheduled from CSV, not status buckets ===")
     print("=== JOB_COUNT_REGRESSION_FIX ACTIVE: keep valid ROI listing jobs when detail parsing fails ===")
     print("=== STATUS MODE ACTIVE: Live Jobs / Currently No Jobs / Fetching Error ===")
     print("=== VACANCY_QUALITY_V2 ACTIVE: sitemap/blog/saved-job false positives rejected; strict ROI retained ===")
@@ -7333,6 +7334,24 @@ def main():
     # automated company back into "manual" merely because this run yields zero.
     prior_history = load_history(args.history)
     historically_automated = {str(name).strip() for name in prior_history.keys()}
+
+    # A previous over-strict validation run may have cached an empty result
+    # for a company that demonstrably produced valid jobs in earlier runs.
+    # Never let that poisoned zero cache suppress the repaired scraper.
+    _historical_lower = {name.lower() for name in historically_automated}
+    _cleared_zero_cache = []
+    for _cache_company in list(browser_cache.keys()):
+        _cache_entry = browser_cache.get(_cache_company) or {}
+        if (_cache_company.lower() in _historical_lower
+                and not _cache_entry.get("jobs")):
+            browser_cache.pop(_cache_company, None)
+            _cleared_zero_cache.append(_cache_company)
+    if _cleared_zero_cache:
+        print(
+            f"=== Cache recovery: cleared {len(_cleared_zero_cache)} stale zero results "
+            "for companies that produced valid jobs before ==="
+        )
+
     live_jobs, manual_check, errors = [], [], []
     automated_zero = {}
     failed_companies = set()
@@ -7557,15 +7576,39 @@ def main():
         "scrape_wtw_ireland_direct", "scrape_guidewire_ireland_direct_http",
     }
 
+    _live_company_names = {
+        str(j.get("company") or "").strip().lower()
+        for j in live_jobs
+        if j.get("company")
+    }
+
     for match_type, key, scraper_fn, timeout_s, description in dedicated_company_specs:
         if match_type == "exact":
-            entry = next((c for c in manual_check if c["company"].strip().lower() == key), None)
+            company_row = next(
+                (c for c in companies if c["company_name"].strip().lower() == key),
+                None,
+            )
         else:
-            entry = next((c for c in manual_check if c["company"].strip().lower().startswith(key)), None)
-        if not entry:
+            company_row = next(
+                (c for c in companies if c["company_name"].strip().lower().startswith(key)),
+                None,
+            )
+        if not company_row:
             continue
-        company_name = entry["company"]
-        matched_entries[company_name] = entry
+
+        company_name = company_row["company_name"].strip()
+
+        # Earlier reliable API/ATS stages already found current jobs: no need
+        # to run the company's dedicated fallback a second time.
+        if company_name.lower() in _live_company_names:
+            continue
+
+        entry = next(
+            (c for c in manual_check if c["company"].strip().lower() == company_name.lower()),
+            None,
+        )
+        if entry is not None:
+            matched_entries[company_name] = entry
 
         def make_task(fn=scraper_fn, name=company_name):
             return lambda: cached_browser_scrape(browser_cache, name, lambda: fn(session), 0, name)
@@ -7583,11 +7626,21 @@ def main():
         ("oracle", "Oracle", "https://eeho.fa.us2.oraclecloud.com", "CX_1"),
     ]
     for exact_name, display_name, host, site_number in oracle_cx_targets:
-        entry = next((c for c in manual_check if c["company"].strip().lower() == exact_name), None)
-        if not entry:
+        company_row = next(
+            (c for c in companies if c["company_name"].strip().lower() == exact_name),
+            None,
+        )
+        if not company_row:
             continue
-        company_name = entry["company"]
-        matched_entries[company_name] = entry
+        company_name = company_row["company_name"].strip()
+        if company_name.lower() in _live_company_names:
+            continue
+        entry = next(
+            (c for c in manual_check if c["company"].strip().lower() == exact_name),
+            None,
+        )
+        if entry is not None:
+            matched_entries[company_name] = entry
 
         def make_oracle_task(h=host, s=site_number, name=company_name):
             return lambda: cached_browser_scrape(
@@ -7615,11 +7668,21 @@ def main():
     ]
     LIGHTWEIGHT_BROWSER_EXCEPTIONS = {"scrape_asl_aviation_ireland"}
     for key, display_name, scraper_fn, base_timeout in lightweight_specs:
-        entry = next((c for c in manual_check if c["company"].strip().lower() == key), None)
-        if not entry:
+        company_row = next(
+            (c for c in companies if c["company_name"].strip().lower() == key),
+            None,
+        )
+        if not company_row:
             continue
-        company_name = entry["company"]
-        matched_entries[company_name] = entry
+        company_name = company_row["company_name"].strip()
+        if company_name.lower() in _live_company_names:
+            continue
+        entry = next(
+            (c for c in manual_check if c["company"].strip().lower() == key),
+            None,
+        )
+        if entry is not None:
+            matched_entries[company_name] = entry
 
         def make_light_task(fn=scraper_fn, name=company_name):
             return lambda: cached_browser_scrape(browser_cache, name, lambda: fn(session), 0, name)
@@ -7679,6 +7742,7 @@ def main():
             for job in jobs:
                 job["company"] = company_name
             live_jobs.extend(jobs)
+            _live_company_names.add(company_name.lower())
             if entry is not None:
                 manual_check = [c for c in manual_check if c is not entry]
             automated_zero.pop(company_name, None)
