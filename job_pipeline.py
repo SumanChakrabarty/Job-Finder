@@ -574,9 +574,23 @@ def normalize_posted_age(job):
 
 
 def is_ireland_location(location_text: str) -> bool:
+    """Republic of Ireland only.
+
+    Historically this helper treated Belfast/Northern Ireland as Ireland,
+    which inflated the live-job count. Keep the original positive hints but
+    explicitly reject Northern-Ireland locations before matching them.
+    """
     if not location_text:
         return False
-    lt = location_text.lower()
+    lt = str(location_text).lower()
+    if re.search(
+        r"\b(?:northern ireland|belfast|lisburn|newry|derry|londonderry|"
+        r"county antrim|county down|county armagh|county tyrone|"
+        r"county fermanagh|county londonderry)\b",
+        lt,
+        re.I,
+    ):
+        return False
     return any(hint in lt for hint in IRELAND_LOCATION_HINTS)
 
 
@@ -2653,10 +2667,14 @@ def _enrich_generic_candidates_from_detail(company_name, candidates):
         # This restores valid Wipro/IQVIA/etc. jobs while still rejecting CTA
         # labels such as "BRANDS", "Apply now", "Explore careers", etc.
         listing_location = str(job.get("location") or "")
-        if current_bad or not current_role_like or not is_republic_of_ireland_location(listing_location):
+        if current_bad or not is_republic_of_ireland_location(listing_location):
             dropped += 1
             continue
 
+        # _choose_job_title() already removed obvious CTA/navigation labels.
+        # Do not require the title to contain one of our limited role keywords;
+        # real titles such as bespoke consulting/technology roles can be valid
+        # without words like "manager", "engineer", "analyst", etc.
         job = dict(job)
         job["title_source"] = "listing_card_roi_verified"
         resolved.append(job)
@@ -3812,10 +3830,28 @@ def _scrape_first_party_ireland_listing(company_name, listing_urls, href_pattern
             if not _ROLE_TITLE_WORD_RE.search(title):
                 continue
 
-        # STRICT REPUBLIC OF IRELAND: listing-page filters are discovery only.
-        # The destination job detail must itself prove a Republic-of-Ireland
-        # location. This prevents Mexico/US/India jobs from being labelled IE.
-        if not _strict_roi_job_evidence(meta, info.get("card", "")):
+        detail_proves_roi = _strict_roi_job_evidence(meta, info.get("card", ""))
+
+        # Some first-party Ireland search pages expose a genuine vacancy URL
+        # and exact title but omit location/schema metadata on the destination
+        # page. For those explicitly trusted Ireland listings, keep the job
+        # only if the URL looks like a real vacancy and there is no explicit
+        # Northern-Ireland location anywhere in the card/detail text.
+        listing_proves_roi = False
+        if not detail_proves_roi and info.get("listing_ireland"):
+            combined = " ".join([
+                str(detail_location or ""),
+                str(description or ""),
+                str(info.get("card") or ""),
+            ])
+            has_ni = bool(_ROI_NEGATIVE_RE.search(combined))
+            listing_proves_roi = (
+                not has_ni
+                and not _looks_like_bad_generic_title(title)
+                and _strong_job_detail_url(meta.get("final_url") or href)
+            )
+
+        if not (detail_proves_roi or listing_proves_roi):
             continue
 
         if is_republic_of_ireland_location(detail_location):
@@ -6502,10 +6538,43 @@ def probe_ats_for_manual_companies(manual_companies, session, cache_path, fetch_
                     company_jobs.append(norm)
         elif platform == "smartrecruiters":
             jobs = try_smartrecruiters(slug, local_session) or []
+
+            # First normalize/filter without detail calls. This is fast and
+            # prevents a large global board (Version 1) from spending tens of
+            # seconds fetching descriptions for jobs that are not in Ireland.
+            _roi_pairs = []
             for job in jobs:
-                norm = normalize_smartrecruiters_job(name, job, slug, local_session, fetch_descriptions)
+                norm = normalize_smartrecruiters_job(
+                    name, job, slug, local_session, False
+                )
                 if norm:
                     company_jobs.append(norm)
+                    _roi_pairs.append((job, norm))
+
+            # Preserve the sponsorship deliverable: fetch descriptions only
+            # for the already-filtered Republic-of-Ireland jobs, concurrently.
+            if fetch_descriptions and _roi_pairs:
+                def _sr_desc(pair):
+                    raw_job, norm_job = pair
+                    posting_id = raw_job.get("id", "")
+                    desc = fetch_smartrecruiters_description(
+                        slug, posting_id, requests.Session()
+                    ) if posting_id else ""
+                    return norm_job, desc
+
+                _desc_pool = ThreadPoolExecutor(max_workers=min(10, len(_roi_pairs)))
+                try:
+                    _desc_futs = [_desc_pool.submit(_sr_desc, pair) for pair in _roi_pairs]
+                    for _df in as_completed(_desc_futs):
+                        try:
+                            _norm_job, _desc = _df.result()
+                            _spons, _snippet = classify_sponsorship(_desc)
+                            _norm_job["visa_sponsorship"] = _spons
+                            _norm_job["visa_snippet"] = _snippet
+                        except Exception:
+                            pass
+                finally:
+                    _desc_pool.shutdown(wait=False)
         elif platform == "ashby":
             jobs = try_ashby(slug, local_session) or []
             for job in jobs:
@@ -6562,11 +6631,12 @@ def probe_ats_for_manual_companies(manual_companies, session, cache_path, fetch_
             }
             for fut, original in future_map.items():
                 try:
-                    entry, platform, slug, company_jobs, fetch_ok = fut.result(timeout=30)
+                    _ats_timeout = 75 if original[1] == "smartrecruiters" else 30
+                    entry, platform, slug, company_jobs, fetch_ok = fut.result(timeout=_ats_timeout)
                 except FuturesTimeoutError:
                     entry, platform, slug = original
                     company_jobs, fetch_ok = [], False
-                    print(f"      [ATS] {entry['company']}: timed out after 30s")
+                    print(f"      [ATS] {entry['company']}: timed out after {_ats_timeout}s")
                 except Exception as exc:
                     # A genuine fetch failure remains unresolved/manual.
                     entry, platform, slug = original
@@ -7249,6 +7319,7 @@ def scrape_aer_lingus_ireland_recovery(session):
     )
 
 def main():
+    print("=== ROI_COUNT_RECOVERY ACTIVE: recover valid Ireland jobs without Belfast/UK inflation ===")
     print("=== FULL_RUN_COVERAGE_FIX ACTIVE: known company scrapers are scheduled from CSV, not status buckets ===")
     print("=== JOB_COUNT_REGRESSION_FIX ACTIVE: keep valid ROI listing jobs when detail parsing fails ===")
     print("=== STATUS MODE ACTIVE: Live Jobs / Currently No Jobs / Fetching Error ===")
