@@ -8084,8 +8084,8 @@
   },
   "BNP Paribas Ireland": {
     "jobs": [],
-    "checked_at": 1787504049.593127,
-    "consecutive_failures": 99
+    "checked_at": 1787506157.7431626,
+    "consecutive_failures": 100
   },
   "AIB (Allied Irish Banks)": {
     "jobs": [
@@ -8342,7 +8342,7 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1787494385.3305118,
+    "checked_at": 1787506181.2266693,
     "consecutive_failures": 0
   },
   "Arup": {
@@ -9687,8 +9687,8 @@
   },
   "Three Ireland": {
     "jobs": [],
-    "checked_at": 1787504051.124726,
-    "consecutive_failures": 97
+    "checked_at": 1787506172.710707,
+    "consecutive_failures": 98
   },
   "Aiven": {
     "jobs": [
@@ -11735,7 +11735,7 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1787494381.5662434,
+    "checked_at": 1787506172.6192904,
     "consecutive_failures": 0
   },
   "ESB": {
@@ -11757,21 +11757,6 @@
       },
       {
         "company": "ESB",
-        "title": "Design Engineer, ecars",
-        "location": "Dublin, Ireland",
-        "posted_text": "4 Aug 2026",
-        "posted_days_ago": 19.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.esb.ie/job/Dublin-Design-Engineer%2C-ecars-D/1370124957/",
-        "source": "esb_successfactors",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-21T17:08:11.267808+00:00",
-        "posted_age_known": true
-      },
-      {
-        "company": "ESB",
         "title": "Senior Commissioners",
         "location": "Ireland",
         "posted_text": "21 Aug 2026",
@@ -11787,42 +11772,42 @@
       },
       {
         "company": "ESB",
-        "title": "Electrical Engineer",
+        "title": "Design Engineer, ecars",
         "location": "Dublin, Ireland",
-        "posted_text": "5 Aug 2026",
-        "posted_days_ago": 18.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.esb.ie/job/Dublin-Electrical-Engineer-D/1353643557/",
-        "source": "esb_successfactors",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-20T14:14:43.434428+00:00",
-        "posted_age_known": true
-      },
-      {
-        "company": "ESB",
-        "title": "Deployment South Team Member - Telecoms",
-        "location": "Wilton, Ireland",
         "posted_text": "19 Aug 2026",
         "posted_days_ago": 4.0,
         "employment_type": "Unspecified",
-        "url": "https://careers.esb.ie/job/Wilton-Deployment-South-Team-Member-Telecoms-C/1369912657/",
+        "url": "https://careers.esb.ie/job/Dublin-Design-Engineer%2C-ecars-D/1370124957/",
         "source": "esb_successfactors",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
         "new_since_last_check": false,
-        "first_seen_at": "2026-08-20T14:14:43.434428+00:00",
+        "first_seen_at": "2026-08-21T17:08:11.267808+00:00",
         "posted_age_known": true
       },
       {
         "company": "ESB",
-        "title": "Solution Architecture Manager",
-        "location": "Dublin, Ireland",
-        "posted_text": "14 Aug 2026",
-        "posted_days_ago": 9.0,
+        "title": "Regulation Analyst",
+        "location": "27, Ireland",
+        "posted_text": "21 Aug 2026",
+        "posted_days_ago": 2.0,
         "employment_type": "Unspecified",
-        "url": "https://careers.esb.ie/job/Dublin-Solution-Architecture-Manager-D/1369875057/",
+        "url": "https://careers.esb.ie/job/27-Lower-Fitzwilliam-Street-Regulation-Analyst-D/1370015157/",
+        "source": "esb_successfactors",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-21T17:08:11.267808+00:00",
+        "posted_age_known": true
+      },
+      {
+        "company": "ESB",
+        "title": "Electrical Engineer",
+        "location": "Dublin, Ireland",
+        "posted_text": "4 Aug 2026",
+        "posted_days_ago": 19.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.esb.ie/job/Dublin-Electrical-Engineer-D/1353643557/",
         "source": "esb_successfactors",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
@@ -11847,12 +11832,27 @@
       },
       {
         "company": "ESB",
-        "title": "Distributed Generation Site Manager (South-East), Renewable Operations",
-        "location": "South, Ireland",
+        "title": "Solution Architecture Manager",
+        "location": "Dublin, Ireland",
+        "posted_text": "5 Aug 2026",
+        "posted_days_ago": 18.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.esb.ie/job/Dublin-Solution-Architecture-Manager-D/1369875057/",
+        "source": "esb_successfactors",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-20T14:14:43.434428+00:00",
+        "posted_age_known": true
+      },
+      {
+        "company": "ESB",
+        "title": "Deployment South Team Member - Telecoms",
+        "location": "Wilton, Ireland",
         "posted_text": "19 Aug 2026",
         "posted_days_ago": 4.0,
         "employment_type": "Unspecified",
-        "url": "https://careers.esb.ie/job/South-East-region-Distributed-Generation-Site-Manager-%28South-East%29%2C-Renewable-Operations-KK/1363465457/",
+        "url": "https://careers.esb.ie/job/Wilton-Deployment-South-Team-Member-Telecoms-C/1369912657/",
         "source": "esb_successfactors",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
@@ -11966,7 +11966,7 @@
         "posted_age_known": true
       }
     ],
-    "checked_at": 1787494366.9085808,
+    "checked_at": 1787506154.6087685,
     "consecutive_failures": 0
   },
   "Avolon": {
@@ -11987,7 +11987,7 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1787494365.4860535,
+    "checked_at": 1787506152.8846827,
     "consecutive_failures": 0
   },
   "Dawn Meats": {
@@ -12013,7 +12013,7 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1787494364.9233546,
+    "checked_at": 1787506155.6572037,
     "consecutive_failures": 0
   },
   "Bloomberg": {
@@ -12244,7 +12244,7 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1787494368.8392365,
+    "checked_at": 1787506155.968917,
     "consecutive_failures": 0
   },
   "ASL Aviation Holdings": {
@@ -12256,12 +12256,12 @@
     "jobs": [
       {
         "company": "AMCS Group",
-        "title": "Inside Sales Representative (m/w/d)",
+        "title": "Account Executive Enterprise Sales DACH",
         "location": "Ireland",
         "posted_text": "Unknown",
         "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
-        "url": "https://www.amcsgroup.com/careers/business-development-representative-wmd-201763/",
+        "url": "https://www.amcsgroup.com/careers/account-executive-enterprise-sales-dach-199422/",
         "source": "amcs_direct",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
@@ -12271,12 +12271,12 @@
       },
       {
         "company": "AMCS Group",
-        "title": "Account Executive Enterprise Sales DACH",
+        "title": "Account Executive",
         "location": "Ireland",
         "posted_text": "Unknown",
         "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
-        "url": "https://www.amcsgroup.com/careers/account-executive-enterprise-sales-dach-199422/",
+        "url": "https://www.amcsgroup.com/careers/account-executive-201744/",
         "source": "amcs_direct",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
@@ -12301,12 +12301,12 @@
       },
       {
         "company": "AMCS Group",
-        "title": "Account Executive",
+        "title": "Inside Sales Representative (m/w/d)",
         "location": "Ireland",
         "posted_text": "Unknown",
         "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
-        "url": "https://www.amcsgroup.com/careers/account-executive-201744/",
+        "url": "https://www.amcsgroup.com/careers/business-development-representative-wmd-201763/",
         "source": "amcs_direct",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
@@ -12315,24 +12315,69 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1787494383.6441343,
+    "checked_at": 1787506178.946947,
     "consecutive_failures": 0
   },
   "BioMarin": {
     "jobs": [
       {
         "company": "BioMarin",
-        "title": "Director, Business Unit Head, Skeletal Conditions – Brazil",
+        "title": "Senior Manager, Commercial FP&A — Southern Cone & NOLA",
         "location": "Ireland",
         "posted_text": "Unknown",
         "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
-        "url": "https://www.biomarin.com/job/director-business-unit-head-skeletal-conditions-brazil/",
+        "url": "https://www.biomarin.com/job/senior-manager-commercial-fpa-southern-cone-nola/",
         "source": "biomarin_direct",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
         "new_since_last_check": false,
         "first_seen_at": "2026-08-21T13:34:04.470339+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "BioMarin",
+        "title": "Director, Global Sourcing and Procurement – Contract Manufacturing",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://www.biomarin.com/job/director-global-sourcing-and-procurement-contract-manufacturing/",
+        "source": "biomarin_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-21T23:31:10.501809+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "BioMarin",
+        "title": "Associate Director, Health Economics & Outcomes Research (HEOR)",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://www.biomarin.com/job/associate-director-health-economics-outcomes-research-heor-2/",
+        "source": "biomarin_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-21T13:34:04.470339+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "BioMarin",
+        "title": "Manager, Commercial FP&A, Centers of Excellence OPEX",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://www.biomarin.com/job/manager-commercial-fpa-centers-of-excellence-opex/",
+        "source": "biomarin_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-21T17:08:11.267808+00:00",
         "posted_age_known": false
       },
       {
@@ -12367,81 +12412,6 @@
       },
       {
         "company": "BioMarin",
-        "title": "Manager, Commercial FP&A, Centers of Excellence OPEX",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://www.biomarin.com/job/manager-commercial-fpa-centers-of-excellence-opex/",
-        "source": "biomarin_direct",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-21T17:08:11.267808+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "BioMarin",
-        "title": "Associate Director, Health Economics & Outcomes Research (HEOR)",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://www.biomarin.com/job/associate-director-health-economics-outcomes-research-heor-2/",
-        "source": "biomarin_direct",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-21T13:34:04.470339+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "BioMarin",
-        "title": "Manager, Commercial FP&A, Centers of Excellence OPEX",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://www.biomarin.com/job/manager-commercial-fpa-centers-of-excellence-opex/",
-        "source": "biomarin_direct",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-21T17:08:11.267808+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "BioMarin",
-        "title": "Senior Manager, Commercial FP&A — Southern Cone & NOLA",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://www.biomarin.com/job/senior-manager-commercial-fpa-southern-cone-nola/",
-        "source": "biomarin_direct",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-21T13:34:04.470339+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "BioMarin",
-        "title": "Associate Director, Health Economics & Outcomes Research (HEOR)",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://www.biomarin.com/job/associate-director-health-economics-outcomes-research-heor-2/",
-        "source": "biomarin_direct",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-21T13:34:04.470339+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "BioMarin",
         "title": "Senior Vendor Laboratory Manager Clinical Laboratory & Biospecimen Management",
         "location": "Ireland",
         "posted_text": "Unknown",
@@ -12457,17 +12427,17 @@
       },
       {
         "company": "BioMarin",
-        "title": "Director, Global Sourcing and Procurement – Contract Manufacturing",
+        "title": "Director, Business Unit Head, Skeletal Conditions – Brazil",
         "location": "Ireland",
         "posted_text": "Unknown",
         "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
-        "url": "https://www.biomarin.com/job/director-global-sourcing-and-procurement-contract-manufacturing/",
+        "url": "https://www.biomarin.com/job/director-business-unit-head-skeletal-conditions-brazil/",
         "source": "biomarin_direct",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
         "new_since_last_check": false,
-        "first_seen_at": "2026-08-21T23:31:10.501809+00:00",
+        "first_seen_at": "2026-08-21T13:34:04.470339+00:00",
         "posted_age_known": false
       },
       {
@@ -12486,33 +12456,33 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1787494376.3140154,
+    "checked_at": 1787506170.3162735,
     "consecutive_failures": 0
   },
   "Alvarez & Marsal": {
     "jobs": [],
-    "checked_at": 1787504092.0443861,
-    "consecutive_failures": 53
+    "checked_at": 1787506222.6269805,
+    "consecutive_failures": 54
   },
   "AXA Ireland": {
     "jobs": [],
-    "checked_at": 1787504090.8401575,
-    "consecutive_failures": 53
+    "checked_at": 1787506218.776975,
+    "consecutive_failures": 54
   },
   "Coca-Cola HBC Ireland": {
     "jobs": [],
-    "checked_at": 1787504094.7473826,
-    "consecutive_failures": 53
+    "checked_at": 1787506224.0651796,
+    "consecutive_failures": 54
   },
   "FactSet": {
     "jobs": [],
-    "checked_at": 1787504110.1357205,
-    "consecutive_failures": 53
+    "checked_at": 1787506235.6745572,
+    "consecutive_failures": 54
   },
   "FBD Insurance": {
     "jobs": [],
-    "checked_at": 1787504098.9862952,
-    "consecutive_failures": 53
+    "checked_at": 1787506230.849423,
+    "consecutive_failures": 54
   },
   "Dunnes Stores": {
     "jobs": [],
@@ -12702,7 +12672,7 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1787494366.2476127,
+    "checked_at": 1787506154.89812,
     "consecutive_failures": 0
   },
   "BDO Ireland": {
@@ -12729,18 +12699,18 @@
   },
   "Bain & Company": {
     "jobs": [],
-    "checked_at": 1787504106.6247175,
-    "consecutive_failures": 53
+    "checked_at": 1787506234.3449464,
+    "consecutive_failures": 54
   },
   "FTI Consulting": {
     "jobs": [],
-    "checked_at": 1787504108.265444,
-    "consecutive_failures": 53
+    "checked_at": 1787506237.0200658,
+    "consecutive_failures": 54
   },
   "Goldman Sachs": {
     "jobs": [],
-    "checked_at": 1787504050.046245,
-    "consecutive_failures": 53
+    "checked_at": 1787506160.475481,
+    "consecutive_failures": 54
   },
   "Fiserv": {
     "jobs": [
@@ -13280,28 +13250,28 @@
   },
   "Dynatrace": {
     "jobs": [],
-    "checked_at": 1787504102.1148834,
-    "consecutive_failures": 51
+    "checked_at": 1787506230.8759794,
+    "consecutive_failures": 52
   },
   "Databricks": {
     "jobs": [],
-    "checked_at": 1787504048.0658946,
-    "consecutive_failures": 47
+    "checked_at": 1787506161.593298,
+    "consecutive_failures": 48
   },
   "Infosys": {
     "jobs": [],
-    "checked_at": 1787504104.9517727,
-    "consecutive_failures": 41
+    "checked_at": 1787506236.1289628,
+    "consecutive_failures": 42
   },
   "Heineken Ireland": {
     "jobs": [],
-    "checked_at": 1787504103.9867709,
-    "consecutive_failures": 41
+    "checked_at": 1787506232.850617,
+    "consecutive_failures": 42
   },
   "Macquarie Group": {
     "jobs": [],
-    "checked_at": 1787504115.4397166,
-    "consecutive_failures": 41
+    "checked_at": 1787506240.0814524,
+    "consecutive_failures": 42
   },
   "Lidl Ireland": {
     "jobs": [],
@@ -13310,43 +13280,43 @@
   },
   "Morningstar": {
     "jobs": [],
-    "checked_at": 1787504113.578378,
-    "consecutive_failures": 41
+    "checked_at": 1787506241.233792,
+    "consecutive_failures": 42
   },
   "Morgan Stanley": {
     "jobs": [],
-    "checked_at": 1787504047.6898699,
-    "consecutive_failures": 41
+    "checked_at": 1787506156.8389468,
+    "consecutive_failures": 42
   },
   "Moody's": {
     "jobs": [],
-    "checked_at": 1787504115.4131675,
-    "consecutive_failures": 41
+    "checked_at": 1787506241.5378134,
+    "consecutive_failures": 42
   },
   "MSCI": {
     "jobs": [],
-    "checked_at": 1787504112.704612,
-    "consecutive_failures": 41
+    "checked_at": 1787506241.0287678,
+    "consecutive_failures": 42
   },
   "S&P Global": {
     "jobs": [],
-    "checked_at": 1787504048.4442637,
-    "consecutive_failures": 41
+    "checked_at": 1787506159.9534461,
+    "consecutive_failures": 42
   },
   "Refinitiv (LSEG)": {
     "jobs": [],
-    "checked_at": 1787504118.4742029,
-    "consecutive_failures": 41
+    "checked_at": 1787506244.1471093,
+    "consecutive_failures": 42
   },
   "Societe Generale": {
     "jobs": [],
-    "checked_at": 1787504120.4334033,
-    "consecutive_failures": 41
+    "checked_at": 1787506247.10017,
+    "consecutive_failures": 42
   },
   "Splunk": {
     "jobs": [],
-    "checked_at": 1787504121.750378,
-    "consecutive_failures": 41
+    "checked_at": 1787506248.6995137,
+    "consecutive_failures": 42
   },
   "Greencore": {
     "jobs": [],
@@ -13365,8 +13335,8 @@
   },
   "McKinsey & Company": {
     "jobs": [],
-    "checked_at": 1787504151.865779,
-    "consecutive_failures": 41
+    "checked_at": 1787506280.3681982,
+    "consecutive_failures": 42
   },
   "SAP": {
     "jobs": [
@@ -13979,7 +13949,7 @@
         "source": "priority_sheet2_generic",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "title_source": "listing_card_unverified",
+        "title_source": "listing_card_roi_verified",
         "new_since_last_check": false,
         "first_seen_at": "2026-08-22T11:33:07.713105+00:00",
         "posted_age_known": false
@@ -13995,69 +13965,69 @@
         "source": "priority_sheet2_generic",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "title_source": "listing_card_unverified",
+        "title_source": "listing_card_roi_verified",
         "new_since_last_check": false,
         "first_seen_at": "2026-08-22T11:33:07.713105+00:00",
         "posted_age_known": false
       }
     ],
-    "checked_at": 1787494573.4218304,
+    "checked_at": 1787506208.8404543,
     "consecutive_failures": 0
   },
   "SuperValu / Musgrave": {
     "jobs": [],
-    "checked_at": 1787504116.52352,
-    "consecutive_failures": 40
+    "checked_at": 1787506242.5164287,
+    "consecutive_failures": 41
   },
   "Tata Consultancy Services (TCS)": {
     "jobs": [],
-    "checked_at": 1787504121.4094217,
-    "consecutive_failures": 40
+    "checked_at": 1787506247.5903094,
+    "consecutive_failures": 41
   },
   "Susquehanna International Group (SIG)": {
     "jobs": [],
-    "checked_at": 1787504121.150568,
-    "consecutive_failures": 40
+    "checked_at": 1787506246.8818018,
+    "consecutive_failures": 41
   },
   "VHI Healthcare": {
     "jobs": [],
-    "checked_at": 1787504131.9418786,
-    "consecutive_failures": 40
+    "checked_at": 1787506256.1534338,
+    "consecutive_failures": 41
   },
   "Tesco Ireland": {
     "jobs": [],
-    "checked_at": 1787504131.2411907,
-    "consecutive_failures": 40
+    "checked_at": 1787506256.6844866,
+    "consecutive_failures": 41
   },
   "Aer Lingus": {
     "jobs": [],
-    "checked_at": 1787504048.9341223,
-    "consecutive_failures": 40
+    "checked_at": 1787506160.1064134,
+    "consecutive_failures": 41
   },
   "Akamai": {
     "jobs": [],
-    "checked_at": 1787504131.6555994,
-    "consecutive_failures": 40
+    "checked_at": 1787506258.07145,
+    "consecutive_failures": 41
   },
   "AerCap": {
     "jobs": [],
-    "checked_at": 1787504127.4752767,
-    "consecutive_failures": 40
+    "checked_at": 1787506254.1185207,
+    "consecutive_failures": 41
   },
   "An Post": {
     "jobs": [],
-    "checked_at": 1787504134.015493,
-    "consecutive_failures": 40
+    "checked_at": 1787506261.267622,
+    "consecutive_failures": 41
   },
   "ASML": {
     "jobs": [],
-    "checked_at": 1787504128.5038369,
-    "consecutive_failures": 40
+    "checked_at": 1787506253.9645753,
+    "consecutive_failures": 41
   },
   "Agilent Technologies": {
     "jobs": [],
-    "checked_at": 1787504127.3795364,
-    "consecutive_failures": 40
+    "checked_at": 1787506259.6905227,
+    "consecutive_failures": 41
   },
   "Advanced Micro Devices (AMD)": {
     "jobs": [],
@@ -14296,8 +14266,8 @@
   },
   "Alkermes": {
     "jobs": [],
-    "checked_at": 1787504133.9383013,
-    "consecutive_failures": 40
+    "checked_at": 1787506260.3929477,
+    "consecutive_failures": 41
   },
   "Alexion Pharmaceuticals": {
     "jobs": [
@@ -14960,8 +14930,8 @@
   },
   "Visa": {
     "jobs": [],
-    "checked_at": 1787504046.3893244,
-    "consecutive_failures": 37
+    "checked_at": 1787506154.215703,
+    "consecutive_failures": 38
   },
   "AstraZeneca": {
     "jobs": [
@@ -16163,23 +16133,23 @@
   },
   "Bausch + Lomb": {
     "jobs": [],
-    "checked_at": 1787504058.4898775,
-    "consecutive_failures": 39
+    "checked_at": 1787506184.437478,
+    "consecutive_failures": 40
   },
   "Boehringer Ingelheim": {
     "jobs": [],
-    "checked_at": 1787504136.4770584,
-    "consecutive_failures": 39
+    "checked_at": 1787506264.3421226,
+    "consecutive_failures": 40
   },
   "Box": {
     "jobs": [],
-    "checked_at": 1787504138.5534105,
-    "consecutive_failures": 39
+    "checked_at": 1787506265.50371,
+    "consecutive_failures": 40
   },
   "Atlassian": {
     "jobs": [],
-    "checked_at": 1787504138.7378602,
-    "consecutive_failures": 39
+    "checked_at": 1787506263.2411134,
+    "consecutive_failures": 40
   },
   "Baxter International": {
     "jobs": [
@@ -16381,23 +16351,23 @@
   },
   "Bruker": {
     "jobs": [],
-    "checked_at": 1787504140.9183037,
-    "consecutive_failures": 39
+    "checked_at": 1787506267.3379846,
+    "consecutive_failures": 40
   },
   "Biotronik": {
     "jobs": [],
-    "checked_at": 1787504139.7741117,
-    "consecutive_failures": 39
+    "checked_at": 1787506265.6867013,
+    "consecutive_failures": 40
   },
   "Coloplast": {
     "jobs": [],
-    "checked_at": 1787504143.0473347,
-    "consecutive_failures": 39
+    "checked_at": 1787506268.7172573,
+    "consecutive_failures": 40
   },
   "Bord Gáis Energy": {
     "jobs": [],
-    "checked_at": 1787504144.3445318,
-    "consecutive_failures": 39
+    "checked_at": 1787506270.1649067,
+    "consecutive_failures": 40
   },
   "Carbery Group": {
     "jobs": [],
@@ -16436,6 +16406,22 @@
         "title_source": "h1_meta",
         "new_since_last_check": false,
         "first_seen_at": "2026-08-23T01:10:01.187422+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Bus Éireann",
+        "title": "Bus Éireann - Service Supervisor School Transport Office, Dundalk (3-months Secondment)",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.buseireann.ie/job/service-supervisor-school-transport-office-dundalk-3-months-secondment-5977217",
+        "source": "priority_sheet2_generic",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "title_source": "h1_meta",
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-23T17:33:11.894027+00:00",
         "posted_age_known": false
       },
       {
@@ -16487,7 +16473,7 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1787494425.7455847,
+    "checked_at": 1787506217.0923917,
     "consecutive_failures": 0
   },
   "Catalent": {
@@ -16496,871 +16482,9 @@
     "consecutive_failures": 33
   },
   "Bristol Myers Squibb": {
-    "jobs": [
-      {
-        "company": "Bristol Myers Squibb",
-        "title": "Our Career Areas",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.bms.com/career-areas",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "h1_meta",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-23T11:06:08.143593+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Bristol Myers Squibb",
-        "title": "Career Stories",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": null,
-        "employment_type": "Unspecified",
-        "url": "https://careers.bms.com/blog",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "h1_meta"
-      },
-      {
-        "company": "Bristol Myers Squibb",
-        "title": "Careers @BMS",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://jobs.bms.com/careers/join?m=3&location=Ireland",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "h1_meta",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-23T11:06:08.143593+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Bristol Myers Squibb",
-        "title": "Trabajando En América Latina",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.bms.com/latam",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "h1_meta",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-23T11:06:08.143593+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Bristol Myers Squibb",
-        "title": "Travailler au Canada",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.bms.com/ca-fr",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "h1_meta",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-23T11:06:08.143593+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Bristol Myers Squibb",
-        "title": "Werken in België",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.bms.com/be-nl",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "h1_meta",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-22T12:26:07.081522+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Bristol Myers Squibb",
-        "title": "Travailler en Belgique",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.bms.com/be-fr",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "h1_meta",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-22T12:26:07.081522+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Bristol Myers Squibb",
-        "title": "Careers defined by meaningful and interesting work",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.bms.com/de-en",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "h1_meta",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-22T12:26:07.081522+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Bristol Myers Squibb",
-        "title": "Discover the Most Interesting and Meaningful Work of Your Career",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.bms.com/nl-en",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "h1_meta",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-22T12:26:07.081522+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Bristol Myers Squibb",
-        "title": "Working in Poland",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.bms.com/pl-en",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "h1_meta",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-22T12:26:07.081522+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Bristol Myers Squibb",
-        "title": "Das Leben von Patienten und deine Karriere verändern",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.bms.com/ch-de",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "h1_meta",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-22T12:26:07.081522+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Bristol Myers Squibb",
-        "title": "Transformez la vie des patients et votre carrière",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.bms.com/ch-fr",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "h1_meta",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-22T12:26:07.081522+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Bristol Myers Squibb",
-        "title": "Search Results",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.bms.com/search",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "h1_meta",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-23T11:06:08.143593+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Bristol Myers Squibb",
-        "title": "Let’s make an impact.",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.bms.com/",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "h1_meta",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-23T11:06:08.143593+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Bristol Myers Squibb",
-        "title": "Inclusion and Belonging",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.bms.com/inclusion/",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "h1_meta",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-23T11:06:08.143593+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Bristol Myers Squibb",
-        "title": "Developing Our People",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.bms.com/developing-our-people/",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "h1_meta",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-23T11:06:08.143593+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Bristol Myers Squibb",
-        "title": "Research & Development - BMS Careers",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.bms.com/research-development/",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "h1_meta",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-23T11:06:08.143593+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Bristol Myers Squibb",
-        "title": "Global Product Development and Supply - BMS Careers",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.bms.com/global-product-development-supply/",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "h1_meta",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-23T11:06:08.143593+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Bristol Myers Squibb",
-        "title": "Commercial and Access - BMS Careers",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.bms.com/commercial-access/",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "h1_meta",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-23T11:06:08.143593+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Bristol Myers Squibb",
-        "title": "Corporate Enabling Functions - BMS Careers",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.bms.com/corporate/",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "h1_meta",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-23T11:06:08.143593+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Bristol Myers Squibb",
-        "title": "Military and Veterans",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.bms.com/military-veterans/",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "h1_meta",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-23T11:06:08.143593+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Bristol Myers Squibb",
-        "title": "RayzeBio - BMS Careers",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.bms.com/rayzebio/",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "h1_meta",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-23T11:06:08.143593+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Bristol Myers Squibb",
-        "title": "Student Opportunities - BMS Careers",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.bms.com/student-opportunities",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "h1_meta",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-23T11:06:08.143593+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Bristol Myers Squibb",
-        "title": "Internships & Co-ops",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.bms.com/internships-co-ops/",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "h1_meta",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-23T11:06:08.143593+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Bristol Myers Squibb",
-        "title": "Leadership Development Programs",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.bms.com/leadership-development-programs/",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "h1_meta",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-23T11:06:08.143593+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Bristol Myers Squibb",
-        "title": "Advanced Degree Programs",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.bms.com/advanced-degree-programs/",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "h1_meta",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-23T11:06:08.143593+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Bristol Myers Squibb",
-        "title": "Events - BMS Careers",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.bms.com/events",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "h1_meta",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-23T11:06:08.143593+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Bristol Myers Squibb",
-        "title": "How We Recruit",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.bms.com/how-we-recruit",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "h1_meta",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-23T11:06:08.143593+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Bristol Myers Squibb",
-        "title": "Trabalhando no Brasil",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.bms.com/br",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "h1_meta",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-23T11:06:08.143593+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Bristol Myers Squibb",
-        "title": "Working in Australia",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.bms.com/au",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "h1_meta",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-23T11:06:08.143593+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Bristol Myers Squibb",
-        "title": "在中国工作",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.bms.com/cn",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "h1_meta",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-23T11:06:08.143593+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Bristol Myers Squibb",
-        "title": "Careers with BMS India",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.bms.com/in",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "h1_meta",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-23T11:06:08.143593+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Bristol Myers Squibb",
-        "title": "求人情報の探索",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.bms.com/jp",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "h1_meta",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-23T11:06:08.143593+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Bristol Myers Squibb",
-        "title": "한국 근무",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.bms.com/kr",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "h1_meta",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-23T11:06:08.143593+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Bristol Myers Squibb",
-        "title": "我們在台灣的努力",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.bms.com/tw",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "h1_meta",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-23T11:06:08.143593+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Bristol Myers Squibb",
-        "title": "Arbeiten in Österreich",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.bms.com/at",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "h1_meta",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-22T12:26:07.081522+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Bristol Myers Squibb",
-        "title": "Arbejde i Danmark",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.bms.com/dk",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "h1_meta",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-22T12:26:07.081522+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Bristol Myers Squibb",
-        "title": "BMS työnantajana",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.bms.com/fi",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "h1_meta",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-22T12:26:07.081522+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Bristol Myers Squibb",
-        "title": "Travailler En France",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.bms.com/fr",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "h1_meta",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-22T12:26:07.081522+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Bristol Myers Squibb",
-        "title": "Arbeiten bei Bristol Myers Squibb in Deutschland",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.bms.com/de",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "h1_meta",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-22T12:26:07.081522+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Bristol Myers Squibb",
-        "title": "Δουλεύοντας στην Ελλάδα",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.bms.com/gr",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "h1_meta",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-22T12:26:07.081522+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Bristol Myers Squibb",
-        "title": "Magyarországi jelenlétünk",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.bms.com/hu",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "h1_meta",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-22T12:26:07.081522+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Bristol Myers Squibb",
-        "title": "Lavorare in Italia",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.bms.com/it",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "h1_meta",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-22T12:26:07.081522+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Bristol Myers Squibb",
-        "title": "Ontdek het meest interessante en zinvolle werk van uw carrière",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.bms.com/nl",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "h1_meta",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-22T12:26:07.081522+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Bristol Myers Squibb",
-        "title": "Jobbe i Norge",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.bms.com/no",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "h1_meta",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-22T12:26:07.081522+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Bristol Myers Squibb",
-        "title": "Praca w Polsce",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.bms.com/pl",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "h1_meta",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-22T12:26:07.081522+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Bristol Myers Squibb",
-        "title": "Trabalhar Em Portugal",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.bms.com/pt",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "h1_meta",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-22T12:26:07.081522+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Bristol Myers Squibb",
-        "title": "Lucrează în România",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.bms.com/ro",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "h1_meta",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-22T12:26:07.081522+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Bristol Myers Squibb",
-        "title": "Trabajando en España",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.bms.com/es",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "h1_meta",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-22T12:26:07.081522+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Bristol Myers Squibb",
-        "title": "Arbeta i Sverige",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.bms.com/se",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "h1_meta",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-22T12:26:07.081522+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Bristol Myers Squibb",
-        "title": "Working in Israel",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.bms.com/il",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "h1_meta",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-23T11:06:08.143593+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Bristol Myers Squibb",
-        "title": "Türkiye'de Çalışmak",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.bms.com/tr",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "h1_meta",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-23T11:06:08.143593+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Bristol Myers Squibb",
-        "title": "Equal Employment Opportunity (EEO) / Disability Assistance",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.bms.com/eeo",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "h1_meta",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-23T11:06:08.143593+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Bristol Myers Squibb",
-        "title": "Contact Us and FAQs",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.bms.com/faq",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "h1_meta",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-23T11:06:08.143593+00:00",
-        "posted_age_known": false
-      }
-    ],
-    "checked_at": 1787494435.8057685,
-    "consecutive_failures": 0
+    "jobs": [],
+    "checked_at": 1787506219.633481,
+    "consecutive_failures": 1
   },
   "Bio-Rad Laboratories": {
     "jobs": [],
@@ -17369,8 +16493,8 @@
   },
   "DSV Ireland": {
     "jobs": [],
-    "checked_at": 1787504146.6223392,
-    "consecutive_failures": 39
+    "checked_at": 1787506275.494638,
+    "consecutive_failures": 40
   },
   "Bayer": {
     "jobs": [],
@@ -17822,8 +16946,8 @@
   },
   "Edwards Lifesciences": {
     "jobs": [],
-    "checked_at": 1787504060.316657,
-    "consecutive_failures": 39
+    "checked_at": 1787506185.2256167,
+    "consecutive_failures": 40
   },
   "Dairygold": {
     "jobs": [],
@@ -17832,8 +16956,8 @@
   },
   "Dexcom": {
     "jobs": [],
-    "checked_at": 1787504180.2888381,
-    "consecutive_failures": 39
+    "checked_at": 1787506274.021977,
+    "consecutive_failures": 40
   },
   "Fastway Couriers Ireland": {
     "jobs": [],
@@ -17896,13 +17020,13 @@
   },
   "DocuSign": {
     "jobs": [],
-    "checked_at": 1787504147.6817791,
-    "consecutive_failures": 39
+    "checked_at": 1787506278.0946128,
+    "consecutive_failures": 40
   },
   "Energia Group": {
     "jobs": [],
-    "checked_at": 1787504148.5548716,
-    "consecutive_failures": 39
+    "checked_at": 1787506278.9202445,
+    "consecutive_failures": 40
   },
   "ESB (Electricity Supply Board)": {
     "jobs": [
@@ -17928,499 +17052,18 @@
   },
   "EirGrid Group": {
     "jobs": [],
-    "checked_at": 1787504151.9750397,
-    "consecutive_failures": 39
+    "checked_at": 1787506279.386833,
+    "consecutive_failures": 40
   },
   "Dell Technologies": {
-    "jobs": [
-      {
-        "company": "Dell Technologies",
-        "title": "How we Work and Lead",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://enterpriseplatform.dell.com/hcmUI/CandidateExperience/en/sites/careers/pages/how-we-work-and-lead/?mode=location",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "listing_card_unverified",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-23T10:36:44.300690+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Dell Technologies",
-        "title": "Software Engineering",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://enterpriseplatform.dell.com/hcmUI/CandidateExperience/en/sites/careers/pages/software-engineering/?mode=location",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "listing_card_unverified",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-23T10:36:44.300690+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Dell Technologies",
-        "title": "Global Sales",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://enterpriseplatform.dell.com/hcmUI/CandidateExperience/en/sites/careers/pages/global-sales/?mode=location",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "listing_card_unverified",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-23T10:36:44.300690+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Dell Technologies",
-        "title": "Tech Support",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://enterpriseplatform.dell.com/hcmUI/CandidateExperience/en/sites/careers/pages/technical-support/?mode=location",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "listing_card_unverified",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-23T10:36:44.300690+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Dell Technologies",
-        "title": "Global Operations",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://enterpriseplatform.dell.com/hcmUI/CandidateExperience/en/sites/careers/pages/global-operations/?mode=location",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "listing_card_unverified",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-23T10:36:44.300690+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Dell Technologies",
-        "title": "Principal Backend Engineer, Data Management Herzliya, Tel Aviv, Israel",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://enterpriseplatform.dell.com/hcmUI/CandidateExperience/en/sites/careers/job/R285525/?mode=location",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "listing_card_unverified",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-23T14:16:45.026799+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Dell Technologies",
-        "title": "Software Engineer Student- Glil Yam Herzliya, Tel Aviv, Israel",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://enterpriseplatform.dell.com/hcmUI/CandidateExperience/en/sites/careers/job/292526/?mode=location",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "listing_card_unverified",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-23T10:36:44.300690+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Dell Technologies",
-        "title": "Software Engineer Student- Beer-Sheva Israel",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://enterpriseplatform.dell.com/hcmUI/CandidateExperience/en/sites/careers/job/292535/?mode=location",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "listing_card_unverified",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-23T10:36:44.300690+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Dell Technologies",
-        "title": "Senior Advisor, Product Management — Cryptographic Security Solutions Herzliya, Tel Aviv, Israel",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://enterpriseplatform.dell.com/hcmUI/CandidateExperience/en/sites/careers/job/296953/?mode=location",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "listing_card_unverified",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-23T07:21:13.199044+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Dell Technologies",
-        "title": "Technical Support Engineer 2 - PowerEdge XE - Hopkinton, Massachusetts MA, United States",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://enterpriseplatform.dell.com/hcmUI/CandidateExperience/en/sites/careers/job/298047/?mode=location",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "listing_card_unverified",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-23T03:45:41.662936+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Dell Technologies",
-        "title": "Technical Support Engineer 2 - PowerEdge XE - Round Rock, Texas TX, United States",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://enterpriseplatform.dell.com/hcmUI/CandidateExperience/en/sites/careers/job/298045/?mode=location",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "listing_card_unverified",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-23T03:45:41.662936+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Dell Technologies",
-        "title": "Technical Support Engineer 2 - PowerEdge XE - Draper, Utah UT, United States",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://enterpriseplatform.dell.com/hcmUI/CandidateExperience/en/sites/careers/job/298048/?mode=location",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "listing_card_unverified",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-23T03:45:41.662936+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Dell Technologies",
-        "title": "Technical Support Engineer 2 - PowerEdge XE - Oklahoma City, Oklahoma OK, United States",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://enterpriseplatform.dell.com/hcmUI/CandidateExperience/en/sites/careers/job/298046/?mode=location",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "listing_card_unverified",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-23T03:45:41.662936+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Dell Technologies",
-        "title": "Domain Engineer - PowerEdge XE - Oklahoma City, Oklahoma OK, United States",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://enterpriseplatform.dell.com/hcmUI/CandidateExperience/en/sites/careers/job/298049/?mode=location",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "listing_card_unverified",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-23T14:16:45.026799+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Dell Technologies",
-        "title": "Software Senior Principal Engineer Singapore",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://enterpriseplatform.dell.com/hcmUI/CandidateExperience/en/sites/careers/job/R287209/?mode=location",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "listing_card_unverified",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-23T00:43:21.772615+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Dell Technologies",
-        "title": "Product Specialist, UDS FL, United States",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://enterpriseplatform.dell.com/hcmUI/CandidateExperience/en/sites/careers/job/R286154/?mode=location",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "listing_card_unverified",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-23T00:43:21.772615+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Dell Technologies",
-        "title": "Field Service Engineer 2 Barstow, Texas TX, United States",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://enterpriseplatform.dell.com/hcmUI/CandidateExperience/en/sites/careers/job/R286540/?mode=location",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "listing_card_unverified",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-23T00:43:21.772615+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Dell Technologies",
-        "title": "Trade Compliance Senior Analyst Lodz, Lodzkie, Poland",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://enterpriseplatform.dell.com/hcmUI/CandidateExperience/en/sites/careers/job/292789/?mode=location",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "listing_card_unverified",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-23T00:43:21.772615+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Dell Technologies",
-        "title": "Advisor E-Business - Mídia programática ELDORADO DO SUL, RS, Brazil and 1 more",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://enterpriseplatform.dell.com/hcmUI/CandidateExperience/en/sites/careers/job/293767/?mode=location",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "listing_card_unverified",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-23T00:43:21.772615+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Dell Technologies",
-        "title": "Senior Analyst, Data Science Singapore",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://enterpriseplatform.dell.com/hcmUI/CandidateExperience/en/sites/careers/job/294203/?mode=location",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "listing_card_unverified",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-23T00:43:21.772615+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Dell Technologies",
-        "title": "Field Service Engineer 2 - Barstow, Texas TX, United States",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://enterpriseplatform.dell.com/hcmUI/CandidateExperience/en/sites/careers/job/294457/?mode=location",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "listing_card_unverified",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-23T00:43:21.772615+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Dell Technologies",
-        "title": "Account Executive 2, Inside Sales Bengaluru, Karnataka, India",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://enterpriseplatform.dell.com/hcmUI/CandidateExperience/en/sites/careers/job/295083/?mode=location",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "listing_card_unverified",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-23T00:43:21.772615+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Dell Technologies",
-        "title": "Account Executive 2, Inside Sales Bengaluru, Karnataka, India",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://enterpriseplatform.dell.com/hcmUI/CandidateExperience/en/sites/careers/job/295230/?mode=location",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "listing_card_unverified",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-23T00:43:21.772615+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Dell Technologies",
-        "title": "Senior AI Storage Solutions Lead, Solutions Architecture Santa Clara, CA, United States and 1 more",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://enterpriseplatform.dell.com/hcmUI/CandidateExperience/en/sites/careers/job/295433/?mode=location",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "listing_card_unverified",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-23T00:43:21.772615+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Dell Technologies",
-        "title": "AI Storage Solutions Lead, Solutions Architecture Seattle, WA, United States",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://enterpriseplatform.dell.com/hcmUI/CandidateExperience/en/sites/careers/job/296001/?mode=location",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "listing_card_unverified",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-23T00:43:21.772615+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Dell Technologies",
-        "title": "Senior Principal Power Engineer Round Rock, TX, United States",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://enterpriseplatform.dell.com/hcmUI/CandidateExperience/en/sites/careers/job/296079/?mode=location",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "listing_card_unverified",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-23T00:43:21.772615+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Dell Technologies",
-        "title": "Field Service Engineer 2 - Sandusky, Ohio OH, United States",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://enterpriseplatform.dell.com/hcmUI/CandidateExperience/en/sites/careers/job/296820/?mode=location",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "listing_card_unverified",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-23T00:43:21.772615+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Dell Technologies",
-        "title": "Senior Principal Engineer, Field Service GA, United States",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://enterpriseplatform.dell.com/hcmUI/CandidateExperience/en/sites/careers/job/296935/?mode=location",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "listing_card_unverified",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-23T00:43:21.772615+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Dell Technologies",
-        "title": "Project Manager - Data Center Infrastructure FL, United States",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://enterpriseplatform.dell.com/hcmUI/CandidateExperience/en/sites/careers/job/297211/?mode=location",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "listing_card_unverified",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-23T00:43:21.772615+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Dell Technologies",
-        "title": "Technical Support Engineer – PowerEdge XE Seoul, Korea, Republic of",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://enterpriseplatform.dell.com/hcmUI/CandidateExperience/en/sites/careers/job/297969/?mode=location",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "listing_card_unverified",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-23T00:43:21.772615+00:00",
-        "posted_age_known": false
-      }
-    ],
-    "checked_at": 1787494519.2111006,
-    "consecutive_failures": 0
+    "jobs": [],
+    "checked_at": 1787506286.1074984,
+    "consecutive_failures": 1
   },
   "Hollister Incorporated": {
     "jobs": [],
-    "checked_at": 1787504153.8220992,
-    "consecutive_failures": 38
+    "checked_at": 1787506283.456718,
+    "consecutive_failures": 39
   },
   "FedEx Express Ireland": {
     "jobs": [],
@@ -20416,8 +19059,8 @@
   },
   "Irish Distillers (Pernod Ricard)": {
     "jobs": [],
-    "checked_at": 1787504156.3384023,
-    "consecutive_failures": 37
+    "checked_at": 1787506284.1079447,
+    "consecutive_failures": 38
   },
   "Kepak Group": {
     "jobs": [
@@ -20459,28 +19102,28 @@
   },
   "Micron Technology": {
     "jobs": [],
-    "checked_at": 1787504158.5983837,
-    "consecutive_failures": 37
+    "checked_at": 1787506287.682128,
+    "consecutive_failures": 38
   },
   "Nokia": {
     "jobs": [],
-    "checked_at": 1787504159.6195562,
-    "consecutive_failures": 37
+    "checked_at": 1787506288.5355296,
+    "consecutive_failures": 38
   },
   "Marvell Technology": {
     "jobs": [],
-    "checked_at": 1787504158.8472726,
-    "consecutive_failures": 37
+    "checked_at": 1787506287.785675,
+    "consecutive_failures": 38
   },
   "Insulet Corporation": {
     "jobs": [],
-    "checked_at": 1787504155.3769612,
-    "consecutive_failures": 37
+    "checked_at": 1787506285.1139443,
+    "consecutive_failures": 38
   },
   "Medpace": {
     "jobs": [],
-    "checked_at": 1787504158.2859776,
-    "consecutive_failures": 37
+    "checked_at": 1787506287.3610177,
+    "consecutive_failures": 38
   },
   "Irish Ferries": {
     "jobs": [],
@@ -21707,101 +20350,21 @@
   },
   "Novartis": {
     "jobs": [],
-    "checked_at": 1787504166.2186038,
-    "consecutive_failures": 35
+    "checked_at": 1787506298.2160952,
+    "consecutive_failures": 36
   },
   "Ornua": {
     "jobs": [],
-    "checked_at": 1787504170.8849416,
-    "consecutive_failures": 35
+    "checked_at": 1787506295.4197116,
+    "consecutive_failures": 36
   },
   "Palo Alto Networks": {
     "jobs": [],
-    "checked_at": 1787504168.775879,
-    "consecutive_failures": 35
+    "checked_at": 1787506297.595659,
+    "consecutive_failures": 36
   },
   "Ryanair": {
     "jobs": [
-      {
-        "company": "Ryanair",
-        "title": "RYANAIR LABS",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.ryanair.com/it-labs/",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "h1_meta",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-22T14:40:36.897890+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Ryanair",
-        "title": "Ryanair Labs Portugal",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.ryanair.com/it-travel-labs/ryanair-labs-portugal/",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "h1_meta",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-22T14:40:36.897890+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Ryanair",
-        "title": "Ryanair Labs Wrocław",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.ryanair.com/it-travel-labs/ryanair-labs-wroclaw/",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "h1_meta",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-22T14:40:36.897890+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Ryanair",
-        "title": "Ryanair Labs Madrid",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.ryanair.com/it-travel-labs/ryanair-labs-madrid/",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "h1_meta",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-22T14:40:36.897890+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Ryanair",
-        "title": "Ryanair Labs Dublin",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.ryanair.com/it-travel-labs/ryanair-labs-dublin/",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "h1_meta",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-22T14:40:36.897890+00:00",
-        "posted_age_known": false
-      },
       {
         "company": "Ryanair",
         "title": "It’s time to go places",
@@ -21817,74 +20380,25 @@
         "new_since_last_check": false,
         "first_seen_at": "2026-08-22T14:40:36.897890+00:00",
         "posted_age_known": false
-      },
-      {
-        "company": "Ryanair",
-        "title": "Engineering",
-        "location": "Heavy Maintenance, Engineering • Shannon, Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.ryanair.com/jobs/?ryanair-jobs-department=21126",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "listing_card_unverified",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-22T14:40:36.897890+00:00",
-        "posted_age_known": false
       }
     ],
-    "checked_at": 1787494452.562474,
+    "checked_at": 1787506223.745706,
     "consecutive_failures": 0
   },
   "SMBC Aviation Capital": {
     "jobs": [],
-    "checked_at": 1787504163.475205,
-    "consecutive_failures": 35
+    "checked_at": 1787506292.476582,
+    "consecutive_failures": 36
   },
   "Shannon Airport Group": {
     "jobs": [],
-    "checked_at": 1787504164.3306007,
-    "consecutive_failures": 35
+    "checked_at": 1787506293.6213863,
+    "consecutive_failures": 36
   },
   "SSE Airtricity / SSE": {
-    "jobs": [
-      {
-        "company": "SSE Airtricity / SSE",
-        "title": "Engineering and Technical",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.sse.com/engineering-and-technical",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "listing_card_unverified",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-23T10:36:44.300690+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "SSE Airtricity / SSE",
-        "title": "Electrical Design Quality Engineer Aldershot Hampshire Hampshire United Kingdom Andover Hampshire Basingstoke Hampshire Oxford Oxfordshire England Petersfield Hampshire Portsmouth Reading Ber",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.sse.com/jobs/electrical-design-quality-engineer-aldershot-hampshire-hampshire-united-kingdom-andover-hampshire-basingstoke-hampshire-oxford-oxfordshire-england-petersfield-hampshire-portsmouth-reading-ber",
-        "source": "priority_sheet2_generic",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "title_source": "listing_card_unverified",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-23T00:43:21.772615+00:00",
-        "posted_age_known": false
-      }
-    ],
-    "checked_at": 1787494539.1175709,
-    "consecutive_failures": 0
+    "jobs": [],
+    "checked_at": 1787506293.5776691,
+    "consecutive_failures": 1
   },
   "Sky Ireland": {
     "jobs": [
@@ -22099,13 +20613,13 @@
   },
   "Slack": {
     "jobs": [],
-    "checked_at": 1787504173.9463553,
-    "consecutive_failures": 35
+    "checked_at": 1787506305.412697,
+    "consecutive_failures": 36
   },
   "Smurfit Westrock": {
     "jobs": [],
-    "checked_at": 1787504177.9176855,
-    "consecutive_failures": 35
+    "checked_at": 1787506308.858671,
+    "consecutive_failures": 36
   },
   "Stena Line Ireland": {
     "jobs": [],
@@ -22280,8 +20794,8 @@
   },
   "Syneos Health": {
     "jobs": [],
-    "checked_at": 1787504181.93223,
-    "consecutive_failures": 35
+    "checked_at": 1787506310.7730472,
+    "consecutive_failures": 36
   },
   "ResMed": {
     "jobs": [],
@@ -22317,8 +20831,8 @@
   },
   "Teva Pharmaceuticals": {
     "jobs": [],
-    "checked_at": 1787504062.3966823,
-    "consecutive_failures": 35
+    "checked_at": 1787506185.6598208,
+    "consecutive_failures": 36
   },
   "Vodafone Ireland": {
     "jobs": [
@@ -22360,18 +20874,18 @@
   },
   "Texas Instruments": {
     "jobs": [],
-    "checked_at": 1787504180.1813889,
-    "consecutive_failures": 34
+    "checked_at": 1787506308.462507,
+    "consecutive_failures": 35
   },
   "Uisce Éireann (Irish Water)": {
     "jobs": [],
-    "checked_at": 1787504183.7791388,
-    "consecutive_failures": 34
+    "checked_at": 1787506312.36942,
+    "consecutive_failures": 35
   },
   "WuXi Biologics": {
     "jobs": [],
-    "checked_at": 1787504190.1391573,
-    "consecutive_failures": 34
+    "checked_at": 1787506315.2425761,
+    "consecutive_failures": 35
   },
   "Waters Corporation": {
     "jobs": [],
@@ -23502,57 +22016,12 @@
     "jobs": [
       {
         "company": "Aon",
-        "title": "Client Service Delivery - Team Leader in Multiple Locations | Aon Corporation",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://jobs.aon.com/jobs/105775?lang=en-us",
-        "source": "aon_sitemap",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-23T14:16:45.026799+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Aon",
         "title": "Associate Consultant, Rewards in Boston, Massachusetts | Aon Corporation",
         "location": "Ireland",
         "posted_text": "Unknown",
         "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://jobs.aon.com/jobs/105579?lang=en-us",
-        "source": "aon_sitemap",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-23T14:16:45.026799+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Aon",
-        "title": "Ejecutivo de cuenta Sr. in Mexico City, Mexico | Aon Corporation",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://jobs.aon.com/jobs/105397?lang=en-us",
-        "source": "aon_sitemap",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-23T14:16:45.026799+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Aon",
-        "title": "Analyst II - Innovation & Solutions in Gurgaon, India | Aon Corporation",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://jobs.aon.com/jobs/96792?lang=en-us",
         "source": "aon_sitemap",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
@@ -23577,12 +22046,27 @@
       },
       {
         "company": "Aon",
+        "title": "Account Manager II, Private Equity - Hybrid/Miami, FL in Miami, Florida | Aon Corporation",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jobs.aon.com/jobs/105908?lang=en-us",
+        "source": "aon_sitemap",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-23T14:16:45.026799+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Aon",
         "title": "Benefits Processor I in Mexico City, Mexico | Aon Corporation",
         "location": "Ireland",
         "posted_text": "Unknown",
         "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
-        "url": "https://jobs.aon.com/jobs/106067?lang=en-us",
+        "url": "https://jobs.aon.com/jobs/106061?lang=en-us",
         "source": "aon_sitemap",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
@@ -23607,12 +22091,12 @@
       },
       {
         "company": "Aon",
-        "title": "Account Manager II, Private Equity - Hybrid/Miami, FL in Miami, Florida | Aon Corporation",
+        "title": "Client Service Delivery - Team Leader in Multiple Locations | Aon Corporation",
         "location": "Ireland",
         "posted_text": "Unknown",
         "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
-        "url": "https://jobs.aon.com/jobs/105908?lang=en-us",
+        "url": "https://jobs.aon.com/jobs/105775?lang=en-us",
         "source": "aon_sitemap",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
@@ -23622,12 +22106,12 @@
       },
       {
         "company": "Aon",
-        "title": "Benefits Processor I in Mexico City, Mexico | Aon Corporation",
+        "title": "Ejecutivo de cuenta Sr. in Mexico City, Mexico | Aon Corporation",
         "location": "Ireland",
         "posted_text": "Unknown",
         "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
-        "url": "https://jobs.aon.com/jobs/106061?lang=en-us",
+        "url": "https://jobs.aon.com/jobs/105397?lang=en-us",
         "source": "aon_sitemap",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
@@ -23664,9 +22148,39 @@
         "new_since_last_check": false,
         "first_seen_at": "2026-08-23T14:16:45.026799+00:00",
         "posted_age_known": false
+      },
+      {
+        "company": "Aon",
+        "title": "Benefits Processor I in Mexico City, Mexico | Aon Corporation",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jobs.aon.com/jobs/106067?lang=en-us",
+        "source": "aon_sitemap",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-23T14:16:45.026799+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Aon",
+        "title": "Analyst II - Innovation & Solutions in Gurgaon, India | Aon Corporation",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jobs.aon.com/jobs/96792?lang=en-us",
+        "source": "aon_sitemap",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-23T14:16:45.026799+00:00",
+        "posted_age_known": false
       }
     ],
-    "checked_at": 1787494384.7953591,
+    "checked_at": 1787506178.7673507,
     "consecutive_failures": 0
   },
   "Guidewire": {
@@ -23676,67 +22190,55 @@
         "title": "Engineering Manager – Guidewire Cloud Platform (JDP & AI Integration)",
         "location": "Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
+        "posted_days_ago": null,
         "employment_type": "Unspecified",
         "url": "https://www.guidewire.com/about/careers/jobs/engineering-manager---guidewire-cloud-platform--jdp---ai-integration--jr_14889",
         "source": "priority_sheet2_generic",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "title_source": "h1_meta",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-23T14:16:45.026799+00:00",
-        "posted_age_known": false
+        "title_source": "h1_meta"
       },
       {
         "company": "Guidewire",
         "title": "Executive Assistance",
         "location": "Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
+        "posted_days_ago": null,
         "employment_type": "Unspecified",
         "url": "https://www.guidewire.com/about/careers/jobs/executive-assistance-jr_14876",
         "source": "priority_sheet2_generic",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "title_source": "h1_meta",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-23T14:16:45.026799+00:00",
-        "posted_age_known": false
+        "title_source": "h1_meta"
       },
       {
         "company": "Guidewire",
         "title": "Program Manager, Business Operations",
         "location": "Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
+        "posted_days_ago": null,
         "employment_type": "Unspecified",
         "url": "https://www.guidewire.com/about/careers/jobs/program-manager--business-operations-jr_14706",
         "source": "priority_sheet2_generic",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "title_source": "h1_meta",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-23T14:16:45.026799+00:00",
-        "posted_age_known": false
+        "title_source": "h1_meta"
       },
       {
         "company": "Guidewire",
         "title": "Software Engineer II",
         "location": "Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
+        "posted_days_ago": null,
         "employment_type": "Unspecified",
         "url": "https://www.guidewire.com/about/careers/jobs/software-engineer-ii-jr_14874",
         "source": "priority_sheet2_generic",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "title_source": "h1_meta",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-23T14:16:45.026799+00:00",
-        "posted_age_known": false
+        "title_source": "h1_meta"
       }
     ],
-    "checked_at": 1787494384.7715514,
+    "checked_at": 1787506176.4071438,
     "consecutive_failures": 0
   },
   "HCLTech": {
@@ -24412,127 +22914,127 @@
   },
   "Regeneron": {
     "jobs": [],
-    "checked_at": 1787504047.2625084,
-    "consecutive_failures": 1
-  },
-  "BNY Mellon": {
-    "jobs": [],
-    "checked_at": 1787504049.67313,
+    "checked_at": 1787506154.5635173,
     "consecutive_failures": 1
   },
   "Central Bank of Ireland": {
     "jobs": [],
-    "checked_at": 1787504050.4064066,
+    "checked_at": 1787506155.1149588,
     "consecutive_failures": 1
   },
   "Oracle": {
     "jobs": [],
-    "checked_at": 1787504050.968642,
+    "checked_at": 1787506159.8856478,
     "consecutive_failures": 1
   },
-  "Deutsche Bank": {
+  "BNY Mellon": {
     "jobs": [],
-    "checked_at": 1787504053.9743304,
+    "checked_at": 1787506164.884959,
     "consecutive_failures": 1
   },
   "Red Hat": {
     "jobs": [],
-    "checked_at": 1787504056.2247007,
+    "checked_at": 1787506168.2697792,
+    "consecutive_failures": 1
+  },
+  "Deutsche Bank": {
+    "jobs": [],
+    "checked_at": 1787506169.5824437,
     "consecutive_failures": 1
   },
   "DXC Technology": {
     "jobs": [],
-    "checked_at": 1787504056.261815,
+    "checked_at": 1787506179.0950065,
     "consecutive_failures": 1
   },
   "Willis Towers Watson (WTW)": {
     "jobs": [],
-    "checked_at": 1787504067.1400547,
+    "checked_at": 1787506188.1982322,
     "consecutive_failures": 2
   },
   "Aldi Ireland": {
     "jobs": [],
-    "checked_at": 1787504067.771418,
+    "checked_at": 1787506189.859237,
     "consecutive_failures": 1
   },
   "Cantor Fitzgerald Ireland": {
     "jobs": [],
-    "checked_at": 1787504069.5657542,
-    "consecutive_failures": 1
-  },
-  "Aviva Ireland": {
-    "jobs": [],
-    "checked_at": 1787504074.4982603,
-    "consecutive_failures": 1
-  },
-  "Laya Healthcare": {
-    "jobs": [],
-    "checked_at": 1787504075.1252093,
-    "consecutive_failures": 1
-  },
-  "Fitch Ratings": {
-    "jobs": [],
-    "checked_at": 1787504075.141485,
+    "checked_at": 1787506195.863607,
     "consecutive_failures": 1
   },
   "Glanbia / Tirlán": {
     "jobs": [],
-    "checked_at": 1787504077.4574656,
+    "checked_at": 1787506196.735124,
     "consecutive_failures": 1
   },
-  "Capgemini": {
+  "Aviva Ireland": {
     "jobs": [],
-    "checked_at": 1787504078.0724702,
-    "consecutive_failures": 1
-  },
-  "Musgrave Group (SuperValu / Centra)": {
-    "jobs": [],
-    "checked_at": 1787504078.7172732,
-    "consecutive_failures": 1
-  },
-  "UBS": {
-    "jobs": [],
-    "checked_at": 1787504081.9162679,
-    "consecutive_failures": 1
-  },
-  "Slalom": {
-    "jobs": [],
-    "checked_at": 1787504085.083303,
-    "consecutive_failures": 1
-  },
-  "ABP Food Group": {
-    "jobs": [],
-    "checked_at": 1787504086.0136392,
+    "checked_at": 1787506197.2229295,
     "consecutive_failures": 1
   },
   "QIAGEN": {
     "jobs": [],
-    "checked_at": 1787504086.2465038,
+    "checked_at": 1787506197.482646,
+    "consecutive_failures": 1
+  },
+  "Fitch Ratings": {
+    "jobs": [],
+    "checked_at": 1787506198.8335853,
+    "consecutive_failures": 1
+  },
+  "Capgemini": {
+    "jobs": [],
+    "checked_at": 1787506202.6826766,
+    "consecutive_failures": 1
+  },
+  "Laya Healthcare": {
+    "jobs": [],
+    "checked_at": 1787506203.13139,
+    "consecutive_failures": 1
+  },
+  "Musgrave Group (SuperValu / Centra)": {
+    "jobs": [],
+    "checked_at": 1787506204.2251942,
+    "consecutive_failures": 1
+  },
+  "Slalom": {
+    "jobs": [],
+    "checked_at": 1787506204.693841,
+    "consecutive_failures": 1
+  },
+  "UBS": {
+    "jobs": [],
+    "checked_at": 1787506204.9258425,
+    "consecutive_failures": 1
+  },
+  "ABP Food Group": {
+    "jobs": [],
+    "checked_at": 1787506209.970263,
     "consecutive_failures": 1
   },
   "Coillte": {
     "jobs": [],
-    "checked_at": 1787504088.5173264,
-    "consecutive_failures": 1
-  },
-  "Gas Networks Ireland": {
-    "jobs": [],
-    "checked_at": 1787504088.931257,
+    "checked_at": 1787506213.5027213,
     "consecutive_failures": 1
   },
   "Zurich Insurance": {
     "jobs": [],
-    "checked_at": 1787504089.7156928,
+    "checked_at": 1787506213.528732,
+    "consecutive_failures": 1
+  },
+  "Gas Networks Ireland": {
+    "jobs": [],
+    "checked_at": 1787506218.7212794,
     "consecutive_failures": 1
   },
   "Revvity (PerkinElmer)": {
     "jobs": [],
-    "checked_at": 1787504095.1906545,
+    "checked_at": 1787506221.8199172,
     "consecutive_failures": 1
   },
   "Haleon": {
     "jobs": [],
-    "checked_at": 1787504152.1204188,
+    "checked_at": 1787506281.597058,
     "consecutive_failures": 1
   }
 }
