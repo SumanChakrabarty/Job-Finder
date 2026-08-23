@@ -224,7 +224,7 @@ def classify_url(url: str) -> str:
 
 
 BROWSER_SCRAPE_CACHE_PATH = "browser_scrape_cache.json"
-JOB_RECORD_QUALITY_FIX_VERSION = 2
+JOB_RECORD_QUALITY_FIX_VERSION = 3
 BROWSER_SCRAPE_MAX_AGE_HOURS = 3  # only actually re-run a real browser scrape this often
 EMPTY_RESULT_MAX_AGE_HOURS = 0.5  # empty results retried much sooner — could be a real "no jobs",
 # or could be a one-time failure (crash, resource contention); don't lock in a failure for 3 hours
@@ -2305,6 +2305,334 @@ def _choose_job_title(anchor_text, card_text, href):
 
     return _title_from_job_url(href)
 
+
+def _clean_detail_page_title(value, company_name=""):
+    """Clean a title taken from a *job detail page*, not from a listing card."""
+    t = html.unescape(re.sub(r"<[^>]+>", " ", str(value or "")))
+    t = re.sub(r"\s+", " ", t).strip(" \t\r\n-|•")
+    if not t:
+        return ""
+
+    # Common document-title suffixes: "Role | Company Careers", "Role - Jobs at X".
+    company = re.escape(str(company_name or "").strip())
+    suffixes = [
+        r"\s*[|\-–—]\s*(?:careers?|jobs?|job search|vacancies|opportunities)(?:\s+at)?\s+.*$",
+        r"\s*[|\-–—]\s*jobs?\s+at\s+.*$",
+        r"\s*[|\-–—]\s*careers?\s+at\s+.*$",
+    ]
+    if company:
+        suffixes.extend([
+            rf"\s*[|\-–—]\s*{company}(?:\s+careers?)?\s*$",
+            rf"\s*[|\-–—]\s*(?:careers?|jobs?)\s*[|\-–—]\s*{company}\s*$",
+        ])
+    for pat in suffixes:
+        t = re.sub(pat, "", t, flags=re.I).strip(" \t\r\n-|•")
+
+    # Company/category labels are not job titles.
+    generic_exact = {
+        "brands", "brand", "kepak", "our brands", "our people", "our business",
+        "careers", "career", "jobs", "job opportunities", "opportunities",
+        "vacancies", "join us", "work with us", "open positions",
+    }
+    if t.lower() in generic_exact:
+        return ""
+    if company_name and re.sub(r"\W+", "", t).lower() == re.sub(r"\W+", "", company_name).lower():
+        return ""
+    if _looks_like_non_job_title(t):
+        return ""
+    return t[:300]
+
+
+def _flatten_job_location(value):
+    """Turn schema.org JobPosting.jobLocation into compact readable text."""
+    pieces = []
+
+    def walk(v):
+        if isinstance(v, list):
+            for x in v:
+                walk(x)
+            return
+        if not isinstance(v, dict):
+            return
+        addr = v.get("address") if isinstance(v.get("address"), dict) else v
+        for key in ("addressLocality", "addressRegion", "addressCountry"):
+            x = addr.get(key) if isinstance(addr, dict) else None
+            if isinstance(x, dict):
+                x = x.get("name") or x.get("value")
+            if x:
+                sx = re.sub(r"\s+", " ", str(x)).strip()
+                if sx and sx not in pieces:
+                    pieces.append(sx)
+
+    walk(value)
+    return ", ".join(pieces)
+
+
+def _iter_jsonld_objects(obj):
+    """Yield every dict nested in arbitrary JSON-LD containers/@graph arrays."""
+    if isinstance(obj, dict):
+        yield obj
+        for v in obj.values():
+            yield from _iter_jsonld_objects(v)
+    elif isinstance(obj, list):
+        for v in obj:
+            yield from _iter_jsonld_objects(v)
+
+
+def _extract_job_detail_metadata_from_html(page_html, url, company_name):
+    """Extract authoritative metadata from an individual job detail HTML page.
+
+    Priority:
+      1. schema.org JobPosting JSON-LD (best source)
+      2. h1 on a page that has strong job-detail signals
+      3. OpenGraph/document title on a page with strong job-detail signals
+
+    Returns {verified, title, location, posted_text, employment_type,
+             description}. 'verified' means the destination behaves like a real
+    vacancy page, not merely a careers/category/brand page.
+    """
+    raw = str(page_html or "")
+    if not raw:
+        return {"verified": False}
+
+    visible = re.sub(r"\s+", " ", _html_to_text(raw)).strip()
+    lower_visible = visible.lower()
+
+    # --- 1) Structured JobPosting is authoritative -----------------------
+    for m in re.finditer(
+        r'<script\b[^>]*type=["\']application/ld\+json["\'][^>]*>(.*?)</script>',
+        raw, re.I | re.S
+    ):
+        blob = html.unescape(m.group(1)).strip()
+        if not blob:
+            continue
+        try:
+            data = json.loads(blob)
+        except Exception:
+            # Some sites leave harmless trailing semicolons.
+            try:
+                data = json.loads(blob.rstrip(" ;"))
+            except Exception:
+                continue
+
+        for obj in _iter_jsonld_objects(data):
+            typ = obj.get("@type")
+            types = typ if isinstance(typ, list) else [typ]
+            if not any(str(x).lower() == "jobposting" for x in types if x):
+                continue
+
+            title = _clean_detail_page_title(
+                obj.get("title") or obj.get("name"), company_name
+            )
+            if not title:
+                continue
+
+            location = _flatten_job_location(obj.get("jobLocation"))
+            desc = obj.get("description") or ""
+            date_posted = obj.get("datePosted") or ""
+            employment = obj.get("employmentType") or ""
+            if isinstance(employment, list):
+                employment = " ".join(str(x) for x in employment)
+
+            return {
+                "verified": True,
+                "title": title,
+                "location": location,
+                "posted_text": str(date_posted or ""),
+                "employment_type": str(employment or ""),
+                "description": str(desc or ""),
+                "method": "jsonld_jobposting",
+            }
+
+    # --- 2) Non-JSON-LD detail pages -------------------------------------
+    # A genuine job page usually has several of these. Requiring multiple
+    # signals stops pages such as "BRANDS" or the company homepage from being
+    # accepted merely because they contain a generic "Apply" link somewhere.
+    signals = 0
+    signal_patterns = (
+        r"\b(?:job|requisition)\s*(?:id|number|#)\b",
+        r"\bresponsibilit(?:y|ies)\b",
+        r"\brequirements?\b",
+        r"\bqualifications?\b",
+        r"\bjob description\b",
+        r"\b(?:apply now|apply for this job|apply for this position)\b",
+        r"\bemployment type\b",
+        r"\bdate posted\b",
+        r"\bwhat you(?:'|’)ll do\b",
+        r"\babout the role\b",
+    )
+    for pat in signal_patterns:
+        if re.search(pat, lower_visible, re.I):
+            signals += 1
+
+    # Job-specific form/action URLs are another strong signal.
+    if re.search(r'(?:/apply(?:/|["\']|\?)|application|jobid=|requisitionid=|vacancyno=)', raw, re.I):
+        signals += 1
+
+    # Location signal from the *detail page*.
+    ireland_detail = is_ireland_location(visible)
+
+    # H1 is normally the most exact human-facing title.
+    h1 = ""
+    hm = re.search(r"<h1\b[^>]*>(.*?)</h1>", raw, re.I | re.S)
+    if hm:
+        h1 = _clean_detail_page_title(_html_to_text(hm.group(1)), company_name)
+
+    # Meta title alternatives.
+    og_title = ""
+    mm = re.search(
+        r'<meta\b[^>]*(?:property|name)=["\'](?:og:title|twitter:title)["\'][^>]*content=["\']([^"\']+)["\']',
+        raw, re.I
+    )
+    if not mm:
+        mm = re.search(
+            r'<meta\b[^>]*content=["\']([^"\']+)["\'][^>]*(?:property|name)=["\'](?:og:title|twitter:title)["\']',
+            raw, re.I
+        )
+    if mm:
+        og_title = _clean_detail_page_title(mm.group(1), company_name)
+
+    doc_title = ""
+    tm = re.search(r"<title\b[^>]*>(.*?)</title>", raw, re.I | re.S)
+    if tm:
+        doc_title = _clean_detail_page_title(_html_to_text(tm.group(1)), company_name)
+
+    candidate = h1 or og_title or doc_title
+
+    # Two strong detail signals + a real-looking title is enough for bespoke
+    # career sites that do not publish JobPosting JSON-LD. Ireland can either
+    # be explicit on the detail page or already enforced by the listing URL.
+    verified = bool(candidate and signals >= 2)
+
+    return {
+        "verified": verified,
+        "title": candidate,
+        "location": "Ireland" if ireland_detail else "",
+        "posted_text": "",
+        "employment_type": "",
+        "description": visible[:12000],
+        "method": "h1_meta" if verified else "unverified",
+        "signals": signals,
+    }
+
+
+def _fetch_job_detail_metadata(url, company_name, timeout=8):
+    """Cheap HTTP detail-page fetch used by the generic browser fallback.
+
+    This does not launch another Chrome instance. It is intentionally bounded;
+    if a site is JS-only or protected, the listing-card fallback can still be
+    used when that card already looks like a real role.
+    """
+    try:
+        resp = requests.get(
+            url,
+            headers={**HEADERS, "Accept": "text/html,application/xhtml+xml"},
+            timeout=timeout,
+            allow_redirects=True,
+        )
+        if resp.status_code >= 400:
+            return {"verified": False, "http_status": resp.status_code}
+        return _extract_job_detail_metadata_from_html(resp.text, resp.url, company_name)
+    except Exception as exc:
+        return {"verified": False, "error": str(exc)}
+
+
+def _enrich_generic_candidates_from_detail(company_name, candidates):
+    """Resolve exact titles for generic-browser candidates concurrently.
+
+    The browser is only used to discover candidate links. Exact title/location
+    metadata comes from each destination job page, which is substantially more
+    reliable than link text. HTTP detail fetches run in a small local pool so
+    20-60 jobs do not turn into minutes of serial network waits.
+    """
+    if not candidates:
+        return []
+
+    items = list(candidates.values())
+    workers = min(8, max(1, len(items)))
+    details = {}
+
+    pool = ThreadPoolExecutor(max_workers=workers)
+    try:
+        fut_map = {
+            pool.submit(_fetch_job_detail_metadata, j.get("url", ""), company_name, 8):
+            j.get("url", "")
+            for j in items
+        }
+        for fut in as_completed(fut_map):
+            url = fut_map[fut]
+            try:
+                details[url] = fut.result()
+            except Exception:
+                details[url] = {"verified": False}
+    finally:
+        pool.shutdown(wait=False)
+
+    resolved = []
+    dropped = 0
+    detail_titles = 0
+
+    for job in items:
+        meta = details.get(job.get("url", "")) or {}
+        current = str(job.get("title") or "")
+        current_bad = _looks_like_bad_generic_title(current)
+        current_role_like = bool(_ROLE_TITLE_WORD_RE.search(current))
+
+        exact = _clean_detail_page_title(meta.get("title"), company_name)
+        if meta.get("verified") and exact:
+            job = dict(job)
+            job["title"] = exact
+            detail_titles += 1
+
+            detail_loc = str(meta.get("location") or "").strip()
+            if detail_loc and is_ireland_location(detail_loc):
+                job["location"] = detail_loc
+
+            detail_posted = str(meta.get("posted_text") or "").strip()
+            if detail_posted:
+                pdays = parse_posted_text(detail_posted)
+                if pdays is not None:
+                    job["posted_text"] = detail_posted
+                    job["posted_days_ago"] = pdays
+
+            detail_emp = str(meta.get("employment_type") or "").strip()
+            if detail_emp:
+                job["employment_type"] = normalize_employment_type(detail_emp, exact)
+            else:
+                job["employment_type"] = normalize_employment_type(
+                    job.get("employment_type"), exact
+                )
+
+            detail_desc = str(meta.get("description") or "")
+            if detail_desc:
+                sponsorship, snippet = classify_sponsorship(detail_desc[:12000])
+                job["visa_sponsorship"] = sponsorship
+                job["visa_snippet"] = snippet
+
+            job["title_source"] = meta.get("method", "detail_page")
+            resolved.append(job)
+            continue
+
+        # If the destination could not be verified, only retain the listing
+        # result when its current title is already strongly role-like. This is
+        # what removes "BRANDS", "Kepak", "Explore..." etc. without requiring
+        # every JS-only career site to expose JSON-LD.
+        if current_bad or not current_role_like:
+            dropped += 1
+            continue
+
+        job = dict(job)
+        job["title_source"] = "listing_card_unverified"
+        resolved.append(job)
+
+    print(
+        f"      [priority-detail] {company_name}: exact titles from detail pages "
+        f"for {detail_titles}/{len(items)} candidates; dropped {dropped} unverified "
+        f"category/CTA links"
+    )
+    return resolved
+
+
 def _final_job_quality_filter(live_jobs):
     """Final safety net before jobs.json/history are written.
 
@@ -2489,7 +2817,10 @@ def scrape_priority_sheet2_generic(company_name, url, session=None):
             browser.close()
     except Exception as e:
         print(f"      [priority-generic] {company_name} failed: {e}")
-    return list(results.values())
+
+    # Do not trust card/link text as the final title. Resolve the destination
+    # job page and use its JobPosting JSON-LD / H1 / meta title instead.
+    return _enrich_generic_candidates_from_detail(company_name, results)
 
 
 def _extract_location_from_card(card_text, default="Ireland"):
