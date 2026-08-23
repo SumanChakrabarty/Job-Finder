@@ -405,9 +405,9 @@ def run_company_tasks_in_parallel(tasks, browser_workers=None, http_workers=None
     TIMEOUT, since it never actually ran) rather than silently vanishing
     or hanging the run — so it's visible in the log which companies are
     structurally being starved out, instead of that fact being invisible."""
-    results, errors = [], []
+    results, errors, failed_companies = [], [], set()
     if not tasks:
-        return results, errors
+        return results, errors, failed_companies
     browser_pool = ThreadPoolExecutor(max_workers=browser_workers or BROWSER_WORKERS)
     http_pool = ThreadPoolExecutor(max_workers=http_workers or HTTP_WORKERS)
     task_started_at = {}
@@ -445,10 +445,11 @@ def run_company_tasks_in_parallel(tasks, browser_workers=None, http_workers=None
                             print(f"  -> {company}: {len(jobs)} Ireland postings found")
                         else:
                             print(f"  -> {company}: found nothing this time")
-                        results.append((company, jobs))
+                        results.append((label, company, jobs))
                     except Exception as exc:
                         print(f"  -> {company}: task failed ({exc})")
                         errors.append(f"{label}/{company}: {exc}")
+                        failed_companies.add(company)
             except FuturesTimeoutError:
                 pass  # normal — just means nothing finished within this poll window
             # Anything still pending gets checked two ways: if it's actually
@@ -474,6 +475,7 @@ def run_company_tasks_in_parallel(tasks, browser_workers=None, http_workers=None
                 print(f"  -> {company}: HARD TIMEOUT after {timeout_s}s "
                       f"(pipeline continues normally with whatever else it already found)")
                 errors.append(f"{label}/{company}: timed out after {timeout_s}s")
+                failed_companies.add(company)
             for fut in not_reached_now:
                 pending.discard(fut)
                 label, company, timeout_s, task_id = future_map[fut]
@@ -481,10 +483,11 @@ def run_company_tasks_in_parallel(tasks, browser_workers=None, http_workers=None
                       f"companies when the {OVERALL_BATCH_TIMEOUT_SECONDS}s batch ceiling hit; "
                       f"never actually started this run, will be retried next run")
                 errors.append(f"{label}/{company}: not reached before batch ceiling")
+                failed_companies.add(company)
     finally:
         browser_pool.shutdown(wait=False)
         http_pool.shutdown(wait=False)
-    return results, errors
+    return results, errors, failed_companies
 
 
 def parse_posted_text(posted_text: str):
@@ -2603,12 +2606,17 @@ def _enrich_generic_candidates_from_detail(company_name, candidates):
 
         exact = _clean_detail_page_title(meta.get("title"), company_name)
         if meta.get("verified") and exact:
+            # STRICT REPUBLIC OF IRELAND. The detail page itself must prove ROI.
+            if not _strict_roi_job_evidence(meta):
+                dropped += 1
+                continue
+
             job = dict(job)
             job["title"] = exact
             detail_titles += 1
 
             detail_loc = str(meta.get("location") or "").strip()
-            if detail_loc and is_ireland_location(detail_loc):
+            if detail_loc and is_republic_of_ireland_location(detail_loc):
                 job["location"] = detail_loc
 
             detail_posted = str(meta.get("posted_text") or "").strip()
@@ -2674,6 +2682,15 @@ def _final_job_quality_filter(live_jobs):
         title = re.sub(r"\s+", " ", str(job.get("title") or "")).strip()
         url = str(job.get("url") or "").strip()
         source = str(job.get("source") or "")
+
+        if re.search(
+            r"/(?:saved-jobs?|career-advice|blog|blogs|article|articles|news|"
+            r"locations?|teams?|departments?|benefits?|culture)(?:/|$)",
+            url,
+            re.I,
+        ):
+            removed.append((job.get("company", ""), title, "non-vacancy URL"))
+            continue
 
         # Generic career systems use many legitimate URL shapes, including
         # opaque IDs, query-string routes and SPA URLs. Do not discard a real
@@ -3706,6 +3723,13 @@ def _scrape_first_party_ireland_listing(company_name, listing_urls, href_pattern
             href = urllib.parse.urljoin(resp.url, raw_href).split("#")[0]
             if not href or not any(p.search(href) for p in patterns):
                 continue
+            if re.search(
+                r"/(?:saved-jobs?|job-alerts?|alerts?|login|signin|register|"
+                r"locations?|teams?|departments?|career-advice|blog|news)(?:/|$)",
+                href,
+                re.I,
+            ):
+                continue
             if href in candidates:
                 continue
 
@@ -3773,17 +3797,22 @@ def _scrape_first_party_ireland_listing(company_name, listing_urls, href_pattern
         if not title:
             continue
 
-        ireland_ok = (
-            is_ireland_location(detail_location)
-            or is_ireland_location(description)
-            or bool(info.get("listing_ireland"))
-        )
-        if not ireland_ok:
+        # If we successfully parsed the destination page, it must also look
+        # like a genuine vacancy page rather than a careers article/navigation page.
+        if meta.get("verified") and not _verified_vacancy_detail(meta, meta.get("final_url") or href):
             continue
 
-        location = detail_location if is_ireland_location(detail_location) else _extract_location_from_card(
-            description or info.get("card", ""), "Ireland"
-        )
+        # STRICT REPUBLIC OF IRELAND: listing-page filters are discovery only.
+        # The destination job detail must itself prove a Republic-of-Ireland
+        # location. This prevents Mexico/US/India jobs from being labelled IE.
+        if not _strict_roi_job_evidence(meta, info.get("card", "")):
+            continue
+
+        if is_republic_of_ireland_location(detail_location):
+            location = detail_location
+        else:
+            inferred = _extract_location_from_card(description or info.get("card", ""), "")
+            location = inferred if is_republic_of_ireland_location(inferred) else "Republic of Ireland"
         posted_text = str(meta.get("posted_text") or "").strip() or "Unknown"
         posted_days = parse_posted_text(posted_text)
         employment = normalize_employment_type(meta.get("employment_type"), title)
@@ -3808,15 +3837,346 @@ def _scrape_first_party_ireland_listing(company_name, listing_urls, href_pattern
     return list(results.values())
 
 
+
+
+# Republic of Ireland only. Northern Ireland / Belfast is deliberately excluded.
+_ROI_POSITIVE_RE = re.compile(
+    r"\b(?:Ireland|Republic of Ireland|Dublin|Cork|Galway|Limerick|Waterford|"
+    r"Athlone|Kilkenny|Kildare|Naas|Sligo|Wexford|Carlow|Clare|Tipperary|"
+    r"Meath|Louth|Drogheda|Dundalk|Mayo|Castlebar|Westmeath|Mullingar|"
+    r"Wicklow|Bray|Leixlip|Maynooth|Letterkenny|Donegal|Shannon|Ennis|"
+    r"Tralee|Killarney|Nenagh|Clonmel|Dún Laoghaire|Dun Laoghaire|"
+    r"Blanchardstown|Swords|Tallaght|Baldoyle|Damastown|Northern Cross|"
+    r"Clonee|Carrigtwohill|Ringaskiddy|Little Island|Oranmore|Parkmore)\b",
+    re.I,
+)
+
+_ROI_NEGATIVE_RE = re.compile(
+    r"\b(?:Northern Ireland|Belfast|Lisburn|Newry|Derry|Londonderry|"
+    r"County Antrim|County Down|County Armagh|County Tyrone|"
+    r"County Fermanagh|County Londonderry)\b",
+    re.I,
+)
+
+def is_republic_of_ireland_location(value):
+    """Return True only for an explicit Republic-of-Ireland location signal.
+
+    This intentionally rejects Belfast/Northern Ireland even when a page or URL
+    contains the word 'Ireland'. Unknown/ambiguous locations return False.
+    """
+    text = re.sub(r"\s+", " ", str(value or "")).strip()
+    if not text:
+        return False
+    if _ROI_NEGATIVE_RE.search(text):
+        return False
+    return bool(_ROI_POSITIVE_RE.search(text))
+
+
+
+def _verified_vacancy_detail(meta, url=""):
+    """Require the destination to behave like an actual vacancy page.
+
+    JobPosting JSON-LD is authoritative. Otherwise require both a plausible
+    title and strong job-detail evidence such as requisition/job ID,
+    responsibilities/requirements, or an apply-for-this-job control.
+    """
+    if not meta:
+        return False
+
+    method = str(meta.get("method") or "")
+    if method == "jsonld_jobposting":
+        return True
+
+    title = str(meta.get("title") or "").strip()
+    if not title or _looks_like_non_job_title(title):
+        return False
+
+    text = str(meta.get("description") or "").lower()
+    strong_signals = 0
+    for pat in (
+        r"\b(?:job|requisition)\s*(?:id|number|#)\b",
+        r"\bresponsibilit(?:y|ies)\b",
+        r"\brequirements?\b",
+        r"\bqualifications?\b",
+        r"\bjob description\b",
+        r"\bapply (?:now|for this job|for this position)\b",
+        r"\bwhat you(?:'|’)ll do\b",
+        r"\babout the role\b",
+    ):
+        if re.search(pat, text, re.I):
+            strong_signals += 1
+
+    u = str(url or "").lower()
+    if re.search(r"/(?:job|jobs|vacancy|position|requisition)/[^/?#]+", u):
+        strong_signals += 1
+    if re.search(r"(?:jobid|job_id|reqid|requisitionid|vacancyno)=", u):
+        strong_signals += 1
+
+    return strong_signals >= 2
+
+
+def _strict_roi_job_evidence(meta, fallback_text=""):
+    """Validate a recovered job using the actual detail-page evidence.
+
+    Priority is the structured/detail-page location. Description text can only
+    rescue a missing location when it contains an explicit Republic-of-Ireland
+    place and no Northern-Ireland signal.
+    """
+    loc = str((meta or {}).get("location") or "").strip()
+    desc = str((meta or {}).get("description") or "")
+    if loc:
+        return is_republic_of_ireland_location(loc)
+    return is_republic_of_ireland_location(desc or fallback_text)
+
+
+def _sitemap_job_recovery(company_name, roots, source_tag, session, max_detail_urls=220):
+    """Recover jobs from first-party XML sitemaps when the visible search page
+    is blocked, JS-only or returns a WAF page.
+
+    This is especially useful for sites like DXC/Aon where the user's runtime
+    can receive 403s on the search UI while individual job pages remain public.
+    """
+    headers = {
+        **HEADERS,
+        "Accept": "application/xml,text/xml,text/html;q=0.9,*/*;q=0.8",
+        "Accept-Language": "en-IE,en;q=0.9",
+    }
+    sitemap_urls = []
+    seen_maps = set()
+    detail_urls = set()
+
+    for root in roots:
+        root = root.rstrip("/")
+        for suffix in ("/sitemap.xml", "/sitemap_index.xml", "/sitemap-index.xml",
+                       "/job-sitemap.xml", "/jobs-sitemap.xml"):
+            sitemap_urls.append(root + suffix)
+
+    def _fetch_map(u):
+        try:
+            r = session.get(u, headers=headers, timeout=12, allow_redirects=True)
+            if r.status_code >= 400:
+                return None
+            text = r.text
+            if "<loc>" not in text:
+                return None
+            return text
+        except Exception:
+            return None
+
+    # One sitemap-index level plus child maps.
+    queue = list(sitemap_urls)
+    while queue and len(seen_maps) < 30 and len(detail_urls) < max_detail_urls:
+        sm = queue.pop(0)
+        if sm in seen_maps:
+            continue
+        seen_maps.add(sm)
+        text = _fetch_map(sm)
+        if not text:
+            continue
+        locs = [html.unescape(x.strip()) for x in re.findall(r"<loc>\s*(.*?)\s*</loc>", text, re.I | re.S)]
+        for loc in locs:
+            low = loc.lower()
+            if low.endswith(".xml") or "sitemap" in low:
+                if loc not in seen_maps and len(queue) < 60:
+                    queue.append(loc)
+                continue
+            # Only accept URLs that look like real vacancy/detail pages.
+            # Generic /careers/ content, blog posts, news, saved jobs, teams,
+            # locations, advice pages, etc. are not job postings.
+            if re.search(
+                r"/(?:blog|blogs|article|articles|news|insights|stories|"
+                r"saved-jobs?|career-advice|locations?|teams?|departments?|"
+                r"benefits?|culture|events?|students?|graduates?|early-careers?)(?:/|$)",
+                low,
+            ):
+                continue
+
+            strong_job_url = bool(
+                re.search(r"/(?:job|jobs|vacancy|vacancies|position|positions|requisition|requisitions)/[^/?#]+", low)
+                or re.search(r"(?:jobid|job_id|reqid|requisitionid|vacancyno)=", low)
+                or re.search(r"/jobs?/[0-9]{4,}(?:/|$)", low)
+                or re.search(r"/jobs?/[a-z0-9_-]*[0-9]{4,}[a-z0-9_-]*(?:/|$)", low)
+            )
+            if not strong_job_url:
+                continue
+
+            detail_urls.add(loc)
+            if len(detail_urls) >= max_detail_urls:
+                break
+
+    if not detail_urls:
+        print(f"      [{source_tag}] sitemap recovery found 0 candidate detail URLs")
+        return []
+
+    print(f"      [{source_tag}] sitemap recovery discovered {len(detail_urls)} candidate detail URLs")
+
+    results = {}
+    urls = list(detail_urls)[:max_detail_urls]
+
+    def _fetch_detail(u):
+        try:
+            r = requests.get(
+                u,
+                headers={**HEADERS, "Accept": "text/html,application/xhtml+xml"},
+                timeout=9,
+                allow_redirects=True,
+            )
+            if r.status_code >= 400:
+                return u, None
+            meta = _extract_job_detail_metadata_from_html(r.text, r.url, company_name)
+            meta["final_url"] = r.url
+            return u, meta
+        except Exception:
+            return u, None
+
+    pool = ThreadPoolExecutor(max_workers=min(12, max(1, len(urls))))
+    try:
+        future_map = {pool.submit(_fetch_detail, u): u for u in urls}
+        for fut in as_completed(future_map):
+            u = future_map[fut]
+            try:
+                _, meta = fut.result()
+            except Exception:
+                meta = None
+            if not meta or not meta.get("verified"):
+                continue
+            if not _verified_vacancy_detail(meta, meta.get("final_url") or u):
+                continue
+
+            title = _clean_detail_page_title(meta.get("title"), company_name)
+            loc = str(meta.get("location") or "")
+            desc = str(meta.get("description") or "")
+            final_url = str(meta.get("final_url") or u)
+
+            # STRICT REPUBLIC OF IRELAND: the actual detail page must prove
+            # the location. Belfast/Northern Ireland and ambiguous locations
+            # are rejected.
+            if not _strict_roi_job_evidence(meta):
+                continue
+            if not title:
+                continue
+
+            posted_text = str(meta.get("posted_text") or "").strip() or "Unknown"
+            posted_days = parse_posted_text(posted_text)
+            employment = normalize_employment_type(meta.get("employment_type"), title)
+            sponsorship, snippet = classify_sponsorship(desc[:12000])
+
+            results[final_url.rstrip("/").lower()] = {
+                "company": company_name,
+                "title": title,
+                "location": loc if is_republic_of_ireland_location(loc) else "Republic of Ireland",
+                "posted_text": posted_text,
+                "posted_days_ago": posted_days,
+                "employment_type": employment,
+                "url": final_url,
+                "source": source_tag,
+                "visa_sponsorship": sponsorship,
+                "visa_snippet": snippet,
+            }
+    finally:
+        pool.shutdown(wait=False)
+
+    print(f"      [{source_tag}] sitemap recovery verified {len(results)} Ireland jobs")
+    return list(results.values())
+
+
+def _workday_override_scrape(company_name, correct_url, session):
+    """Use the existing Workday parser against a verified current tenant URL."""
+    local = make_workday_session()
+    jobs, err = fetch_workday_jobs(
+        company_name, correct_url, local, fetch_descriptions=True
+    )
+    if err:
+        print(f"      [workday-override] {company_name}: {err}")
+    else:
+        print(f"      [workday-override] {company_name}: {len(jobs)} Ireland jobs")
+    return jobs
+
+
+def _rendered_filtered_job_page(company_name, url, source_tag, href_fragment):
+    """Rendered first-party listing recovery for JS-only careers pages."""
+    if not HAS_PLAYWRIGHT:
+        return []
+    candidates = {}
+    try:
+        with sync_playwright() as p:
+            browser = p.chromium.launch(
+                headless=True,
+                args=["--no-sandbox", "--disable-dev-shm-usage", "--disable-gpu"],
+            )
+            page = browser.new_page(
+                viewport={"width": 1365, "height": 900},
+                user_agent=HEADERS.get("User-Agent"),
+            )
+            page.goto(url, wait_until="domcontentloaded", timeout=45000)
+            page.wait_for_timeout(5000)
+
+            # If a location/search box is present, ask the page itself for Ireland.
+            selectors = [
+                'input[placeholder*="location" i]',
+                'input[aria-label*="location" i]',
+                'input[placeholder*="job title and location" i]',
+                'input[placeholder*="search" i]',
+            ]
+            for sel in selectors:
+                try:
+                    box = page.locator(sel).first
+                    if box.count():
+                        box.fill("Ireland")
+                        box.press("Enter")
+                        page.wait_for_timeout(4500)
+                        break
+                except Exception:
+                    pass
+
+            links = page.locator(f'a[href*="{href_fragment}"]')
+            for i in range(min(links.count(), 240)):
+                a = links.nth(i)
+                try:
+                    href = a.get_attribute("href")
+                    if not href:
+                        continue
+                    href = urllib.parse.urljoin(page.url, href).split("#")[0]
+                    text = _browser_text(a)
+                    card = _browser_card(a) or text
+                    candidates[href] = {
+                        "company": company_name,
+                        "title": text,
+                        "location": "Ireland",
+                        "posted_text": "Unknown",
+                        "posted_days_ago": None,
+                        "employment_type": "Unspecified",
+                        "url": href,
+                        "source": "priority_sheet2_generic",
+                        "visa_sponsorship": "not_mentioned",
+                        "visa_snippet": None,
+                    }
+                except Exception:
+                    continue
+            browser.close()
+    except Exception as exc:
+        print(f"      [{source_tag}] rendered listing failed: {exc}")
+        return []
+
+    print(f"      [{source_tag}] rendered listing discovered {len(candidates)} candidate links")
+    return _enrich_generic_candidates_from_detail(company_name, candidates)
+
+
 def scrape_wtw_ireland_direct(session):
-    return _scrape_first_party_ireland_listing(
+    # Current WTW careers site uses /search-page; previous /jobs?... URLs return 404.
+    jobs = _rendered_filtered_job_page(
         "Willis Towers Watson (WTW)",
-        [
-            "https://careers.wtwco.com/jobs?location=Ireland",
-            "https://careers.wtwco.com/jobs?query=&location=Dublin%2C%20Ireland",
-        ],
-        [r"careers\.wtwco\.com/(?:[a-z]{2}(?:-[A-Z]{2})?/)?jobs/[^/?#]+$"],
-        "wtw_direct", session, True
+        "https://careers.wtwco.com/search-page",
+        "wtw_rendered",
+        "/jobs/",
+    )
+    if jobs:
+        return jobs
+    return _sitemap_job_recovery(
+        "Willis Towers Watson (WTW)",
+        ["https://careers.wtwco.com"],
+        "wtw_sitemap",
+        session,
     )
 
 
@@ -3865,15 +4225,13 @@ def scrape_teleflex_ireland_direct(session):
     )
 
 
+
 def scrape_viatris_ireland_direct(session):
-    return _scrape_first_party_ireland_listing(
+    # Verified current tenant: Viatris moved from wd1 to wd5 and the board is "external".
+    return _workday_override_scrape(
         "Viatris",
-        [
-            "https://careers.viatris.com/search/?q=&locationsearch=Ireland",
-            "https://careers.viatris.com/search/?q=&locationsearch=Dublin",
-        ],
-        [r"careers\.viatris\.com/job/[^?#]+"],
-        "viatris_direct", session, True
+        "https://viatris.wd5.myworkdayjobs.com/external",
+        session,
     )
 
 
@@ -3889,27 +4247,23 @@ def scrape_regeneron_ireland_direct(session):
     )
 
 
+
 def scrape_medtronic_ireland_direct(session):
-    return _scrape_first_party_ireland_listing(
+    # Verified current Medtronic Workday tenant; replaces the broken jobs.medtronic.com route.
+    return _workday_override_scrape(
         "Medtronic",
-        [
-            "https://jobs.medtronic.com/search/?q=&locationsearch=Ireland",
-            "https://jobs.medtronic.com/search/?q=&locationsearch=Galway",
-        ],
-        [r"jobs\.medtronic\.com/job/[^?#]+"],
-        "medtronic_direct", session, True
+        "https://medtronic.wd1.myworkdayjobs.com/MedtronicCareers",
+        session,
     )
 
 
+
 def scrape_qiagen_ireland_direct(session):
-    return _scrape_first_party_ireland_listing(
+    # Verified current QIAGEN Workday tenant.
+    return _workday_override_scrape(
         "QIAGEN",
-        [
-            "https://careers.qiagen.com/global/en/search-results?keywords=&location=Ireland",
-            "https://www.qiagen.com/us/about-us/careers",
-        ],
-        [r"careers\.qiagen\.com/.*/job/[^?#]+", r"qiagen\.com/.*/job/[^?#]+"],
-        "qiagen_direct", session, True
+        "https://qiagen.wd502.myworkdayjobs.com/QIAGEN",
+        session,
     )
 
 
@@ -3927,15 +4281,22 @@ def scrape_northern_trust_ireland_direct(session):
     )
 
 
+
 def scrape_guidewire_ireland_direct_http(session):
-    return _scrape_first_party_ireland_listing(
+    # Guidewire's jobs are rendered dynamically under /about/careers/jobs/<slug>.
+    jobs = _rendered_filtered_job_page(
         "Guidewire",
-        [
-            "https://www.guidewire.com/about/careers/jobs",
-            "https://www.guidewire.com/about/careers/jobs?location=Ireland",
-        ],
-        [r"guidewire\.com/about/careers/jobs/[^?#]+", r"jobs\.lever\.co/guidewire/[^?#]+"],
-        "guidewire_direct_http", session, True
+        "https://www.guidewire.com/about/careers/jobs",
+        "guidewire_rendered",
+        "/about/careers/jobs/",
+    )
+    if jobs:
+        return jobs
+    return _sitemap_job_recovery(
+        "Guidewire",
+        ["https://www.guidewire.com"],
+        "guidewire_sitemap",
+        session,
     )
 
 
@@ -3962,29 +4323,27 @@ def scrape_red_hat_ireland_direct_http(session):
     )
 
 
+
 def scrape_aon_ireland_direct_http(session):
-    return _scrape_first_party_ireland_listing(
+    # Search UI is 403 in the user's runtime; try first-party sitemap/job-detail recovery.
+    return _sitemap_job_recovery(
         "Aon",
-        [
-            "https://jobs.aon.com/?country=ie",
-            "https://jobs.aon.com/jobs",
-            "https://jobs.aon.com/jobs/locations",
-        ],
-        [r"jobs\.aon\.com/(?:jobs|signin/jobs|sign-up/jobs)/\d+[^?#]*"],
-        "aon_direct_http", session, True
+        ["https://jobs.aon.com"],
+        "aon_sitemap",
+        session,
     )
+
 
 
 def scrape_dxc_ireland_direct_http(session):
-    return _scrape_first_party_ireland_listing(
+    # Search UI is frequently 403, but public detail pages are indexed under /job/<id>/...
+    return _sitemap_job_recovery(
         "DXC Technology",
-        [
-            "https://careers.dxc.com/job-search-results/?location=Ireland",
-            "https://careers.dxc.com/job-search-results/?keyword=&location=Ireland",
-        ],
-        [r"careers\.dxc\.com/job/\d+/[^?#]+/?$"],
-        "dxc_direct_http", session, True
+        ["https://careers.dxc.com"],
+        "dxc_sitemap",
+        session,
     )
+
 
 def scrape_red_hat_ireland(session):
     direct = scrape_red_hat_ireland_direct_http(session)
@@ -6048,6 +6407,7 @@ def probe_ats_for_manual_companies(manual_companies, session, cache_path, fetch_
 
     still_manual = []
     discovered_jobs = []
+    automated_zero = []
     known_platforms = ("greenhouse", "lever", "smartrecruiters", "ashby", "recruitee", "personio", "pinpoint", "eightfold", "phenom", "workable")
     cache_hits_matched, cache_hits_none = 0, 0
 
@@ -6171,7 +6531,7 @@ def probe_ats_for_manual_companies(manual_companies, session, cache_path, fetch_
                 norm = normalize_workable_job(name, job)
                 if norm:
                     company_jobs.append(norm)
-        return entry, platform, slug, company_jobs
+        return entry, platform, slug, company_jobs, True
 
     if confirmed_platform_entries:
         print(f"  Fetching {len(confirmed_platform_entries)} confirmed ATS boards in parallel "
@@ -6184,22 +6544,30 @@ def probe_ats_for_manual_companies(manual_companies, session, cache_path, fetch_
             }
             for fut, original in future_map.items():
                 try:
-                    entry, platform, slug, company_jobs = fut.result(timeout=30)
+                    entry, platform, slug, company_jobs, fetch_ok = fut.result(timeout=30)
                 except FuturesTimeoutError:
                     entry, platform, slug = original
-                    company_jobs = []
+                    company_jobs, fetch_ok = [], False
                     print(f"      [ATS] {entry['company']}: timed out after 30s")
                 except Exception as exc:
-                    # Preserve the existing behavior for a failed board: it remains manual.
+                    # A genuine fetch failure remains unresolved/manual.
                     entry, platform, slug = original
-                    company_jobs = []
+                    company_jobs, fetch_ok = [], False
                     print(f"      [ATS] {entry['company']}: fetch failed ({exc})")
                 name, url = entry["company"], entry["url"]
                 if company_jobs:
                     discovered_jobs.extend(company_jobs)
-                else:
+                elif not fetch_ok:
                     still_manual.append({"company": name, "url": url,
-                                          "platform": f"{platform} (no Ireland postings found right now)"})
+                                          "platform": f"{platform} (Fetching error)"})
+                else:
+                    automated_zero.append({
+                        "company": name,
+                        "platform": platform,
+                        "reason": "Currently no jobs in Ireland",
+                    })
+                # IMPORTANT: fetch_ok=True + 0 Ireland jobs is a successful
+                # automated check, not a manual/unresolved company.
         finally:
             pool.shutdown(wait=False)
 
@@ -6215,7 +6583,7 @@ def probe_ats_for_manual_companies(manual_companies, session, cache_path, fetch_
               f"high on your NEXT run too (not just this one), the cache isn't persisting between "
               f"runs and that's the real runtime problem to chase next.")
 
-    return discovered_jobs, still_manual
+    return discovered_jobs, still_manual, automated_zero
 
 def load_companies(csv_path):
     with open(csv_path, newline="", encoding="utf-8-sig") as f:
@@ -6709,6 +7077,15 @@ def test_single_company(name):
         "microsoft": lambda: scrape_microsoft_ireland(session),
         "citi": lambda: scrape_citi_ireland(session),
         "red hat": lambda: scrape_red_hat_ireland(session),
+        "guidewire": lambda: scrape_guidewire_ireland_direct_http(session),
+        "bny mellon": lambda: scrape_bny_mellon_ireland_recovery(session),
+        "fidelity investments": lambda: scrape_fidelity_investments_ireland_direct(session),
+        "goldman sachs": lambda: scrape_goldman_sachs_ireland_recovery(session),
+        "morgan stanley": lambda: scrape_morgan_stanley_ireland_recovery(session),
+        "s&p global": lambda: scrape_sp_global_ireland_recovery(session),
+        "databricks": lambda: scrape_databricks_ireland_recovery(session),
+        "visa": lambda: scrape_visa_ireland_recovery(session),
+        "aer lingus": lambda: scrape_aer_lingus_ireland_recovery(session),
         "northern trust": lambda: scrape_northern_trust_ireland_direct(session),
         "willis towers watson": lambda: scrape_wtw_ireland_direct(session),
         "becton dickinson": lambda: scrape_bd_ireland_direct(session),
@@ -6784,7 +7161,80 @@ def test_single_company(name):
     print(f"No known platform matched for '{name}' — would land in manual-check.")
 
 
+
+def scrape_fidelity_investments_ireland_direct(session):
+    return _scrape_first_party_ireland_listing(
+        "Fidelity Investments",
+        [
+            "https://jobs.fidelity.com/ie/jobs/",
+            "https://jobs.fidelity.com/ie/jobs/?page=2",
+            "https://jobs.fidelity.com/ie/jobs/?page=3",
+        ],
+        [r"jobs\.fidelity\.com/ie/job/[^?#]+", r"jobs\.fidelity\.com/ie/jobs/[^?#]+"],
+        "fidelity_ie_direct", session, True
+    )
+
+
+def scrape_bny_mellon_ireland_recovery(session):
+    return _sitemap_job_recovery(
+        "BNY Mellon",
+        ["https://www.bny.com", "https://careers.bnymellon.com"],
+        "bny_sitemap", session
+    )
+
+
+def scrape_goldman_sachs_ireland_recovery(session):
+    return _sitemap_job_recovery(
+        "Goldman Sachs",
+        ["https://higher.gs.com", "https://www.goldmansachs.com"],
+        "goldman_sitemap", session
+    )
+
+
+def scrape_morgan_stanley_ireland_recovery(session):
+    return _sitemap_job_recovery(
+        "Morgan Stanley",
+        ["https://morganstanley.tal.net", "https://www.morganstanley.com"],
+        "morgan_stanley_sitemap", session
+    )
+
+
+def scrape_sp_global_ireland_recovery(session):
+    return _sitemap_job_recovery(
+        "S&P Global",
+        ["https://careers.spglobal.com", "https://www.spglobal.com"],
+        "spglobal_sitemap", session
+    )
+
+
+def scrape_databricks_ireland_recovery(session):
+    return _sitemap_job_recovery(
+        "Databricks",
+        ["https://www.databricks.com"],
+        "databricks_sitemap", session
+    )
+
+
+def scrape_visa_ireland_recovery(session):
+    return _sitemap_job_recovery(
+        "Visa",
+        ["https://search.visa.com", "https://corporate.visa.com"],
+        "visa_sitemap", session
+    )
+
+
+def scrape_aer_lingus_ireland_recovery(session):
+    return _sitemap_job_recovery(
+        "Aer Lingus",
+        ["https://www.aerlingus.com"],
+        "aer_lingus_sitemap", session
+    )
+
 def main():
+    print("=== STATUS MODE ACTIVE: Live Jobs / Currently No Jobs / Fetching Error ===")
+    print("=== VACANCY_QUALITY_V2 ACTIVE: sitemap/blog/saved-job false positives rejected; strict ROI retained ===")
+    print("=== STRICT_ROI_MODE ACTIVE: job detail page must prove Republic of Ireland; Northern Ireland excluded ===")
+    print("=== MANUAL_RECOVERY_NEXT_BATCH ACTIVE: corrected Viatris/Medtronic/QIAGEN routes + WTW/Guidewire + sitemap recovery + 8 new manual targets ===")
     print("=== PLATFORM_SPECIFIC_RECOVERY ACTIVE: 15 confirmed-manual companies get first-party recovery paths ===")
     print("=== CONFIRMED_MANUAL_RECOVERY ACTIVE: 15 companies from latest JSON; live companies untouched ===")
     print("=== WORKDAY_RECOVERY_BATCH=2 ACTIVE: 18 audited Workday companies get rendered fallback on API error/zero ===")
@@ -6852,7 +7302,21 @@ def main():
           f"instantly instead of re-launching a real browser this run ===")
 
     session = requests.Session()
+
+    # Three-state company model:
+    #   live_jobs             = automated successfully + current ROI jobs
+    #   automated_zero       = automated successfully + 0 current ROI jobs
+    #   manual_check         = unresolved because automation could not reliably check it
+    #
+    # sponsorship_history.json already contains every company that has ever
+    # produced a live job in earlier successful runs. Reusing that history
+    # prevents a stricter title/detail validator from pushing a previously
+    # automated company back into "manual" merely because this run yields zero.
+    prior_history = load_history(args.history)
+    historically_automated = {str(name).strip() for name in prior_history.keys()}
     live_jobs, manual_check, errors = [], [], []
+    automated_zero = {}
+    failed_companies = set()
 
     workday_rows = [row for row in companies if classify_url(row["career_url"].strip()) == "workday"]
     other_rows = [row for row in companies if classify_url(row["career_url"].strip()) != "workday"]
@@ -6920,11 +7384,22 @@ def main():
                 live_jobs.extend(jobs)
                 if err:
                     errors.append(err)
+                    failed_companies.add(name)
                 done += 1
                 print(f"      [workday {done}/{len(workday_rows)}] {name} -> {len(jobs)} Ireland postings")
                 if not jobs:
-                    reason = "fetch error, verify manually" if err else "no Ireland postings found right now"
-                    manual_check.append({"company": name, "url": url, "platform": f"workday ({reason})"})
+                    if err:
+                        manual_check.append({
+                            "company": name,
+                            "url": url,
+                            "platform": "workday (Fetching error)",
+                        })
+                    else:
+                        automated_zero[name] = {
+                            "company": name,
+                            "platform": "workday",
+                            "reason": "Currently no jobs in Ireland",
+                        }
         finally:
             pool.shutdown(wait=False)
 
@@ -6938,9 +7413,11 @@ def main():
     print(f"\nProbing remaining {len(manual_check)} companies for Greenhouse/Lever/SmartRecruiters/"
           f"Ashby/Recruitee/Personio/Pinpoint/Eightfold boards "
           f"(cached — only new/changed companies are actually re-probed)...")
-    discovered_jobs, manual_check = probe_ats_for_manual_companies(
+    discovered_jobs, manual_check, ats_automated_zero = probe_ats_for_manual_companies(
         manual_check, session, cache_path="ats_platform_cache.json",
         fetch_descriptions=not args.no_descriptions)
+    for item in ats_automated_zero:
+        automated_zero[item["company"]] = item
     if discovered_jobs:
         found_companies = sorted(set(j["company"] for j in discovered_jobs))
         print(f"  -> Auto-discovered {len(discovered_jobs)} Ireland postings across "
@@ -7013,6 +7490,14 @@ def main():
         ("exact", "qiagen", scrape_qiagen_ireland_direct, 75, "first-party QIAGEN careers"),
         ("exact", "regeneron", scrape_regeneron_ireland_direct, 75, "first-party Regeneron Ireland listing"),
         ("exact", "medtronic", scrape_medtronic_ireland_direct, 75, "first-party Medtronic Ireland search"),
+        ("exact", "fidelity investments", scrape_fidelity_investments_ireland_direct, 75, "Ireland-scoped first-party listing"),
+        ("exact", "bny mellon", scrape_bny_mellon_ireland_recovery, 75, "first-party sitemap recovery"),
+        ("exact", "goldman sachs", scrape_goldman_sachs_ireland_recovery, 75, "first-party sitemap recovery"),
+        ("exact", "morgan stanley", scrape_morgan_stanley_ireland_recovery, 75, "first-party sitemap recovery"),
+        ("exact", "s&p global", scrape_sp_global_ireland_recovery, 75, "first-party sitemap recovery"),
+        ("exact", "databricks", scrape_databricks_ireland_recovery, 75, "first-party sitemap recovery"),
+        ("exact", "visa", scrape_visa_ireland_recovery, 75, "first-party sitemap recovery"),
+        ("exact", "aer lingus", scrape_aer_lingus_ireland_recovery, 75, "first-party sitemap recovery"),
         ("exact", "pepsico", scrape_pepsico_ireland, 180, "official careers search"),
     ]
 
@@ -7050,6 +7535,7 @@ def main():
         "scrape_huawei_ireland", "scrape_ge_healthcare_ireland", "scrape_ntt_data_ireland",
         "scrape_guidewire_ireland", "scrape_hcltech_ireland", "scrape_allianz_ireland",
         "scrape_siemens_ireland",
+        "scrape_wtw_ireland_direct", "scrape_guidewire_ireland_direct_http",
     }
 
     for match_type, key, scraper_fn, timeout_s, description in dedicated_company_specs:
@@ -7164,16 +7650,36 @@ def main():
     print(f"\n=== Running {len(task_list)} dedicated company scrapers "
           f"({browser_count} browser-based, up to {BROWSER_WORKERS} at once; "
           f"{http_count} plain HTTP, up to {HTTP_WORKERS} at once) ===")
-    parallel_results, parallel_errors = run_company_tasks_in_parallel(task_list)
+    parallel_results, parallel_errors, parallel_failed_companies = run_company_tasks_in_parallel(task_list)
+    failed_companies.update(parallel_failed_companies)
 
-    for company_name, jobs in parallel_results:
+    for task_label, company_name, jobs in parallel_results:
+        entry = matched_entries.get(company_name)
+
         if jobs:
             for job in jobs:
                 job["company"] = company_name
             live_jobs.extend(jobs)
-            entry = matched_entries.get(company_name)
             if entry is not None:
                 manual_check = [c for c in manual_check if c is not entry]
+            automated_zero.pop(company_name, None)
+            continue
+
+        # A completed, company-specific scraper returning zero is a valid
+        # automated result. Do NOT send it back to manual.
+        #
+        # The broad Sheet-2 generic fallback is deliberately excluded here:
+        # "0 job-like links" on an arbitrary custom site is not strong enough
+        # evidence that the company was reliably checked.
+        if task_label != "sheet2_priority" and company_name not in failed_companies:
+            if entry is not None:
+                manual_check = [c for c in manual_check if c is not entry]
+            automated_zero[company_name] = {
+                "company": company_name,
+                "platform": task_label,
+                "reason": "Currently no jobs in Ireland",
+            }
+
     if parallel_errors:
         errors.extend(parallel_errors)
 
@@ -7283,8 +7789,50 @@ def main():
     # including stale bad records served from browser_scrape_cache.json.
     live_jobs = _final_job_quality_filter(live_jobs)
 
-    history = load_history(args.history)
-    history = update_history(history, live_jobs)
+    current_live_companies = {
+        str(job.get("company") or "").strip()
+        for job in live_jobs
+        if job.get("company")
+    }
+
+    # Once a company has successfully produced real jobs in prior runs, a
+    # later zero-result run must not make it "manual" unless we have a real
+    # technical failure (timeout, exception, not-reached, Workday error, etc.).
+    #
+    # This is the stability fix for companies such as Wipro/IQVIA/LinkedIn
+    # that were pushed back into manual solely because a stricter detail-page
+    # validator rejected today's candidate cards.
+    sticky_automated = historically_automated - failed_companies
+    unresolved_before_sticky = len(manual_check)
+    new_manual = []
+    for entry in manual_check:
+        name = str(entry.get("company") or "").strip()
+        if name in current_live_companies:
+            continue
+        if name in automated_zero:
+            continue
+        if name in sticky_automated:
+            automated_zero[name] = {
+                "company": name,
+                "platform": entry.get("platform", "historical"),
+                "reason": "Currently no jobs in Ireland",
+            }
+            continue
+        new_manual.append(entry)
+    manual_check = new_manual
+
+    sticky_removed = unresolved_before_sticky - len(manual_check)
+    if sticky_removed:
+        print(
+            f"=== Automation-status stability: kept {sticky_removed} previously automated "
+            f"companies out of manual because this run had no hard fetch failure ==="
+        )
+
+    # Any company with current live jobs is not an automated-zero company.
+    for name in current_live_companies:
+        automated_zero.pop(name, None)
+
+    history = update_history(prior_history, live_jobs)
     with open(args.history, "w", encoding="utf-8") as f:
         json.dump(history, f, indent=2)
 
@@ -7320,6 +7868,15 @@ def main():
     output = {
         "generated_at": now_iso,
         "live_jobs": live_jobs,
+        "status_labels": {
+            "live_jobs": "Live Jobs",
+            "automated_zero_companies": "Currently No Jobs",
+            "manual_check_companies": "Fetching Error / Manual Check Needed",
+        },
+        "automated_zero_companies": sorted(
+            automated_zero.values(),
+            key=lambda x: str(x.get("company", "")).lower(),
+        ),
         "manual_check_companies": manual_check,
         "company_sponsorship_stats": company_sponsorship_stats,
         "official_permit_stats": official_permit_stats,
@@ -7327,6 +7884,10 @@ def main():
         "stats": {
             "total_companies": len(companies),
             "automated_companies": len(companies) - len(manual_check),
+            "automated_zero_companies": len(automated_zero),
+            "companies_with_live_jobs": len({
+                str(j.get("company") or "").strip() for j in live_jobs if j.get("company")
+            }),
             "manual_companies": len(manual_check),
             "live_jobs_found": len(live_jobs),
             "new_since_last_check": new_count,
@@ -7342,7 +7903,12 @@ def main():
     print(f"\nDone. {len(live_jobs)} live Ireland job postings written to {args.output}")
     print(f"{new_count} of those are NEW since the last run (see seen_jobs.json).")
     print(f"Sponsorship history (cumulative across all runs) saved to {args.history}")
-    print(f"{len(manual_check)} companies need manual checking — still listed in the dashboard's directory tab.")
+    print(
+        f"{len(automated_zero)} companies: Currently No Jobs in Ireland."
+    )
+    print(
+        f"{len(manual_check)} companies: Fetching Error / Manual Check Needed."
+    )
     if errors:
         print(f"{len(errors)} companies had fetch errors — see 'errors' in {args.output}")
 
