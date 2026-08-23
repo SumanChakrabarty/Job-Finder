@@ -225,6 +225,29 @@ def classify_url(url: str) -> str:
 
 BROWSER_SCRAPE_CACHE_PATH = "browser_scrape_cache.json"
 JOB_RECORD_QUALITY_FIX_VERSION = 3
+
+# Confirmed-manual recovery batch, derived from the latest jobs.json/run log.
+# IMPORTANT: companies already producing live jobs (e.g. KPMG Ireland, PepsiCo)
+# are deliberately NOT included here and their working paths remain untouched.
+MANUAL_RECOVERY_CONFIRMED = {
+    "aon",
+    "dxc technology",
+    "northern trust",
+    "willis towers watson (wtw)",
+    "becton dickinson (bd)",
+    "jazz pharmaceuticals",
+    "takeda",
+    "teleflex",
+    "viatris",
+    "siemens",
+    "guidewire",
+    "hcltech",
+    "red hat",
+    "central bank of ireland",
+    "deutsche bank",
+}
+MANUAL_RECOVERY_CONFIRMED_VERSION = 1
+
 BROWSER_SCRAPE_MAX_AGE_HOURS = 3  # only actually re-run a real browser scrape this often
 EMPTY_RESULT_MAX_AGE_HOURS = 0.5  # empty results retried much sooner — could be a real "no jobs",
 # or could be a one-time failure (crash, resource contention); don't lock in a failure for 3 hours
@@ -6015,6 +6038,12 @@ WORKDAY_RECOVERY_COMPANIES = {
 
 
 PRIORITY_SHEET2_COMPANIES = {
+    # confirmed manual recovery batch
+    "aon", "dxc technology", "northern trust", "willis towers watson (wtw)",
+    "becton dickinson (bd)", "jazz pharmaceuticals", "takeda", "teleflex",
+    "viatris", "siemens", "guidewire", "hcltech", "red hat",
+    "central bank of ireland", "deutsche bank",
+
     "axa ireland",
     "aldi ireland",
     "alvarez & marsal",
@@ -6412,6 +6441,7 @@ def test_single_company(name):
 
 
 def main():
+    print("=== CONFIRMED_MANUAL_RECOVERY ACTIVE: 15 companies from latest JSON; live companies untouched ===")
     print("=== WORKDAY_RECOVERY_BATCH=2 ACTIVE: 18 audited Workday companies get rendered fallback on API error/zero ===")
     print(f"=== job_pipeline.py running with PROBE_VERSION={PROBE_VERSION} "
           f"(should be 13 or higher — if this shows anything less, the uploaded "
@@ -6457,6 +6487,19 @@ def main():
     print(f"Loaded {len(companies)} companies from {args.input}")
 
     browser_cache = _load_browser_scrape_cache()
+
+    # Force a fresh browser attempt for audited manual companies only when the
+    # existing cache contains ZERO jobs. Positive cached results are preserved.
+    _recovery_zeroes = []
+    for _cache_name in list(browser_cache.keys()):
+        if str(_cache_name).lower() in MANUAL_RECOVERY_CONFIRMED:
+            _entry = browser_cache.get(_cache_name) or {}
+            if not _entry.get("jobs"):
+                browser_cache.pop(_cache_name, None)
+                _recovery_zeroes.append(_cache_name)
+    if _recovery_zeroes:
+        print("=== Confirmed-manual recovery: bypassing stale zero browser cache for "
+              + ", ".join(sorted(_recovery_zeroes)) + " ===")
     fresh_count = sum(1 for v in browser_cache.values()
                        if (time.time() - v.get("checked_at", 0)) / 3600 < BROWSER_SCRAPE_MAX_AGE_HOURS)
     print(f"=== Browser-scrape cache: {len(browser_cache)} companies tracked, "
