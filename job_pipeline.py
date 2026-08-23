@@ -3667,7 +3667,329 @@ def scrape_citi_ireland(session):
     return list(results.values())
 
 
+
+def _scrape_first_party_ireland_listing(company_name, listing_urls, href_patterns,
+                                        source_tag, session, trust_listing_filter=True,
+                                        max_detail_pages=120):
+    """First-party HTTP recovery for companies whose Workday/custom route is failing.
+
+    The listing page is only used to discover candidate vacancy URLs. Each
+    candidate detail page is fetched and the exact title/location is taken from
+    JobPosting JSON-LD, H1 or page metadata via the existing detail extractor.
+
+    This is deliberately HTTP-first: no extra Chromium process unless the
+    company's legacy wrapper later decides a browser fallback is still needed.
+    """
+    patterns = [re.compile(p, re.I) for p in href_patterns]
+    candidates = {}
+    headers = {
+        **HEADERS,
+        "Accept": "text/html,application/xhtml+xml",
+        "Accept-Language": "en-IE,en;q=0.9",
+    }
+
+    for listing_url in listing_urls:
+        try:
+            resp = session.get(listing_url, headers=headers, timeout=20, allow_redirects=True)
+        except Exception as exc:
+            print(f"      [{source_tag}] listing fetch failed {listing_url}: {exc}")
+            continue
+        if resp.status_code >= 400:
+            print(f"      [{source_tag}] listing {listing_url}: HTTP {resp.status_code}")
+            continue
+
+        html_text = resp.text
+        found_here = 0
+        for m in re.finditer(r'<a\b[^>]*href=["\']([^"\']+)["\'][^>]*>(.*?)</a>',
+                             html_text, re.I | re.S):
+            raw_href = html.unescape(m.group(1))
+            href = urllib.parse.urljoin(resp.url, raw_href).split("#")[0]
+            if not href or not any(p.search(href) for p in patterns):
+                continue
+            if href in candidates:
+                continue
+
+            anchor_text = re.sub(r"\s+", " ", _html_to_text(m.group(2))).strip()
+            start, end = max(0, m.start() - 1400), min(len(html_text), m.end() + 1800)
+            card = re.sub(r"\s+", " ", _html_to_text(html_text[start:end])).strip()
+            candidates[href] = {
+                "anchor": anchor_text,
+                "card": card,
+                "listing_url": resp.url,
+                "listing_ireland": bool(trust_listing_filter or is_ireland_location(card)),
+            }
+            found_here += 1
+            if len(candidates) >= max_detail_pages:
+                break
+
+        print(f"      [{source_tag}] {listing_url}: discovered {found_here} candidate vacancy links")
+        if len(candidates) >= max_detail_pages:
+            break
+
+    if not candidates:
+        return []
+
+    results = {}
+    urls = list(candidates.keys())[:max_detail_pages]
+
+    def _detail(url):
+        try:
+            r = requests.get(url, headers=headers, timeout=10, allow_redirects=True)
+            if r.status_code >= 400:
+                return url, {"verified": False, "http_status": r.status_code}
+            meta = _extract_job_detail_metadata_from_html(r.text, r.url, company_name)
+            meta["final_url"] = r.url
+            return url, meta
+        except Exception as exc:
+            return url, {"verified": False, "error": str(exc)}
+
+    pool = ThreadPoolExecutor(max_workers=min(10, max(1, len(urls))))
+    detail_map = {}
+    try:
+        future_map = {pool.submit(_detail, u): u for u in urls}
+        for fut in as_completed(future_map):
+            u = future_map[fut]
+            try:
+                _, detail_map[u] = fut.result()
+            except Exception:
+                detail_map[u] = {"verified": False}
+    finally:
+        pool.shutdown(wait=False)
+
+    for href, info in candidates.items():
+        meta = detail_map.get(href) or {}
+        title = _clean_detail_page_title(meta.get("title"), company_name)
+        description = str(meta.get("description") or "")
+        detail_location = str(meta.get("location") or "").strip()
+
+        # Exact detail metadata is preferred. If a site omits schema/H1 metadata,
+        # fall back to a role-like anchor only when the listing itself is
+        # explicitly Ireland-filtered.
+        if not title:
+            anchor_title = re.sub(r"\s+", " ", str(info.get("anchor") or "")).strip()
+            if anchor_title and _ROLE_TITLE_WORD_RE.search(anchor_title) and not _looks_like_bad_generic_title(anchor_title):
+                title = anchor_title
+
+        if not title:
+            continue
+
+        ireland_ok = (
+            is_ireland_location(detail_location)
+            or is_ireland_location(description)
+            or bool(info.get("listing_ireland"))
+        )
+        if not ireland_ok:
+            continue
+
+        location = detail_location if is_ireland_location(detail_location) else _extract_location_from_card(
+            description or info.get("card", ""), "Ireland"
+        )
+        posted_text = str(meta.get("posted_text") or "").strip() or "Unknown"
+        posted_days = parse_posted_text(posted_text)
+        employment = normalize_employment_type(meta.get("employment_type"), title)
+        sponsorship, snippet = classify_sponsorship((description or info.get("card", ""))[:12000])
+
+        final_url = str(meta.get("final_url") or href)
+        key = final_url.rstrip("/").lower()
+        results[key] = {
+            "company": company_name,
+            "title": title[:300],
+            "location": location,
+            "posted_text": posted_text,
+            "posted_days_ago": posted_days,
+            "employment_type": employment,
+            "url": final_url,
+            "source": source_tag,
+            "visa_sponsorship": sponsorship,
+            "visa_snippet": snippet,
+        }
+
+    print(f"      [{source_tag}] {len(results)} verified Ireland jobs accumulated")
+    return list(results.values())
+
+
+def scrape_wtw_ireland_direct(session):
+    return _scrape_first_party_ireland_listing(
+        "Willis Towers Watson (WTW)",
+        [
+            "https://careers.wtwco.com/jobs?location=Ireland",
+            "https://careers.wtwco.com/jobs?query=&location=Dublin%2C%20Ireland",
+        ],
+        [r"careers\.wtwco\.com/(?:[a-z]{2}(?:-[A-Z]{2})?/)?jobs/[^/?#]+$"],
+        "wtw_direct", session, True
+    )
+
+
+def scrape_bd_ireland_direct(session):
+    return _scrape_first_party_ireland_listing(
+        "Becton Dickinson (BD)",
+        [
+            "https://jobs.bd.com/en/location/ireland-jobs/159/2963597/2",
+            "https://jobs.bd.com/en/search-jobs/Ireland/159/2/2963597/53/-8/100/2",
+        ],
+        [r"jobs\.bd\.com/(?:[a-z]{2}/)?job/[^/?#]+", r"jobs\.bd\.com/.*/job/[^/?#]+"],
+        "bd_direct", session, True
+    )
+
+
+def scrape_jazz_ireland_direct(session):
+    return _scrape_first_party_ireland_listing(
+        "Jazz Pharmaceuticals",
+        ["https://careers.jazzpharma.com/jobs/ie/"],
+        [r"careers\.jazzpharma\.com/job/\d+/[^?#]+/?$"],
+        "jazz_direct", session, True
+    )
+
+
+def scrape_takeda_ireland_direct(session):
+    return _scrape_first_party_ireland_listing(
+        "Takeda",
+        [
+            "https://jobs.takeda.com/location/ireland-jobs/1113/2963597/2",
+            "https://jobs.takeda.com/en/Ireland",
+        ],
+        [r"jobs\.takeda\.com/(?:[a-z]{2}/)?job/[^?#]+", r"jobs\.takeda\.com/job/[^?#]+"],
+        "takeda_direct", session, True
+    )
+
+
+def scrape_teleflex_ireland_direct(session):
+    return _scrape_first_party_ireland_listing(
+        "Teleflex",
+        [
+            "https://careers.teleflex.com/search/?q=&locationsearch=Ireland",
+            "https://careers.teleflex.com/search/?q=&locationsearch=Athlone",
+        ],
+        [r"careers\.teleflex\.com/job/[^?#]+"],
+        "teleflex_direct", session, True
+    )
+
+
+def scrape_viatris_ireland_direct(session):
+    return _scrape_first_party_ireland_listing(
+        "Viatris",
+        [
+            "https://careers.viatris.com/search/?q=&locationsearch=Ireland",
+            "https://careers.viatris.com/search/?q=&locationsearch=Dublin",
+        ],
+        [r"careers\.viatris\.com/job/[^?#]+"],
+        "viatris_direct", session, True
+    )
+
+
+def scrape_regeneron_ireland_direct(session):
+    return _scrape_first_party_ireland_listing(
+        "Regeneron",
+        [
+            "https://careers.regeneron.com/en/jobs/?location=Ireland",
+            "https://careers.regeneron.com/en/jobs/?search=&location=Limerick",
+        ],
+        [r"careers\.regeneron\.com/(?:[a-z]{2}/)?job/[^?#]+", r"careers\.regeneron\.com/.*/jobs?/[^?#]+"],
+        "regeneron_direct", session, True
+    )
+
+
+def scrape_medtronic_ireland_direct(session):
+    return _scrape_first_party_ireland_listing(
+        "Medtronic",
+        [
+            "https://jobs.medtronic.com/search/?q=&locationsearch=Ireland",
+            "https://jobs.medtronic.com/search/?q=&locationsearch=Galway",
+        ],
+        [r"jobs\.medtronic\.com/job/[^?#]+"],
+        "medtronic_direct", session, True
+    )
+
+
+def scrape_qiagen_ireland_direct(session):
+    return _scrape_first_party_ireland_listing(
+        "QIAGEN",
+        [
+            "https://careers.qiagen.com/global/en/search-results?keywords=&location=Ireland",
+            "https://www.qiagen.com/us/about-us/careers",
+        ],
+        [r"careers\.qiagen\.com/.*/job/[^?#]+", r"qiagen\.com/.*/job/[^?#]+"],
+        "qiagen_direct", session, True
+    )
+
+
+def scrape_northern_trust_ireland_direct(session):
+    # First-party corporate Ireland page is used as the entry point; job links
+    # discovered there are verified on their destination pages.
+    return _scrape_first_party_ireland_listing(
+        "Northern Trust",
+        [
+            "https://www.northerntrust.com/europe/about-us/locations/ie",
+            "https://www.northerntrust.com/united-states/about-us/careers",
+        ],
+        [r"northerntrust.*(?:job|career).*(?:\d|requisition)", r"myworkdayjobs\.com/.*/job/"],
+        "northern_trust_direct", session, False
+    )
+
+
+def scrape_guidewire_ireland_direct_http(session):
+    return _scrape_first_party_ireland_listing(
+        "Guidewire",
+        [
+            "https://www.guidewire.com/about/careers/jobs",
+            "https://www.guidewire.com/about/careers/jobs?location=Ireland",
+        ],
+        [r"guidewire\.com/about/careers/jobs/[^?#]+", r"jobs\.lever\.co/guidewire/[^?#]+"],
+        "guidewire_direct_http", session, True
+    )
+
+
+def scrape_siemens_ireland_direct_http(session):
+    return _scrape_first_party_ireland_listing(
+        "Siemens",
+        [
+            "https://jobs.siemens.com/en_US/externaljobs/SearchJobs/?jobRecordsPerPage=50&searchKeyword=Ireland",
+        ],
+        [r"jobs\.siemens\.com/en_US/externaljobs/JobDetail/[^?#]+"],
+        "siemens_direct_http", session, True
+    )
+
+
+def scrape_red_hat_ireland_direct_http(session):
+    return _scrape_first_party_ireland_listing(
+        "Red Hat",
+        [
+            "https://www.redhat.com/en/jobs/locations",
+            "https://www.redhat.com/en/jobs",
+        ],
+        [r"redhat\.com/.*/jobs?/[^?#]+", r"redhat\.com/.*/job/[^?#]+"],
+        "redhat_direct_http", session, False
+    )
+
+
+def scrape_aon_ireland_direct_http(session):
+    return _scrape_first_party_ireland_listing(
+        "Aon",
+        [
+            "https://jobs.aon.com/?country=ie",
+            "https://jobs.aon.com/jobs",
+            "https://jobs.aon.com/jobs/locations",
+        ],
+        [r"jobs\.aon\.com/(?:jobs|signin/jobs|sign-up/jobs)/\d+[^?#]*"],
+        "aon_direct_http", session, True
+    )
+
+
+def scrape_dxc_ireland_direct_http(session):
+    return _scrape_first_party_ireland_listing(
+        "DXC Technology",
+        [
+            "https://careers.dxc.com/job-search-results/?location=Ireland",
+            "https://careers.dxc.com/job-search-results/?keyword=&location=Ireland",
+        ],
+        [r"careers\.dxc\.com/job/\d+/[^?#]+/?$"],
+        "dxc_direct_http", session, True
+    )
+
 def scrape_red_hat_ireland(session):
+    direct = scrape_red_hat_ireland_direct_http(session)
+    if direct:
+        return direct
     """Red Hat's locations page links into its live country search. Use a
     browser so the Ireland country link and subsequent dynamic results are
     actually rendered rather than scraping navigation text as jobs."""
@@ -3914,6 +4236,9 @@ def scrape_hsbc_ireland(session):
 
 
 def scrape_dxc_ireland(session):
+    direct = scrape_dxc_ireland_direct_http(session)
+    if direct:
+        return direct
     """DXC Technology is currently stuck in the Workday 422-error cluster
     (a shared, unresolved block affecting ~15 tenants this whole session).
     Bypasses that entirely with a direct scrape of their own public
@@ -4049,6 +4374,9 @@ def _browser_collect_job_links_with_retries(page, company_name, patterns, source
 
 
 def scrape_aon_ireland(session):
+    direct = scrape_aon_ireland_direct_http(session)
+    if direct:
+        return direct
     """Aon now publishes live vacancies on jobs.aon.com.  The location index
     exposes Ireland/Dublin and individual postings use /jobs/<numeric-id>.
     Use the first-party location page and rendered pagination rather than the
@@ -4802,6 +5130,9 @@ def scrape_ntt_data_ireland(session):
 
 
 def scrape_guidewire_ireland(session):
+    direct = scrape_guidewire_ireland_direct_http(session)
+    if direct:
+        return direct
     """Guidewire's official careers listing."""
     if not HAS_PLAYWRIGHT:
         print("      [guidewire] playwright not installed — skipping")
@@ -4876,6 +5207,9 @@ def scrape_allianz_ireland(session):
 
 
 def scrape_siemens_ireland(session):
+    direct = scrape_siemens_ireland_direct_http(session)
+    if direct:
+        return direct
     """Siemens' Avature-powered search."""
     if not HAS_PLAYWRIGHT:
         print("      [siemens] playwright not installed — skipping")
@@ -6375,6 +6709,16 @@ def test_single_company(name):
         "microsoft": lambda: scrape_microsoft_ireland(session),
         "citi": lambda: scrape_citi_ireland(session),
         "red hat": lambda: scrape_red_hat_ireland(session),
+        "northern trust": lambda: scrape_northern_trust_ireland_direct(session),
+        "willis towers watson": lambda: scrape_wtw_ireland_direct(session),
+        "becton dickinson": lambda: scrape_bd_ireland_direct(session),
+        "jazz pharmaceuticals": lambda: scrape_jazz_ireland_direct(session),
+        "takeda": lambda: scrape_takeda_ireland_direct(session),
+        "teleflex": lambda: scrape_teleflex_ireland_direct(session),
+        "viatris": lambda: scrape_viatris_ireland_direct(session),
+        "qiagen": lambda: scrape_qiagen_ireland_direct(session),
+        "regeneron": lambda: scrape_regeneron_ireland_direct(session),
+        "medtronic": lambda: scrape_medtronic_ireland_direct(session),
         "oracle": lambda: scrape_oracle_candidate_experience("Oracle", "https://eeho.fa.us2.oraclecloud.com", "CX_1", session),
         "jpmorgan chase": lambda: scrape_oracle_candidate_experience("JPMorgan Chase", "https://jpmc.fa.oraclecloud.com", "CX_1001", session),
     }
@@ -6441,6 +6785,7 @@ def test_single_company(name):
 
 
 def main():
+    print("=== PLATFORM_SPECIFIC_RECOVERY ACTIVE: 15 confirmed-manual companies get first-party recovery paths ===")
     print("=== CONFIRMED_MANUAL_RECOVERY ACTIVE: 15 companies from latest JSON; live companies untouched ===")
     print("=== WORKDAY_RECOVERY_BATCH=2 ACTIVE: 18 audited Workday companies get rendered fallback on API error/zero ===")
     print(f"=== job_pipeline.py running with PROBE_VERSION={PROBE_VERSION} "
@@ -6528,7 +6873,12 @@ def main():
         # suspicious zero.  For ONLY this explicitly-audited set, fall back to
         # the already-existing rendered Ireland-first scraper.  The normal API
         # remains primary, so companies that already work are unchanged.
-        if not jobs and name.lower() in WORKDAY_RECOVERY_COMPANIES and HAS_PLAYWRIGHT:
+        if (not jobs and name.lower() in WORKDAY_RECOVERY_COMPANIES
+                and name.lower() not in {
+                    "aon", "dxc technology", "northern trust", "willis towers watson (wtw)",
+                    "becton dickinson (bd)", "jazz pharmaceuticals", "takeda",
+                    "teleflex", "viatris"
+                } and HAS_PLAYWRIGHT):
             original_err = err
             try:
                 print(f"      [workday-recovery] {name}: API returned "
@@ -6653,6 +7003,16 @@ def main():
         ("exact", "hcltech", scrape_hcltech_ireland, 180, "Ireland-filtered search"),
         ("exact", "allianz", scrape_allianz_ireland, 180, "real careers page"),
         ("exact", "siemens", scrape_siemens_ireland, 180, "Avature-powered search"),
+        ("exact", "northern trust", scrape_northern_trust_ireland_direct, 75, "first-party HTTP detail verification"),
+        ("exact", "willis towers watson (wtw)", scrape_wtw_ireland_direct, 75, "first-party WTW Ireland listing"),
+        ("exact", "becton dickinson (bd)", scrape_bd_ireland_direct, 75, "first-party BD Ireland listing"),
+        ("exact", "jazz pharmaceuticals", scrape_jazz_ireland_direct, 75, "first-party Jazz Ireland listing"),
+        ("exact", "takeda", scrape_takeda_ireland_direct, 75, "first-party Takeda Ireland listing"),
+        ("exact", "teleflex", scrape_teleflex_ireland_direct, 75, "first-party Teleflex Ireland search"),
+        ("exact", "viatris", scrape_viatris_ireland_direct, 75, "first-party Viatris Ireland search"),
+        ("exact", "qiagen", scrape_qiagen_ireland_direct, 75, "first-party QIAGEN careers"),
+        ("exact", "regeneron", scrape_regeneron_ireland_direct, 75, "first-party Regeneron Ireland listing"),
+        ("exact", "medtronic", scrape_medtronic_ireland_direct, 75, "first-party Medtronic Ireland search"),
         ("exact", "pepsico", scrape_pepsico_ireland, 180, "official careers search"),
     ]
 
