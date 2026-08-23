@@ -353,7 +353,7 @@ def _has_dedicated_company_scraper(company_name):
     return key in dedicated_keys
 
 
-def cached_browser_scrape(cache, company_key, scraper_fn, timeout_seconds, label):
+def cached_browser_scrape(cache, company_key, scraper_fn, timeout_seconds, label, empty_max_age_hours=None):
     """The real fix for a run that took hours even with every individual
     company correctly time-bounded: running ~20 separate real browser
     automations sequentially, every single 15-minute cycle, is simply a
@@ -385,7 +385,14 @@ def cached_browser_scrape(cache, company_key, scraper_fn, timeout_seconds, label
     if entry:
         age_hours = (time.time() - entry.get("checked_at", 0)) / 3600
         had_jobs = bool(entry.get("jobs"))
-        max_age = BROWSER_SCRAPE_MAX_AGE_HOURS if had_jobs else EMPTY_RESULT_MAX_AGE_HOURS
+        if had_jobs:
+            max_age = BROWSER_SCRAPE_MAX_AGE_HOURS
+        else:
+            max_age = (
+                EMPTY_RESULT_MAX_AGE_HOURS
+                if empty_max_age_hours is None
+                else float(empty_max_age_hours)
+            )
         if age_hours < max_age:
             jobs = entry.get("jobs", [])
             print(f"      [{label}] using cached result from {age_hours:.1f}h ago "
@@ -8538,6 +8545,7 @@ def scrape_aer_lingus_ireland_recovery(session):
     )
 
 def main():
+    print("=== RUNTIME_QUEUE_FIX ACTIVE: duplicate browser tasks removed; generic zero results cached 12h; generic timeout 45s ===")
     print("=== DEDICATED_QUALITY_FILTER_FIX ACTIVE: dedicated ROI jobs are not rejected solely for generic URL shape ===")
     print("=== DEDICATED_GENERIC_EXCLUSION ACTIVE: dedicated companies cannot run through Sheet-2 generic fallback ===")
     print("=== DEDICATED_CACHE_VERSION_FIX ACTIVE: old scraper results cannot survive after a dedicated scraper upgrade ===")
@@ -9012,16 +9020,19 @@ def main():
     # when new batches of companies were added on top of an un-fixed base
     # file. Confirmed via pyflakes each time: both names flagged as
     # "undefined name" at their old location.
+    # Do not even QUEUE a generic browser task for a company that already has
+    # a dedicated/lightweight task in this run. Previously the generic function
+    # itself skipped some companies, but the expensive browser queue was still
+    # built first — causing the runtime regression.
+    _already_scheduled_company_names = {
+        str(task[1] or "").strip().lower()
+        for task in task_list
+    }
+
     priority_entries = [
         entry for entry in manual_check
         if entry["company"].strip().lower() in PRIORITY_SHEET2_COMPANIES
-        and entry["company"].strip().lower() not in {
-            "wipro",
-            "iqvia",
-            "cook medical",
-            "merit medical",
-            "goodbody",
-        }
+        and entry["company"].strip().lower() not in _already_scheduled_company_names
     ]
     for entry in priority_entries:
         company_name = entry["company"].strip()
@@ -9034,14 +9045,16 @@ def main():
                 lambda: scrape_priority_sheet2_generic(name, u, session),
                 0,
                 name,
+                empty_max_age_hours=12,
             )
 
-        actual_timeout = effective_timeout(browser_cache, company_name, 150)
+        actual_timeout = effective_timeout(browser_cache, company_name, 45)
         task_list.append(("sheet2_priority", company_name, make_priority_task(), actual_timeout, True))
 
     print(
         f"\n=== Sheet 2 priority coverage: {len(priority_entries)}/{len(PRIORITY_SHEET2_COMPANIES)} "
-        f"selected companies queued for Ireland browser fallback ==="
+        f"generic-only companies queued; "
+        f"{len(_already_scheduled_company_names)} companies already covered by dedicated/lightweight routes ==="
     )
     if priority_entries:
         print("  -> " + ", ".join(e["company"] for e in priority_entries))
