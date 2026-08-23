@@ -294,6 +294,30 @@ def _load_browser_scrape_cache():
     return {}
 
 
+
+# Dedicated scraper cache versions.
+#
+# Browser cache used to be keyed only by company name + age. That meant an old
+# generic result could survive for hours even after the company was upgraded to
+# a dedicated first-party scraper. Version tags make cache correctness follow
+# scraper correctness.
+DEDICATED_SCRAPER_CACHE_VERSION = {
+    "wipro": "wipro_sf_search_v3",
+    "iqvia": "iqvia_ireland_location_v3",
+    "merit medical": "merit_workday_v2",
+    "goodbody": "goodbody_first_party_v2",
+    "cook medical": "cook_deferred_v2",
+    "guidewire": "guidewire_direct_v2",
+    "siemens": "siemens_direct_v2",
+}
+
+def _expected_scraper_cache_version(company_key):
+    return DEDICATED_SCRAPER_CACHE_VERSION.get(
+        str(company_key or "").strip().lower(),
+        "legacy",
+    )
+
+
 def cached_browser_scrape(cache, company_key, scraper_fn, timeout_seconds, label):
     """The real fix for a run that took hours even with every individual
     company correctly time-bounded: running ~20 separate real browser
@@ -309,7 +333,20 @@ def cached_browser_scrape(cache, company_key, scraper_fn, timeout_seconds, label
     just as easily mean the browser crashed or got resource-starved this
     one time. Only a confirmed, real (non-empty) result earns the long
     cache duration."""
+    expected_version = _expected_scraper_cache_version(company_key)
     entry = cache.get(company_key)
+
+    if entry:
+        cached_version = str(entry.get("scraper_version") or "legacy")
+        version_ok = (cached_version == expected_version)
+
+        if not version_ok:
+            print(
+                f"      [{label}] cached scraper version {cached_version!r} is stale; "
+                f"current version is {expected_version!r} — forcing fresh scrape"
+            )
+            entry = None
+
     if entry:
         age_hours = (time.time() - entry.get("checked_at", 0)) / 3600
         had_jobs = bool(entry.get("jobs"))
@@ -325,7 +362,12 @@ def cached_browser_scrape(cache, company_key, scraper_fn, timeout_seconds, label
     # every dedicated company the first time this ran in parallel.
     prior_failures = (cache.get(company_key) or {}).get("consecutive_failures", 0)
     new_failures = 0 if jobs else prior_failures + 1
-    cache[company_key] = {"jobs": jobs, "checked_at": time.time(), "consecutive_failures": new_failures}
+    cache[company_key] = {
+        "jobs": jobs,
+        "checked_at": time.time(),
+        "consecutive_failures": new_failures,
+        "scraper_version": expected_version,
+    }
     return jobs
 
 
@@ -8406,6 +8448,7 @@ def scrape_aer_lingus_ireland_recovery(session):
     )
 
 def main():
+    print("=== DEDICATED_CACHE_VERSION_FIX ACTIVE: old scraper results cannot survive after a dedicated scraper upgrade ===")
     print("=== IQVIA_FINAL_FIX ACTIVE: 30-job Ireland discovery retained; location output canonicalized ===")
     print("=== IQVIA_LOCATION_COOK_NETWORK_FIX ACTIVE: clean IQVIA locations + iCIMS network discovery ===")
     print("=== IQVIA_SITEMAP_COOK_LOCATION_FIX ACTIVE: IQVIA Ireland Jobs page + correct Cook Limerick code ===")
