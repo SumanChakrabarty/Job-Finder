@@ -185,7 +185,8 @@
     <div class="readout">
       <div><b id="stCompanies">0</b>companies checked</div>
       <div><b id="stLive">0</b>live matches</div>
-      <div><b id="stManual">0</b>manual-check</div>
+      <div><b id="stZero">0</b>currently no jobs</div>
+      <div><b id="stManual">0</b>fetching/manual</div>
       <div id="genTime">Connecting to live data...</div>
     </div>
   </div>
@@ -245,7 +246,8 @@
   <div class="subhead">
     <div class="tabs">
       <div class="tab active" id="tabLive" onclick="showTab('live')">Live matches — click opens the exact job</div>
-      <div class="tab" id="tabDir" onclick="showTab('dir')">Other companies — click opens their careers page</div>
+      <div class="tab" id="tabZero" onclick="showTab('zero')">Currently No Jobs</div>
+      <div class="tab" id="tabDir" onclick="showTab('dir')">Fetching Error / Check Manually</div>
     </div>
     <div id="resultCount">0 results</div>
   </div>
@@ -253,6 +255,10 @@
   <div id="livePane">
     <div class="grid" id="cardGrid"></div>
     <div class="empty" id="emptyState">No jobs loaded yet — click "Load jobs.json" above.</div>
+  </div>
+
+  <div id="zeroPane" style="display:none;">
+    <div class="dir-grid" id="zeroGrid"></div>
   </div>
 
   <div id="directoryPane">
@@ -263,6 +269,7 @@
 <script>
 let ALL_JOBS = [];
 let ALL_MANUAL = [];
+let ALL_ZERO = [];
 let SPONSOR_STATS = {};
 let OFFICIAL_STATS = {};
 
@@ -271,14 +278,22 @@ const REFRESH_INTERVAL_MS = 5 * 60 * 1000; // re-check every 5 minutes while the
 
 function loadData(data){
   ALL_JOBS = data.live_jobs || [];
-  ALL_MANUAL = data.manual_check_companies || [];
+  const rawManual = data.manual_check_companies || [];
+  const explicitZero = data.automated_zero_companies || data.currently_no_jobs_companies || data.zero_job_companies || [];
+  // Backward compatible: older jobs.json files stored successful zero-job checks
+  // inside manual_check_companies with a descriptive platform string.
+  const isZero = c => /no ireland postings found|no current ireland jobs|currently no jobs|0 ireland/i.test(String(c.platform || c.status || c.reason || ''));
+  ALL_ZERO = explicitZero.length ? explicitZero : rawManual.filter(isZero);
+  const zeroNames = new Set(ALL_ZERO.map(c => String(c.company || c.company_name || '').toLowerCase()));
+  ALL_MANUAL = rawManual.filter(c => !zeroNames.has(String(c.company || c.company_name || '').toLowerCase()) && !isZero(c));
   SPONSOR_STATS = data.company_sponsorship_stats || {};
   OFFICIAL_STATS = data.official_permit_stats || {};
   document.getElementById('genTime').textContent = data.generated_at
     ? ('Updated ' + new Date(data.generated_at).toLocaleString()) : '';
   document.getElementById('stLive').textContent = data.stats?.live_jobs_found ?? ALL_JOBS.length;
   document.getElementById('stCompanies').textContent = data.stats?.total_companies ?? '—';
-  document.getElementById('stManual').textContent = data.stats?.manual_companies ?? ALL_MANUAL.length;
+  document.getElementById('stZero').textContent = data.stats?.zero_job_companies ?? data.stats?.currently_no_jobs ?? ALL_ZERO.length;
+  document.getElementById('stManual').textContent = data.stats?.fetch_error_companies ?? ALL_MANUAL.length;
   applyFilters();
 }
 
@@ -414,21 +429,49 @@ function applyFilters(){
     grid.appendChild(card);
   });
 
+  const zeroMatches = renderZeroDirectory(search);
   const dirMatches = renderDirectory(search);
   document.getElementById('tabLive').textContent = `Live matches — click opens the exact job (${filtered.length})`;
-  document.getElementById('tabDir').textContent = `Other companies — click opens their careers page (${dirMatches})`;
+  document.getElementById('tabZero').textContent = `Currently No Jobs (${zeroMatches})`;
+  document.getElementById('tabDir').textContent = `Fetching Error / Check Manually (${dirMatches})`;
 
   // If someone searches a company that only exists in the directory (no
   // live job data for it), don't leave them staring at an empty Live tab —
   // point them at where it actually is.
-  if(search && filtered.length === 0 && dirMatches > 0 && document.getElementById('tabLive').classList.contains('active')){
+  if(search && filtered.length === 0 && (zeroMatches > 0 || dirMatches > 0) && document.getElementById('tabLive').classList.contains('active')){
     document.getElementById('emptyState').innerHTML =
       `No live job data for "${escapeHtml(search)}" — but it's listed in the ` +
-      `<a href="#" onclick="showTab('dir'); return false;" style="color:var(--amber);">Other companies tab</a> ` +
-      `with a direct link to their careers page.`;
+      `<a href="#" onclick="showTab('${zeroMatches > 0 ? 'zero' : 'dir'}'); return false;" style="color:var(--amber);">${zeroMatches > 0 ? 'Currently No Jobs' : 'Fetching Error / Check Manually'} tab</a> ` +
+      `with a direct link to the company careers page.`;
   } else {
     document.getElementById('emptyState').textContent = 'No jobs loaded yet — connecting to live data...';
   }
+}
+
+
+function renderZeroDirectory(search){
+  search = search || '';
+  const grid = document.getElementById('zeroGrid');
+  grid.innerHTML = '';
+  const matches = ALL_ZERO
+    .filter(c => !search || String(c.company || c.company_name || '').toLowerCase().includes(search))
+    .sort((a,b)=>String(a.company || a.company_name || '').localeCompare(String(b.company || b.company_name || '')));
+  matches.forEach(c=>{
+    const name = c.company || c.company_name || 'Unknown company';
+    const url = c.url || c.career_url || '#';
+    const card = document.createElement('div');
+    card.className = 'dir-card';
+    card.onclick = () => { if(url && url !== '#') window.open(url, '_blank', 'noopener'); };
+    card.innerHTML = `
+      <div>
+        <div class="dir-name">${escapeHtml(name)}</div>
+        <div class="dir-plat">Checked successfully — no current Ireland jobs</div>
+      </div>
+      <span class="apply-hint">Open →</span>
+    `;
+    grid.appendChild(card);
+  });
+  return matches.length;
 }
 
 function renderDirectory(search){
@@ -445,7 +488,7 @@ function renderDirectory(search){
     card.innerHTML = `
       <div>
         <div class="dir-name">${escapeHtml(c.company)}</div>
-        <div class="dir-plat">${escapeHtml(c.platform)}</div>
+        <div class="dir-plat">${escapeHtml(/timeout/i.test(String(c.platform||c.reason||'')) ? 'Timeout' : /error|failed|blocked/i.test(String(c.platform||c.reason||'')) ? 'Fetching error' : 'Check manually')}</div>
       </div>
       <span class="apply-hint">Open →</span>
     `;
@@ -456,8 +499,10 @@ function renderDirectory(search){
 
 function showTab(which){
   document.getElementById('livePane').style.display = which==='live' ? 'block':'none';
+  document.getElementById('zeroPane').style.display = which==='zero' ? 'block':'none';
   document.getElementById('directoryPane').style.display = which==='dir' ? 'block':'none';
   document.getElementById('tabLive').classList.toggle('active', which==='live');
+  document.getElementById('tabZero').classList.toggle('active', which==='zero');
   document.getElementById('tabDir').classList.toggle('active', which==='dir');
 }
 

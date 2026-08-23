@@ -2644,16 +2644,21 @@ def _enrich_generic_candidates_from_detail(company_name, candidates):
             resolved.append(job)
             continue
 
-        # If the destination could not be verified, only retain the listing
-        # result when its current title is already strongly role-like. This is
-        # what removes "BRANDS", "Kepak", "Explore..." etc. without requiring
-        # every JS-only career site to expose JSON-LD.
-        if current_bad or not current_role_like:
+        # If the destination could not be parsed/verified, do NOT throw away
+        # a legitimate Ireland listing merely because the detail-page extractor
+        # failed. Keep it only when:
+        #   1) the listing title already looks like a real role, AND
+        #   2) the listing/card location itself is explicitly Republic of Ireland.
+        #
+        # This restores valid Wipro/IQVIA/etc. jobs while still rejecting CTA
+        # labels such as "BRANDS", "Apply now", "Explore careers", etc.
+        listing_location = str(job.get("location") or "")
+        if current_bad or not current_role_like or not is_republic_of_ireland_location(listing_location):
             dropped += 1
             continue
 
         job = dict(job)
-        job["title_source"] = "listing_card_unverified"
+        job["title_source"] = "listing_card_roi_verified"
         resolved.append(job)
 
     print(
@@ -2683,9 +2688,11 @@ def _final_job_quality_filter(live_jobs):
         url = str(job.get("url") or "").strip()
         source = str(job.get("source") or "")
 
+        # High-confidence non-vacancy URLs only. Do not broadly reject paths
+        # containing locations/teams/etc., because some real ATS detail routes
+        # legitimately include those words.
         if re.search(
-            r"/(?:saved-jobs?|career-advice|blog|blogs|article|articles|news|"
-            r"locations?|teams?|departments?|benefits?|culture)(?:/|$)",
+            r"/(?:saved-jobs?|career-advice|blogs?|articles?|news)(?:/|$)",
             url,
             re.I,
         ):
@@ -3797,10 +3804,13 @@ def _scrape_first_party_ireland_listing(company_name, listing_urls, href_pattern
         if not title:
             continue
 
-        # If we successfully parsed the destination page, it must also look
-        # like a genuine vacancy page rather than a careers article/navigation page.
+        # A successfully parsed detail page that lacks our preferred vacancy
+        # signals is not automatically junk. Some ATS pages omit requisition/
+        # responsibilities markers. Keep it when the title is role-like and ROI
+        # is independently proven; obvious CTA/navigation titles are still rejected.
         if meta.get("verified") and not _verified_vacancy_detail(meta, meta.get("final_url") or href):
-            continue
+            if not _ROLE_TITLE_WORD_RE.search(title):
+                continue
 
         # STRICT REPUBLIC OF IRELAND: listing-page filters are discovery only.
         # The destination job detail must itself prove a Republic-of-Ireland
@@ -4040,10 +4050,18 @@ def _sitemap_job_recovery(company_name, roots, source_tag, session, max_detail_u
                 meta = None
             if not meta or not meta.get("verified"):
                 continue
-            if not _verified_vacancy_detail(meta, meta.get("final_url") or u):
-                continue
 
             title = _clean_detail_page_title(meta.get("title"), company_name)
+            if not title:
+                continue
+
+            # JobPosting JSON-LD is authoritative. Otherwise a role-like title
+            # plus explicit ROI detail evidence is sufficient; this avoids
+            # losing legitimate jobs on sparse ATS detail pages.
+            if (str(meta.get("method") or "") != "jsonld_jobposting"
+                    and not _verified_vacancy_detail(meta, meta.get("final_url") or u)
+                    and not _ROLE_TITLE_WORD_RE.search(title)):
+                continue
             loc = str(meta.get("location") or "")
             desc = str(meta.get("description") or "")
             final_url = str(meta.get("final_url") or u)
@@ -7231,6 +7249,7 @@ def scrape_aer_lingus_ireland_recovery(session):
     )
 
 def main():
+    print("=== JOB_COUNT_REGRESSION_FIX ACTIVE: keep valid ROI listing jobs when detail parsing fails ===")
     print("=== STATUS MODE ACTIVE: Live Jobs / Currently No Jobs / Fetching Error ===")
     print("=== VACANCY_QUALITY_V2 ACTIVE: sitemap/blog/saved-job false positives rejected; strict ROI retained ===")
     print("=== STRICT_ROI_MODE ACTIVE: job detail page must prove Republic of Ireland; Northern Ireland excluded ===")
