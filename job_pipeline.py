@@ -2197,19 +2197,27 @@ def _looks_like_non_job_title(title):
 
 
 def _looks_like_bad_generic_title(title):
-    """Stricter check used only for the generic browser fallback.
+    """Reject only clear non-vacancy/navigation text.
 
-    The generic scraper is where CTA/navigation text historically leaked in,
-    so it gets stronger validation without penalising trusted API/dedicated
-    sources that legitimately expose long role names.
+    IMPORTANT: vacancy validity must never depend on a hard-coded profession
+    vocabulary. A real role can have any title. CV/domain relevance is a
+    separate ranking concern and must not affect whether the vacancy is fetched.
     """
     t = re.sub(r"\s+", " ", str(title or "")).strip(" \t\r\n-|•")
     if _looks_like_non_job_title(t):
         return True
     if len(t) > 300:
         return True
-    # Very long navigation/header blobs without any role-like vocabulary.
-    if len(t.split()) >= 18 and not _ROLE_TITLE_WORD_RE.search(t):
+
+    # Reject obvious navigation/header blobs by their content, not by requiring
+    # words such as analyst/manager/engineer.
+    nav_blob = re.compile(
+        r"\b(?:saved jobs|register/sign in|sign in|about us|featured careers|"
+        r"stay connected|privacy|cookie|careers blog|language selector|"
+        r"skip to content|read more|explore careers|career stories)\b",
+        re.I,
+    )
+    if len(t.split()) >= 18 and nav_blob.search(t):
         return True
     return False
 
@@ -2338,9 +2346,9 @@ def _choose_job_title(anchor_text, card_text, href):
         lines.append(line)
 
     if lines:
-        # Role-word matches first; otherwise take the shortest plausible line
-        # rather than a giant navigation/header blob.
-        lines.sort(key=lambda x: (0 if _ROLE_TITLE_WORD_RE.search(x) else 1, len(x)))
+        # No profession-keyword scoring here. Pick the shortest plausible
+        # non-navigation line from the vacancy card.
+        lines.sort(key=len)
         return lines[0][:220]
 
     return _title_from_job_url(href)
@@ -2616,7 +2624,6 @@ def _enrich_generic_candidates_from_detail(company_name, candidates):
         meta = details.get(job.get("url", "")) or {}
         current = str(job.get("title") or "")
         current_bad = _looks_like_bad_generic_title(current)
-        current_role_like = bool(_ROLE_TITLE_WORD_RE.search(current))
 
         exact = _clean_detail_page_title(meta.get("title"), company_name)
         if meta.get("verified") and exact:
@@ -3812,23 +3819,21 @@ def _scrape_first_party_ireland_listing(company_name, listing_urls, href_pattern
         detail_location = str(meta.get("location") or "").strip()
 
         # Exact detail metadata is preferred. If a site omits schema/H1 metadata,
-        # fall back to a role-like anchor only when the listing itself is
-        # explicitly Ireland-filtered.
+        # fall back to a plausible non-navigation anchor from an explicitly
+        # Ireland-filtered vacancy listing. No profession vocabulary required.
         if not title:
             anchor_title = re.sub(r"\s+", " ", str(info.get("anchor") or "")).strip()
-            if anchor_title and _ROLE_TITLE_WORD_RE.search(anchor_title) and not _looks_like_bad_generic_title(anchor_title):
+            if anchor_title and not _looks_like_bad_generic_title(anchor_title):
                 title = anchor_title
 
         if not title:
             continue
 
-        # A successfully parsed detail page that lacks our preferred vacancy
-        # signals is not automatically junk. Some ATS pages omit requisition/
-        # responsibilities markers. Keep it when the title is role-like and ROI
-        # is independently proven; obvious CTA/navigation titles are still rejected.
-        if meta.get("verified") and not _verified_vacancy_detail(meta, meta.get("final_url") or href):
-            if not _ROLE_TITLE_WORD_RE.search(title):
-                continue
+        # Sparse ATS pages may omit requisition/responsibility markers.
+        # Do not reject them based on profession keywords. The title only needs
+        # to be plausible/non-navigation; ROI is validated separately below.
+        if meta.get("verified") and _looks_like_bad_generic_title(title):
+            continue
 
         detail_proves_roi = _strict_roi_job_evidence(meta, info.get("card", ""))
 
@@ -4091,12 +4096,12 @@ def _sitemap_job_recovery(company_name, roots, source_tag, session, max_detail_u
             if not title:
                 continue
 
-            # JobPosting JSON-LD is authoritative. Otherwise a role-like title
-            # plus explicit ROI detail evidence is sufficient; this avoids
-            # losing legitimate jobs on sparse ATS detail pages.
+            # JobPosting JSON-LD is authoritative. For sparse ATS pages, do not
+            # require a profession keyword in the title. A plausible title,
+            # job-detail URL/page evidence, and explicit ROI proof are enough.
             if (str(meta.get("method") or "") != "jsonld_jobposting"
                     and not _verified_vacancy_detail(meta, meta.get("final_url") or u)
-                    and not _ROLE_TITLE_WORD_RE.search(title)):
+                    and _looks_like_bad_generic_title(title)):
                 continue
             loc = str(meta.get("location") or "")
             desc = str(meta.get("description") or "")
@@ -7319,7 +7324,7 @@ def scrape_aer_lingus_ireland_recovery(session):
     )
 
 def main():
-    print("=== ROI_COUNT_RECOVERY ACTIVE: recover valid Ireland jobs without Belfast/UK inflation ===")
+    print("=== ROI_VACANCY_MODE ACTIVE: fetch real Republic-of-Ireland vacancies; no profession-title keyword filtering ===")
     print("=== FULL_RUN_COVERAGE_FIX ACTIVE: known company scrapers are scheduled from CSV, not status buckets ===")
     print("=== JOB_COUNT_REGRESSION_FIX ACTIVE: keep valid ROI listing jobs when detail parsing fails ===")
     print("=== STATUS MODE ACTIVE: Live Jobs / Currently No Jobs / Fetching Error ===")
