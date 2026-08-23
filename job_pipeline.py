@@ -2777,6 +2777,52 @@ def _enrich_generic_candidates_from_detail(company_name, candidates):
     return resolved
 
 
+
+def _dedicated_quality_url_exception(company, title, location):
+    """Protect verified-looking ROI vacancies from dedicated company routes.
+
+    This exception applies ONLY to the generic URL-shape rejection. It does not
+    override CTA/navigation-title rejection or Republic-of-Ireland validation.
+    """
+    if not _has_dedicated_company_scraper(company):
+        return False
+
+    t = str(title or "").strip()
+    loc = str(location or "").strip().lower()
+    if not t:
+        return False
+
+    # Never rescue obvious navigation / CTA labels.
+    junk = {
+        "apply now", "apply", "read more", "learn more", "skip to content",
+        "careers", "career", "jobs", "job search", "search jobs",
+        "explore careers", "early careers", "view jobs", "view all jobs",
+    }
+    if t.lower() in junk:
+        return False
+
+    # Require explicit Republic-of-Ireland evidence in the normalized location.
+    roi_tokens = (
+        "ireland", "dublin", "cork", "galway", "limerick", "waterford",
+        "kilkenny", "athlone", "wexford", "kildare", "meath", "wicklow",
+        "tipperary", "clare", "sligo", "mayo", "donegal", "laois",
+        "offaly", "carlow", "westmeath", "louth", "monaghan", "cavan",
+        "roscommon", "leitrim", "longford", "kerry",
+    )
+    if not any(tok in loc for tok in roi_tokens):
+        return False
+
+    # Explicit Northern Ireland locations must never be rescued.
+    ni_tokens = (
+        "northern ireland", "belfast", "derry", "londonderry",
+        "antrim", "armagh", "down", "fermanagh", "tyrone",
+    )
+    if any(tok in loc for tok in ni_tokens):
+        return False
+
+    return True
+
+
 def _final_job_quality_filter(live_jobs):
     """Final safety net before jobs.json/history are written.
 
@@ -2800,7 +2846,7 @@ def _final_job_quality_filter(live_jobs):
         # Require structural vacancy URL evidence and an explicit ROI location
         # even when the record came from browser cache.
         if source == "priority_sheet2_generic":
-            if not _strong_job_detail_url(url):
+            if not _strong_job_detail_url(url) and not _dedicated_quality_url_exception(company, title, location):
                 removed.append((job.get("company", ""), title, "generic non-vacancy URL"))
                 continue
             if not is_republic_of_ireland_location(job.get("location", "")):
@@ -8492,6 +8538,7 @@ def scrape_aer_lingus_ireland_recovery(session):
     )
 
 def main():
+    print("=== DEDICATED_QUALITY_FILTER_FIX ACTIVE: dedicated ROI jobs are not rejected solely for generic URL shape ===")
     print("=== DEDICATED_GENERIC_EXCLUSION ACTIVE: dedicated companies cannot run through Sheet-2 generic fallback ===")
     print("=== DEDICATED_CACHE_VERSION_FIX ACTIVE: old scraper results cannot survive after a dedicated scraper upgrade ===")
     print("=== IQVIA_FINAL_FIX ACTIVE: 30-job Ireland discovery retained; location output canonicalized ===")
