@@ -224,7 +224,7 @@ def classify_url(url: str) -> str:
 
 
 BROWSER_SCRAPE_CACHE_PATH = "browser_scrape_cache.json"
-JOB_RECORD_QUALITY_FIX_VERSION = 1
+JOB_RECORD_QUALITY_FIX_VERSION = 2
 BROWSER_SCRAPE_MAX_AGE_HOURS = 3  # only actually re-run a real browser scrape this often
 EMPTY_RESULT_MAX_AGE_HOURS = 0.5  # empty results retried much sooner — could be a real "no jobs",
 # or could be a one-time failure (crash, resource contention); don't lock in a failure for 3 hours
@@ -2132,7 +2132,7 @@ _NON_JOB_LINE_RE = re.compile(
 
 # Common words that are strong evidence a text string is an actual role title.
 _ROLE_TITLE_WORD_RE = re.compile(
-    r"\b(?:analyst|analytics|architect|associate|administrator|advisor|adviser|"
+    r"\b(?:analyst|analytics|architect|associate|administrator|advisor|adviser|consulting|researcher|"
     r"accountant|auditor|consultant|controller|coordinator|developer|director|"
     r"engineer|engineering|executive|intern|manager|officer|operator|planner|"
     r"recruiter|scientist|specialist|supervisor|technician|lead|head|partner|"
@@ -2144,14 +2144,32 @@ _ROLE_TITLE_WORD_RE = re.compile(
 )
 
 def _looks_like_non_job_title(title):
-    """True when *title* is visibly a CTA/navigation/category label, not a role."""
+    """Conservative global check: reject only clear CTA/navigation labels.
+
+    Do NOT reject a title merely because it is long or uses uncommon wording.
+    Real postings at EY/Huawei/Meta can legitimately have long descriptive
+    titles, and the previous length/word-count heuristic wrongly removed them.
+    """
     t = re.sub(r"\s+", " ", str(title or "")).strip(" \t\r\n-|•")
-    if not t or len(t) < 3 or len(t) > 220:
+    if not t or len(t) < 3:
         return True
-    if _NON_JOB_TITLE_RE.fullmatch(t):
+    return bool(_NON_JOB_TITLE_RE.fullmatch(t))
+
+
+def _looks_like_bad_generic_title(title):
+    """Stricter check used only for the generic browser fallback.
+
+    The generic scraper is where CTA/navigation text historically leaked in,
+    so it gets stronger validation without penalising trusted API/dedicated
+    sources that legitimately expose long role names.
+    """
+    t = re.sub(r"\s+", " ", str(title or "")).strip(" \t\r\n-|•")
+    if _looks_like_non_job_title(t):
         return True
-    # Obvious navigation/header blobs should never become titles.
-    if len(t.split()) >= 12 and not _ROLE_TITLE_WORD_RE.search(t):
+    if len(t) > 300:
+        return True
+    # Very long navigation/header blobs without any role-like vocabulary.
+    if len(t.split()) >= 18 and not _ROLE_TITLE_WORD_RE.search(t):
         return True
     return False
 
@@ -2265,8 +2283,8 @@ def _choose_job_title(anchor_text, card_text, href):
     labels and scores nearby card lines for role-title likelihood.
     """
     anchor = re.sub(r"\s+", " ", str(anchor_text or "")).strip()
-    if anchor and not _looks_like_non_job_title(anchor):
-        return anchor[:220]
+    if anchor and not _looks_like_bad_generic_title(anchor):
+        return anchor[:300]
 
     lines = []
     for raw in str(card_text or "").splitlines():
@@ -2275,7 +2293,7 @@ def _choose_job_title(anchor_text, card_text, href):
             continue
         if is_ireland_location(line) or _NON_JOB_LINE_RE.search(line):
             continue
-        if _looks_like_non_job_title(line):
+        if _looks_like_bad_generic_title(line):
             continue
         lines.append(line)
 
@@ -2306,19 +2324,19 @@ def _final_job_quality_filter(live_jobs):
         url = str(job.get("url") or "").strip()
         source = str(job.get("source") or "")
 
-        # Generic fallback must point to a real vacancy detail page. This is
-        # the main false-positive source identified from the dashboard data.
-        if source == "priority_sheet2_generic" and not _strong_job_detail_url(url):
-            removed.append((job.get("company", ""), title, "generic non-job URL"))
-            continue
+        # Generic career systems use many legitimate URL shapes, including
+        # opaque IDs, query-string routes and SPA URLs. Do not discard a real
+        # role solely because its URL fails a narrow pattern check.
+        bad_title = (_looks_like_bad_generic_title(title)
+                     if source == "priority_sheet2_generic"
+                     else _looks_like_non_job_title(title))
 
         # Across every source, never display CTA/navigation text as a job title.
-        if _looks_like_non_job_title(title):
-            # For generic detail URLs we can safely recover from the vacancy
-            # slug. For other sources, dropping the malformed record is safer
-            # than inventing a role name.
+        if bad_title:
+            # For generic results, recover from a genuine vacancy-looking URL
+            # when possible; otherwise drop the malformed CTA/navigation record.
             recovered = _title_from_job_url(url) if source == "priority_sheet2_generic" else ""
-            if recovered and not _looks_like_non_job_title(recovered):
+            if recovered and not _looks_like_bad_generic_title(recovered):
                 job = dict(job)
                 job["title"] = recovered
                 title = recovered
@@ -2421,9 +2439,12 @@ def scrape_priority_sheet2_generic(company_name, url, session=None):
                 if not href or href in seen or href.startswith(("mailto:", "tel:", "javascript:")):
                     continue
 
-                # Precision fix: a career/navigation link is not a vacancy.
-                # Only individual job-detail-looking URLs are eligible.
-                if not _strong_job_detail_url(href):
+                # Career systems use many legitimate opaque/SPA URL shapes.
+                # Require a job-like signal, but do NOT require one fixed URL
+                # convention. Obvious navigation/CTA titles are filtered below.
+                if not jobish.search(href) and not jobish.search(text):
+                    continue
+                if re.search(r"/(login|signin|register|account|privacy|terms|contact|about)(?:/|$)", href, re.I):
                     continue
 
                 card = _browser_card(a)
@@ -2439,7 +2460,7 @@ def scrape_priority_sheet2_generic(company_name, url, session=None):
                     continue
 
                 title = _choose_job_title(text, card, href)
-                if not title or _looks_like_non_job_title(title):
+                if not title or _looks_like_bad_generic_title(title):
                     continue
 
                 seen.add(href)
