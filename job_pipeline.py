@@ -9807,6 +9807,7 @@ def scrape_aer_lingus_ireland_recovery(session):
     )
 
 def main():
+    print("=== REGRESSION_GUARD_FIX ACTIVE: versioned zero caches cleared; sudden 1-run disappearances protected; count drops reported ===")
     print("=== RUNTIME_DEDUPE_FIX ACTIVE: one company = one full-run task; dedicated routes win over generic duplicates ===")
     print("=== TWO_ATTEMPT_RULE_BATCH ACTIVE: Oracle/McKinsey attempt 2 + Honeywell/Schneider attempt 1; successful live routes untouched ===")
     print("=== ORACLE_BAUSCH_MCKINSEY_BATCH ACTIVE: Oracle REST scheduled in full run + Bausch/McKinsey friend routes; live companies untouched ===")
@@ -9921,7 +9922,11 @@ def main():
     _cleared_zero_cache = []
     for _cache_company in list(browser_cache.keys()):
         _cache_entry = browser_cache.get(_cache_company) or {}
-        if (_cache_company.lower() in _historical_lower
+        # Cache keys are often versioned: "Company::route_v2". Compare the
+        # company portion, not the entire cache key. Otherwise a cached zero
+        # for a previously-live company can survive indefinitely.
+        _cache_base_company = str(_cache_company).split("::", 1)[0].strip().lower()
+        if (_cache_base_company in _historical_lower
                 and not _cache_entry.get("jobs")):
             browser_cache.pop(_cache_company, None)
             _cleared_zero_cache.append(_cache_company)
@@ -9930,6 +9935,21 @@ def main():
             f"=== Cache recovery: cleared {len(_cleared_zero_cache)} stale zero results "
             "for companies that produced valid jobs before ==="
         )
+
+    # Snapshot the immediately previous live output. This is used only as a
+    # regression safety net: one transient zero/error must not instantly erase
+    # a company that was live in the preceding run.
+    _previous_live_jobs = []
+    if os.path.exists(args.output):
+        try:
+            with open(args.output, encoding="utf-8") as _pf:
+                _previous_payload = json.load(_pf)
+            if isinstance(_previous_payload, dict):
+                _previous_live_jobs = list(_previous_payload.get("jobs") or [])
+            elif isinstance(_previous_payload, list):
+                _previous_live_jobs = list(_previous_payload)
+        except Exception:
+            _previous_live_jobs = []
 
     live_jobs, manual_check, errors = [], [], []
     automated_zero = {}
@@ -10718,6 +10738,63 @@ def main():
     # Any company with current live jobs is not an automated-zero company.
     for name in current_live_companies:
         automated_zero.pop(name, None)
+
+    # Regression guard.
+    #
+    # - If a company had live jobs in the immediately previous jobs.json and
+    #   this run suddenly has ZERO, preserve that previous set for this run.
+    #   This prevents a transient browser/API/cache miss from deleting a
+    #   previously proven live company.
+    # - If the count merely decreased, report it for review but DO NOT pad the
+    #   result with old jobs; real vacancies can close normally.
+    _prev_by_company = {}
+    for _job in _previous_live_jobs:
+        _n = str((_job or {}).get("company") or "").strip()
+        if _n:
+            _prev_by_company.setdefault(_n, []).append(_job)
+
+    _cur_counts = {}
+    for _job in live_jobs:
+        _n = str((_job or {}).get("company") or "").strip()
+        if _n:
+            _cur_counts[_n] = _cur_counts.get(_n, 0) + 1
+
+    _zero_regressions = []
+    _count_decreases = []
+    for _name, _prev_jobs in _prev_by_company.items():
+        _prev_count = len(_prev_jobs)
+        _cur_count = _cur_counts.get(_name, 0)
+        if _prev_count > 0 and _cur_count == 0:
+            # Preserve only the immediately previous run's records. They are
+            # marked so this safety-net behavior is visible and auditable.
+            for _old_job in _prev_jobs:
+                _kept = dict(_old_job)
+                _kept["regression_guard"] = "preserved_from_previous_run_after_single_zero"
+                live_jobs.append(_kept)
+            automated_zero.pop(_name, None)
+            _zero_regressions.append((_name, _prev_count))
+        elif 0 < _cur_count < _prev_count:
+            _count_decreases.append((_name, _prev_count, _cur_count))
+
+    if _zero_regressions:
+        print("=== REGRESSION GUARD: prevented single-run disappearance for "
+              f"{len(_zero_regressions)} previously-live companies ===")
+        for _name, _old_count in sorted(_zero_regressions):
+            print(f"      [regression-zero] {_name}: {_old_count} -> 0; "
+                  "previous live records preserved pending a clean recheck")
+
+    if _count_decreases:
+        print("=== COUNT REGRESSION WATCH: live companies with lower counts than previous run "
+              "(reported only; old vacancies are NOT re-added) ===")
+        for _name, _old_count, _new_count in sorted(_count_decreases):
+            print(f"      [count-drop] {_name}: {_old_count} -> {_new_count}")
+
+    # Recompute after the zero-regression guard.
+    current_live_companies = {
+        str(job.get("company") or "").strip()
+        for job in live_jobs
+        if job.get("company")
+    }
 
     history = update_history(prior_history, live_jobs)
     with open(args.history, "w", encoding="utf-8") as f:
