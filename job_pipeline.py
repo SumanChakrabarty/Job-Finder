@@ -9366,6 +9366,97 @@ def scrape_mckinsey_ireland_friend(session):
     print(f"      [mckinsey_friend] {len(results)} verified Dublin jobs")
     return list(results.values())
 
+
+
+def scrape_oracle_ireland_attempt2(session):
+    """Oracle attempt 2: rendered Candidate Experience Ireland page, not REST."""
+    return _batch_first_party_roi_scrape(
+        "Oracle",
+        [
+            "https://eeho.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1/requisitions?location=Ireland",
+            "https://eeho.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1/jobs?location=Ireland",
+        ],
+        ["eeho.fa.us2.oraclecloud.com"],
+        ["/sites/CX_1/job/", "/sites/CX_1/jobs/"],
+        session,
+        "oracle_attempt2_rendered",
+        55,
+    )
+
+
+def scrape_mckinsey_ireland_attempt2(session):
+    """McKinsey attempt 2: lightweight official HTML route; avoids the 60s Playwright stall."""
+    company = "McKinsey & Company"
+    source = "https://www.mckinsey.com/careers/search-jobs?locations=Dublin&cities=Dublin"
+    results = {}
+    try:
+        r = session.get(source, timeout=25, headers={
+            "User-Agent": HEADERS.get("User-Agent", "Mozilla/5.0"),
+            "Accept-Language": "en-IE,en;q=0.9",
+        })
+        html = r.text or ""
+    except Exception as exc:
+        print(f"      [mckinsey_attempt2] HTTP failed: {exc}")
+        return []
+
+    for m in re.finditer(r'href=["\']([^"\']*/careers/search-jobs/jobs/[^"\'#?]+)[^"\']*["\']', html, re.I):
+        href = urllib.parse.urljoin(source, m.group(1)).split("?")[0].split("#")[0]
+        start, end = max(0, m.start()-1800), min(len(html), m.end()+2200)
+        card = _html_to_text(html[start:end])
+        if _ROI_NEGATIVE_RE.search(card):
+            continue
+        if not re.search(r"\bDublin\b|\bIreland\b", card, re.I):
+            continue
+        title = ""
+        # Prefer nearby anchor text, then a conservative text line.
+        am = re.search(r'<a[^>]+href=["\'][^"\']*' + re.escape(m.group(1)) + r'[^"\']*["\'][^>]*>(.*?)</a>', html[start:end], re.I|re.S)
+        if am:
+            title = re.sub(r"\s+", " ", _html_to_text(am.group(1))).strip()
+        if not title or _looks_like_non_job_title(title):
+            lines = [re.sub(r"\s+", " ", x).strip() for x in card.splitlines() if 5 <= len(x.strip()) <= 220]
+            title = next((x for x in lines if not _looks_like_non_job_title(x) and not re.fullmatch(r"Dublin(?:, Ireland)?", x, re.I)), "")
+        if not title:
+            continue
+        sponsorship, snippet = classify_sponsorship(card[:16000])
+        results[href.rstrip('/').lower()] = {
+            "company": company, "title": title[:300], "location": "Dublin, Ireland",
+            "posted_text": "Unknown", "posted_days_ago": None,
+            "employment_type": normalize_employment_type("", title), "url": href,
+            "source": "mckinsey_attempt2_http", "visa_sponsorship": sponsorship,
+            "visa_snippet": snippet,
+        }
+    print(f"      [mckinsey_attempt2] {len(results)} verified Dublin jobs")
+    return list(results.values())
+
+
+def scrape_honeywell_friend(session):
+    """Fresh company: official Honeywell Oracle Ireland board from friend logic."""
+    return _batch_first_party_roi_scrape(
+        "Honeywell",
+        ["https://ibqbjb.fa.ocs.oraclecloud.com/hcmUI/CandidateExperience/en/sites/Honeywell/jobs?location=Ireland&locationId=300000000469476&locationLevel=country&mode=location"],
+        ["ibqbjb.fa.ocs.oraclecloud.com"],
+        ["/sites/Honeywell/job/"],
+        session,
+        "honeywell_friend_reference",
+        55,
+    )
+
+
+def scrape_schneider_friend(session):
+    """Fresh company: Schneider official Ireland jobs route from friend logic."""
+    return _batch_first_party_roi_scrape(
+        "Schneider Electric",
+        [
+            "https://careers.se.com/jobs?keywords=&location=Ireland",
+            "https://careers.se.com/jobs?location=Ireland",
+        ],
+        ["careers.se.com"],
+        ["/jobs/"],
+        session,
+        "schneider_friend_reference",
+        55,
+    )
+
 def test_single_company(name):
     """Fast test mode for one company — skips the full ~30 min pipeline
     entirely. Checks known dedicated scrapers by name directly (Apple,
@@ -9469,9 +9560,11 @@ def test_single_company(name):
         "qiagen": lambda: scrape_qiagen_ireland_direct(session),
         "regeneron": lambda: scrape_regeneron_ireland_direct(session),
         "medtronic": lambda: scrape_medtronic_ireland_direct(session),
-        "oracle": lambda: scrape_oracle_ireland_friend(session),
+        "oracle": lambda: scrape_oracle_ireland_attempt2(session),
         "bausch + lomb": lambda: scrape_bausch_lomb_friend(session),
-        "mckinsey & company": lambda: scrape_mckinsey_ireland_friend(session),
+        "mckinsey & company": lambda: scrape_mckinsey_ireland_attempt2(session),
+        "honeywell": lambda: scrape_honeywell_friend(session),
+        "schneider electric": lambda: scrape_schneider_friend(session),
         "jpmorgan chase": lambda: scrape_oracle_candidate_experience("JPMorgan Chase", "https://jpmc.fa.oraclecloud.com", "CX_1001", session),
     }
     matched_key = next((k for k in dedicated if name_lower == k or name_lower.startswith(k)), None)
@@ -9714,6 +9807,7 @@ def scrape_aer_lingus_ireland_recovery(session):
     )
 
 def main():
+    print("=== TWO_ATTEMPT_RULE_BATCH ACTIVE: Oracle/McKinsey attempt 2 + Honeywell/Schneider attempt 1; successful live routes untouched ===")
     print("=== ORACLE_BAUSCH_MCKINSEY_BATCH ACTIVE: Oracle REST scheduled in full run + Bausch/McKinsey friend routes; live companies untouched ===")
     print("=== AGILENT_PLUS_FRIEND_NEXT4 ACTIVE: Agilent full dedicated timeout + Heineken/Musgrave/VHI/HP friend logic; live companies untouched ===")
     print("=== NONLIVE_FRIEND_BATCH_10 ACTIVE: AXA/Agilent/BNP/Coca-Cola HBC/HCL/Infosys/Laya/Palo Alto/SMBC Aviation/SIG; valid live companies untouched ===")
@@ -10013,9 +10107,11 @@ def main():
         ("exact", "musgrave group (supervalu / centra)", scrape_musgrave_ireland_friend, 60, "friend-referenced Musgrave vacancies"),
         ("exact", "vhi healthcare", scrape_vhi_ireland_friend, 60, "friend-referenced VHI CandidateManager"),
         ("exact", "hp (hewlett-packard)", scrape_hp_ireland_friend, 60, "friend-referenced HP Ireland search"),
-        ("exact", "oracle", scrape_oracle_ireland_friend, 60, "Oracle Recruiting Cloud REST"),
+        ("exact", "oracle", scrape_oracle_ireland_attempt2, 60, "attempt 2 rendered Oracle Ireland board"),
         ("exact", "bausch + lomb", scrape_bausch_lomb_friend, 60, "friend-referenced Bausch + Lomb Ireland board"),
-        ("exact", "mckinsey & company", scrape_mckinsey_ireland_friend, 60, "friend-referenced McKinsey Dublin search"),
+        ("exact", "mckinsey & company", scrape_mckinsey_ireland_attempt2, 45, "attempt 2 lightweight McKinsey Dublin HTTP"),
+        ("exact", "honeywell", scrape_honeywell_friend, 60, "friend-referenced Honeywell Ireland Oracle board"),
+        ("exact", "schneider electric", scrape_schneider_friend, 60, "friend-referenced Schneider Ireland board"),
         ("exact", "aib (allied irish banks)", scrape_aib_ireland, 240, "filtered against UK-only postings"),
         ("exact", "blackrock", scrape_blackrock_ireland, 240, "Phenom platform"),
         ("exact", "bank of ireland", scrape_bank_of_ireland_direct, 240, "first-party jobs board"),
@@ -10110,7 +10206,8 @@ def main():
         "scrape_sig_ireland_friend",
         "scrape_musgrave_ireland_friend", "scrape_vhi_ireland_friend",
         "scrape_hp_ireland_friend",
-        "scrape_bausch_lomb_friend", "scrape_mckinsey_ireland_friend",
+        "scrape_bausch_lomb_friend",
+        "scrape_oracle_ireland_attempt2", "scrape_honeywell_friend", "scrape_schneider_friend",
     }
 
     _live_company_names = {
@@ -10158,8 +10255,13 @@ def main():
                 cache_key = "Merit Medical::workday_dedicated_v1"
             elif _key in {
                 "oracle",
-                "bausch + lomb",
                 "mckinsey & company",
+                "honeywell",
+                "schneider electric",
+            }:
+                cache_key = f"{name}::attempt2_plus_new_v2"
+            elif _key in {
+                "bausch + lomb",
             }:
                 cache_key = f"{name}::friend_oracle_bausch_mckinsey_v1"
             elif _key in {
@@ -10228,6 +10330,8 @@ def main():
             "oracle",
             "bausch + lomb",
             "mckinsey & company",
+            "honeywell",
+            "schneider electric",
         }
         if company_name.strip().lower() in _fresh_dedicated_timeout_names:
             actual_timeout = timeout_s
