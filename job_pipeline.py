@@ -2149,6 +2149,13 @@ _NON_JOB_TITLE_RE = re.compile(
         italiano |
         português |
         skip\s+to\s+(?:main\s+)?content |
+        skip\s+to\s+(?:main\s+)?navigation |
+        skip\s+navigation |
+        read\s+more |
+        learn\s+more |
+        view\s+(?:all\s+)?jobs? |
+        explore\s+careers? |
+        early\s+careers? |
         open\s+submenu |
         contact(?:\s+us)? |
         faq |
@@ -4791,42 +4798,225 @@ def scrape_dxc_ireland(session):
 
 
 
+
+
+def _clean_grant_oracle_title(raw_title):
+    """Strip Oracle card metadata from Grant Thornton job titles."""
+    title = re.sub(r"\s+", " ", str(raw_title or "")).strip()
+    if not title:
+        return ""
+
+    # Oracle can render this as "POSTING DATE24/08/2026" with no space.
+    title = re.split(
+        r"POSTING\s+DATE",
+        title,
+        maxsplit=1,
+        flags=re.I,
+    )[0].strip()
+
+    # Remove trailing Oracle location metadata.
+    title = re.sub(
+        r"\s+"
+        r"(?:Dublin|Cork|Galway|Limerick|Waterford|Kilkenny|Wexford|"
+        r"Athlone|Sligo|Kildare|Clare|Tipperary|Meath|Louth|Mayo|"
+        r"Wicklow|Donegal)"
+        r",\s*Ireland"
+        r"(?:\s+and\s+\d+\s+more)?"
+        r"\s*$",
+        "",
+        title,
+        flags=re.I,
+    ).strip()
+
+    # Fallback for a plain trailing "Ireland" location.
+    title = re.sub(
+        r"\s+Ireland(?:\s+and\s+\d+\s+more)?\s*$",
+        "",
+        title,
+        flags=re.I,
+    ).strip()
+
+    # Occasional residual card badges.
+    title = re.sub(
+        r"\s+(?:TRENDING|BE THE FIRST TO APPLY|NEW)\s*$",
+        "",
+        title,
+        flags=re.I,
+    ).strip()
+
+    return title
+
 def scrape_grant_thornton_direct(session):
-    """Grant Thornton's original Workday tenant (iegt.wd3) has been part of
-    the stuck-422 cluster all session and appears to no longer be their
-    live hiring source — their current real careers pages are on their
-    own site instead. Lightweight, no browser needed."""
-    urls = [
-        "https://www.grantthornton.ie/careers/",
-        "https://www.grantthornton.ie/careers/experienced-hires/",
-        "https://www.grantthornton.ie/careers/early-careers/",
-    ]
-    hints = ("/careers/", "/job/", "/jobs/", "vacanc", "opportunit",
-             "experienced-hires", "graduate", "undergrad")
-    blocked_titles = {
-        "why grant thornton", "our benefits", "working at grant thornton",
-        "careers", "experienced hires", "early careers",
-        "graduate programme", "undergrad programme", "contact us",
-    }
-    results, seen = [], set()
-    for url in urls:
-        try:
-            rows = _scrape_public_careers_page("Grant Thornton Ireland", url, hints, session, "Ireland")
-        except Exception as e:
-            print(f"      [grant-thornton] page failed {url}: {e}")
-            continue
-        for job in rows:
-            title = (job.get("title") or "").strip()
-            href = (job.get("url") or "").strip()
-            if not title or not href or title.lower() in blocked_titles:
-                continue
-            key = href.split("?")[0].rstrip("/").lower()
-            if key in seen:
-                continue
-            seen.add(key)
-            results.append(job)
-    print(f"      [grant-thornton] {len(results)} candidate Ireland opportunities")
-    return results
+    """Grant Thornton Ireland: collect only real Oracle Candidate Experience job links.
+
+    The former broad careers-page scraper could mistake navigation/CTA anchors
+    for vacancies. This implementation follows the supplied reference logic:
+    only /job/ detail links are accepted, then ROI evidence and title quality
+    are verified before output.
+    """
+    company = "Grant Thornton Ireland"
+    source_url = (
+        "https://ehzq.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/"
+        "GrantThorntonIrelandExperiencedHires/jobs"
+    )
+
+    if not HAS_PLAYWRIGHT:
+        print("      [grant-oracle] Playwright unavailable")
+        return []
+
+    results = {}
+
+    try:
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch(
+                headless=True,
+                args=["--no-sandbox", "--disable-dev-shm-usage", "--disable-gpu"],
+            )
+            page = browser.new_page(
+                viewport={"width": 1440, "height": 1300},
+                locale="en-IE",
+            )
+
+            page.goto(
+                source_url,
+                wait_until="domcontentloaded",
+                timeout=60000,
+            )
+            page.wait_for_timeout(2500)
+
+            stagnant = 0
+            previous_count = 0
+
+            for _ in range(50):
+                anchors = page.locator('a[href*="/job/"]')
+
+                for i in range(min(anchors.count(), 500)):
+                    a = anchors.nth(i)
+
+                    try:
+                        href = urllib.parse.urljoin(
+                            page.url,
+                            a.get_attribute("href") or "",
+                        ).split("#")[0]
+                    except Exception:
+                        continue
+
+                    # Structural proof that this is a real Oracle job detail URL.
+                    if "/job/" not in href.lower():
+                        continue
+
+                    try:
+                        title = _clean_grant_oracle_title(a.inner_text() or "")
+                    except Exception:
+                        title = ""
+
+                    node = a
+                    card = ""
+
+                    for _up in range(7):
+                        try:
+                            candidate = node.inner_text() or ""
+                            candidate = re.sub(r"\s+", " ", candidate).strip()
+                        except Exception:
+                            candidate = ""
+
+                        if candidate and len(candidate) <= 3000:
+                            card = candidate
+
+                        if re.search(
+                            r"\b(?:Dublin|Ireland|Cork|Galway|Limerick)\b",
+                            card,
+                            re.I,
+                        ):
+                            break
+
+                        try:
+                            node = node.locator("..")
+                        except Exception:
+                            break
+
+                    if not title or len(title) > 300:
+                        lines = [
+                            re.sub(r"\s+", " ", x).strip()
+                            for x in card.splitlines()
+                            if 4 <= len(x.strip()) <= 220
+                        ]
+                        title = _clean_grant_oracle_title(
+                            next(
+                                (x for x in lines if not _looks_like_non_job_title(x)),
+                                "",
+                            )
+                        )
+
+                    if not title or _looks_like_non_job_title(title):
+                        continue
+
+                    evidence = f"{title} {card} {href}"
+
+                    if _ROI_NEGATIVE_RE.search(evidence):
+                        continue
+                    if not is_republic_of_ireland_location(evidence):
+                        continue
+
+                    location = "Ireland"
+                    for city in ("Dublin", "Cork", "Galway", "Limerick"):
+                        if re.search(rf"\b{city}\b", evidence, re.I):
+                            location = f"{city}, Ireland"
+                            break
+
+                    sponsorship, snippet = classify_sponsorship(card[:16000])
+
+                    results[href.rstrip("/").lower()] = {
+                        "company": company,
+                        "title": title[:300],
+                        "location": location,
+                        "posted_text": "Unknown",
+                        "posted_days_ago": None,
+                        "employment_type": normalize_employment_type("", title),
+                        "url": href,
+                        "source": "grant_oracle_job_detail",
+                        "visa_sponsorship": sponsorship,
+                        "visa_snippet": snippet,
+                    }
+
+                clicked = False
+                for selector in (
+                    'button:has-text("Load More")',
+                    'button:has-text("Show More")',
+                    'button:has-text("Next")',
+                    'a:has-text("Next")',
+                ):
+                    try:
+                        btn = page.locator(selector)
+                        if btn.count() and btn.first.is_visible():
+                            btn.first.click(timeout=1200)
+                            page.wait_for_timeout(400)
+                            clicked = True
+                            break
+                    except Exception:
+                        pass
+
+                try:
+                    page.mouse.wheel(0, 3200)
+                    page.wait_for_timeout(300)
+                except Exception:
+                    pass
+
+                current_count = len(results)
+                stagnant = stagnant + 1 if current_count == previous_count else 0
+                previous_count = current_count
+
+                if stagnant >= 6 and not clicked:
+                    break
+
+            browser.close()
+
+    except Exception as exc:
+        print(f"      [grant-oracle] failed: {exc}")
+
+    print(f"      [grant-oracle] {len(results)} verified Ireland jobs")
+    return list(results.values())
+
 
 
 def _browser_collect_job_links_with_retries(page, company_name, patterns, source_tag, results,
@@ -8761,6 +8951,8 @@ def scrape_aer_lingus_ireland_recovery(session):
     )
 
 def main():
+    print("=== GRANT_EXACT_TITLE_FIX ACTIVE: Oracle card location/date/badges stripped from Grant job titles ===")
+    print("=== SINGLE_FILE_GRANT_QUALITY_FIX ACTIVE: Grant uses Oracle real-job links; navigation/CTA titles globally blocked ===")
     print("=== FRIEND_LOGIC_NONLIVE_BATCH ACTIVE: Abbott/Intel/Vodafone/DXC/DB/S&P/Three/TCS; existing live companies untouched ===")
     print("=== FAST_BATCH_8_NEXT ACTIVE: Abbott/AZ/Amgen/Alexion/Stryker/Novartis/Intel + Aldi second pass ===")
     print("=== FAST_BATCH_6_NEXT ACTIVE: SSE fast-return + Tesco/Aldi/FBD/Capgemini/Vodafone dedicated routes ===")
@@ -9208,6 +9400,8 @@ def main():
                 cache_key = name
             if _key in {"dxc technology", "deutsche bank", "s&p global", "three ireland"}:
                 cache_key = f"{name}::friend_logic_v1"
+            elif _key == "grant thornton ireland":
+                cache_key = "Grant Thornton Ireland::oracle_exact_titles_v2"
             return lambda: cached_browser_scrape(browser_cache, cache_key, lambda: fn(session), 0, name)
 
         actual_timeout = effective_timeout(browser_cache, company_name, timeout_s)
