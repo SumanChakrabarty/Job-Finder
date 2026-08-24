@@ -10647,7 +10647,7 @@
         "source": "jnj_workday",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-24T23:24:56.766410+00:00",
         "posted_age_known": false
       },
@@ -10662,7 +10662,7 @@
         "source": "jnj_workday",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-24T23:24:56.766410+00:00",
         "posted_age_known": false
       },
@@ -12448,8 +12448,8 @@
   },
   "Alvarez & Marsal": {
     "jobs": [],
-    "checked_at": 1787612330.7876325,
-    "consecutive_failures": 84
+    "checked_at": 1787615092.3652081,
+    "consecutive_failures": 85
   },
   "Coca-Cola HBC Ireland": {
     "jobs": [],
@@ -12458,8 +12458,8 @@
   },
   "FactSet": {
     "jobs": [],
-    "checked_at": 1787612345.380414,
-    "consecutive_failures": 84
+    "checked_at": 1787615107.2386172,
+    "consecutive_failures": 85
   },
   "Dunnes Stores": {
     "jobs": [],
@@ -12654,18 +12654,18 @@
   },
   "Bain & Company": {
     "jobs": [],
-    "checked_at": 1787612343.5542343,
-    "consecutive_failures": 84
+    "checked_at": 1787615107.0431201,
+    "consecutive_failures": 85
   },
   "FTI Consulting": {
     "jobs": [],
-    "checked_at": 1787612346.256254,
-    "consecutive_failures": 84
+    "checked_at": 1787615110.8690865,
+    "consecutive_failures": 85
   },
   "Goldman Sachs": {
     "jobs": [],
-    "checked_at": 1787612240.6890755,
-    "consecutive_failures": 84
+    "checked_at": 1787614999.633729,
+    "consecutive_failures": 85
   },
   "Fiserv": {
     "jobs": [
@@ -13167,13 +13167,13 @@
   },
   "Dynatrace": {
     "jobs": [],
-    "checked_at": 1787612343.2033927,
-    "consecutive_failures": 82
+    "checked_at": 1787615100.5593212,
+    "consecutive_failures": 83
   },
   "Databricks": {
     "jobs": [],
-    "checked_at": 1787612243.1049654,
-    "consecutive_failures": 78
+    "checked_at": 1787615001.0937011,
+    "consecutive_failures": 79
   },
   "Infosys": {
     "jobs": [],
@@ -13187,8 +13187,8 @@
   },
   "Macquarie Group": {
     "jobs": [],
-    "checked_at": 1787612352.357562,
-    "consecutive_failures": 72
+    "checked_at": 1787615112.0134091,
+    "consecutive_failures": 73
   },
   "Lidl Ireland": {
     "jobs": [],
@@ -13197,38 +13197,38 @@
   },
   "Morningstar": {
     "jobs": [],
-    "checked_at": 1787612350.392046,
-    "consecutive_failures": 72
+    "checked_at": 1787615112.517605,
+    "consecutive_failures": 73
   },
   "Morgan Stanley": {
     "jobs": [],
-    "checked_at": 1787612240.263832,
-    "consecutive_failures": 72
+    "checked_at": 1787614996.4826534,
+    "consecutive_failures": 73
   },
   "Moody's": {
     "jobs": [],
-    "checked_at": 1787612349.8332965,
-    "consecutive_failures": 72
+    "checked_at": 1787615115.157012,
+    "consecutive_failures": 73
   },
   "MSCI": {
     "jobs": [],
-    "checked_at": 1787612345.1068327,
-    "consecutive_failures": 72
+    "checked_at": 1787615107.473389,
+    "consecutive_failures": 73
   },
   "Refinitiv (LSEG)": {
     "jobs": [],
-    "checked_at": 1787612354.8315177,
-    "consecutive_failures": 72
+    "checked_at": 1787615117.8610716,
+    "consecutive_failures": 73
   },
   "Societe Generale": {
     "jobs": [],
-    "checked_at": 1787612354.0073948,
-    "consecutive_failures": 72
+    "checked_at": 1787615119.4462864,
+    "consecutive_failures": 73
   },
   "Splunk": {
     "jobs": [],
-    "checked_at": 1787612356.9404414,
-    "consecutive_failures": 72
+    "checked_at": 1787615120.763308,
+    "consecutive_failures": 73
   },
   "Greencore": {
     "jobs": [],
@@ -13552,8 +13552,8 @@
   },
   "SuperValu / Musgrave": {
     "jobs": [],
-    "checked_at": 1787612350.9675293,
-    "consecutive_failures": 71
+    "checked_at": 1787615113.9892254,
+    "consecutive_failures": 72
   },
   "Tesco Ireland": {
     "jobs": [],
@@ -13562,28 +13562,28 @@
   },
   "Aer Lingus": {
     "jobs": [],
-    "checked_at": 1787612243.2539065,
-    "consecutive_failures": 71
+    "checked_at": 1787614999.1884153,
+    "consecutive_failures": 72
   },
   "Akamai": {
     "jobs": [],
-    "checked_at": 1787612357.742161,
-    "consecutive_failures": 71
+    "checked_at": 1787615120.329134,
+    "consecutive_failures": 72
   },
   "AerCap": {
     "jobs": [],
-    "checked_at": 1787612358.0020316,
-    "consecutive_failures": 71
+    "checked_at": 1787615122.7064588,
+    "consecutive_failures": 72
   },
   "An Post": {
     "jobs": [],
-    "checked_at": 1787612364.0588245,
-    "consecutive_failures": 71
+    "checked_at": 1787615130.4637947,
+    "consecutive_failures": 72
   },
   "ASML": {
     "jobs": [],
-    "checked_at": 1787612359.175499,
-    "consecutive_failures": 71
+    "checked_at": 1787615125.3582304,
+    "consecutive_failures": 72
   },
   "Advanced Micro Devices (AMD)": {
     "jobs": [],
@@ -13592,13 +13592,13 @@
   },
   "Alkermes": {
     "jobs": [],
-    "checked_at": 1787612361.506546,
-    "consecutive_failures": 71
+    "checked_at": 1787615125.724108,
+    "consecutive_failures": 72
   },
   "Visa": {
     "jobs": [],
-    "checked_at": 1787612239.7004564,
-    "consecutive_failures": 68
+    "checked_at": 1787614995.8247755,
+    "consecutive_failures": 69
   },
   "Applied Materials": {
     "jobs": [],
@@ -13607,38 +13607,38 @@
   },
   "Boehringer Ingelheim": {
     "jobs": [],
-    "checked_at": 1787612363.5297375,
-    "consecutive_failures": 70
+    "checked_at": 1787615128.0582788,
+    "consecutive_failures": 71
   },
   "Box": {
     "jobs": [],
-    "checked_at": 1787612366.5880985,
-    "consecutive_failures": 70
+    "checked_at": 1787615130.7732427,
+    "consecutive_failures": 71
   },
   "Atlassian": {
     "jobs": [],
-    "checked_at": 1787612366.2665057,
-    "consecutive_failures": 70
+    "checked_at": 1787615130.343105,
+    "consecutive_failures": 71
   },
   "Bruker": {
     "jobs": [],
-    "checked_at": 1787612367.9603462,
-    "consecutive_failures": 70
+    "checked_at": 1787615132.5883136,
+    "consecutive_failures": 71
   },
   "Biotronik": {
     "jobs": [],
-    "checked_at": 1787612366.8523283,
-    "consecutive_failures": 70
+    "checked_at": 1787615131.052628,
+    "consecutive_failures": 71
   },
   "Coloplast": {
     "jobs": [],
-    "checked_at": 1787612368.6936948,
-    "consecutive_failures": 70
+    "checked_at": 1787615135.19625,
+    "consecutive_failures": 71
   },
   "Bord Gáis Energy": {
     "jobs": [],
-    "checked_at": 1787612369.250529,
-    "consecutive_failures": 70
+    "checked_at": 1787615138.0548725,
+    "consecutive_failures": 71
   },
   "Carbery Group": {
     "jobs": [],
@@ -13743,8 +13743,8 @@
   },
   "DSV Ireland": {
     "jobs": [],
-    "checked_at": 1787612376.2336874,
-    "consecutive_failures": 70
+    "checked_at": 1787615140.2333324,
+    "consecutive_failures": 71
   },
   "Bayer": {
     "jobs": [],
@@ -14196,8 +14196,8 @@
   },
   "Edwards Lifesciences": {
     "jobs": [],
-    "checked_at": 1787612291.9305847,
-    "consecutive_failures": 70
+    "checked_at": 1787615048.4164848,
+    "consecutive_failures": 71
   },
   "Dairygold": {
     "jobs": [],
@@ -14206,8 +14206,8 @@
   },
   "Dexcom": {
     "jobs": [],
-    "checked_at": 1787612372.4700036,
-    "consecutive_failures": 70
+    "checked_at": 1787615138.760582,
+    "consecutive_failures": 71
   },
   "Fastway Couriers Ireland": {
     "jobs": [],
@@ -14216,23 +14216,23 @@
   },
   "DocuSign": {
     "jobs": [],
-    "checked_at": 1787612375.5153317,
-    "consecutive_failures": 70
+    "checked_at": 1787615142.9826798,
+    "consecutive_failures": 71
   },
   "Energia Group": {
     "jobs": [],
-    "checked_at": 1787612373.7566214,
-    "consecutive_failures": 70
+    "checked_at": 1787615139.9391794,
+    "consecutive_failures": 71
   },
   "EirGrid Group": {
     "jobs": [],
-    "checked_at": 1787612376.267902,
-    "consecutive_failures": 70
+    "checked_at": 1787615142.5105162,
+    "consecutive_failures": 71
   },
   "Hollister Incorporated": {
     "jobs": [],
-    "checked_at": 1787612379.060572,
-    "consecutive_failures": 69
+    "checked_at": 1787615147.193079,
+    "consecutive_failures": 70
   },
   "FedEx Express Ireland": {
     "jobs": [],
@@ -15372,33 +15372,33 @@
   },
   "Irish Distillers (Pernod Ricard)": {
     "jobs": [],
-    "checked_at": 1787612381.29836,
-    "consecutive_failures": 68
+    "checked_at": 1787615147.3620384,
+    "consecutive_failures": 69
   },
   "Micron Technology": {
     "jobs": [],
-    "checked_at": 1787612383.285974,
-    "consecutive_failures": 68
+    "checked_at": 1787615151.9369526,
+    "consecutive_failures": 69
   },
   "Nokia": {
     "jobs": [],
-    "checked_at": 1787612384.1006005,
-    "consecutive_failures": 68
+    "checked_at": 1787615152.507308,
+    "consecutive_failures": 69
   },
   "Marvell Technology": {
     "jobs": [],
-    "checked_at": 1787612383.003117,
-    "consecutive_failures": 68
+    "checked_at": 1787615150.341074,
+    "consecutive_failures": 69
   },
   "Insulet Corporation": {
     "jobs": [],
-    "checked_at": 1787612381.5399497,
-    "consecutive_failures": 68
+    "checked_at": 1787615147.8207006,
+    "consecutive_failures": 69
   },
   "Medpace": {
     "jobs": [],
-    "checked_at": 1787612385.237529,
-    "consecutive_failures": 68
+    "checked_at": 1787615151.6521163,
+    "consecutive_failures": 69
   },
   "Irish Ferries": {
     "jobs": [],
@@ -16625,23 +16625,23 @@
   },
   "Ornua": {
     "jobs": [],
-    "checked_at": 1787612389.821524,
-    "consecutive_failures": 66
+    "checked_at": 1787615158.8742964,
+    "consecutive_failures": 67
   },
   "Shannon Airport Group": {
     "jobs": [],
-    "checked_at": 1787612386.0502543,
-    "consecutive_failures": 66
+    "checked_at": 1787615153.7730584,
+    "consecutive_failures": 67
   },
   "Slack": {
     "jobs": [],
-    "checked_at": 1787612395.1716673,
-    "consecutive_failures": 66
+    "checked_at": 1787615165.8323693,
+    "consecutive_failures": 67
   },
   "Smurfit Westrock": {
     "jobs": [],
-    "checked_at": 1787612395.771307,
-    "consecutive_failures": 66
+    "checked_at": 1787615167.130697,
+    "consecutive_failures": 67
   },
   "Stena Line Ireland": {
     "jobs": [],
@@ -16650,8 +16650,8 @@
   },
   "Syneos Health": {
     "jobs": [],
-    "checked_at": 1787612399.4234018,
-    "consecutive_failures": 66
+    "checked_at": 1787615169.0192115,
+    "consecutive_failures": 67
   },
   "ResMed": {
     "jobs": [],
@@ -16687,23 +16687,23 @@
   },
   "Teva Pharmaceuticals": {
     "jobs": [],
-    "checked_at": 1787612295.0124366,
-    "consecutive_failures": 66
+    "checked_at": 1787615049.4719687,
+    "consecutive_failures": 67
   },
   "Texas Instruments": {
     "jobs": [],
-    "checked_at": 1787612397.7216172,
-    "consecutive_failures": 65
+    "checked_at": 1787615166.1393824,
+    "consecutive_failures": 66
   },
   "Uisce Éireann (Irish Water)": {
     "jobs": [],
-    "checked_at": 1787612399.8189397,
-    "consecutive_failures": 65
+    "checked_at": 1787615168.5031826,
+    "consecutive_failures": 66
   },
   "WuXi Biologics": {
     "jobs": [],
-    "checked_at": 1787612409.6702127,
-    "consecutive_failures": 65
+    "checked_at": 1787615180.6687214,
+    "consecutive_failures": 66
   },
   "Waters Corporation": {
     "jobs": [],
@@ -17324,7 +17324,7 @@
         "source": "takeda_direct",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-24T23:24:56.766410+00:00",
         "posted_age_known": false
       },
@@ -17399,7 +17399,7 @@
         "source": "takeda_direct",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-24T23:24:56.766410+00:00",
         "posted_age_known": false
       }
@@ -18128,7 +18128,7 @@
         "source": "siemens_direct_http",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-24T23:24:56.766410+00:00",
         "posted_age_known": false
       },
@@ -18143,7 +18143,7 @@
         "source": "siemens_direct_http",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-24T23:24:56.766410+00:00",
         "posted_age_known": false
       },
@@ -18158,7 +18158,7 @@
         "source": "siemens_direct_http",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-24T23:24:56.766410+00:00",
         "posted_age_known": false
       },
@@ -18173,7 +18173,7 @@
         "source": "siemens_direct_http",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-24T23:24:56.766410+00:00",
         "posted_age_known": false
       },
@@ -18188,7 +18188,7 @@
         "source": "siemens_direct_http",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-24T23:24:56.766410+00:00",
         "posted_age_known": false
       },
@@ -18203,7 +18203,7 @@
         "source": "siemens_direct_http",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-24T23:24:56.766410+00:00",
         "posted_age_known": false
       }
@@ -19059,8 +19059,8 @@
   },
   "Tesco Ireland::batch_dedicated_v1": {
     "jobs": [],
-    "checked_at": 1787612267.9531844,
-    "consecutive_failures": 27
+    "checked_at": 1787615026.209148,
+    "consecutive_failures": 28
   },
   "AstraZeneca::batch_dedicated_v1": {
     "jobs": [
@@ -19817,8 +19817,8 @@
   },
   "DXC Technology::friend_logic_v1": {
     "jobs": [],
-    "checked_at": 1787612239.0855975,
-    "consecutive_failures": 26
+    "checked_at": 1787614994.7001095,
+    "consecutive_failures": 27
   },
   "Tata Consultancy Services (TCS)::friend_logic_v1": {
     "jobs": [
@@ -20575,8 +20575,8 @@
   },
   "Deutsche Bank::friend_logic_v1": {
     "jobs": [],
-    "checked_at": 1787612300.028606,
-    "consecutive_failures": 26
+    "checked_at": 1787615064.7466247,
+    "consecutive_failures": 27
   },
   "Intel::friend_logic_v1": {
     "jobs": [
@@ -21325,11 +21325,6 @@
     "checked_at": 1787610240.3485644,
     "consecutive_failures": 0
   },
-  "Grant Thornton Ireland::oracle_exact_titles_v2": {
-    "jobs": [],
-    "checked_at": 1787613703.8204548,
-    "consecutive_failures": 1
-  },
   "AXA Ireland::friend_nonlive_batch10_v1": {
     "jobs": [
       {
@@ -21656,8 +21651,8 @@
   },
   "Coca-Cola HBC Ireland::friend_nonlive_batch10_v1": {
     "jobs": [],
-    "checked_at": 1787612265.2747388,
-    "consecutive_failures": 16
+    "checked_at": 1787615025.3283417,
+    "consecutive_failures": 17
   },
   "Agilent Technologies::friend_nonlive_batch10_v1": {
     "jobs": [
@@ -21904,13 +21899,13 @@
   },
   "Infosys::friend_nonlive_batch10_v1": {
     "jobs": [],
-    "checked_at": 1787612326.339437,
-    "consecutive_failures": 16
+    "checked_at": 1787615087.0642867,
+    "consecutive_failures": 17
   },
   "Heineken Ireland::friend_next4_v1": {
     "jobs": [],
-    "checked_at": 1787612240.8630877,
-    "consecutive_failures": 15
+    "checked_at": 1787614997.3564482,
+    "consecutive_failures": 16
   },
   "VHI Healthcare::friend_next4_v1": {
     "jobs": [
@@ -22913,18 +22908,18 @@
   },
   "McKinsey & Company::attempt2_plus_new_v2": {
     "jobs": [],
-    "checked_at": 1787612264.12446,
-    "consecutive_failures": 12
+    "checked_at": 1787615019.4140215,
+    "consecutive_failures": 13
   },
   "Schneider Electric::attempt2_plus_new_v2": {
     "jobs": [],
-    "checked_at": 1787612280.6967025,
-    "consecutive_failures": 12
+    "checked_at": 1787615040.2863622,
+    "consecutive_failures": 13
   },
   "Honeywell::attempt2_plus_new_v2": {
     "jobs": [],
-    "checked_at": 1787612281.8306606,
-    "consecutive_failures": 12
+    "checked_at": 1787615040.7748718,
+    "consecutive_failures": 13
   },
   "Aiven": {
     "jobs": [
@@ -23691,177 +23686,963 @@
   },
   "Regeneron": {
     "jobs": [],
-    "checked_at": 1787613695.891246,
+    "checked_at": 1787614996.8991702,
     "consecutive_failures": 1
   },
   "BNY Mellon": {
     "jobs": [],
-    "checked_at": 1787613701.501772,
-    "consecutive_failures": 1
-  },
-  "QIAGEN": {
-    "jobs": [],
-    "checked_at": 1787613734.87196,
-    "consecutive_failures": 1
-  },
-  "Dell Technologies::batch_dedicated_v1": {
-    "jobs": [],
-    "checked_at": 1787613742.5936673,
+    "checked_at": 1787615001.1156394,
     "consecutive_failures": 1
   },
   "Aldi Ireland::batch_dedicated_v2": {
     "jobs": [],
-    "checked_at": 1787613751.3714075,
+    "checked_at": 1787615011.6233177,
     "consecutive_failures": 1
   },
-  "SSE Airtricity / SSE::batch_dedicated_v1": {
+  "Dell Technologies::batch_dedicated_v1": {
     "jobs": [],
-    "checked_at": 1787613762.0462472,
-    "consecutive_failures": 1
-  },
-  "Bristol Myers Squibb::batch_dedicated_v1": {
-    "jobs": [],
-    "checked_at": 1787613763.3009014,
+    "checked_at": 1787615012.8152344,
     "consecutive_failures": 1
   },
   "Stryker::batch_dedicated_v1": {
     "jobs": [],
-    "checked_at": 1787613767.499787,
+    "checked_at": 1787615027.2278526,
+    "consecutive_failures": 1
+  },
+  "SSE Airtricity / SSE::batch_dedicated_v1": {
+    "jobs": [],
+    "checked_at": 1787615033.4678485,
+    "consecutive_failures": 1
+  },
+  "QIAGEN": {
+    "jobs": [],
+    "checked_at": 1787615035.581003,
+    "consecutive_failures": 1
+  },
+  "Grant Thornton Ireland::oracle_exact_titles_v2": {
+    "jobs": [
+      {
+        "company": "Grant Thornton Ireland",
+        "title": "Transport Sector Project Manager – Associate Director/ Director Level",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://ehzq.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/GrantThorntonIrelandExperiencedHires/job/115628",
+        "source": "grant_oracle_job_detail",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T10:27:13.573065+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Grant Thornton Ireland",
+        "title": "Utilities Sector Project Manager – Associate Director / Director",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://ehzq.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/GrantThorntonIrelandExperiencedHires/job/115629",
+        "source": "grant_oracle_job_detail",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T10:27:13.573065+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Grant Thornton Ireland",
+        "title": "Receptionist/ Facilities Co-ordinator - Limerick",
+        "location": "Limerick, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://ehzq.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/GrantThorntonIrelandExperiencedHires/job/115611",
+        "source": "grant_oracle_job_detail",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T10:27:13.573065+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Grant Thornton Ireland",
+        "title": "Marketing Planning & Operations Associate Director",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://ehzq.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/GrantThorntonIrelandExperiencedHires/job/115561",
+        "source": "grant_oracle_job_detail",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T10:27:13.573065+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Grant Thornton Ireland",
+        "title": "Campaign Strategy Associate Director, EMEA",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://ehzq.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/GrantThorntonIrelandExperiencedHires/job/115562",
+        "source": "grant_oracle_job_detail",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T10:27:13.573065+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Grant Thornton Ireland",
+        "title": "Receptionist",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://ehzq.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/GrantThorntonIrelandExperiencedHires/job/115526",
+        "source": "grant_oracle_job_detail",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T10:27:13.573065+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Grant Thornton Ireland",
+        "title": "Interim Head of Legal and Data Protection (Mat Leave Cover)",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://ehzq.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/GrantThorntonIrelandExperiencedHires/job/115397",
+        "source": "grant_oracle_job_detail",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T10:27:13.573065+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Grant Thornton Ireland",
+        "title": "Change Manager – Assistant Manager - Advisory Consulting",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://ehzq.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/GrantThorntonIrelandExperiencedHires/job/115456",
+        "source": "grant_oracle_job_detail",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T10:27:13.573065+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Grant Thornton Ireland",
+        "title": "Human Capital Change Manager – Manager / Associate Director",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://ehzq.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/GrantThorntonIrelandExperiencedHires/job/115450",
+        "source": "grant_oracle_job_detail",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T10:27:13.573065+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Grant Thornton Ireland",
+        "title": "Insurance Project Manager – Manager",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://ehzq.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/GrantThorntonIrelandExperiencedHires/job/115439",
+        "source": "grant_oracle_job_detail",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T10:27:13.573065+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Grant Thornton Ireland",
+        "title": "Executive Assistant",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://ehzq.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/GrantThorntonIrelandExperiencedHires/job/115443",
+        "source": "grant_oracle_job_detail",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T10:27:13.573065+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Grant Thornton Ireland",
+        "title": "Anaplan Developer – Manager / Associate Director",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://ehzq.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/GrantThorntonIrelandExperiencedHires/job/115447",
+        "source": "grant_oracle_job_detail",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T10:27:13.573065+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Grant Thornton Ireland",
+        "title": "International Tax Director",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://ehzq.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/GrantThorntonIrelandExperiencedHires/job/115389",
+        "source": "grant_oracle_job_detail",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T10:27:13.573065+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Grant Thornton Ireland",
+        "title": "Senior - Financial Service Tax",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://ehzq.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/GrantThorntonIrelandExperiencedHires/job/115369",
+        "source": "grant_oracle_job_detail",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T10:27:13.573065+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Grant Thornton Ireland",
+        "title": "HRIS Manager - Oracle HCM",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://ehzq.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/GrantThorntonIrelandExperiencedHires/job/115365",
+        "source": "grant_oracle_job_detail",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T10:27:13.573065+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Grant Thornton Ireland",
+        "title": "Manager - Financial Service Tax",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://ehzq.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/GrantThorntonIrelandExperiencedHires/job/115318",
+        "source": "grant_oracle_job_detail",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T10:27:13.573065+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Grant Thornton Ireland",
+        "title": "Semi Senior - Financial Services Tax",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://ehzq.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/GrantThorntonIrelandExperiencedHires/job/115314",
+        "source": "grant_oracle_job_detail",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T10:27:13.573065+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Grant Thornton Ireland",
+        "title": "Assistant Manager - Financial Services Tax",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://ehzq.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/GrantThorntonIrelandExperiencedHires/job/115316",
+        "source": "grant_oracle_job_detail",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T10:27:13.573065+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Grant Thornton Ireland",
+        "title": "Director - Corporate Tax & Transaction Advisory",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://ehzq.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/GrantThorntonIrelandExperiencedHires/job/115319",
+        "source": "grant_oracle_job_detail",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T10:27:13.573065+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Grant Thornton Ireland",
+        "title": "Social Media Manager",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://ehzq.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/GrantThorntonIrelandExperiencedHires/job/115297",
+        "source": "grant_oracle_job_detail",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T10:27:13.573065+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Grant Thornton Ireland",
+        "title": "Data & AI Internal Product Team – Associate Director",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://ehzq.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/GrantThorntonIrelandExperiencedHires/job/115289",
+        "source": "grant_oracle_job_detail",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T10:27:13.573065+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Grant Thornton Ireland",
+        "title": "Payroll Manager",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://ehzq.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/GrantThorntonIrelandExperiencedHires/job/115284",
+        "source": "grant_oracle_job_detail",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T10:27:13.573065+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Grant Thornton Ireland",
+        "title": "Payroll Assistant Manager",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://ehzq.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/GrantThorntonIrelandExperiencedHires/job/115285",
+        "source": "grant_oracle_job_detail",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T10:27:13.573065+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Grant Thornton Ireland",
+        "title": "Payroll Specialist",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://ehzq.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/GrantThorntonIrelandExperiencedHires/job/115266",
+        "source": "grant_oracle_job_detail",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T10:27:13.573065+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Grant Thornton Ireland",
+        "title": "Tax Incentives Assistant Manager",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://ehzq.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/GrantThorntonIrelandExperiencedHires/job/115267",
+        "source": "grant_oracle_job_detail",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T10:27:13.573065+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Grant Thornton Ireland",
+        "title": "Assistant Manager - Deal Advisory",
+        "location": "Cork, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://ehzq.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/GrantThorntonIrelandExperiencedHires/job/114066",
+        "source": "grant_oracle_job_detail",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T10:27:13.573065+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Grant Thornton Ireland",
+        "title": "Senior- Insurance FAAS",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://ehzq.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/GrantThorntonIrelandExperiencedHires/job/114190",
+        "source": "grant_oracle_job_detail",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T10:27:13.573065+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Grant Thornton Ireland",
+        "title": "Assistant Manager – BPO Global Outsourcing",
+        "location": "Cork, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://ehzq.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/GrantThorntonIrelandExperiencedHires/job/115226",
+        "source": "grant_oracle_job_detail",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T10:27:13.573065+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Grant Thornton Ireland",
+        "title": "Cyber Advisory BRS – Data Protection Senior Consultant",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://ehzq.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/GrantThorntonIrelandExperiencedHires/job/115222",
+        "source": "grant_oracle_job_detail",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T10:27:13.573065+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Grant Thornton Ireland",
+        "title": "Hospitality Executive",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://ehzq.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/GrantThorntonIrelandExperiencedHires/job/115207",
+        "source": "grant_oracle_job_detail",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T10:27:13.573065+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Grant Thornton Ireland",
+        "title": "Healthcare Project Manager - Assistant Manager/Manager - ROI",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://ehzq.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/GrantThorntonIrelandExperiencedHires/job/115200",
+        "source": "grant_oracle_job_detail",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T10:27:13.573065+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Grant Thornton Ireland",
+        "title": "Junior Technical Analyst - Aviation Advisory",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://ehzq.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/GrantThorntonIrelandExperiencedHires/job/115206",
+        "source": "grant_oracle_job_detail",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T10:27:13.573065+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Grant Thornton Ireland",
+        "title": "Associate Director – Corporate Audit",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://ehzq.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/GrantThorntonIrelandExperiencedHires/job/114032",
+        "source": "grant_oracle_job_detail",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T10:27:13.573065+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Grant Thornton Ireland",
+        "title": "Marketing Activation Manager",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://ehzq.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/GrantThorntonIrelandExperiencedHires/job/115185",
+        "source": "grant_oracle_job_detail",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T10:27:13.573065+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Grant Thornton Ireland",
+        "title": "Associate Director - Privacy",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://ehzq.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/GrantThorntonIrelandExperiencedHires/job/115065",
+        "source": "grant_oracle_job_detail",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T10:27:13.573065+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Grant Thornton Ireland",
+        "title": "Assistant Manager / Senior - Deal Advisory - Valuations and Financial Modelling",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://ehzq.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/GrantThorntonIrelandExperiencedHires/job/115132",
+        "source": "grant_oracle_job_detail",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T10:27:13.573065+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Grant Thornton Ireland",
+        "title": "Assistant Manager – Global Statutory Audit",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://ehzq.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/GrantThorntonIrelandExperiencedHires/job/115106",
+        "source": "grant_oracle_job_detail",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T10:27:13.573065+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Grant Thornton Ireland",
+        "title": "Associate Director - Advisory Marketing",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://ehzq.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/GrantThorntonIrelandExperiencedHires/job/115111",
+        "source": "grant_oracle_job_detail",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T10:27:13.573065+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Grant Thornton Ireland",
+        "title": "Strategic Transformation Leader – Finance & Accounting Outsourcing - FAAS",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://ehzq.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/GrantThorntonIrelandExperiencedHires/job/114322",
+        "source": "grant_oracle_job_detail",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T10:27:13.573065+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Grant Thornton Ireland",
+        "title": "Deal Advisory – Associate Director",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://ehzq.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/GrantThorntonIrelandExperiencedHires/job/115085",
+        "source": "grant_oracle_job_detail",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T10:27:13.573065+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Grant Thornton Ireland",
+        "title": "Deal Advisory – Assistant Manager",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://ehzq.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/GrantThorntonIrelandExperiencedHires/job/115087",
+        "source": "grant_oracle_job_detail",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T10:27:13.573065+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Grant Thornton Ireland",
+        "title": "Director - Brand Communications",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://ehzq.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/GrantThorntonIrelandExperiencedHires/job/114876",
+        "source": "grant_oracle_job_detail",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T10:27:13.573065+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Grant Thornton Ireland",
+        "title": "Central Operations Manager - Office of the COO",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://ehzq.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/GrantThorntonIrelandExperiencedHires/job/114868",
+        "source": "grant_oracle_job_detail",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T10:27:13.573065+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Grant Thornton Ireland",
+        "title": "Associate Director – Global Statutory Audit",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://ehzq.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/GrantThorntonIrelandExperiencedHires/job/113941",
+        "source": "grant_oracle_job_detail",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T10:27:13.573065+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Grant Thornton Ireland",
+        "title": "Infrastructure Director – Health\\Public Sector Advisory",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://ehzq.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/GrantThorntonIrelandExperiencedHires/job/114779",
+        "source": "grant_oracle_job_detail",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T10:27:13.573065+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Grant Thornton Ireland",
+        "title": "Associate Director / Manager Insurance Risk and Actuarial Dublin, Ireland (Hybrid)",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://ehzq.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/GrantThorntonIrelandExperiencedHires/job/114280",
+        "source": "grant_oracle_job_detail",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T10:27:13.573065+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Grant Thornton Ireland",
+        "title": "International Tax Assistant Manager",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://ehzq.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/GrantThorntonIrelandExperiencedHires/job/114182",
+        "source": "grant_oracle_job_detail",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T10:27:13.573065+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Grant Thornton Ireland",
+        "title": "Global Compliance and Reporting Solutions Associate Director - FAAS",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://ehzq.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/GrantThorntonIrelandExperiencedHires/job/113805",
+        "source": "grant_oracle_job_detail",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T10:27:13.573065+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Grant Thornton Ireland",
+        "title": "International Tax Associate Director",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://ehzq.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/GrantThorntonIrelandExperiencedHires/job/113835",
+        "source": "grant_oracle_job_detail",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T10:27:13.573065+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Grant Thornton Ireland",
+        "title": "Manager - Corporate Audit - Dublin",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://ehzq.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/GrantThorntonIrelandExperiencedHires/job/113874",
+        "source": "grant_oracle_job_detail",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T10:27:13.573065+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Grant Thornton Ireland",
+        "title": "Global Compliance and Reporting Solutions Manager - FAAS",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://ehzq.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/GrantThorntonIrelandExperiencedHires/job/114057",
+        "source": "grant_oracle_job_detail",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T10:27:13.573065+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Grant Thornton Ireland",
+        "title": "Tax Manager – Corporate Tax and Transaction Advisory",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://ehzq.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/GrantThorntonIrelandExperiencedHires/job/114063",
+        "source": "grant_oracle_job_detail",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T10:27:13.573065+00:00",
+        "posted_age_known": false
+      }
+    ],
+    "checked_at": 1787615036.1795716,
+    "consecutive_failures": 0
+  },
+  "Oracle::attempt2_plus_new_v2": {
+    "jobs": [],
+    "checked_at": 1787615038.5643637,
+    "consecutive_failures": 1
+  },
+  "Bristol Myers Squibb::batch_dedicated_v1": {
+    "jobs": [],
+    "checked_at": 1787615041.8029304,
     "consecutive_failures": 1
   },
   "HP (Hewlett-Packard)::friend_next4_v1": {
     "jobs": [],
-    "checked_at": 1787613772.8858984,
-    "consecutive_failures": 1
-  },
-  "Oracle::attempt2_plus_new_v2": {
-    "jobs": [],
-    "checked_at": 1787613775.178488,
+    "checked_at": 1787615042.0400069,
     "consecutive_failures": 1
   },
   "Central Bank of Ireland": {
     "jobs": [],
-    "checked_at": 1787613777.7226937,
+    "checked_at": 1787615043.3779166,
     "consecutive_failures": 1
   },
   "Red Hat": {
     "jobs": [],
-    "checked_at": 1787613790.3021574,
-    "consecutive_failures": 1
-  },
-  "BDO Ireland": {
-    "jobs": [],
-    "checked_at": 1787613820.4064,
+    "checked_at": 1787615050.5562766,
     "consecutive_failures": 1
   },
   "Cantor Fitzgerald Ireland": {
     "jobs": [],
-    "checked_at": 1787613821.1024847,
+    "checked_at": 1787615058.1388488,
     "consecutive_failures": 1
   },
   "Willis Towers Watson (WTW)": {
     "jobs": [],
-    "checked_at": 1787613826.8409393,
+    "checked_at": 1787615062.8077905,
     "consecutive_failures": 1
   },
   "Aviva Ireland": {
     "jobs": [],
-    "checked_at": 1787613827.0255153,
+    "checked_at": 1787615063.2743363,
     "consecutive_failures": 1
   },
-  "Glanbia / Tirlán": {
+  "BDO Ireland": {
     "jobs": [],
-    "checked_at": 1787613829.088508,
+    "checked_at": 1787615065.0256488,
     "consecutive_failures": 1
   },
   "Fitch Ratings": {
     "jobs": [],
-    "checked_at": 1787613830.5911682,
+    "checked_at": 1787615069.3151176,
     "consecutive_failures": 1
   },
-  "Slalom": {
+  "Glanbia / Tirlán": {
     "jobs": [],
-    "checked_at": 1787613835.7182572,
+    "checked_at": 1787615070.011912,
     "consecutive_failures": 1
   },
   "UBS": {
     "jobs": [],
-    "checked_at": 1787613836.5660248,
+    "checked_at": 1787615070.9296837,
     "consecutive_failures": 1
   },
-  "ABP Food Group": {
+  "Slalom": {
     "jobs": [],
-    "checked_at": 1787613842.2997224,
-    "consecutive_failures": 1
-  },
-  "Alexion Pharmaceuticals": {
-    "jobs": [],
-    "checked_at": 1787613843.1982684,
+    "checked_at": 1787615071.3062348,
     "consecutive_failures": 1
   },
   "Zurich Insurance": {
     "jobs": [],
-    "checked_at": 1787613845.1972075,
+    "checked_at": 1787615074.8424459,
     "consecutive_failures": 1
   },
-  "Baxter International": {
+  "ABP Food Group": {
     "jobs": [],
-    "checked_at": 1787613846.884526,
+    "checked_at": 1787615076.662139,
+    "consecutive_failures": 1
+  },
+  "Alexion Pharmaceuticals": {
+    "jobs": [],
+    "checked_at": 1787615076.9012868,
     "consecutive_failures": 1
   },
   "Coillte": {
     "jobs": [],
-    "checked_at": 1787613849.8202763,
+    "checked_at": 1787615079.7807446,
     "consecutive_failures": 1
   },
-  "ESB (Electricity Supply Board)": {
+  "Baxter International": {
     "jobs": [],
-    "checked_at": 1787613853.057922,
-    "consecutive_failures": 1
-  },
-  "Eir": {
-    "jobs": [],
-    "checked_at": 1787613853.1931534,
+    "checked_at": 1787615080.2223492,
     "consecutive_failures": 1
   },
   "Cook Medical": {
     "jobs": [],
-    "checked_at": 1787613853.223575,
+    "checked_at": 1787615082.9582722,
     "consecutive_failures": 1
   },
   "Gas Networks Ireland": {
     "jobs": [],
-    "checked_at": 1787613855.71645,
+    "checked_at": 1787615085.9718416,
+    "consecutive_failures": 1
+  },
+  "ESB (Electricity Supply Board)": {
+    "jobs": [],
+    "checked_at": 1787615087.464632,
+    "consecutive_failures": 1
+  },
+  "Eir": {
+    "jobs": [],
+    "checked_at": 1787615088.0456393,
     "consecutive_failures": 1
   },
   "Kepak Group": {
     "jobs": [],
-    "checked_at": 1787613859.3089082,
+    "checked_at": 1787615089.6666486,
     "consecutive_failures": 1
   },
   "Sky Ireland": {
     "jobs": [],
-    "checked_at": 1787613859.4401233,
+    "checked_at": 1787615091.9232566,
     "consecutive_failures": 1
   },
   "Revvity (PerkinElmer)": {
     "jobs": [],
-    "checked_at": 1787613861.6046014,
-    "consecutive_failures": 1
-  },
-  "GlaxoSmithKline (GSK)": {
-    "jobs": [],
-    "checked_at": 1787613862.9298189,
-    "consecutive_failures": 1
-  },
-  "Haleon": {
-    "jobs": [],
-    "checked_at": 1787613863.3904643,
+    "checked_at": 1787615094.678375,
     "consecutive_failures": 1
   },
   "Boston Consulting Group (BCG)": {
     "jobs": [],
-    "checked_at": 1787613866.4039721,
+    "checked_at": 1787615110.5772884,
+    "consecutive_failures": 1
+  },
+  "Haleon": {
+    "jobs": [],
+    "checked_at": 1787615145.377833,
+    "consecutive_failures": 1
+  },
+  "GlaxoSmithKline (GSK)": {
+    "jobs": [],
+    "checked_at": 1787615148.3945162,
     "consecutive_failures": 1
   }
 }
