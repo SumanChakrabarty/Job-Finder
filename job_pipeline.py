@@ -7988,18 +7988,21 @@ def scrape_bms_ireland(session):
 
 
 def scrape_sse_ireland(session):
+    # The previous run found 2 verified ROI jobs but the outer 60s task
+    # timeout fired while it was still walking 70+ global candidate URLs.
+    # Restrict discovery to Ireland/Dublin-focused result pages and cap
+    # detail verification so valid ROI jobs are returned in time.
     return _batch_first_party_roi_scrape(
         "SSE Airtricity / SSE",
         [
-            "https://careers.sse.com/jobs/search",
             "https://careers.sse.com/jobs/search?page=1&query=Dublin",
-            "https://careers.sse.com/jobs/search?page=2&query=",
+            "https://careers.sse.com/jobs/search?page=1&query=Ireland",
         ],
         ["careers.sse.com"],
         ["/jobs/", "/job/"],
         session,
         "sse_first_party",
-        50,
+        18,
     )
 
 
@@ -8032,6 +8035,84 @@ def scrape_dell_ireland(session):
         "dell_first_party",
         80,
     )
+
+
+def scrape_tesco_ireland(session):
+    return _batch_first_party_roi_scrape(
+        "Tesco Ireland",
+        [
+            "https://apply.tesco-careers.com/v2/job/search?location=Dublin&location_country=106",
+            "https://apply.tesco-careers.com/v2/job/search?location=Cork&location_country=106",
+            "https://apply.tesco-careers.com/v2/job/search?location_country=106",
+        ],
+        ["apply.tesco-careers.com"],
+        ["/v2/job/"],
+        session,
+        "tesco_first_party",
+        45,
+    )
+
+
+def scrape_aldi_ireland(session):
+    return _batch_first_party_roi_scrape(
+        "Aldi Ireland",
+        [
+            "https://careers.aldirecruitment.ie/vacancies/vacancy-search-results.aspx",
+        ],
+        ["careers.aldirecruitment.ie"],
+        ["vacancy-details", "/vacancies/"],
+        session,
+        "aldi_first_party",
+        45,
+    )
+
+
+def scrape_fbd_ireland(session):
+    return _batch_first_party_roi_scrape(
+        "FBD Insurance",
+        [
+            "https://careers.fbdgroup.com/",
+            "https://careers.fbdgroup.com/search/",
+        ],
+        ["careers.fbdgroup.com"],
+        ["/job/", "/jobs/"],
+        session,
+        "fbd_first_party",
+        35,
+    )
+
+
+def scrape_capgemini_ireland(session):
+    return _batch_first_party_roi_scrape(
+        "Capgemini",
+        [
+            "https://careers.capgemini.com/search/?q=&locationsearch=Dublin",
+            "https://careers.capgemini.com/search/?q=&locationsearch=Ireland",
+            "https://careers.capgemini.com/job/",
+        ],
+        ["careers.capgemini.com"],
+        ["/job/"],
+        session,
+        "capgemini_first_party",
+        45,
+    )
+
+
+def scrape_vodafone_ireland(session):
+    return _batch_first_party_roi_scrape(
+        "Vodafone Ireland",
+        [
+            "https://careers.vodafone.com/ireland/",
+            "https://careers.vodafone.com/search/?q=&locationsearch=Ireland",
+            "https://careers.vodafone.com/search/?q=&locationsearch=Dublin",
+        ],
+        ["careers.vodafone.com"],
+        ["/job/", "/jobs/", "/search/"],
+        session,
+        "vodafone_first_party",
+        40,
+    )
+
 
 def test_single_company(name):
     """Fast test mode for one company — skips the full ~30 min pipeline
@@ -8069,6 +8150,11 @@ def test_single_company(name):
         "sse airtricity / sse": lambda: scrape_sse_ireland(session),
         "hewlett packard enterprise (hpe)": lambda: scrape_hpe_ireland(session),
         "dell technologies": lambda: scrape_dell_ireland(session),
+        "tesco ireland": lambda: scrape_tesco_ireland(session),
+        "aldi ireland": lambda: scrape_aldi_ireland(session),
+        "fbd insurance": lambda: scrape_fbd_ireland(session),
+        "capgemini": lambda: scrape_capgemini_ireland(session),
+        "vodafone ireland": lambda: scrape_vodafone_ireland(session),
         "pepsico": lambda: scrape_pepsico_ireland(session),
         "esb": lambda: scrape_esb_ireland(session),
         "irish rail": lambda: scrape_irish_rail_ireland(session),
@@ -8250,6 +8336,7 @@ def scrape_aer_lingus_ireland_recovery(session):
     )
 
 def main():
+    print("=== FAST_BATCH_6_NEXT ACTIVE: SSE fast-return + Tesco/Aldi/FBD/Capgemini/Vodafone dedicated routes ===")
     print("=== FAST_BATCH_5_RECOVERY ACTIVE: Goodbody/BMS/SSE/HPE/Dell dedicated first-party routes; runtime architecture unchanged ===")
     print("=== FAST_MERIT_MEDICAL_FIX ACTIVE: official Merit Workday route; runtime architecture unchanged ===")
     print("=== FAST_GUIDEWIRE_QUALITY_FIX ACTIVE: verified Guidewire ROI jobs no longer rejected only for URL shape ===")
@@ -8514,6 +8601,11 @@ def main():
         ("exact", "sse airtricity / sse", scrape_sse_ireland, 60, "official SSE careers"),
         ("exact", "hewlett packard enterprise (hpe)", scrape_hpe_ireland, 60, "official HPE careers"),
         ("exact", "dell technologies", scrape_dell_ireland, 60, "official Dell careers"),
+        ("exact", "tesco ireland", scrape_tesco_ireland, 60, "official Tesco Ireland careers"),
+        ("exact", "aldi ireland", scrape_aldi_ireland, 60, "official Aldi Ireland careers"),
+        ("exact", "fbd insurance", scrape_fbd_ireland, 60, "official FBD careers"),
+        ("exact", "capgemini", scrape_capgemini_ireland, 60, "official Capgemini careers"),
+        ("exact", "vodafone ireland", scrape_vodafone_ireland, 60, "official Vodafone Ireland careers"),
         ("exact", "aib (allied irish banks)", scrape_aib_ireland, 240, "filtered against UK-only postings"),
         ("exact", "bnp paribas ireland", scrape_bnp_paribas_ireland, 240, "first-party Dublin jobs page"),
         ("exact", "blackrock", scrape_blackrock_ireland, 240, "Phenom platform"),
@@ -8598,6 +8690,8 @@ def main():
         "scrape_iqvia_ireland",
         "scrape_goodbody_ireland", "scrape_bms_ireland", "scrape_sse_ireland",
         "scrape_hpe_ireland", "scrape_dell_ireland",
+        "scrape_tesco_ireland", "scrape_aldi_ireland", "scrape_fbd_ireland",
+        "scrape_capgemini_ireland", "scrape_vodafone_ireland",
     }
 
     _live_company_names = {
@@ -8649,6 +8743,11 @@ def main():
                 "sse airtricity / sse",
                 "hewlett packard enterprise (hpe)",
                 "dell technologies",
+                "tesco ireland",
+                "aldi ireland",
+                "fbd insurance",
+                "capgemini",
+                "vodafone ireland",
             }:
                 cache_key = f"{name}::batch_dedicated_v1"
             else:
@@ -8754,6 +8853,11 @@ def main():
             "sse airtricity / sse",
             "hewlett packard enterprise (hpe)",
             "dell technologies",
+            "tesco ireland",
+            "aldi ireland",
+            "fbd insurance",
+            "capgemini",
+            "vodafone ireland",
         }
     ]
     for entry in priority_entries:
