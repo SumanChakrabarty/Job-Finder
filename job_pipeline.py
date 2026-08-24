@@ -7473,6 +7473,300 @@ def scrape_wipro_ireland(session):
 
 
 
+
+def scrape_iqvia_ireland(session):
+    """Dedicated IQVIA scraper via IQVIA's own Sitemap -> Ireland Jobs page.
+
+    The generic/global /en/jobs page does not reliably expose location on cards,
+    and query parameters were observed to be ignored. IQVIA's first-party
+    sitemap explicitly exposes an "Ireland Jobs" location page, which is the
+    correct country-scoped discovery surface.
+    """
+    if not HAS_PLAYWRIGHT:
+        print("      [iqvia] Playwright unavailable")
+        return []
+
+    base = "https://jobs.iqvia.com"
+    candidate_urls = set()
+    ireland_page_url = None
+
+    try:
+        with sync_playwright() as p:
+            browser = p.chromium.launch(
+                headless=True,
+                args=["--no-sandbox", "--disable-dev-shm-usage", "--disable-gpu"],
+            )
+            page = browser.new_page(
+                viewport={"width": 1400, "height": 1000},
+                user_agent=HEADERS.get("User-Agent"),
+            )
+
+            # 1) Resolve the current Ireland location page from IQVIA's own sitemap.
+            try:
+                page.goto(f"{base}/en/sitemap", wait_until="domcontentloaded", timeout=45000)
+                page.wait_for_timeout(2500)
+
+                links = page.locator("a[href]")
+                for i in range(min(links.count(), 2500)):
+                    a = links.nth(i)
+                    try:
+                        txt = re.sub(r"\s+", " ", a.inner_text()).strip()
+                        href = a.get_attribute("href")
+                    except Exception:
+                        continue
+                    if not href:
+                        continue
+                    if re.fullmatch(r"Ireland Jobs", txt, re.I):
+                        ireland_page_url = urllib.parse.urljoin(page.url, href).split("#")[0]
+                        break
+
+                # Fallback: search the sitemap HTML for a location URL containing Ireland.
+                if not ireland_page_url:
+                    sitemap_html = page.content()
+                    mm = re.search(
+                        r'href=["\']([^"\']*(?:ireland|%C3%A9ire)[^"\']*)["\'][^>]*>'
+                        r'[^<]*Ireland Jobs',
+                        sitemap_html,
+                        re.I,
+                    )
+                    if mm:
+                        ireland_page_url = urllib.parse.urljoin(
+                            page.url, html.unescape(mm.group(1))
+                        ).split("#")[0]
+            except Exception as exc:
+                print(f"      [iqvia] sitemap resolution failed: {exc}")
+
+            if not ireland_page_url:
+                print("      [iqvia] could not resolve first-party Ireland Jobs page from sitemap")
+                browser.close()
+                return []
+
+            print(f"      [iqvia] Ireland Jobs page: {ireland_page_url}")
+
+            # 2) Walk the Ireland-scoped location page.
+            # IQVIA location pages usually paginate with ?page=N.
+            no_new_pages = 0
+            for page_no in range(1, 21):
+                if page_no == 1:
+                    url = ireland_page_url
+                else:
+                    sep = "&" if "?" in ireland_page_url else "?"
+                    url = f"{ireland_page_url}{sep}page={page_no}"
+
+                try:
+                    page.goto(url, wait_until="domcontentloaded", timeout=45000)
+                    page.wait_for_timeout(1800)
+                except Exception:
+                    break
+
+                found = set()
+                links = page.locator('a[href*="/en/jobs/R"]')
+                for i in range(min(links.count(), 300)):
+                    try:
+                        href = links.nth(i).get_attribute("href")
+                    except Exception:
+                        continue
+                    if not href:
+                        continue
+                    href = urllib.parse.urljoin(page.url, href).split("#")[0]
+                    if re.search(
+                        r"^https://jobs\.iqvia\.com/en/jobs/R\d+(?:-\d+)?/?$",
+                        href,
+                        re.I,
+                    ):
+                        found.add(href)
+
+                # Current/legacy IQVIA detail format fallback:
+                # /en/job/<city>/<slug>/<numbers>/<numbers>
+                legacy = page.locator('a[href*="/en/job/"]')
+                for i in range(min(legacy.count(), 300)):
+                    try:
+                        href = legacy.nth(i).get_attribute("href")
+                    except Exception:
+                        continue
+                    if not href:
+                        continue
+                    href = urllib.parse.urljoin(page.url, href).split("#")[0]
+                    if "/en/job/" in href:
+                        found.add(href)
+
+                before = len(candidate_urls)
+                candidate_urls.update(found)
+
+                print(
+                    f"      [iqvia] Ireland page={page_no}: "
+                    f"{len(found)} vacancy URLs ({len(candidate_urls)} unique)"
+                )
+
+                if len(candidate_urls) == before:
+                    no_new_pages += 1
+                else:
+                    no_new_pages = 0
+
+                # Two consecutive pages with no new jobs means the location
+                # listing has ended or page=N is ignored.
+                if no_new_pages >= 2:
+                    break
+
+            if not candidate_urls:
+                browser.close()
+                print("      [iqvia] Ireland location page exposed 0 vacancy URLs")
+                return []
+
+            # 3) Verify each detail page in rendered DOM.
+            results = {}
+
+            for url in sorted(candidate_urls):
+                try:
+                    page.goto(url, wait_until="domcontentloaded", timeout=35000)
+                    page.wait_for_timeout(900)
+
+                    body = re.sub(r"\s+", " ", page.locator("body").inner_text()).strip()
+
+                    title = ""
+                    try:
+                        title = re.sub(
+                            r"\s+", " ",
+                            page.locator("h1").first.inner_text()
+                        ).strip()
+                    except Exception:
+                        pass
+
+                    if not title or _looks_like_non_job_title(title):
+                        continue
+
+                    # IQVIA header examples:
+                    # Dublin, Ireland | Full time | Hybrid | R...
+                    # Galway County, Ireland | Full time | Field-based | R...
+                    # Wexford, Ireland | Full time | Office-based | R...
+                    # IQVIA LOCATION CLEANUP
+                    # Extract a location from the vacancy detail itself, but
+                    # never allow surrounding job-title/navigation text to
+                    # become part of the location.
+                    #
+                    # Examples to normalize:
+                    #   "Unix Systems Engineer Dublin, Ireland"
+                    #       -> "Dublin, Ireland"
+                    #   "homebased Dublin, Ireland"
+                    #       -> "Dublin, Ireland"
+                    #   "Wexford, Ireland"
+                    #       -> "Wexford, Ireland"
+                    #
+                    # This is geographic parsing only. It does NOT use job-title
+                    # keywords and does not affect whether a vacancy is relevant
+                    # to the user's CV.
+                    loc = ""
+
+                    roi_place_patterns = [
+                        (r"\bDublin\b", "Dublin"),
+                        (r"\bCork\b", "Cork"),
+                        (r"\bGalway(?:\s+County)?\b", "Galway"),
+                        (r"\bLimerick\b", "Limerick"),
+                        (r"\bWexford\b", "Wexford"),
+                        (r"\bWaterford\b", "Waterford"),
+                        (r"\bAthlone\b", "Athlone"),
+                        (r"\bSligo\b", "Sligo"),
+                        (r"\bKildare\b", "Kildare"),
+                        (r"\bKilkenny\b", "Kilkenny"),
+                        (r"\bClare\b", "Clare"),
+                        (r"\bTipperary\b", "Tipperary"),
+                        (r"\bMeath\b", "Meath"),
+                        (r"\bLouth\b", "Louth"),
+                        (r"\bMayo\b", "Mayo"),
+                        (r"\bWicklow\b", "Wicklow"),
+                        (r"\bDonegal\b", "Donegal"),
+                    ]
+
+                    # Prefer the header/metadata area before the main description.
+                    # IQVIA normally presents:
+                    #   <location> | Full time | <work mode> | R...
+                    header_text = body[:3500]
+
+                    # First, look for an explicit Republic-of-Ireland place that
+                    # is immediately associated with ", Ireland".
+                    for place_re, canonical_place in roi_place_patterns:
+                        if re.search(
+                            rf"{place_re}\s*,\s*Ireland\b",
+                            header_text,
+                            re.I,
+                        ):
+                            loc = f"{canonical_place}, Ireland"
+                            break
+
+                    # Some multi-location IQVIA roles have the Ireland location
+                    # farther down the page. Search the whole vacancy only when
+                    # the header did not provide a clean ROI place.
+                    if not loc:
+                        for place_re, canonical_place in roi_place_patterns:
+                            if re.search(
+                                rf"{place_re}\s*,\s*Ireland\b",
+                                body,
+                                re.I,
+                            ):
+                                loc = f"{canonical_place}, Ireland"
+                                break
+
+                    # Last resort: a detail page explicitly scoped simply to
+                    # "Ireland | ..." with no city.
+                    if not loc and re.search(
+                        r"(?:^|\s)Ireland\s*\|\s*(?:Full|Part|Contract|Temporary|"
+                        r"Permanent|Remote|Hybrid|Office|Field)",
+                        header_text,
+                        re.I,
+                    ):
+                        loc = "Ireland"
+
+                    if not is_republic_of_ireland_location(loc):
+                        continue
+                    if _ROI_NEGATIVE_RE.search(loc):
+                        continue
+
+                    # Canonicalize whitespace and punctuation for dashboard use.
+                    loc = re.sub(r"\s+", " ", loc).strip(" ,|-")
+                    if loc.lower() != "ireland" and not loc.lower().endswith(", ireland"):
+                        # A named ROI city/county should always render uniformly.
+                        loc = f"{loc}, Ireland"
+
+                    posted_text = "Unknown"
+                    # IQVIA does not consistently expose a posting date.
+                    employment = "Unspecified"
+                    header_match = re.search(
+                        re.escape(loc) + r"\s*\|\s*([^|]{2,40})",
+                        body,
+                        re.I,
+                    )
+                    if header_match:
+                        employment = normalize_employment_type(
+                            header_match.group(1), title
+                        )
+
+                    sponsorship, snippet = classify_sponsorship(body[:18000])
+
+                    results[page.url.rstrip("/").lower()] = {
+                        "company": "IQVIA",
+                        "title": title[:300],
+                        "location": loc,
+                        "posted_text": posted_text,
+                        "posted_days_ago": None,
+                        "employment_type": employment,
+                        "url": page.url,
+                        "source": "iqvia_ireland_location_page",
+                        "visa_sponsorship": sponsorship,
+                        "visa_snippet": snippet,
+                    }
+                except Exception:
+                    continue
+
+            browser.close()
+
+    except Exception as exc:
+        print(f"      [iqvia] Ireland-location recovery failed: {exc}")
+        return []
+
+    jobs = list(results.values())
+    print(f"      [iqvia] {len(jobs)} verified Republic-of-Ireland vacancies")
+    return jobs
+
 def test_single_company(name):
     """Fast test mode for one company — skips the full ~30 min pipeline
     entirely. Checks known dedicated scrapers by name directly (Apple,
@@ -7502,6 +7796,7 @@ def test_single_company(name):
         "eaton": lambda: scrape_eaton_ireland(session),
         "cognizant": lambda: scrape_cognizant_ireland(session),
         "wipro": lambda: scrape_wipro_ireland(session),
+        "iqvia": lambda: scrape_iqvia_ireland(session),
         "pepsico": lambda: scrape_pepsico_ireland(session),
         "esb": lambda: scrape_esb_ireland(session),
         "irish rail": lambda: scrape_irish_rail_ireland(session),
@@ -7683,6 +7978,7 @@ def scrape_aer_lingus_ireland_recovery(session):
     )
 
 def main():
+    print("=== FAST_BASELINE_IQVIA_ONLY ACTIVE: proven IQVIA Ireland scraper added; runtime architecture unchanged ===")
     print("=== WIPRO_UNKNOWN_DATE_FIX ACTIVE: rendered date if available; otherwise Unknown ===")
     print("=== WIPRO_DATE_FIX ACTIVE: SuccessFactors posting dates parsed from labels/HTML attributes ===")
     print("=== WIPRO_SEARCH_FIX ACTIVE: uses SuccessFactors /search/ endpoint, not /viewalljobs/ ===")
@@ -7936,6 +8232,7 @@ def main():
         ("exact", "eaton", scrape_eaton_ireland, 240, "first-party jobs.eaton.com"),
         ("exact", "cognizant", scrape_cognizant_ireland, 240, "verifies Ireland per job detail page"),
         ("exact", "wipro", scrape_wipro_ireland, 75, "first-party Wipro vacancy records + City/State verification"),
+        ("exact", "iqvia", scrape_iqvia_ireland, 90, "first-party IQVIA Ireland Jobs page"),
         ("exact", "aib (allied irish banks)", scrape_aib_ireland, 240, "filtered against UK-only postings"),
         ("exact", "bnp paribas ireland", scrape_bnp_paribas_ireland, 240, "first-party Dublin jobs page"),
         ("exact", "blackrock", scrape_blackrock_ireland, 240, "Phenom platform"),
@@ -8017,6 +8314,7 @@ def main():
         "scrape_siemens_ireland",
         "scrape_wtw_ireland_direct", "scrape_guidewire_ireland_direct_http",
         "scrape_wipro_ireland",
+        "scrape_iqvia_ireland",
     }
 
     _live_company_names = {
@@ -8054,7 +8352,11 @@ def main():
             matched_entries[company_name] = entry
 
         def make_task(fn=scraper_fn, name=company_name):
-            return lambda: cached_browser_scrape(browser_cache, name, lambda: fn(session), 0, name)
+            # IQVIA has a dedicated Ireland scraper now. Keep its cache separate
+            # from the old generic Sheet-2 zero-result cache so the proven
+            # dedicated result cannot be shadowed by a stale generic verdict.
+            cache_key = "IQVIA::ireland_dedicated_v1" if name.strip().lower() == "iqvia" else name
+            return lambda: cached_browser_scrape(browser_cache, cache_key, lambda: fn(session), 0, name)
 
         actual_timeout = effective_timeout(browser_cache, company_name, timeout_s)
         if actual_timeout < timeout_s:
@@ -8148,6 +8450,7 @@ def main():
         if entry["company"].strip().lower() in PRIORITY_SHEET2_COMPANIES
         and entry["company"].strip().lower() not in {
             "wipro",  # dedicated first-party vacancy scraper
+            "iqvia",  # dedicated first-party Ireland Jobs scraper
         }
     ]
     for entry in priority_entries:
