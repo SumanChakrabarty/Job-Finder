@@ -8024,8 +8024,8 @@
   },
   "BNP Paribas Ireland": {
     "jobs": [],
-    "checked_at": 1787534459.270881,
-    "consecutive_failures": 104
+    "checked_at": 1787537196.209857,
+    "consecutive_failures": 105
   },
   "AIB (Allied Irish Banks)": {
     "jobs": [
@@ -9642,8 +9642,8 @@
   },
   "Three Ireland": {
     "jobs": [],
-    "checked_at": 1787534477.1181233,
-    "consecutive_failures": 102
+    "checked_at": 1787537211.1149168,
+    "consecutive_failures": 103
   },
   "Aiven": {
     "jobs": [
@@ -12338,27 +12338,22 @@
   },
   "Alvarez & Marsal": {
     "jobs": [],
-    "checked_at": 1787534555.1517875,
-    "consecutive_failures": 58
+    "checked_at": 1787537258.5238261,
+    "consecutive_failures": 59
   },
   "AXA Ireland": {
     "jobs": [],
-    "checked_at": 1787534552.6854463,
-    "consecutive_failures": 58
+    "checked_at": 1787537256.4460402,
+    "consecutive_failures": 59
   },
   "Coca-Cola HBC Ireland": {
     "jobs": [],
-    "checked_at": 1787534558.1991441,
-    "consecutive_failures": 58
+    "checked_at": 1787537261.346129,
+    "consecutive_failures": 59
   },
   "FactSet": {
     "jobs": [],
     "checked_at": 1787535919.640522,
-    "consecutive_failures": 58
-  },
-  "FBD Insurance": {
-    "jobs": [],
-    "checked_at": 1787534562.320011,
     "consecutive_failures": 58
   },
   "Dunnes Stores": {
@@ -12564,8 +12559,8 @@
   },
   "Goldman Sachs": {
     "jobs": [],
-    "checked_at": 1787534457.084616,
-    "consecutive_failures": 58
+    "checked_at": 1787537147.762644,
+    "consecutive_failures": 59
   },
   "Fiserv": {
     "jobs": [
@@ -13067,13 +13062,13 @@
   },
   "Dynatrace": {
     "jobs": [],
-    "checked_at": 1787534568.0929465,
-    "consecutive_failures": 56
+    "checked_at": 1787537265.6313298,
+    "consecutive_failures": 57
   },
   "Databricks": {
     "jobs": [],
-    "checked_at": 1787534459.8246987,
-    "consecutive_failures": 52
+    "checked_at": 1787537146.9898915,
+    "consecutive_failures": 53
   },
   "Infosys": {
     "jobs": [],
@@ -13102,8 +13097,8 @@
   },
   "Morgan Stanley": {
     "jobs": [],
-    "checked_at": 1787534456.3589246,
-    "consecutive_failures": 46
+    "checked_at": 1787537145.9242969,
+    "consecutive_failures": 47
   },
   "Moody's": {
     "jobs": [],
@@ -13117,8 +13112,8 @@
   },
   "S&P Global": {
     "jobs": [],
-    "checked_at": 1787534457.387909,
-    "consecutive_failures": 46
+    "checked_at": 1787537145.821342,
+    "consecutive_failures": 47
   },
   "Refinitiv (LSEG)": {
     "jobs": [],
@@ -13482,8 +13477,8 @@
   },
   "Aer Lingus": {
     "jobs": [],
-    "checked_at": 1787534458.9134698,
-    "consecutive_failures": 45
+    "checked_at": 1787537146.634931,
+    "consecutive_failures": 46
   },
   "Akamai": {
     "jobs": [],
@@ -13522,8 +13517,8 @@
   },
   "Visa": {
     "jobs": [],
-    "checked_at": 1787534456.0133886,
-    "consecutive_failures": 42
+    "checked_at": 1787537144.2274423,
+    "consecutive_failures": 43
   },
   "Applied Materials": {
     "jobs": [],
@@ -13532,8 +13527,8 @@
   },
   "Bausch + Lomb": {
     "jobs": [],
-    "checked_at": 1787534495.0026095,
-    "consecutive_failures": 44
+    "checked_at": 1787537216.6721356,
+    "consecutive_failures": 45
   },
   "Boehringer Ingelheim": {
     "jobs": [],
@@ -14142,8 +14137,8 @@
   },
   "Edwards Lifesciences": {
     "jobs": [],
-    "checked_at": 1787534499.7589655,
-    "consecutive_failures": 44
+    "checked_at": 1787537218.9881878,
+    "consecutive_failures": 45
   },
   "Dairygold": {
     "jobs": [],
@@ -16670,8 +16665,8 @@
   },
   "Teva Pharmaceuticals": {
     "jobs": [],
-    "checked_at": 1787534504.103744,
-    "consecutive_failures": 40
+    "checked_at": 1787537219.5322738,
+    "consecutive_failures": 41
   },
   "Texas Instruments": {
     "jobs": [],
@@ -18881,8 +18876,8 @@
   },
   "Dell Technologies::batch_dedicated_v1": {
     "jobs": [],
-    "checked_at": 1787534470.7969303,
-    "consecutive_failures": 1
+    "checked_at": 1787537158.283211,
+    "consecutive_failures": 2
   },
   "Hewlett Packard Enterprise (HPE)::batch_dedicated_v1": {
     "jobs": [
@@ -18937,8 +18932,8 @@
   },
   "Bristol Myers Squibb::batch_dedicated_v1": {
     "jobs": [],
-    "checked_at": 1787534502.439269,
-    "consecutive_failures": 1
+    "checked_at": 1787537190.7956598,
+    "consecutive_failures": 2
   },
   "SSE Airtricity / SSE::batch_dedicated_v1": {
     "jobs": [
@@ -18953,7 +18948,7 @@
         "source": "sse_first_party",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-24T01:47:58.944741+00:00",
         "posted_age_known": false
       },
@@ -18968,7 +18963,7 @@
         "source": "sse_first_party",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-24T01:47:58.944741+00:00",
         "posted_age_known": false
       }
@@ -18976,34 +18971,9 @@
     "checked_at": 1787534545.0766373,
     "consecutive_failures": 0
   },
-  "Regeneron": {
-    "jobs": [],
-    "checked_at": 1787535840.751078,
-    "consecutive_failures": 1
-  },
-  "BNY Mellon": {
-    "jobs": [],
-    "checked_at": 1787535842.0052826,
-    "consecutive_failures": 1
-  },
-  "Oracle": {
-    "jobs": [],
-    "checked_at": 1787535843.2243762,
-    "consecutive_failures": 1
-  },
   "Aldi Ireland::batch_dedicated_v1": {
     "jobs": [],
     "checked_at": 1787535846.2279892,
-    "consecutive_failures": 1
-  },
-  "Deutsche Bank": {
-    "jobs": [],
-    "checked_at": 1787535846.856568,
-    "consecutive_failures": 1
-  },
-  "Central Bank of Ireland": {
-    "jobs": [],
-    "checked_at": 1787535848.932792,
     "consecutive_failures": 1
   },
   "FBD Insurance::batch_dedicated_v1": {
@@ -19019,7 +18989,7 @@
         "source": "fbd_first_party",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-24T01:47:58.944741+00:00",
         "posted_age_known": false
       },
@@ -19034,7 +19004,7 @@
         "source": "fbd_first_party",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-24T01:47:58.944741+00:00",
         "posted_age_known": false
       },
@@ -19049,7 +19019,7 @@
         "source": "fbd_first_party",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-24T01:47:58.944741+00:00",
         "posted_age_known": false
       }
@@ -19070,7 +19040,7 @@
         "source": "capgemini_first_party",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-24T01:47:58.944741+00:00",
         "posted_age_known": false
       },
@@ -19085,7 +19055,7 @@
         "source": "capgemini_first_party",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-24T01:47:58.944741+00:00",
         "posted_age_known": false
       }
@@ -19098,184 +19068,861 @@
     "checked_at": 1787535855.5965831,
     "consecutive_failures": 1
   },
-  "DXC Technology": {
-    "jobs": [],
-    "checked_at": 1787535860.4323664,
-    "consecutive_failures": 1
-  },
-  "Willis Towers Watson (WTW)": {
-    "jobs": [],
-    "checked_at": 1787535869.2522342,
-    "consecutive_failures": 2
-  },
   "Tesco Ireland::batch_dedicated_v1": {
     "jobs": [],
     "checked_at": 1787535863.795979,
     "consecutive_failures": 1
   },
-  "HCLTech": {
+  "Regeneron": {
     "jobs": [],
-    "checked_at": 1787535869.7746172,
+    "checked_at": 1787537144.9809194,
     "consecutive_failures": 1
   },
-  "Cantor Fitzgerald Ireland": {
+  "BNY Mellon": {
     "jobs": [],
-    "checked_at": 1787535871.2480526,
+    "checked_at": 1787537148.5278058,
     "consecutive_failures": 1
   },
-  "Aviva Ireland": {
+  "Oracle": {
     "jobs": [],
-    "checked_at": 1787535875.7925436,
+    "checked_at": 1787537151.1979373,
     "consecutive_failures": 1
   },
-  "Glanbia / Tirlán": {
+  "Aldi Ireland::batch_dedicated_v2": {
     "jobs": [],
-    "checked_at": 1787535877.201173,
+    "checked_at": 1787537159.23687,
     "consecutive_failures": 1
   },
   "QIAGEN": {
     "jobs": [],
-    "checked_at": 1787535877.4437551,
+    "checked_at": 1787537183.1311464,
     "consecutive_failures": 1
   },
-  "BDO Ireland": {
+  "Stryker::batch_dedicated_v1": {
     "jobs": [],
-    "checked_at": 1787535877.7498615,
+    "checked_at": 1787537189.9879951,
     "consecutive_failures": 1
   },
-  "Laya Healthcare": {
+  "AstraZeneca::batch_dedicated_v1": {
+    "jobs": [
+      {
+        "company": "AstraZeneca",
+        "title": "Bio-Process Technician (24/7 Shift)",
+        "location": "Athlone, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.astrazeneca.com/job/athlone/bio-process-technician-24-7-shift/43991/99105779552",
+        "source": "astrazeneca_first_party",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-22T11:49:34.357935+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "AstraZeneca",
+        "title": "QA Specialist",
+        "location": "Athlone, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.astrazeneca.com/job/athlone/qa-specialist/43991/99105779568",
+        "source": "astrazeneca_first_party",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-22T11:49:34.357935+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "AstraZeneca",
+        "title": "QA Validation Specialist",
+        "location": "Athlone, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.astrazeneca.com/job/athlone/qa-validation-specialist/43991/99120914592",
+        "source": "astrazeneca_first_party",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-22T11:49:34.357935+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "AstraZeneca",
+        "title": "Associate Director, Data Product & AI Portfolio Lead - 24 Month FTC",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.astrazeneca.com/job/dublin/associate-director-data-product-and-ai-portfolio-lead-24-month-ftc/43991/99067082096",
+        "source": "astrazeneca_first_party",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-24T02:09:43.405517+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "AstraZeneca",
+        "title": "Associate Director, Digital Diagnostics & AI",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.astrazeneca.com/job/dublin/associate-director-digital-diagnostics-and-ai/7684/99339687808",
+        "source": "astrazeneca_first_party",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-22T11:49:34.357935+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "AstraZeneca",
+        "title": "Associate Director, Global Medical Information and Medical Review",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.astrazeneca.com/job/dublin/associate-director-global-medical-information-and-medical-review/43991/99441408960",
+        "source": "astrazeneca_first_party",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-22T11:49:34.357935+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "AstraZeneca",
+        "title": "Associate Director, Global Medical Information and Medical Review",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.astrazeneca.com/job/dublin/associate-director-global-medical-information-and-medical-review/43991/99441408976",
+        "source": "astrazeneca_first_party",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-22T11:49:34.357935+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "AstraZeneca",
+        "title": "Associate Director, Global Medical Information and Medical Review",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.astrazeneca.com/job/dublin/associate-director-global-medical-information-and-medical-review/43991/99447759984",
+        "source": "astrazeneca_first_party",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-22T11:49:34.357935+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "AstraZeneca",
+        "title": "Associate Director Process Engineering – APICOM",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.astrazeneca.com/job/dublin/associate-director-process-engineering-apicom/7684/94058675280",
+        "source": "astrazeneca_first_party",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-22T11:49:34.357935+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "AstraZeneca",
+        "title": "Brand and Customer Manager – Oncology",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.astrazeneca.com/job/dublin/brand-and-customer-manager-oncology/7684/99347815568",
+        "source": "astrazeneca_first_party",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-22T11:49:34.357935+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "AstraZeneca",
+        "title": "Process Chemistry Lead (Small Molecule)",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.astrazeneca.com/job/dublin/process-chemistry-lead-small-molecule/7684/98878771680",
+        "source": "astrazeneca_first_party",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-22T11:49:34.357935+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "AstraZeneca",
+        "title": "QA Specialist (Extended Days)",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.astrazeneca.com/job/dublin/qa-specialist-extended-days/43991/99067082112",
+        "source": "astrazeneca_first_party",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-22T11:49:34.357935+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "AstraZeneca",
+        "title": "Senior Manager, Global Medical Information and Medical Review",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.astrazeneca.com/job/dublin/senior-manager-global-medical-information-and-medical-review/43991/99441408576",
+        "source": "astrazeneca_first_party",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-22T11:49:34.357935+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "AstraZeneca",
+        "title": "Senior Manager, Global Medical Information and Medical Review",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.astrazeneca.com/job/dublin/senior-manager-global-medical-information-and-medical-review/43991/99441408944",
+        "source": "astrazeneca_first_party",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-22T11:49:34.357935+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "AstraZeneca",
+        "title": "Specialist, Medical Writing",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.astrazeneca.com/job/dublin/specialist-medical-writing/43991/99529299632",
+        "source": "astrazeneca_first_party",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-22T11:49:34.357935+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "AstraZeneca",
+        "title": "Vice President, Investment Decisions, Rare Disease",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.astrazeneca.com/job/dublin/vice-president-investment-decisions-rare-disease/43991/97190255568",
+        "source": "astrazeneca_first_party",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-22T11:49:34.357935+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "AstraZeneca",
+        "title": "Vice President R&D, Rare Disease",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.astrazeneca.com/job/dublin/vice-president-r-and-d-rare-disease/43991/98032583232",
+        "source": "astrazeneca_first_party",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-22T11:49:34.357935+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "AstraZeneca",
+        "title": "16 results for your search",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.astrazeneca.com/search-jobs/Dublin",
+        "source": "astrazeneca_first_party",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-24T02:09:43.405517+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "AstraZeneca",
+        "title": "17 results for your search",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.astrazeneca.com/search-jobs/Dublin&p=2",
+        "source": "astrazeneca_first_party",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-24T02:09:43.405517+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "AstraZeneca",
+        "title": "19 results for your search",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.astrazeneca.com/search-jobs/Ireland",
+        "source": "astrazeneca_first_party",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-22T11:49:34.357935+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "AstraZeneca",
+        "title": "21 results for your search",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.astrazeneca.com/search-jobs/Ireland&p=2",
+        "source": "astrazeneca_first_party",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-22T11:49:34.357935+00:00",
+        "posted_age_known": false
+      }
+    ],
+    "checked_at": 1787537191.8231924,
+    "consecutive_failures": 0
+  },
+  "Central Bank of Ireland": {
     "jobs": [],
-    "checked_at": 1787535878.3293967,
+    "checked_at": 1787537200.5681076,
     "consecutive_failures": 1
   },
-  "Fitch Ratings": {
+  "Amgen::batch_dedicated_v1": {
+    "jobs": [
+      {
+        "company": "Amgen",
+        "title": "Senior Counsel - Employment Law",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": null,
+        "employment_type": "Unspecified",
+        "url": "https://careers.amgen.com/en/job/cambridge/senior-counsel-employment-law/87/98831090880",
+        "source": "amgen_first_party",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null
+      },
+      {
+        "company": "Amgen",
+        "title": "Mgr Supply Chain - Product Planner",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": null,
+        "employment_type": "Unspecified",
+        "url": "https://careers.amgen.com/en/job/dublin/mgr-supply-chain-product-planner/87/99337747184",
+        "source": "amgen_first_party",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null
+      },
+      {
+        "company": "Amgen",
+        "title": "Process Development Manager",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": null,
+        "employment_type": "Unspecified",
+        "url": "https://careers.amgen.com/en/job/dublin/process-development-manager/87/99346471280",
+        "source": "amgen_first_party",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null
+      },
+      {
+        "company": "Amgen",
+        "title": "Sr. Engineer Process Development",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": null,
+        "employment_type": "Unspecified",
+        "url": "https://careers.amgen.com/en/job/dublin/sr-engineer-process-development/87/99346471264",
+        "source": "amgen_first_party",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null
+      },
+      {
+        "company": "Amgen",
+        "title": "Associate Director Operations Technology",
+        "location": "Republic of Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": null,
+        "employment_type": "Unspecified",
+        "url": "https://careers.amgen.com/en/job/dun-laoghaire/associate-director-operations-technology/87/99030896656",
+        "source": "amgen_first_party",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null
+      },
+      {
+        "company": "Amgen",
+        "title": "Project Portfolio & Governance Manager",
+        "location": "Republic of Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": null,
+        "employment_type": "Unspecified",
+        "url": "https://careers.amgen.com/en/job/dun-laoghaire/project-portfolio-and-governance-manager/87/99394951472",
+        "source": "amgen_first_party",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null
+      },
+      {
+        "company": "Amgen",
+        "title": "Shift Maintenance Manager",
+        "location": "Republic of Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": null,
+        "employment_type": "Unspecified",
+        "url": "https://careers.amgen.com/en/job/dun-laoghaire/shift-maintenance-manager/87/99449555664",
+        "source": "amgen_first_party",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null
+      },
+      {
+        "company": "Amgen",
+        "title": "Sr. Associate Facilities & Engineering Compliance (Day role)",
+        "location": "Republic of Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": null,
+        "employment_type": "Unspecified",
+        "url": "https://careers.amgen.com/en/job/dun-laoghaire/sr-associate-facilities-and-engineering-compliance-day-role/87/99405253712",
+        "source": "amgen_first_party",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null
+      },
+      {
+        "company": "Amgen",
+        "title": "Sr. Associate Process Development",
+        "location": "Republic of Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": null,
+        "employment_type": "Unspecified",
+        "url": "https://careers.amgen.com/en/job/dun-laoghaire/sr-associate-process-development/87/99346471248",
+        "source": "amgen_first_party",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null
+      },
+      {
+        "company": "Amgen",
+        "title": "Sr. Validation Engineer - Automation",
+        "location": "Republic of Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": null,
+        "employment_type": "Unspecified",
+        "url": "https://careers.amgen.com/en/job/dun-laoghaire/sr-validation-engineer-automation/87/99211231424",
+        "source": "amgen_first_party",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null
+      },
+      {
+        "company": "Amgen",
+        "title": "Sr Associate Benefits",
+        "location": "Republic of Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": null,
+        "employment_type": "Unspecified",
+        "url": "https://careers.amgen.com/en/job/hyderabad/sr-associate-benefits/87/91323449280",
+        "source": "amgen_first_party",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null
+      },
+      {
+        "company": "Amgen",
+        "title": "Supply Chain Senior Manager - Global Supply Chain Lead",
+        "location": "Republic of Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": null,
+        "employment_type": "Unspecified",
+        "url": "https://careers.amgen.com/en/job/washington-d-c/supply-chain-senior-manager-global-supply-chain-lead/87/99500634176",
+        "source": "amgen_first_party",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null
+      },
+      {
+        "company": "Amgen",
+        "title": "Search Results",
+        "location": "Republic of Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": null,
+        "employment_type": "Unspecified",
+        "url": "https://careers.amgen.com/en/search-jobs/Dublin",
+        "source": "amgen_first_party",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null
+      },
+      {
+        "company": "Amgen",
+        "title": "Search Results",
+        "location": "Republic of Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": null,
+        "employment_type": "Unspecified",
+        "url": "https://careers.amgen.com/en/search-jobs/Ireland",
+        "source": "amgen_first_party",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null
+      },
+      {
+        "company": "Amgen",
+        "title": "Search Results",
+        "location": "Republic of Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": null,
+        "employment_type": "Unspecified",
+        "url": "https://careers.amgen.com/en/search-jobs/Ireland%26p%3D1",
+        "source": "amgen_first_party",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null
+      },
+      {
+        "company": "Amgen",
+        "title": "Search Results",
+        "location": "Republic of Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": null,
+        "employment_type": "Unspecified",
+        "url": "https://careers.amgen.com/en/search-jobs/Ireland%26p%3D2",
+        "source": "amgen_first_party",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null
+      }
+    ],
+    "checked_at": 1787537203.3309593,
+    "consecutive_failures": 0
+  },
+  "Intel::batch_dedicated_v1": {
     "jobs": [],
-    "checked_at": 1787535880.0087013,
+    "checked_at": 1787537203.7960215,
     "consecutive_failures": 1
   },
-  "Musgrave Group (SuperValu / Centra)": {
+  "Deutsche Bank": {
     "jobs": [],
-    "checked_at": 1787535882.5880642,
+    "checked_at": 1787537204.7183125,
     "consecutive_failures": 1
   },
-  "UBS": {
-    "jobs": [],
-    "checked_at": 1787535883.6024992,
-    "consecutive_failures": 1
+  "Novartis::batch_dedicated_v1": {
+    "jobs": [
+      {
+        "company": "Novartis",
+        "title": "Trial Vendor Associate Director",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": null,
+        "employment_type": "Unspecified",
+        "url": "https://www.novartis.com/careers/career-search/job/details/req-10073187-trial-vendor-associate-director",
+        "source": "novartis_first_party",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null
+      },
+      {
+        "company": "Novartis",
+        "title": "Clinical Scientific Expert I",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": null,
+        "employment_type": "Unspecified",
+        "url": "https://www.novartis.com/careers/career-search/job/details/req-10076240-clinical-scientific-expert-i",
+        "source": "novartis_first_party",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null
+      },
+      {
+        "company": "Novartis",
+        "title": "Commercial Portfolio Lead",
+        "location": "Republic of Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": null,
+        "employment_type": "Unspecified",
+        "url": "https://www.novartis.com/careers/career-search/job/details/req-10077144-commercial-portfolio-lead",
+        "source": "novartis_first_party",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null
+      },
+      {
+        "company": "Novartis",
+        "title": "Precision Medicine Director",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": null,
+        "employment_type": "Unspecified",
+        "url": "https://www.novartis.com/careers/career-search/job/details/req-10079235-precision-medicine-director",
+        "source": "novartis_first_party",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null
+      },
+      {
+        "company": "Novartis",
+        "title": "Trial Vendor Associate Director",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": null,
+        "employment_type": "Unspecified",
+        "url": "https://www.novartis.com/careers/career-search/job/details/req-10079543-trial-vendor-associate-director",
+        "source": "novartis_first_party",
+        "visa_sponsorship": "no_sponsorship",
+        "visa_snippet": "cations are accessible to you. Novartis cannot sponsor Visas for these locations. As a core me"
+      },
+      {
+        "company": "Novartis",
+        "title": "Precision Medicine Director",
+        "location": "Republic of Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": null,
+        "employment_type": "Unspecified",
+        "url": "https://www.novartis.com/careers/career-search/job/details/req-10080334-precision-medicine-director",
+        "source": "novartis_first_party",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null
+      },
+      {
+        "company": "Novartis",
+        "title": "Global Labelling Associate Director, Content (Established Products)",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": null,
+        "employment_type": "Unspecified",
+        "url": "https://www.novartis.com/careers/career-search/job/details/req-10082739-global-labelling-associate-director-content-established-products",
+        "source": "novartis_first_party",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null
+      },
+      {
+        "company": "Novartis",
+        "title": "Global Labelling Associate Director, Content (Oncology)",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": null,
+        "employment_type": "Unspecified",
+        "url": "https://www.novartis.com/careers/career-search/job/details/req-10082740-global-labelling-associate-director-content-oncology",
+        "source": "novartis_first_party",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null
+      },
+      {
+        "company": "Novartis",
+        "title": "Director, AI Enablement, Corporate Affairs",
+        "location": "Republic of Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": null,
+        "employment_type": "Unspecified",
+        "url": "https://www.novartis.com/careers/career-search/job/details/req-10083568-director-ai-enablement-corporate-affairs",
+        "source": "novartis_first_party",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null
+      },
+      {
+        "company": "Novartis",
+        "title": "Associate Director, Web Analytics",
+        "location": "Republic of Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": null,
+        "employment_type": "Unspecified",
+        "url": "https://www.novartis.com/careers/career-search/job/details/req-10085652-associate-director-web-analytics",
+        "source": "novartis_first_party",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null
+      },
+      {
+        "company": "Novartis",
+        "title": "Manager, Learning Product Enablement",
+        "location": "Republic of Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": null,
+        "employment_type": "Unspecified",
+        "url": "https://www.novartis.com/careers/career-search/job/details/req-10085755-manager-learning-product-enablement",
+        "source": "novartis_first_party",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null
+      }
+    ],
+    "checked_at": 1787537206.740183,
+    "consecutive_failures": 0
   },
-  "Slalom": {
+  "Abbott::batch_dedicated_v1": {
     "jobs": [],
-    "checked_at": 1787535884.463457,
-    "consecutive_failures": 1
-  },
-  "ABP Food Group": {
-    "jobs": [],
-    "checked_at": 1787535886.1576066,
-    "consecutive_failures": 1
-  },
-  "Zurich Insurance": {
-    "jobs": [],
-    "checked_at": 1787535888.8473058,
-    "consecutive_failures": 1
-  },
-  "Alexion Pharmaceuticals": {
-    "jobs": [],
-    "checked_at": 1787535890.57814,
-    "consecutive_failures": 1
-  },
-  "Abbott": {
-    "jobs": [],
-    "checked_at": 1787535892.2818727,
-    "consecutive_failures": 1
-  },
-  "AstraZeneca": {
-    "jobs": [],
-    "checked_at": 1787535892.9091313,
-    "consecutive_failures": 1
-  },
-  "Amgen": {
-    "jobs": [],
-    "checked_at": 1787535896.6363626,
-    "consecutive_failures": 1
-  },
-  "Baxter International": {
-    "jobs": [],
-    "checked_at": 1787535898.0043795,
-    "consecutive_failures": 1
-  },
-  "Coillte": {
-    "jobs": [],
-    "checked_at": 1787535898.798343,
-    "consecutive_failures": 1
-  },
-  "Cook Medical": {
-    "jobs": [],
-    "checked_at": 1787535901.4611208,
-    "consecutive_failures": 1
-  },
-  "ESB (Electricity Supply Board)": {
-    "jobs": [],
-    "checked_at": 1787535901.8746493,
-    "consecutive_failures": 1
-  },
-  "Eir": {
-    "jobs": [],
-    "checked_at": 1787535904.1818163,
-    "consecutive_failures": 1
-  },
-  "Gas Networks Ireland": {
-    "jobs": [],
-    "checked_at": 1787535905.3995001,
-    "consecutive_failures": 1
-  },
-  "Sky Ireland": {
-    "jobs": [],
-    "checked_at": 1787535907.1739326,
-    "consecutive_failures": 1
-  },
-  "Kepak Group": {
-    "jobs": [],
-    "checked_at": 1787535907.2933552,
+    "checked_at": 1787537208.5821745,
     "consecutive_failures": 1
   },
   "Red Hat": {
     "jobs": [],
-    "checked_at": 1787535914.062309,
+    "checked_at": 1787537213.7908707,
+    "consecutive_failures": 1
+  },
+  "DXC Technology": {
+    "jobs": [],
+    "checked_at": 1787537214.2167778,
+    "consecutive_failures": 1
+  },
+  "Willis Towers Watson (WTW)": {
+    "jobs": [],
+    "checked_at": 1787537225.7351563,
+    "consecutive_failures": 2
+  },
+  "HCLTech": {
+    "jobs": [],
+    "checked_at": 1787537226.6634839,
+    "consecutive_failures": 1
+  },
+  "Cantor Fitzgerald Ireland": {
+    "jobs": [],
+    "checked_at": 1787537229.1721265,
+    "consecutive_failures": 1
+  },
+  "Fitch Ratings": {
+    "jobs": [],
+    "checked_at": 1787537231.527246,
+    "consecutive_failures": 1
+  },
+  "Aviva Ireland": {
+    "jobs": [],
+    "checked_at": 1787537231.6373746,
+    "consecutive_failures": 1
+  },
+  "BDO Ireland": {
+    "jobs": [],
+    "checked_at": 1787537233.1707554,
+    "consecutive_failures": 1
+  },
+  "Glanbia / Tirlán": {
+    "jobs": [],
+    "checked_at": 1787537234.675131,
+    "consecutive_failures": 1
+  },
+  "Laya Healthcare": {
+    "jobs": [],
+    "checked_at": 1787537234.8049433,
+    "consecutive_failures": 1
+  },
+  "Musgrave Group (SuperValu / Centra)": {
+    "jobs": [],
+    "checked_at": 1787537237.6562874,
+    "consecutive_failures": 1
+  },
+  "UBS": {
+    "jobs": [],
+    "checked_at": 1787537238.4345543,
+    "consecutive_failures": 1
+  },
+  "Slalom": {
+    "jobs": [],
+    "checked_at": 1787537239.3794885,
+    "consecutive_failures": 1
+  },
+  "ABP Food Group": {
+    "jobs": [],
+    "checked_at": 1787537242.345073,
+    "consecutive_failures": 1
+  },
+  "Alexion Pharmaceuticals": {
+    "jobs": [],
+    "checked_at": 1787537242.3530548,
+    "consecutive_failures": 1
+  },
+  "Zurich Insurance": {
+    "jobs": [],
+    "checked_at": 1787537244.7977512,
+    "consecutive_failures": 1
+  },
+  "Coillte": {
+    "jobs": [],
+    "checked_at": 1787537247.2067318,
+    "consecutive_failures": 1
+  },
+  "Baxter International": {
+    "jobs": [],
+    "checked_at": 1787537248.490444,
+    "consecutive_failures": 1
+  },
+  "Cook Medical": {
+    "jobs": [],
+    "checked_at": 1787537249.4510553,
+    "consecutive_failures": 1
+  },
+  "Eir": {
+    "jobs": [],
+    "checked_at": 1787537251.3396606,
+    "consecutive_failures": 1
+  },
+  "ESB (Electricity Supply Board)": {
+    "jobs": [],
+    "checked_at": 1787537253.6206403,
+    "consecutive_failures": 1
+  },
+  "Gas Networks Ireland": {
+    "jobs": [],
+    "checked_at": 1787537253.8904448,
+    "consecutive_failures": 1
+  },
+  "Sky Ireland": {
+    "jobs": [],
+    "checked_at": 1787537255.2244039,
+    "consecutive_failures": 1
+  },
+  "Kepak Group": {
+    "jobs": [],
+    "checked_at": 1787537256.9591305,
     "consecutive_failures": 1
   },
   "Revvity (PerkinElmer)": {
     "jobs": [],
-    "checked_at": 1787535915.0859714,
-    "consecutive_failures": 1
-  },
-  "Boston Consulting Group (BCG)": {
-    "jobs": [],
-    "checked_at": 1787535926.80629,
-    "consecutive_failures": 1
-  },
-  "Haleon": {
-    "jobs": [],
-    "checked_at": 1787535966.6778698,
+    "checked_at": 1787537260.170214,
     "consecutive_failures": 1
   },
   "GlaxoSmithKline (GSK)": {
     "jobs": [],
-    "checked_at": 1787535967.6511202,
+    "checked_at": 1787537267.7523813,
+    "consecutive_failures": 1
+  },
+  "Haleon": {
+    "jobs": [],
+    "checked_at": 1787537268.013893,
     "consecutive_failures": 1
   },
   "HP (Hewlett-Packard)": {
     "jobs": [],
-    "checked_at": 1787535970.9262846,
+    "checked_at": 1787537268.7080553,
     "consecutive_failures": 1
   },
-  "Intel": {
+  "Boston Consulting Group (BCG)": {
     "jobs": [],
-    "checked_at": 1787535975.793547,
-    "consecutive_failures": 1
-  },
-  "Stryker": {
-    "jobs": [],
-    "checked_at": 1787535996.2023437,
+    "checked_at": 1787537270.3316972,
     "consecutive_failures": 1
   }
 }
