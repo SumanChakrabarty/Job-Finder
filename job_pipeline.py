@@ -9206,6 +9206,166 @@ def scrape_hp_ireland_friend(session):
     print(f"      [hp_friend] {len(results)} verified Ireland jobs")
     return list(results.values())
 
+
+
+def scrape_oracle_ireland_friend(session):
+    """Oracle Ireland via the existing public Oracle Recruiting Cloud REST helper."""
+    jobs = scrape_oracle_candidate_experience(
+        "Oracle",
+        "https://eeho.fa.us2.oraclecloud.com",
+        "CX_1",
+        session,
+    )
+    print(f"      [oracle_friend] {len(jobs)} Ireland jobs from Oracle Recruiting REST")
+    return jobs
+
+
+def scrape_bausch_lomb_friend(session):
+    """Bausch + Lomb official Ireland-filtered careers board."""
+    return _batch_first_party_roi_scrape(
+        "Bausch + Lomb",
+        [
+            "https://careers.bauschlomb.com/search/?q=&locationsearch=Ireland",
+            "https://careers.bauschlomb.com/search/?q=&locationsearch=Waterford",
+        ],
+        ["careers.bauschlomb.com"],
+        ["/job/", "/jobs/", "/search/"],
+        session,
+        "bausch_friend_reference",
+        45,
+    )
+
+
+def scrape_mckinsey_ireland_friend(session):
+    """McKinsey Dublin: official search, real job-detail links only."""
+    company = "McKinsey & Company"
+    source = (
+        "https://www.mckinsey.com/careers/search-jobs"
+        "?locations=Dublin&cities=Dublin"
+    )
+    official_marker = "/careers/search-jobs/jobs/"
+
+    if not HAS_PLAYWRIGHT:
+        return []
+
+    results = {}
+
+    try:
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch(
+                headless=True,
+                args=[
+                    "--no-sandbox",
+                    "--disable-dev-shm-usage",
+                    "--disable-gpu",
+                    "--disable-http2",
+                    "--disable-blink-features=AutomationControlled",
+                ],
+            )
+            context = browser.new_context(
+                locale="en-IE",
+                viewport={"width": 1440, "height": 1500},
+                user_agent=HEADERS.get("User-Agent"),
+            )
+            context.add_init_script(
+                """
+                Object.defineProperty(
+                    navigator,
+                    'webdriver',
+                    {get: () => undefined}
+                );
+                """
+            )
+            page = context.new_page()
+
+            try:
+                page.goto(source, wait_until="commit", timeout=35000)
+            except Exception as exc:
+                print(f"      [mckinsey_friend] initial navigation: {exc}")
+
+            # Do not wait for full network-idle; McKinsey keeps background
+            # traffic alive. Wait only for the actual vacancy link structure.
+            try:
+                page.wait_for_selector(
+                    'a[href*="/careers/search-jobs/jobs/"]',
+                    timeout=18000,
+                )
+            except Exception:
+                pass
+
+            page.wait_for_timeout(1200)
+
+            try:
+                links = page.locator(
+                    'a[href*="/careers/search-jobs/jobs/"]'
+                ).evaluate_all(
+                    """els => els.map(a => ({
+                        href: a.href || "",
+                        text: (a.innerText || a.textContent || "").trim()
+                    }))"""
+                )
+            except Exception:
+                links = []
+
+            for item in links:
+                href = str(item.get("href") or "").strip().split("#")[0]
+                title = re.sub(
+                    r"\s+",
+                    " ",
+                    str(item.get("text") or ""),
+                ).strip()
+
+                if not href or official_marker not in href:
+                    continue
+                if not title or _looks_like_non_job_title(title):
+                    continue
+
+                # Dublin-specific source is already filtered, but still inspect
+                # nearby/detail evidence when inexpensive.
+                body = ""
+                try:
+                    detail = context.new_page()
+                    detail.goto(href, wait_until="domcontentloaded", timeout=15000)
+                    detail.wait_for_timeout(250)
+                    body = detail.locator("body").inner_text(timeout=5000)
+                    detail.close()
+                except Exception:
+                    try:
+                        detail.close()
+                    except Exception:
+                        pass
+
+                evidence = f"Dublin, Ireland {body}"
+                if _ROI_NEGATIVE_RE.search(evidence):
+                    continue
+                if body and not is_republic_of_ireland_location(evidence):
+                    continue
+
+                canonical = href.split("?")[0]
+                sponsorship, snippet = classify_sponsorship(body[:16000])
+
+                results[canonical.rstrip("/").lower()] = {
+                    "company": company,
+                    "title": title[:300],
+                    "location": "Dublin, Ireland",
+                    "posted_text": "Unknown",
+                    "posted_days_ago": None,
+                    "employment_type": normalize_employment_type("", title),
+                    "url": canonical,
+                    "source": "mckinsey_friend_reference",
+                    "visa_sponsorship": sponsorship,
+                    "visa_snippet": snippet,
+                }
+
+            context.close()
+            browser.close()
+
+    except Exception as exc:
+        print(f"      [mckinsey_friend] failed: {exc}")
+
+    print(f"      [mckinsey_friend] {len(results)} verified Dublin jobs")
+    return list(results.values())
+
 def test_single_company(name):
     """Fast test mode for one company — skips the full ~30 min pipeline
     entirely. Checks known dedicated scrapers by name directly (Apple,
@@ -9309,7 +9469,9 @@ def test_single_company(name):
         "qiagen": lambda: scrape_qiagen_ireland_direct(session),
         "regeneron": lambda: scrape_regeneron_ireland_direct(session),
         "medtronic": lambda: scrape_medtronic_ireland_direct(session),
-        "oracle": lambda: scrape_oracle_candidate_experience("Oracle", "https://eeho.fa.us2.oraclecloud.com", "CX_1", session),
+        "oracle": lambda: scrape_oracle_ireland_friend(session),
+        "bausch + lomb": lambda: scrape_bausch_lomb_friend(session),
+        "mckinsey & company": lambda: scrape_mckinsey_ireland_friend(session),
         "jpmorgan chase": lambda: scrape_oracle_candidate_experience("JPMorgan Chase", "https://jpmc.fa.oraclecloud.com", "CX_1001", session),
     }
     matched_key = next((k for k in dedicated if name_lower == k or name_lower.startswith(k)), None)
@@ -9552,6 +9714,7 @@ def scrape_aer_lingus_ireland_recovery(session):
     )
 
 def main():
+    print("=== ORACLE_BAUSCH_MCKINSEY_BATCH ACTIVE: Oracle REST scheduled in full run + Bausch/McKinsey friend routes; live companies untouched ===")
     print("=== AGILENT_PLUS_FRIEND_NEXT4 ACTIVE: Agilent full dedicated timeout + Heineken/Musgrave/VHI/HP friend logic; live companies untouched ===")
     print("=== NONLIVE_FRIEND_BATCH_10 ACTIVE: AXA/Agilent/BNP/Coca-Cola HBC/HCL/Infosys/Laya/Palo Alto/SMBC Aviation/SIG; valid live companies untouched ===")
     print("=== GRANT_EXACT_TITLE_FIX ACTIVE: Oracle card location/date/badges stripped from Grant job titles ===")
@@ -9850,6 +10013,9 @@ def main():
         ("exact", "musgrave group (supervalu / centra)", scrape_musgrave_ireland_friend, 60, "friend-referenced Musgrave vacancies"),
         ("exact", "vhi healthcare", scrape_vhi_ireland_friend, 60, "friend-referenced VHI CandidateManager"),
         ("exact", "hp (hewlett-packard)", scrape_hp_ireland_friend, 60, "friend-referenced HP Ireland search"),
+        ("exact", "oracle", scrape_oracle_ireland_friend, 60, "Oracle Recruiting Cloud REST"),
+        ("exact", "bausch + lomb", scrape_bausch_lomb_friend, 60, "friend-referenced Bausch + Lomb Ireland board"),
+        ("exact", "mckinsey & company", scrape_mckinsey_ireland_friend, 60, "friend-referenced McKinsey Dublin search"),
         ("exact", "aib (allied irish banks)", scrape_aib_ireland, 240, "filtered against UK-only postings"),
         ("exact", "blackrock", scrape_blackrock_ireland, 240, "Phenom platform"),
         ("exact", "bank of ireland", scrape_bank_of_ireland_direct, 240, "first-party jobs board"),
@@ -9944,6 +10110,7 @@ def main():
         "scrape_sig_ireland_friend",
         "scrape_musgrave_ireland_friend", "scrape_vhi_ireland_friend",
         "scrape_hp_ireland_friend",
+        "scrape_bausch_lomb_friend", "scrape_mckinsey_ireland_friend",
     }
 
     _live_company_names = {
@@ -9989,6 +10156,12 @@ def main():
                 cache_key = "IQVIA::ireland_dedicated_v1"
             elif _key == "merit medical":
                 cache_key = "Merit Medical::workday_dedicated_v1"
+            elif _key in {
+                "oracle",
+                "bausch + lomb",
+                "mckinsey & company",
+            }:
+                cache_key = f"{name}::friend_oracle_bausch_mckinsey_v1"
             elif _key in {
                 "heineken ireland",
                 "musgrave group (supervalu / centra)",
@@ -10052,6 +10225,9 @@ def main():
             "musgrave group (supervalu / centra)",
             "vhi healthcare",
             "hp (hewlett-packard)",
+            "oracle",
+            "bausch + lomb",
+            "mckinsey & company",
         }
         if company_name.strip().lower() in _fresh_dedicated_timeout_names:
             actual_timeout = timeout_s
@@ -10183,6 +10359,9 @@ def main():
             "musgrave group (supervalu / centra)",
             "vhi healthcare",
             "hp (hewlett-packard)",
+            "oracle",
+            "bausch + lomb",
+            "mckinsey & company",
         }
     ]
     for entry in priority_entries:
