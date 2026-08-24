@@ -13433,11 +13433,6 @@
     "checked_at": 1787568344.2635977,
     "consecutive_failures": 56
   },
-  "Agilent Technologies": {
-    "jobs": [],
-    "checked_at": 1787566378.466916,
-    "consecutive_failures": 55
-  },
   "Advanced Micro Devices (AMD)": {
     "jobs": [],
     "checked_at": 1787491760.2875175,
@@ -22942,174 +22937,552 @@
     "checked_at": 1787568316.2170653,
     "consecutive_failures": 1
   },
-  "BNY Mellon": {
+  "Heineken Ireland::friend_next4_v1": {
     "jobs": [],
-    "checked_at": 1787569109.098569,
+    "checked_at": 1787569795.4782724,
     "consecutive_failures": 1
   },
   "Central Bank of Ireland": {
     "jobs": [],
-    "checked_at": 1787569109.6608908,
+    "checked_at": 1787569796.3343856,
+    "consecutive_failures": 1
+  },
+  "BNY Mellon": {
+    "jobs": [],
+    "checked_at": 1787569797.002626,
+    "consecutive_failures": 1
+  },
+  "Regeneron": {
+    "jobs": [],
+    "checked_at": 1787569798.2881122,
     "consecutive_failures": 1
   },
   "Oracle": {
     "jobs": [],
-    "checked_at": 1787569113.9237025,
+    "checked_at": 1787569799.317305,
     "consecutive_failures": 1
   },
-  "Red Hat": {
-    "jobs": [],
-    "checked_at": 1787569114.6374784,
-    "consecutive_failures": 1
+  "VHI Healthcare::friend_next4_v1": {
+    "jobs": [
+      {
+        "company": "VHI Healthcare",
+        "title": "Customer Engagement Advisor - Kilkenny",
+        "location": "Kilkenny, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://www.candidatemanager.net/cm/p/pJobDetails.aspx?mid=YGTGTU&sid=YCXAZF&jid=BAZBDUDD&a=FH1ckSP%252fGQE%253d",
+        "source": "vhi_friend_reference",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-24T11:11:26.698832+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "VHI Healthcare",
+        "title": "Administrator - Radiology",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://www.candidatemanager.net/cm/p/pJobDetails.aspx?mid=YGTGTU&sid=YCXAZF&jid=BAZBDWEVAZ&a=FH1ckSP%252fGQE%253d",
+        "source": "vhi_friend_reference",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-24T11:11:26.698832+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "VHI Healthcare",
+        "title": "Business Continuity Manager",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://www.candidatemanager.net/cm/p/pJobDetails.aspx?mid=YGTGTU&sid=YCXAZF&jid=BAZBWUFGT&a=FH1ckSP%252fGQE%253d",
+        "source": "vhi_friend_reference",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-24T11:11:26.698832+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "VHI Healthcare",
+        "title": "Clinical Nurse Manager 1 (CNM1)",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://www.candidatemanager.net/cm/p/pJobDetails.aspx?mid=YGTGTU&sid=YCXAZF&jid=BAZBUAZEVD&a=FH1ckSP%252fGQE%253d",
+        "source": "vhi_friend_reference",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-24T11:11:26.698832+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "VHI Healthcare",
+        "title": "Consultant Child & Adolescent Psychiatrist",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://www.candidatemanager.net/cm/p/pJobDetails.aspx?mid=YGTGTU&sid=YCXAZF&jid=BAZBFFDY&a=FH1ckSP%252fGQE%253d",
+        "source": "vhi_friend_reference",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-24T11:11:26.698832+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "VHI Healthcare",
+        "title": "EAP Associate",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://www.candidatemanager.net/cm/p/pJobDetails.aspx?mid=YGTGTU&sid=YCXAZF&jid=BAZBFUFCX&a=FH1ckSP%252fGQE%253d",
+        "source": "vhi_friend_reference",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-24T11:11:26.698832+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "VHI Healthcare",
+        "title": "Head of Corporate Business Acquisition",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://www.candidatemanager.net/cm/p/pJobDetails.aspx?mid=YGTGTU&sid=YCXAZF&jid=BAZBUAZEVEV&a=FH1ckSP%252fGQE%253d",
+        "source": "vhi_friend_reference",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-24T11:11:26.698832+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "VHI Healthcare",
+        "title": "Health Care Assistant Swords",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://www.candidatemanager.net/cm/p/pJobDetails.aspx?mid=YGTGTU&sid=YCXAZF&jid=BAZBFAZDF&a=FH1ckSP%252fGQE%253d",
+        "source": "vhi_friend_reference",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-24T11:11:26.698832+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "VHI Healthcare",
+        "title": "Identity and Access Management - Technical Architect",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://www.candidatemanager.net/cm/p/pJobDetails.aspx?mid=YGTGTU&sid=YCXAZF&jid=BAZBEVBEVEV&a=FH1ckSP%252fGQE%253d",
+        "source": "vhi_friend_reference",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-24T11:11:26.698832+00:00",
+        "posted_age_known": false
+      }
+    ],
+    "checked_at": 1787569801.7911837,
+    "consecutive_failures": 0
   },
   "DXC Technology": {
     "jobs": [],
-    "checked_at": 1787569117.064183,
+    "checked_at": 1787569804.548976,
+    "consecutive_failures": 1
+  },
+  "HP (Hewlett-Packard)::friend_next4_v1": {
+    "jobs": [],
+    "checked_at": 1787569807.4086432,
     "consecutive_failures": 1
   },
   "Willis Towers Watson (WTW)": {
     "jobs": [],
-    "checked_at": 1787569127.4979944,
+    "checked_at": 1787569811.8024018,
     "consecutive_failures": 2
-  },
-  "Regeneron": {
-    "jobs": [],
-    "checked_at": 1787569128.495048,
-    "consecutive_failures": 1
   },
   "Cantor Fitzgerald Ireland": {
     "jobs": [],
-    "checked_at": 1787569128.549368,
+    "checked_at": 1787569816.1047387,
     "consecutive_failures": 1
   },
   "Aviva Ireland": {
     "jobs": [],
-    "checked_at": 1787569128.8490944,
+    "checked_at": 1787569818.5899742,
     "consecutive_failures": 1
   },
   "BDO Ireland": {
     "jobs": [],
-    "checked_at": 1787569130.1809568,
-    "consecutive_failures": 1
-  },
-  "Glanbia / Tirlán": {
-    "jobs": [],
-    "checked_at": 1787569134.6976686,
+    "checked_at": 1787569819.2890775,
     "consecutive_failures": 1
   },
   "Fitch Ratings": {
     "jobs": [],
-    "checked_at": 1787569135.4194324,
+    "checked_at": 1787569820.522087,
     "consecutive_failures": 1
   },
-  "Slalom": {
-    "jobs": [],
-    "checked_at": 1787569135.7846756,
-    "consecutive_failures": 1
+  "Musgrave Group (SuperValu / Centra)::friend_next4_v1": {
+    "jobs": [
+      {
+        "company": "Musgrave Group (SuperValu / Centra)",
+        "title": "Fresh Food & Operations Specialist",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://musgravegroup.com/vacancy/fresh-food-operations-specialist/",
+        "source": "musgrave_friend_reference",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-24T11:11:26.698832+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Musgrave Group (SuperValu / Centra)",
+        "title": "HR Officer",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://musgravegroup.com/vacancy/hr-officer/",
+        "source": "musgrave_friend_reference",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-24T11:11:26.698832+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Musgrave Group (SuperValu / Centra)",
+        "title": "Business Development Manager",
+        "location": "Waterford, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://musgravegroup.com/vacancy/business-development-manager-2/",
+        "source": "musgrave_friend_reference",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-24T11:11:26.698832+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Musgrave Group (SuperValu / Centra)",
+        "title": "Facilities Technician",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://musgravegroup.com/vacancy/facilities-technician/",
+        "source": "musgrave_friend_reference",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-24T11:11:26.698832+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Musgrave Group (SuperValu / Centra)",
+        "title": "Store Replenishment Co-ordinator",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://musgravegroup.com/vacancy/store-replenishment-co-ordinator/",
+        "source": "musgrave_friend_reference",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-24T11:11:26.698832+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Musgrave Group (SuperValu / Centra)",
+        "title": "Employee Experience Co-Ordinator",
+        "location": "Cork, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://musgravegroup.com/vacancy/employee-experience-co-ordinator/",
+        "source": "musgrave_friend_reference",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-24T11:11:26.698832+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Musgrave Group (SuperValu / Centra)",
+        "title": "Trading Manager Assistant",
+        "location": "Cork, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://musgravegroup.com/vacancy/trading-manager-assistant/",
+        "source": "musgrave_friend_reference",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-24T11:11:26.698832+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Musgrave Group (SuperValu / Centra)",
+        "title": "HR Business Partner",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://musgravegroup.com/vacancy/hr-business-partner/",
+        "source": "musgrave_friend_reference",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-24T11:11:26.698832+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Musgrave Group (SuperValu / Centra)",
+        "title": "IT Integration Delivery Lead",
+        "location": "Cork, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://musgravegroup.com/vacancy/it-integration-delivery-lead/",
+        "source": "musgrave_friend_reference",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-24T11:11:26.698832+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Musgrave Group (SuperValu / Centra)",
+        "title": "IT Integration Architect",
+        "location": "Cork, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://musgravegroup.com/vacancy/it-integration-architect/",
+        "source": "musgrave_friend_reference",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-24T11:11:26.698832+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Musgrave Group (SuperValu / Centra)",
+        "title": "UX/UI Designer",
+        "location": "Cork, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://musgravegroup.com/vacancy/ux-ui-designer/",
+        "source": "musgrave_friend_reference",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-24T11:11:26.698832+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Musgrave Group (SuperValu / Centra)",
+        "title": "Transport Planning Manager",
+        "location": "Kildare, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://musgravegroup.com/vacancy/transport-planning-manager/",
+        "source": "musgrave_friend_reference",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-24T11:11:26.698832+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Musgrave Group (SuperValu / Centra)",
+        "title": "Floor Supervisor",
+        "location": "Limerick, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://musgravegroup.com/vacancy/floor-supervisor/",
+        "source": "musgrave_friend_reference",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-24T11:11:26.698832+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Musgrave Group (SuperValu / Centra)",
+        "title": "Credit Controller",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://musgravegroup.com/vacancy/credit-controller/",
+        "source": "musgrave_friend_reference",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-24T11:11:26.698832+00:00",
+        "posted_age_known": false
+      }
+    ],
+    "checked_at": 1787569821.9587035,
+    "consecutive_failures": 0
   },
-  "Musgrave Group (SuperValu / Centra)": {
+  "Glanbia / Tirlán": {
     "jobs": [],
-    "checked_at": 1787569135.9330487,
+    "checked_at": 1787569823.0680735,
     "consecutive_failures": 1
   },
   "UBS": {
     "jobs": [],
-    "checked_at": 1787569139.9883308,
+    "checked_at": 1787569825.2999277,
     "consecutive_failures": 1
   },
-  "Alexion Pharmaceuticals": {
+  "Slalom": {
     "jobs": [],
-    "checked_at": 1787569141.646115,
+    "checked_at": 1787569825.6459444,
     "consecutive_failures": 1
   },
   "ABP Food Group": {
     "jobs": [],
-    "checked_at": 1787569142.5951462,
+    "checked_at": 1787569827.7984004,
+    "consecutive_failures": 1
+  },
+  "Alexion Pharmaceuticals": {
+    "jobs": [],
+    "checked_at": 1787569828.5519805,
+    "consecutive_failures": 1
+  },
+  "Agilent Technologies::friend_workday_return_v2": {
+    "jobs": [
+      {
+        "company": "Agilent Technologies",
+        "title": "Qualification Profile: Agilent University Coordinator for Customer Training (Temporary position)",
+        "location": "Ireland-Little Island-Euro Hse",
+        "posted_text": "Posted 30+ Days Ago",
+        "posted_days_ago": 30.0,
+        "employment_type": "Temporary",
+        "url": "https://agilent.wd5.myworkdayjobs.com/Agilent_Careers/job/Ireland-Little-Island-Euro-Hse/Qualification-Profile--Agilent-University-Coordinator-for-Customer-Training_4037553",
+        "source": "workday_api",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T10:59:52.336162+00:00",
+        "posted_age_known": true
+      }
+    ],
+    "checked_at": 1787569830.7612,
+    "consecutive_failures": 0
+  },
+  "Zurich Insurance": {
+    "jobs": [],
+    "checked_at": 1787569830.9119241,
     "consecutive_failures": 1
   },
   "Coillte": {
     "jobs": [],
-    "checked_at": 1787569143.063631,
-    "consecutive_failures": 1
-  },
-  "Zurich Insurance": {
-    "jobs": [],
-    "checked_at": 1787569143.3950348,
-    "consecutive_failures": 1
-  },
-  "Baxter International": {
-    "jobs": [],
-    "checked_at": 1787569144.020656,
-    "consecutive_failures": 1
-  },
-  "Cook Medical": {
-    "jobs": [],
-    "checked_at": 1787569146.164576,
+    "checked_at": 1787569832.540542,
     "consecutive_failures": 1
   },
   "QIAGEN": {
     "jobs": [],
-    "checked_at": 1787569147.0306473,
+    "checked_at": 1787569832.5604594,
     "consecutive_failures": 1
   },
-  "Gas Networks Ireland": {
+  "Baxter International": {
     "jobs": [],
-    "checked_at": 1787569148.9509876,
+    "checked_at": 1787569833.4400842,
+    "consecutive_failures": 1
+  },
+  "Cook Medical": {
+    "jobs": [],
+    "checked_at": 1787569835.6947365,
     "consecutive_failures": 1
   },
   "ESB (Electricity Supply Board)": {
     "jobs": [],
-    "checked_at": 1787569149.9381435,
-    "consecutive_failures": 1
-  },
-  "Kepak Group": {
-    "jobs": [],
-    "checked_at": 1787569150.666104,
-    "consecutive_failures": 1
-  },
-  "Sky Ireland": {
-    "jobs": [],
-    "checked_at": 1787569151.5631032,
+    "checked_at": 1787569836.260533,
     "consecutive_failures": 1
   },
   "Eir": {
     "jobs": [],
-    "checked_at": 1787569151.7561886,
+    "checked_at": 1787569838.510383,
+    "consecutive_failures": 1
+  },
+  "Gas Networks Ireland": {
+    "jobs": [],
+    "checked_at": 1787569839.4315696,
+    "consecutive_failures": 1
+  },
+  "Kepak Group": {
+    "jobs": [],
+    "checked_at": 1787569841.7830634,
+    "consecutive_failures": 1
+  },
+  "Sky Ireland": {
+    "jobs": [],
+    "checked_at": 1787569841.7984884,
     "consecutive_failures": 1
   },
   "Revvity (PerkinElmer)": {
     "jobs": [],
-    "checked_at": 1787569151.8490644,
+    "checked_at": 1787569846.5851152,
     "consecutive_failures": 1
   },
   "S&P Global": {
     "jobs": [],
-    "checked_at": 1787569155.053374,
+    "checked_at": 1787569846.8460233,
     "consecutive_failures": 1
   },
   "Deutsche Bank": {
     "jobs": [],
-    "checked_at": 1787569156.2431304,
-    "consecutive_failures": 1
-  },
-  "Haleon": {
-    "jobs": [],
-    "checked_at": 1787569157.406708,
+    "checked_at": 1787569848.7846284,
     "consecutive_failures": 1
   },
   "GlaxoSmithKline (GSK)": {
     "jobs": [],
-    "checked_at": 1787569158.6603103,
+    "checked_at": 1787569852.1896772,
     "consecutive_failures": 1
   },
-  "HP (Hewlett-Packard)": {
+  "Haleon": {
     "jobs": [],
-    "checked_at": 1787569160.3683276,
+    "checked_at": 1787569853.4808586,
     "consecutive_failures": 1
+  },
+  "Red Hat": {
+    "jobs": [],
+    "checked_at": 1787569859.0644853,
+    "consecutive_failures": 2
   },
   "Boston Consulting Group (BCG)": {
     "jobs": [],
-    "checked_at": 1787569164.548633,
+    "checked_at": 1787569855.9486935,
     "consecutive_failures": 1
   }
 }
