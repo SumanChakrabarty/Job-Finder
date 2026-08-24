@@ -8750,6 +8750,462 @@ def scrape_sig_ireland_friend(session):
         55,
     )
 
+
+
+def scrape_heineken_ireland_friend(session):
+    """HEINEKEN Ireland official SuccessFactors-style board, HTTP only."""
+    company = "Heineken Ireland"
+    source_url = "https://careers.theheinekencompany.com/HEINEKEN-Ireland"
+    results = {}
+
+    try:
+        r = session.get(
+            source_url,
+            timeout=20,
+            headers={
+                "User-Agent": HEADERS.get("User-Agent", "Mozilla/5.0"),
+                "Accept-Language": "en-IE,en;q=0.9",
+            },
+        )
+    except Exception as exc:
+        print(f"      [heineken_friend] request failed: {exc}")
+        return []
+
+    if r.status_code != 200:
+        print(f"      [heineken_friend] HTTP {r.status_code}")
+        return []
+
+    html_text = r.text or ""
+    body = _html_to_text(html_text)
+
+    # Official board can legitimately be empty.
+    if re.search(
+        r"\bNo jobs on tap right now\b|\bno open positions\b",
+        body,
+        re.I,
+    ):
+        print("      [heineken_friend] official Ireland board currently empty")
+        return []
+
+    for m in re.finditer(
+        r'<a[^>]+href=["\']([^"\']*/job/[^"\']+/\d+/?)["\'][^>]*>(.*?)</a>',
+        html_text,
+        re.I | re.S,
+    ):
+        href = urllib.parse.urljoin(source_url, m.group(1)).split("#")[0]
+
+        start = max(0, m.start() - 1600)
+        end = min(len(html_text), m.end() + 2000)
+        card_text = _html_to_text(html_text[start:end])
+
+        if _ROI_NEGATIVE_RE.search(card_text):
+            continue
+        if not is_republic_of_ireland_location(card_text):
+            continue
+
+        title = re.sub(r"\s+", " ", _html_to_text(m.group(2))).strip()
+        if not title or _looks_like_non_job_title(title):
+            continue
+
+        location = "Ireland"
+        for city in ("Dublin", "Cork", "Galway", "Limerick"):
+            if re.search(rf"\b{city}\b", card_text, re.I):
+                location = f"{city}, Ireland"
+                break
+
+        sponsorship, snippet = classify_sponsorship(card_text[:16000])
+        canonical = href.split("?")[0].rstrip("/")
+
+        results[canonical.lower()] = {
+            "company": company,
+            "title": title[:300],
+            "location": location,
+            "posted_text": "Unknown",
+            "posted_days_ago": None,
+            "employment_type": normalize_employment_type("", title),
+            "url": canonical,
+            "source": "heineken_friend_reference",
+            "visa_sponsorship": sponsorship,
+            "visa_snippet": snippet,
+        }
+
+    print(f"      [heineken_friend] {len(results)} verified Ireland jobs")
+    return list(results.values())
+
+
+def scrape_musgrave_ireland_friend(session):
+    """Musgrave official vacancies page from supplied reference scraper."""
+    company = "Musgrave Group (SuperValu / Centra)"
+    source_url = "https://musgravegroup.com/careers/vacancies/"
+
+    if not HAS_PLAYWRIGHT:
+        return []
+
+    results = {}
+
+    try:
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch(
+                headless=True,
+                args=["--no-sandbox", "--disable-dev-shm-usage", "--disable-gpu"],
+            )
+            page = browser.new_page(
+                viewport={"width": 1440, "height": 1300},
+                locale="en-IE",
+            )
+            page.goto(source_url, wait_until="domcontentloaded", timeout=45000)
+            page.wait_for_timeout(2200)
+
+            stagnant = 0
+            previous = 0
+
+            for _ in range(35):
+                anchors = page.locator("a[href]")
+
+                for i in range(min(anchors.count(), 800)):
+                    a = anchors.nth(i)
+
+                    try:
+                        href = urllib.parse.urljoin(
+                            page.url,
+                            a.get_attribute("href") or "",
+                        ).split("#")[0]
+                    except Exception:
+                        continue
+
+                    low = href.lower()
+
+                    # Reject obvious site navigation/social links.
+                    if any(x in low for x in (
+                        "linkedin.com", "facebook.com", "instagram.com",
+                        "/about/", "/news/", "/contact/"
+                    )):
+                        continue
+
+                    if href.rstrip("/") == source_url.rstrip("/"):
+                        continue
+
+                    try:
+                        title = re.sub(r"\s+", " ", a.inner_text() or "").strip()
+                    except Exception:
+                        title = ""
+
+                    node = a
+                    card = ""
+
+                    for _up in range(6):
+                        try:
+                            txt = re.sub(r"\s+", " ", node.inner_text() or "").strip()
+                        except Exception:
+                            txt = ""
+
+                        if txt and len(txt) <= 3200:
+                            card = txt
+
+                        if is_republic_of_ireland_location(card):
+                            break
+
+                        try:
+                            node = node.locator("..")
+                        except Exception:
+                            break
+
+                    evidence = f"{title} {card} {href}"
+
+                    if not title or _looks_like_non_job_title(title):
+                        continue
+                    if _ROI_NEGATIVE_RE.search(evidence):
+                        continue
+
+                    # Require a vacancy-ish structural URL OR explicit ROI card evidence.
+                    if not (
+                        any(k in low for k in ("vacanc", "/job", "career"))
+                        and is_republic_of_ireland_location(evidence)
+                    ):
+                        continue
+
+                    location = "Ireland"
+                    for city in (
+                        "Dublin", "Cork", "Limerick", "Galway", "Waterford",
+                        "Kildare", "Meath", "Westmeath", "Kilkenny", "Tipperary",
+                    ):
+                        if re.search(rf"\b{city}\b", evidence, re.I):
+                            location = f"{city}, Ireland"
+                            break
+
+                    sponsorship, snippet = classify_sponsorship(card[:16000])
+                    canonical = href.split("?")[0]
+
+                    results[canonical.rstrip("/").lower()] = {
+                        "company": company,
+                        "title": title[:300],
+                        "location": location,
+                        "posted_text": "Unknown",
+                        "posted_days_ago": None,
+                        "employment_type": normalize_employment_type("", title),
+                        "url": canonical,
+                        "source": "musgrave_friend_reference",
+                        "visa_sponsorship": sponsorship,
+                        "visa_snippet": snippet,
+                    }
+
+                try:
+                    page.mouse.wheel(0, 3200)
+                    page.wait_for_timeout(250)
+                except Exception:
+                    pass
+
+                current = len(results)
+                stagnant = stagnant + 1 if current == previous else 0
+                previous = current
+                if stagnant >= 6:
+                    break
+
+            browser.close()
+
+    except Exception as exc:
+        print(f"      [musgrave_friend] failed: {exc}")
+
+    print(f"      [musgrave_friend] {len(results)} verified Ireland jobs")
+    return list(results.values())
+
+
+def scrape_vhi_ireland_friend(session):
+    """VHI careers -> embedded CandidateManager vacancy links."""
+    company = "VHI Healthcare"
+    source = "https://www1.vhi.ie/about/careers"
+
+    if not HAS_PLAYWRIGHT:
+        return []
+
+    results = {}
+
+    try:
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch(
+                headless=True,
+                args=["--no-sandbox", "--disable-dev-shm-usage", "--disable-gpu"],
+            )
+            context = browser.new_context(locale="en-IE")
+            page = context.new_page()
+            page.goto(source, wait_until="domcontentloaded", timeout=40000)
+            page.wait_for_timeout(2200)
+
+            for frame in page.frames:
+                try:
+                    anchors = frame.locator("a[href]")
+                    count = anchors.count()
+                except Exception:
+                    continue
+
+                for i in range(min(count, 600)):
+                    a = anchors.nth(i)
+
+                    try:
+                        raw = a.get_attribute("href") or ""
+                    except Exception:
+                        continue
+
+                    href = urllib.parse.urljoin(frame.url or source, raw).split("#")[0]
+
+                    # Structural CandidateManager vacancy/detail link.
+                    if "candidatemanager.net" not in href.lower():
+                        continue
+                    if not re.search(
+                        r"(pjobdetails|jobdetails|vacanc|jobid|jid=|sid=)",
+                        href,
+                        re.I,
+                    ):
+                        continue
+
+                    try:
+                        title = re.sub(r"\s+", " ", a.inner_text() or "").strip()
+                    except Exception:
+                        title = ""
+
+                    if not title or _looks_like_non_job_title(title):
+                        continue
+
+                    node = a
+                    card = title
+                    for _ in range(6):
+                        try:
+                            txt = re.sub(r"\s+", " ", node.inner_text() or "").strip()
+                        except Exception:
+                            txt = ""
+                        if txt and 10 < len(txt) < 4000:
+                            card = txt
+                        if is_republic_of_ireland_location(card):
+                            break
+                        try:
+                            node = node.locator("..")
+                        except Exception:
+                            break
+
+                    # VHI is an Ireland board, but still require ROI evidence in card/page.
+                    evidence = f"{card} Ireland"
+                    if _ROI_NEGATIVE_RE.search(evidence):
+                        continue
+
+                    location = "Ireland"
+                    for city in ("Dublin", "Cork", "Galway", "Limerick", "Kilkenny"):
+                        if re.search(rf"\b{city}\b", card, re.I):
+                            location = f"{city}, Ireland"
+                            break
+
+                    sponsorship, snippet = classify_sponsorship(card[:16000])
+                    canonical = href.split("#")[0]
+
+                    results[canonical.rstrip("/").lower()] = {
+                        "company": company,
+                        "title": title[:300],
+                        "location": location,
+                        "posted_text": "Unknown",
+                        "posted_days_ago": None,
+                        "employment_type": normalize_employment_type("", title),
+                        "url": canonical,
+                        "source": "vhi_friend_reference",
+                        "visa_sponsorship": sponsorship,
+                        "visa_snippet": snippet,
+                    }
+
+            context.close()
+            browser.close()
+
+    except Exception as exc:
+        print(f"      [vhi_friend] failed: {exc}")
+
+    print(f"      [vhi_friend] {len(results)} CandidateManager Ireland jobs")
+    return list(results.values())
+
+
+def scrape_hp_ireland_friend(session):
+    """HP official jobs site with Ireland location search."""
+    company = "HP (Hewlett-Packard)"
+    source = "https://jobs.hp.com/"
+
+    if not HAS_PLAYWRIGHT:
+        return []
+
+    results = {}
+
+    try:
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch(
+                headless=True,
+                args=["--no-sandbox", "--disable-dev-shm-usage", "--disable-gpu"],
+            )
+            page = browser.new_page(
+                viewport={"width": 1440, "height": 1100},
+                locale="en-IE",
+            )
+            page.goto(source, wait_until="domcontentloaded", timeout=40000)
+            page.wait_for_timeout(1500)
+
+            for selector in (
+                'input[placeholder*="location" i]',
+                'input[aria-label*="location" i]',
+                'input[name*="location" i]',
+            ):
+                try:
+                    inp = page.locator(selector)
+                    if inp.count():
+                        inp.first.fill("Ireland")
+                        inp.first.press("Enter")
+                        page.wait_for_timeout(1800)
+                        break
+                except Exception:
+                    pass
+
+            stagnant = 0
+            previous = 0
+
+            for _ in range(25):
+                anchors = page.locator("a[href]")
+
+                for i in range(min(anchors.count(), 1000)):
+                    a = anchors.nth(i)
+                    try:
+                        href = urllib.parse.urljoin(
+                            page.url,
+                            a.get_attribute("href") or "",
+                        ).split("#")[0]
+                    except Exception:
+                        continue
+
+                    if not any(x in href.lower() for x in (
+                        "/job/", "/jobs/", "jobdetail", "job-detail"
+                    )):
+                        continue
+
+                    try:
+                        title = re.sub(r"\s+", " ", a.inner_text() or "").strip()
+                    except Exception:
+                        title = ""
+
+                    if not title or _looks_like_non_job_title(title):
+                        continue
+
+                    node = a
+                    card = ""
+
+                    for _up in range(6):
+                        try:
+                            node = node.locator("..")
+                            candidate = re.sub(r"\s+", " ", node.inner_text() or "").strip()
+                        except Exception:
+                            break
+
+                        if candidate and len(candidate) <= 2600:
+                            card = candidate
+                        if is_republic_of_ireland_location(card):
+                            break
+
+                    evidence = f"{title} {card} {href}"
+                    if _ROI_NEGATIVE_RE.search(evidence):
+                        continue
+                    if not is_republic_of_ireland_location(evidence):
+                        continue
+
+                    location = "Ireland"
+                    for city in ("Dublin", "Leixlip", "Galway", "Cork"):
+                        if re.search(rf"\b{city}\b", evidence, re.I):
+                            location = f"{city}, Ireland"
+                            break
+
+                    sponsorship, snippet = classify_sponsorship(card[:16000])
+                    canonical = href.split("?")[0]
+
+                    results[canonical.rstrip("/").lower()] = {
+                        "company": company,
+                        "title": title[:300],
+                        "location": location,
+                        "posted_text": "Unknown",
+                        "posted_days_ago": None,
+                        "employment_type": normalize_employment_type("", title),
+                        "url": canonical,
+                        "source": "hp_friend_reference",
+                        "visa_sponsorship": sponsorship,
+                        "visa_snippet": snippet,
+                    }
+
+                page.mouse.wheel(0, 3000)
+                page.wait_for_timeout(250)
+
+                current = len(results)
+                stagnant = stagnant + 1 if current == previous else 0
+                previous = current
+                if stagnant >= 5:
+                    break
+
+            browser.close()
+
+    except Exception as exc:
+        print(f"      [hp_friend] failed: {exc}")
+
+    print(f"      [hp_friend] {len(results)} verified Ireland jobs")
+    return list(results.values())
+
 def test_single_company(name):
     """Fast test mode for one company — skips the full ~30 min pipeline
     entirely. Checks known dedicated scrapers by name directly (Apple,
@@ -8809,6 +9265,10 @@ def test_single_company(name):
         "palo alto networks": lambda: scrape_palo_alto_ireland_friend(session),
         "smbc aviation capital": lambda: scrape_smbc_aviation_capital_friend(session),
         "susquehanna international group (sig)": lambda: scrape_sig_ireland_friend(session),
+        "heineken ireland": lambda: scrape_heineken_ireland_friend(session),
+        "musgrave group (supervalu / centra)": lambda: scrape_musgrave_ireland_friend(session),
+        "vhi healthcare": lambda: scrape_vhi_ireland_friend(session),
+        "hp (hewlett-packard)": lambda: scrape_hp_ireland_friend(session),
         "pepsico": lambda: scrape_pepsico_ireland(session),
         "esb": lambda: scrape_esb_ireland(session),
         "irish rail": lambda: scrape_irish_rail_ireland(session),
@@ -9092,6 +9552,7 @@ def scrape_aer_lingus_ireland_recovery(session):
     )
 
 def main():
+    print("=== AGILENT_PLUS_FRIEND_NEXT4 ACTIVE: Agilent full dedicated timeout + Heineken/Musgrave/VHI/HP friend logic; live companies untouched ===")
     print("=== NONLIVE_FRIEND_BATCH_10 ACTIVE: AXA/Agilent/BNP/Coca-Cola HBC/HCL/Infosys/Laya/Palo Alto/SMBC Aviation/SIG; valid live companies untouched ===")
     print("=== GRANT_EXACT_TITLE_FIX ACTIVE: Oracle card location/date/badges stripped from Grant job titles ===")
     print("=== SINGLE_FILE_GRANT_QUALITY_FIX ACTIVE: Grant uses Oracle real-job links; navigation/CTA titles globally blocked ===")
@@ -9385,6 +9846,10 @@ def main():
         ("exact", "palo alto networks", scrape_palo_alto_ireland_friend, 60, "friend-referenced Palo Alto Ireland board"),
         ("exact", "smbc aviation capital", scrape_smbc_aviation_capital_friend, 60, "friend-referenced SMBC Aviation board"),
         ("exact", "susquehanna international group (sig)", scrape_sig_ireland_friend, 60, "friend-referenced SIG Dublin board"),
+        ("exact", "heineken ireland", scrape_heineken_ireland_friend, 45, "friend-referenced HEINEKEN Ireland board"),
+        ("exact", "musgrave group (supervalu / centra)", scrape_musgrave_ireland_friend, 60, "friend-referenced Musgrave vacancies"),
+        ("exact", "vhi healthcare", scrape_vhi_ireland_friend, 60, "friend-referenced VHI CandidateManager"),
+        ("exact", "hp (hewlett-packard)", scrape_hp_ireland_friend, 60, "friend-referenced HP Ireland search"),
         ("exact", "aib (allied irish banks)", scrape_aib_ireland, 240, "filtered against UK-only postings"),
         ("exact", "blackrock", scrape_blackrock_ireland, 240, "Phenom platform"),
         ("exact", "bank of ireland", scrape_bank_of_ireland_direct, 240, "first-party jobs board"),
@@ -9477,6 +9942,8 @@ def main():
         "scrape_infosys_ireland_friend", "scrape_laya_healthcare_friend",
         "scrape_palo_alto_ireland_friend", "scrape_smbc_aviation_capital_friend",
         "scrape_sig_ireland_friend",
+        "scrape_musgrave_ireland_friend", "scrape_vhi_ireland_friend",
+        "scrape_hp_ireland_friend",
     }
 
     _live_company_names = {
@@ -9523,6 +9990,13 @@ def main():
             elif _key == "merit medical":
                 cache_key = "Merit Medical::workday_dedicated_v1"
             elif _key in {
+                "heineken ireland",
+                "musgrave group (supervalu / centra)",
+                "vhi healthcare",
+                "hp (hewlett-packard)",
+            }:
+                cache_key = f"{name}::friend_next4_v1"
+            elif _key in {
                 "axa ireland",
                 "agilent technologies",
                 "bnp paribas ireland",
@@ -9534,7 +10008,7 @@ def main():
                 "smbc aviation capital",
                 "susquehanna international group (sig)",
             }:
-                cache_key = f"{name}::friend_nonlive_batch10_v1"
+                cache_key = ("Agilent Technologies::friend_workday_return_v2" if _key == "agilent technologies" else f"{name}::friend_nonlive_batch10_v1")
             elif _key in {
                 "goodbody",
                 "bristol myers squibb",
@@ -9572,7 +10046,18 @@ def main():
                 cache_key = "Grant Thornton Ireland::oracle_exact_titles_v2"
             return lambda: cached_browser_scrape(browser_cache, cache_key, lambda: fn(session), 0, name)
 
-        actual_timeout = effective_timeout(browser_cache, company_name, timeout_s)
+        _fresh_dedicated_timeout_names = {
+            "agilent technologies",
+            "heineken ireland",
+            "musgrave group (supervalu / centra)",
+            "vhi healthcare",
+            "hp (hewlett-packard)",
+        }
+        if company_name.strip().lower() in _fresh_dedicated_timeout_names:
+            actual_timeout = timeout_s
+        else:
+            actual_timeout = effective_timeout(browser_cache, company_name, timeout_s)
+
         if actual_timeout < timeout_s:
             failures = (browser_cache.get(company_name) or {}).get("consecutive_failures", 0)
             print(f"  [{company_name}] {failures} consecutive failures — reduced budget "
@@ -9694,6 +10179,10 @@ def main():
             "palo alto networks",
             "smbc aviation capital",
             "susquehanna international group (sig)",
+            "heineken ireland",
+            "musgrave group (supervalu / centra)",
+            "vhi healthcare",
+            "hp (hewlett-packard)",
         }
     ]
     for entry in priority_entries:
