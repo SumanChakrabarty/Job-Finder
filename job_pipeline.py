@@ -4690,65 +4690,105 @@ def scrape_hsbc_ireland(session):
     return list(results.values())
 
 
+
 def scrape_dxc_ireland(session):
-    direct = scrape_dxc_ireland_direct_http(session)
-    if direct:
-        return direct
-    """DXC Technology is currently stuck in the Workday 422-error cluster
-    (a shared, unresolved block affecting ~15 tenants this whole session).
-    Bypasses that entirely with a direct scrape of their own public
-    careers site instead."""
-    if not HAS_PLAYWRIGHT:
-        print("      [dxc] playwright not installed — skipping")
-        return []
-    urls = [
-        "https://careers.dxc.com/job-search-results/?location=Ireland",
-        "https://careers.dxc.com/job-search-results/?keyword=&location=Ireland",
-    ]
+    """DXC Ireland via official CWS JSONP job API from supplied scrape.py."""
+    api_url = "https://jobsapi-internal.m-cloud.io/api/job"
     results = {}
-    try:
-        with sync_playwright() as pw:
-            browser = pw.chromium.launch(headless=True, args=["--disable-http2"])
-            page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
-            for url in urls:
-                page.goto(url, wait_until="domcontentloaded", timeout=60000)
-                page.wait_for_timeout(1200)
-                _browser_accept_consent(page)
-                try:
-                    all_links = page.locator("a[href]")
-                    hrefs = [all_links.nth(i).get_attribute("href") or "" for i in range(all_links.count())]
-                    matching = sum(1 for h in hrefs if re.search(r"careers\.dxc\.com/job", h, re.I))
-                    print(f"      [dxc] {url}: page title={page.title()!r}, total links={len(hrefs)}, "
-                          f"matching job-pattern links={matching}")
-                    sample = [h for h in hrefs if h and "dxc" in h.lower()][:8]
-                    print(f"      [dxc] sample real hrefs on page: {sample}")
-                except Exception as e:
-                    print(f"      [dxc] diagnostic read failed: {e}")
-                stagnant, previous = 0, 0
-                for _ in range(40):
-                    _collect_verified_ireland_page_jobs(
-                        page, "DXC Technology", r"careers\.dxc\.com/job/",
-                        "dxc_browser", results, "Ireland")
-                    for txt in ("Load more", "Show more", "See more", "Next"):
-                        try:
-                            b = page.get_by_role("button", name=txt, exact=False)
-                            if b.count() and b.first.is_visible():
-                                b.first.click(timeout=1000)
-                                page.wait_for_timeout(400)
-                        except Exception:
-                            pass
-                    page.mouse.wheel(0, 3000)
-                    page.wait_for_timeout(350)
-                    current = len(results)
-                    stagnant = stagnant + 1 if current == previous else 0
-                    previous = current
-                    if stagnant >= 8:
-                        break
-            browser.close()
-    except Exception as e:
-        print(f"      [dxc] browser scrape failed: {e}")
-    print(f"      [dxc] {len(results)} unique Ireland jobs accumulated")
+    offset = 1
+    limit = 50
+
+    for _ in range(20):
+        params = [
+            ("callback", "CWS.jobs.jobCallback"),
+            ("facet[]", "is_internal:DXCJobs"),
+            ("facet[]", "compliment:Ireland"),
+            ("sortfield", "open_date"),
+            ("sortorder", "descending"),
+            ("Limit", str(limit)),
+            ("Organization", "2492"),
+            ("offset", str(offset)),
+            ("fuzzy", "false"),
+            ("facetlist[]", "compliment"),
+            ("facetlist[]", "store_id"),
+            ("facetlist[]", "primary_city"),
+            ("facetlist[]", "primary_category"),
+            ("facetlist[]", "employment_type"),
+        ]
+        try:
+            r = session.get(
+                api_url,
+                params=params,
+                timeout=20,
+                headers={
+                    "User-Agent": HEADERS.get("User-Agent", "Mozilla/5.0"),
+                    "Referer": "https://careers.dxc.com/job-search-results/",
+                    "Accept": "*/*",
+                },
+            )
+        except Exception as exc:
+            print(f"      [dxc_friend] request failed: {exc}")
+            break
+
+        if r.status_code != 200:
+            print(f"      [dxc_friend] HTTP {r.status_code}")
+            break
+
+        text = (r.text or "").strip()
+        mm = re.search(r'^[^(]+\((.*)\)\s*;?\s*$', text, re.S)
+        if mm:
+            text = mm.group(1)
+
+        try:
+            payload = json.loads(text)
+        except Exception:
+            print("      [dxc_friend] invalid JSONP")
+            break
+
+        rows = payload.get("queryResult", []) if isinstance(payload, dict) else []
+        if not isinstance(rows, list) or not rows:
+            break
+
+        for row in rows:
+            if not isinstance(row, dict):
+                continue
+            country_code = str(row.get("primary_country") or "").strip().upper()
+            country_name = str(row.get("compliment") or "").strip()
+            city = str(row.get("primary_city") or "").strip()
+            title = str(row.get("title") or "").strip()
+            href = str(row.get("url") or "").strip()
+            job_id = str(row.get("clientid") or row.get("id") or "").strip()
+
+            if country_code != "IE" and country_name.lower() != "ireland":
+                continue
+            if not title or not href or _looks_like_non_job_title(title):
+                continue
+
+            location = f"{city}, Ireland" if city else "Ireland"
+            desc = _html_to_text(str(row.get("description") or ""))
+            sponsorship, snippet = classify_sponsorship(desc[:16000])
+
+            results[(job_id or href).lower()] = {
+                "company": "DXC Technology",
+                "title": re.sub(r"\s+", " ", title).strip()[:300],
+                "location": location,
+                "posted_text": str(row.get("open_date") or "Unknown"),
+                "posted_days_ago": parse_posted_text(str(row.get("open_date") or "")),
+                "employment_type": normalize_employment_type(row.get("employment_type"), title),
+                "url": href,
+                "source": "dxc_cws_api",
+                "visa_sponsorship": sponsorship,
+                "visa_snippet": snippet,
+            }
+
+        total_hits = int(payload.get("totalHits") or 0) if isinstance(payload, dict) else 0
+        if offset + limit > total_hits or len(rows) < limit:
+            break
+        offset += limit
+
+    print(f"      [dxc_friend] {len(results)} Ireland jobs")
     return list(results.values())
+
 
 
 def scrape_grant_thornton_direct(session):
@@ -5290,29 +5330,15 @@ def scrape_ing_ireland(session):
     return list(results.values())
 
 
+
 def scrape_deutsche_bank_ireland(session):
-    """Deutsche Bank's professional roles search, real browser rendering."""
-    if not HAS_PLAYWRIGHT:
-        print("      [deutsche-bank] playwright not installed — skipping")
-        return []
-    urls = ["https://careers.db.com/professionals/search-roles/"]
-    results = {}
-    try:
-        with sync_playwright() as pw:
-            browser = pw.chromium.launch(headless=True, args=["--disable-http2"])
-            page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
-            for url in urls:
-                page.goto(url, wait_until="domcontentloaded", timeout=30000)
-                page.wait_for_timeout(1800)
-                _browser_accept_consent(page)
-                _collect_verified_ireland_page_jobs(
-                    page, "Deutsche Bank", r"careers\.db\.com/professionals/job/",
-                    "deutsche_bank_browser", results, "Ireland")
-            browser.close()
-    except Exception as e:
-        print(f"      [deutsche-bank] browser scrape failed: {e}")
-    print(f"      [deutsche-bank] {len(results)} unique Ireland jobs accumulated")
-    return list(results.values())
+    """Deutsche Bank Ireland via official Workday tenant from supplied scrape.py."""
+    return _workday_override_scrape(
+        "Deutsche Bank",
+        "https://db.wd3.myworkdayjobs.com/DBWebsite",
+        session,
+    )
+
 
 
 def scrape_arup_ireland(session):
@@ -5445,28 +5471,86 @@ def scrape_ups_ireland(session):
     return list(results.values())
 
 
+
 def scrape_three_ireland_direct(session):
-    """Three Ireland's real Cornerstone OnDemand careers site."""
+    """Three Ireland via official Cornerstone careers site."""
+    source = (
+        "https://three-ireland.csod.com/ux/ats/careersite/5/home"
+        "?c=three-ireland&lq=Ireland"
+        "&pl=ChIJ-ydAXOS6WUgRCPTbzjQSfM8"
+    )
     if not HAS_PLAYWRIGHT:
-        print("      [three-ireland] playwright not installed — skipping")
         return []
+
     results = {}
     try:
         with sync_playwright() as pw:
-            browser = pw.chromium.launch(headless=True, args=["--disable-http2"])
-            page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
-            page.goto("https://three-ireland.csod.com/ux/ats/careersite/5/home?c=three-ireland&country=ie",
-                       wait_until="domcontentloaded", timeout=30000)
-            page.wait_for_timeout(1800)
-            _browser_accept_consent(page)
-            _browser_collect_job_links_with_retries(
-                page, "Three Ireland", [r"three-ireland\.csod\.com/.*ats/careersite/.*job"],
-                "three_ireland_browser", results, "Ireland", rounds=25)
+            browser = pw.chromium.launch(
+                headless=True,
+                args=["--no-sandbox", "--disable-dev-shm-usage", "--disable-gpu"],
+            )
+            context = browser.new_context(locale="en-IE", viewport={"width": 1400, "height": 1400})
+            page = context.new_page()
+            page.goto(source, wait_until="domcontentloaded", timeout=45000)
+            page.wait_for_timeout(2500)
+
+            links = page.locator("a").evaluate_all(
+                """els => els.map(a => ({
+                    href: a.href || "",
+                    text: (a.innerText || a.textContent || "").trim()
+                }))"""
+            )
+
+            location_map = [
+                ("Drogheda", "Drogheda, Ireland"),
+                ("Sligo", "Sligo, Ireland"),
+                ("Mary Street", "Dublin, Ireland"),
+                ("Navan", "Navan, Ireland"),
+                ("Limerick", "Limerick, Ireland"),
+                ("Athlone", "Athlone, Ireland"),
+                ("Patrick St", "Cork, Ireland"),
+                ("Tralee", "Tralee, Ireland"),
+                ("Bray", "Bray, Ireland"),
+                ("Mahon Point", "Cork, Ireland"),
+                ("Dublin", "Dublin, Ireland"),
+                ("Cork", "Cork, Ireland"),
+                ("Galway", "Galway, Ireland"),
+            ]
+
+            for item in links:
+                href = re.sub(r"\s+", " ", str(item.get("href") or "")).strip()
+                title = re.sub(r"\s+", " ", str(item.get("text") or "")).strip()
+                mm = re.search(r"/careersite/5/home/requisition/(\d+)", href, re.I)
+                if not mm or not title or _looks_like_non_job_title(title):
+                    continue
+
+                loc = "Ireland"
+                for needle, normalized in location_map:
+                    if re.search(rf"\b{re.escape(needle)}\b", title, re.I):
+                        loc = normalized
+                        break
+
+                results[mm.group(1)] = {
+                    "company": "Three Ireland",
+                    "title": title[:300],
+                    "location": loc,
+                    "posted_text": "Unknown",
+                    "posted_days_ago": None,
+                    "employment_type": normalize_employment_type("", title),
+                    "url": href.split("#")[0],
+                    "source": "three_cornerstone",
+                    "visa_sponsorship": "Unknown",
+                    "visa_snippet": "",
+                }
+
+            context.close()
             browser.close()
-    except Exception as e:
-        print(f"      [three-ireland] browser scrape failed: {e}")
-    print(f"      [three-ireland] {len(results)} unique Ireland jobs accumulated")
+    except Exception as exc:
+        print(f"      [three_friend] failed: {exc}")
+
+    print(f"      [three_friend] {len(results)} Ireland jobs")
     return list(results.values())
+
 
 
 def scrape_aiven_ireland(session):
@@ -8101,37 +8185,100 @@ def scrape_capgemini_ireland(session):
     )
 
 
+
 def scrape_vodafone_ireland(session):
-    return _batch_first_party_roi_scrape(
-        "Vodafone Ireland",
-        [
-            "https://careers.vodafone.com/ireland/",
-            "https://careers.vodafone.com/search/?q=&locationsearch=Ireland",
-            "https://careers.vodafone.com/search/?q=&locationsearch=Dublin",
-        ],
-        ["careers.vodafone.com"],
-        ["/job/", "/jobs/", "/search/"],
-        session,
-        "vodafone_first_party",
-        40,
-    )
+    """Vodafone Ireland via official SuccessFactors search/detail pages."""
+    search_urls = [
+        "https://opportunities.vodafone.com/search/?q=&locationsearch=Ireland",
+        "https://opportunities.vodafone.com/search/?q=&locationsearch=Dublin",
+        "https://opportunities.vodafone.com/",
+    ]
+    headers = {
+        "User-Agent": HEADERS.get("User-Agent", "Mozilla/5.0"),
+        "Accept-Language": "en-IE,en;q=0.9",
+    }
+    detail_urls = set()
+    results = {}
+
+    for url in search_urls:
+        try:
+            r = session.get(url, headers=headers, timeout=20)
+        except Exception:
+            continue
+        if r.status_code != 200:
+            continue
+
+        html_text = r.text or ""
+        for m in re.finditer(
+            r'href=["\']([^"\']*/job/[^"\']+/\d+/?)["\']',
+            html_text, re.I
+        ):
+            detail_urls.add(urllib.parse.urljoin(url, m.group(1)).split("#")[0])
+        for m in re.finditer(
+            r'https://opportunities\.vodafone\.com/job/[^"\'<>\s]+/\d+/?',
+            html_text, re.I
+        ):
+            detail_urls.add(m.group(0))
+
+    for url in sorted(detail_urls):
+        try:
+            r = session.get(url, headers=headers, timeout=20)
+        except Exception:
+            continue
+        if r.status_code != 200:
+            continue
+
+        body = re.sub(r"\s+", " ", _html_to_text(r.text or "")).strip()
+        if _ROI_NEGATIVE_RE.search(body):
+            continue
+        if not is_republic_of_ireland_location(body):
+            continue
+
+        title = ""
+        mm = re.search(r"<h1[^>]*>(.*?)</h1>", r.text or "", re.I | re.S)
+        if mm:
+            title = re.sub(r"\s+", " ", _html_to_text(mm.group(1))).strip()
+        if not title:
+            mm = re.search(r"<title[^>]*>(.*?)</title>", r.text or "", re.I | re.S)
+            if mm:
+                title = re.sub(r"\s+", " ", _html_to_text(mm.group(1))).strip()
+                title = re.sub(r"\s+Job Details.*$", "", title, flags=re.I).strip()
+
+        if not title or _looks_like_non_job_title(title):
+            continue
+
+        loc = "Dublin, Ireland" if re.search(r"\bDublin\b", body, re.I) else "Ireland"
+        sponsorship, snippet = classify_sponsorship(body[:16000])
+
+        canonical = url.split("?")[0]
+        results[canonical.lower()] = {
+            "company": "Vodafone Ireland",
+            "title": title[:300],
+            "location": loc,
+            "posted_text": "Unknown",
+            "posted_days_ago": None,
+            "employment_type": normalize_employment_type("", title),
+            "url": canonical,
+            "source": "vodafone_successfactors_http",
+            "visa_sponsorship": sponsorship,
+            "visa_snippet": snippet,
+        }
+
+    print(f"      [vodafone_friend] {len(results)} verified Ireland jobs from {len(detail_urls)} links")
+    return list(results.values())
+
+
 
 
 
 def scrape_abbott_ireland(session):
-    return _batch_first_party_roi_scrape(
+    """Abbott Ireland via official Workday tenant from the supplied scrape.py."""
+    return _workday_override_scrape(
         "Abbott",
-        [
-            "https://www.jobs.abbott/us/en/search-results?keywords=Ireland",
-            "https://www.jobs.abbott/us/en/search-results?keywords=Dublin",
-            "https://www.jobs.abbott/us/en/search-results?keywords=Galway",
-        ],
-        ["jobs.abbott"],
-        ["/job/", "/jobs/"],
+        "https://abbott.wd5.myworkdayjobs.com/abbottcareers",
         session,
-        "abbott_first_party",
-        55,
     )
+
 
 
 def scrape_astrazeneca_ireland(session):
@@ -8210,20 +8357,77 @@ def scrape_novartis_ireland(session):
     )
 
 
+
 def scrape_intel_ireland(session):
-    return _batch_first_party_roi_scrape(
+    """Intel Ireland via official Workday tenant from the supplied scrape.py."""
+    return _workday_override_scrape(
         "Intel",
-        [
-            "https://jobs.intel.com/en/search-jobs/Ireland",
-            "https://jobs.intel.com/en/search-jobs/Leixlip",
-        ],
-        ["jobs.intel.com"],
-        ["/job/", "/jobs/", "/search-jobs/"],
+        "https://intel.wd1.myworkdayjobs.com/External",
         session,
-        "intel_first_party",
-        55,
     )
 
+
+
+
+
+def scrape_tcs_ireland(session):
+    """TCS Ireland via Candidate Manager, adapted from supplied scrape.py."""
+    source_url = "https://www.candidatemanager.net/cm/p/pJobs.aspx?mid=CXAZAZB&sid=YYAZD"
+    try:
+        r = session.get(
+            source_url, timeout=20,
+            headers={
+                "User-Agent": HEADERS.get("User-Agent", "Mozilla/5.0"),
+                "Accept-Language": "en-IE,en;q=0.9",
+            },
+        )
+    except Exception as exc:
+        print(f"      [tcs_friend] request failed: {exc}")
+        return []
+
+    if r.status_code != 200:
+        return []
+
+    html_text = r.text or ""
+    results = {}
+
+    for m in re.finditer(
+        r'<a[^>]+href=["\']([^"\']*pJobDetails[^"\']*)["\'][^>]*>(.*?)</a>',
+        html_text, re.I | re.S
+    ):
+        href = urllib.parse.urljoin(source_url, m.group(1))
+        title = re.sub(r"\s+", " ", _html_to_text(m.group(2))).strip()
+        start = max(0, m.start() - 1500)
+        end = min(len(html_text), m.end() + 1500)
+        row_text = re.sub(r"\s+", " ", _html_to_text(html_text[start:end])).strip()
+
+        if not re.search(r"\bIreland\b", row_text, re.I):
+            continue
+        if not title or _looks_like_non_job_title(title):
+            continue
+
+        location = "Ireland"
+        for city in ("Letterkenny", "Dublin", "Cork", "Galway", "Limerick", "Waterford"):
+            if re.search(rf"\b{city}\b", row_text, re.I):
+                location = f"{city}, Ireland"
+                break
+
+        sponsorship, snippet = classify_sponsorship(row_text[:16000])
+        results[href.lower()] = {
+            "company": "Tata Consultancy Services (TCS)",
+            "title": title[:300],
+            "location": location,
+            "posted_text": "Unknown",
+            "posted_days_ago": None,
+            "employment_type": normalize_employment_type("", title),
+            "url": href,
+            "source": "tcs_candidate_manager",
+            "visa_sponsorship": sponsorship,
+            "visa_snippet": snippet,
+        }
+
+    print(f"      [tcs_friend] {len(results)} Ireland jobs")
+    return list(results.values())
 
 def test_single_company(name):
     """Fast test mode for one company — skips the full ~30 min pipeline
@@ -8273,6 +8477,7 @@ def test_single_company(name):
         "stryker": lambda: scrape_stryker_ireland(session),
         "novartis": lambda: scrape_novartis_ireland(session),
         "intel": lambda: scrape_intel_ireland(session),
+        "tata consultancy services (tcs)": lambda: scrape_tcs_ireland(session),
         "pepsico": lambda: scrape_pepsico_ireland(session),
         "esb": lambda: scrape_esb_ireland(session),
         "irish rail": lambda: scrape_irish_rail_ireland(session),
@@ -8422,12 +8627,114 @@ def scrape_morgan_stanley_ireland_recovery(session):
     )
 
 
+
 def scrape_sp_global_ireland_recovery(session):
-    return _sitemap_job_recovery(
-        "S&P Global",
-        ["https://careers.spglobal.com", "https://www.spglobal.com"],
-        "spglobal_sitemap", session
-    )
+    """S&P Global via official Workday Ireland country facet."""
+    company = "S&P Global"
+    base = "https://spgi.wd5.myworkdayjobs.com"
+    site = "SPGI_Careers"
+    api = f"{base}/wday/cxs/spgi/{site}/jobs"
+    ireland_country_id = "04a05835925f45b3a59406a2a6b72c8a"
+    results = {}
+    offset = 0
+
+    while offset < 500:
+        payload = {
+            "appliedFacets": {"Location_Country": [ireland_country_id]},
+            "limit": 20,
+            "offset": offset,
+            "searchText": "",
+        }
+        try:
+            r = session.post(
+                api, json=payload, timeout=20,
+                headers={
+                    "User-Agent": HEADERS.get("User-Agent", "Mozilla/5.0"),
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                    "Accept-Language": "en-IE,en;q=0.9",
+                    "Referer": f"{base}/{site}",
+                },
+            )
+            if r.status_code != 200:
+                break
+            data = r.json()
+        except Exception:
+            break
+
+        rows = data.get("jobPostings") or []
+        if not rows:
+            break
+
+        for row in rows:
+            external_path = str(row.get("externalPath") or "").strip()
+            if not external_path:
+                continue
+
+            detail_url = f"{base}/wday/cxs/spgi/{site}{external_path}"
+            try:
+                dr = session.get(
+                    detail_url, timeout=15,
+                    headers={
+                        "User-Agent": HEADERS.get("User-Agent", "Mozilla/5.0"),
+                        "Accept": "application/json",
+                        "Referer": f"{base}/{site}",
+                    },
+                )
+                if dr.status_code != 200:
+                    continue
+                detail = dr.json()
+            except Exception:
+                continue
+
+            info = detail.get("jobPostingInfo") or {}
+            title = str(info.get("title") or row.get("title") or "").strip()
+            location = str(info.get("location") or "")
+            additional = info.get("additionalLocations") or []
+            additional_text = " ".join(
+                str(x.get("location") if isinstance(x, dict) else x)
+                for x in additional
+            ) if isinstance(additional, list) else str(additional)
+            desc = str(info.get("jobDescription") or info.get("description") or "")
+            blob = f"{title} {location} {additional_text} {desc}"
+
+            if _ROI_NEGATIVE_RE.search(blob):
+                continue
+            if not is_republic_of_ireland_location(blob):
+                continue
+            if not title or _looks_like_non_job_title(title):
+                continue
+
+            if re.search(r"\bDublin\b", blob, re.I):
+                clean_location = "Dublin, Ireland"
+            elif re.search(r"\bCork\b", blob, re.I):
+                clean_location = "Cork, Ireland"
+            else:
+                clean_location = "Ireland"
+
+            public_url = base + "/" + site + external_path
+            sponsorship, snippet = classify_sponsorship(desc[:16000])
+            results[public_url.rstrip("/").lower()] = {
+                "company": company,
+                "title": title[:300],
+                "location": clean_location,
+                "posted_text": str(info.get("startDate") or "Unknown"),
+                "posted_days_ago": parse_posted_text(str(info.get("startDate") or "")),
+                "employment_type": normalize_employment_type(info.get("timeType"), title),
+                "url": public_url,
+                "source": "spglobal_workday_ireland",
+                "visa_sponsorship": sponsorship,
+                "visa_snippet": snippet,
+            }
+
+        offset += len(rows)
+        total = data.get("total")
+        if isinstance(total, int) and offset >= total:
+            break
+
+    print(f"      [spglobal_friend] {len(results)} Ireland jobs")
+    return list(results.values())
+
 
 
 def scrape_databricks_ireland_recovery(session):
@@ -8454,6 +8761,7 @@ def scrape_aer_lingus_ireland_recovery(session):
     )
 
 def main():
+    print("=== FRIEND_LOGIC_NONLIVE_BATCH ACTIVE: Abbott/Intel/Vodafone/DXC/DB/S&P/Three/TCS; existing live companies untouched ===")
     print("=== FAST_BATCH_8_NEXT ACTIVE: Abbott/AZ/Amgen/Alexion/Stryker/Novartis/Intel + Aldi second pass ===")
     print("=== FAST_BATCH_6_NEXT ACTIVE: SSE fast-return + Tesco/Aldi/FBD/Capgemini/Vodafone dedicated routes ===")
     print("=== FAST_BATCH_5_RECOVERY ACTIVE: Goodbody/BMS/SSE/HPE/Dell dedicated first-party routes; runtime architecture unchanged ===")
@@ -8732,6 +9040,7 @@ def main():
         ("exact", "stryker", scrape_stryker_ireland, 60, "official Stryker careers"),
         ("exact", "novartis", scrape_novartis_ireland, 60, "official Novartis careers"),
         ("exact", "intel", scrape_intel_ireland, 60, "official Intel careers"),
+        ("exact", "tata consultancy services (tcs)", scrape_tcs_ireland, 45, "official TCS Candidate Manager"),
         ("exact", "aib (allied irish banks)", scrape_aib_ireland, 240, "filtered against UK-only postings"),
         ("exact", "bnp paribas ireland", scrape_bnp_paribas_ireland, 240, "first-party Dublin jobs page"),
         ("exact", "blackrock", scrape_blackrock_ireland, 240, "Phenom platform"),
@@ -8884,10 +9193,21 @@ def main():
                 "stryker",
                 "novartis",
                 "intel",
+                "tata consultancy services (tcs)",
             }:
-                cache_key = ("Aldi Ireland::batch_dedicated_v2" if _key == "aldi ireland" else f"{name}::batch_dedicated_v1")
+                if _key == "aldi ireland":
+                    cache_key = "Aldi Ireland::batch_dedicated_v2"
+                elif _key in {
+                    "abbott", "intel", "vodafone ireland",
+                    "tata consultancy services (tcs)"
+                }:
+                    cache_key = f"{name}::friend_logic_v1"
+                else:
+                    cache_key = f"{name}::batch_dedicated_v1"
             else:
                 cache_key = name
+            if _key in {"dxc technology", "deutsche bank", "s&p global", "three ireland"}:
+                cache_key = f"{name}::friend_logic_v1"
             return lambda: cached_browser_scrape(browser_cache, cache_key, lambda: fn(session), 0, name)
 
         actual_timeout = effective_timeout(browser_cache, company_name, timeout_s)
@@ -9001,6 +9321,7 @@ def main():
             "stryker",
             "novartis",
             "intel",
+            "tata consultancy services (tcs)",
         }
     ]
     for entry in priority_entries:
