@@ -7791,6 +7791,248 @@ def scrape_merit_medical_ireland(session):
     )
 
 
+
+
+def _batch_first_party_roi_scrape(company_name, search_urls, allowed_domains,
+                                  url_markers, session, source_tag,
+                                  max_candidates=80):
+    if not HAS_PLAYWRIGHT:
+        print(f"      [{source_tag}] Playwright unavailable")
+        return []
+
+    candidates = set()
+
+    def structural_job_url(url):
+        u = str(url or "").lower()
+        if not any(d.lower() in u for d in allowed_domains):
+            return False
+        return any(marker.lower() in u for marker in url_markers)
+
+    try:
+        with sync_playwright() as p:
+            browser = p.chromium.launch(
+                headless=True,
+                args=["--no-sandbox", "--disable-dev-shm-usage", "--disable-gpu"],
+            )
+            page = browser.new_page(
+                viewport={"width": 1400, "height": 1000},
+                user_agent=HEADERS.get("User-Agent"),
+            )
+
+            for search_url in search_urls:
+                try:
+                    page.goto(search_url, wait_until="domcontentloaded", timeout=35000)
+                    page.wait_for_timeout(1800)
+                    try:
+                        page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
+                        page.wait_for_timeout(700)
+                    except Exception:
+                        pass
+                except Exception as exc:
+                    print(f"      [{source_tag}] search failed: {exc}")
+                    continue
+
+                found = set()
+
+                for frame in page.frames:
+                    try:
+                        links = frame.locator("a[href]")
+                        for i in range(min(links.count(), 1200)):
+                            href = links.nth(i).get_attribute("href")
+                            if not href:
+                                continue
+                            href = urllib.parse.urljoin(
+                                frame.url or page.url, href
+                            ).split("#")[0]
+                            if structural_job_url(href):
+                                found.add(href)
+                    except Exception:
+                        pass
+
+                    try:
+                        frame_html = frame.content()
+                        for raw in re.findall(
+                            r'''(?:href=["\']|["\'])((?:https?://|/)[^"\'<> ]+)(?:["\'])''',
+                            frame_html,
+                            re.I,
+                        ):
+                            href = urllib.parse.urljoin(
+                                frame.url or page.url,
+                                html.unescape(raw).replace("\\/", "/"),
+                            ).split("#")[0]
+                            if structural_job_url(href):
+                                found.add(href)
+                    except Exception:
+                        pass
+
+                candidates.update(found)
+                print(
+                    f"      [{source_tag}] {len(found)} vacancy URLs "
+                    f"({len(candidates)} unique)"
+                )
+
+                if len(candidates) >= max_candidates:
+                    break
+
+            if not candidates:
+                browser.close()
+                return []
+
+            results = {}
+
+            for detail_url in list(sorted(candidates))[:max_candidates]:
+                try:
+                    page.goto(
+                        detail_url,
+                        wait_until="domcontentloaded",
+                        timeout=25000,
+                    )
+                    page.wait_for_timeout(500)
+
+                    body = re.sub(
+                        r"\s+", " ",
+                        page.locator("body").inner_text()
+                    ).strip()
+
+                    if not is_republic_of_ireland_location(body):
+                        continue
+                    if _ROI_NEGATIVE_RE.search(body):
+                        continue
+
+                    title = ""
+                    try:
+                        title = re.sub(
+                            r"\s+", " ",
+                            page.locator("h1").first.inner_text()
+                        ).strip()
+                    except Exception:
+                        pass
+
+                    if not title or _looks_like_non_job_title(title):
+                        continue
+
+                    loc = "Republic of Ireland"
+                    places = (
+                        "Dublin", "Cork", "Galway", "Limerick", "Wexford",
+                        "Waterford", "Athlone", "Sligo", "Kildare", "Kilkenny",
+                        "Clare", "Tipperary", "Meath", "Louth", "Mayo",
+                        "Wicklow", "Donegal", "Leixlip", "Cruiserath", "Shannon",
+                    )
+                    for place in places:
+                        if re.search(
+                            rf"\b{re.escape(place)}\b[^|.;]{{0,40}}\bIreland\b",
+                            body,
+                            re.I,
+                        ):
+                            loc = f"{place}, Ireland"
+                            break
+
+                    sponsorship, snippet = classify_sponsorship(body[:18000])
+
+                    results[page.url.rstrip("/").lower()] = {
+                        "company": company_name,
+                        "title": title[:300],
+                        "location": loc,
+                        "posted_text": "Unknown",
+                        "posted_days_ago": None,
+                        "employment_type": normalize_employment_type("", title),
+                        "url": page.url,
+                        "source": source_tag,
+                        "visa_sponsorship": sponsorship,
+                        "visa_snippet": snippet,
+                    }
+
+                except Exception:
+                    continue
+
+            browser.close()
+
+    except Exception as exc:
+        print(f"      [{source_tag}] rendered recovery failed: {exc}")
+        return []
+
+    jobs = list(results.values())
+    print(f"      [{source_tag}] {len(jobs)} verified Republic-of-Ireland vacancies")
+    return jobs
+
+
+def scrape_goodbody_ireland(session):
+    return _batch_first_party_roi_scrape(
+        "Goodbody",
+        [
+            "https://jobs.aib.ie/goodbody/search/?q=&locationsearch=Dublin",
+            "https://jobs.aib.ie/goodbody/search/?q=&locationsearch=Ireland",
+            "https://jobs.aib.ie/goodbody/",
+        ],
+        ["jobs.aib.ie"],
+        ["/goodbody/job/"],
+        session,
+        "goodbody_first_party",
+        40,
+    )
+
+
+def scrape_bms_ireland(session):
+    return _batch_first_party_roi_scrape(
+        "Bristol Myers Squibb",
+        [
+            "https://careers.bms.com/ie/",
+            "https://careers.bms.com/jobs/?location=Ireland",
+        ],
+        ["careers.bms.com"],
+        ["/job/", "/jobs/"],
+        session,
+        "bms_first_party",
+        80,
+    )
+
+
+def scrape_sse_ireland(session):
+    return _batch_first_party_roi_scrape(
+        "SSE Airtricity / SSE",
+        [
+            "https://careers.sse.com/jobs/search",
+            "https://careers.sse.com/jobs/search?page=1&query=Dublin",
+            "https://careers.sse.com/jobs/search?page=2&query=",
+        ],
+        ["careers.sse.com"],
+        ["/jobs/", "/job/"],
+        session,
+        "sse_first_party",
+        50,
+    )
+
+
+def scrape_hpe_ireland(session):
+    return _batch_first_party_roi_scrape(
+        "Hewlett Packard Enterprise (HPE)",
+        [
+            "https://careers.hpe.com/us/en/search-results?keywords=Ireland",
+            "https://careers.hpe.com/us/en/search-results?keywords=Galway",
+            "https://careers.hpe.com/us/en/search-results?keywords=Cork",
+        ],
+        ["careers.hpe.com"],
+        ["/job/", "/jobs/"],
+        session,
+        "hpe_first_party",
+        60,
+    )
+
+
+def scrape_dell_ireland(session):
+    return _batch_first_party_roi_scrape(
+        "Dell Technologies",
+        [
+            "https://jobs.dell.com/en/search-jobs/Ireland/375/2/2963597/53/-8/50/2",
+            "https://jobs.dell.com/en/search-jobs?keywords=Ireland",
+        ],
+        ["jobs.dell.com"],
+        ["/job/", "/jobs/"],
+        session,
+        "dell_first_party",
+        80,
+    )
+
 def test_single_company(name):
     """Fast test mode for one company — skips the full ~30 min pipeline
     entirely. Checks known dedicated scrapers by name directly (Apple,
@@ -7822,6 +8064,11 @@ def test_single_company(name):
         "wipro": lambda: scrape_wipro_ireland(session),
         "iqvia": lambda: scrape_iqvia_ireland(session),
         "merit medical": lambda: scrape_merit_medical_ireland(session),
+        "goodbody": lambda: scrape_goodbody_ireland(session),
+        "bristol myers squibb": lambda: scrape_bms_ireland(session),
+        "sse airtricity / sse": lambda: scrape_sse_ireland(session),
+        "hewlett packard enterprise (hpe)": lambda: scrape_hpe_ireland(session),
+        "dell technologies": lambda: scrape_dell_ireland(session),
         "pepsico": lambda: scrape_pepsico_ireland(session),
         "esb": lambda: scrape_esb_ireland(session),
         "irish rail": lambda: scrape_irish_rail_ireland(session),
@@ -8003,6 +8250,7 @@ def scrape_aer_lingus_ireland_recovery(session):
     )
 
 def main():
+    print("=== FAST_BATCH_5_RECOVERY ACTIVE: Goodbody/BMS/SSE/HPE/Dell dedicated first-party routes; runtime architecture unchanged ===")
     print("=== FAST_MERIT_MEDICAL_FIX ACTIVE: official Merit Workday route; runtime architecture unchanged ===")
     print("=== FAST_GUIDEWIRE_QUALITY_FIX ACTIVE: verified Guidewire ROI jobs no longer rejected only for URL shape ===")
     print("=== FAST_BASELINE_IQVIA_ONLY ACTIVE: proven IQVIA Ireland scraper added; runtime architecture unchanged ===")
@@ -8261,6 +8509,11 @@ def main():
         ("exact", "wipro", scrape_wipro_ireland, 75, "first-party Wipro vacancy records + City/State verification"),
         ("exact", "iqvia", scrape_iqvia_ireland, 90, "first-party IQVIA Ireland Jobs page"),
         ("exact", "merit medical", scrape_merit_medical_ireland, 75, "official Merit Medical Workday"),
+        ("exact", "goodbody", scrape_goodbody_ireland, 60, "official Goodbody jobs board"),
+        ("exact", "bristol myers squibb", scrape_bms_ireland, 60, "official BMS Ireland careers"),
+        ("exact", "sse airtricity / sse", scrape_sse_ireland, 60, "official SSE careers"),
+        ("exact", "hewlett packard enterprise (hpe)", scrape_hpe_ireland, 60, "official HPE careers"),
+        ("exact", "dell technologies", scrape_dell_ireland, 60, "official Dell careers"),
         ("exact", "aib (allied irish banks)", scrape_aib_ireland, 240, "filtered against UK-only postings"),
         ("exact", "bnp paribas ireland", scrape_bnp_paribas_ireland, 240, "first-party Dublin jobs page"),
         ("exact", "blackrock", scrape_blackrock_ireland, 240, "Phenom platform"),
@@ -8343,6 +8596,8 @@ def main():
         "scrape_wtw_ireland_direct", "scrape_guidewire_ireland_direct_http",
         "scrape_wipro_ireland",
         "scrape_iqvia_ireland",
+        "scrape_goodbody_ireland", "scrape_bms_ireland", "scrape_sse_ireland",
+        "scrape_hpe_ireland", "scrape_dell_ireland",
     }
 
     _live_company_names = {
@@ -8388,6 +8643,14 @@ def main():
                 cache_key = "IQVIA::ireland_dedicated_v1"
             elif _key == "merit medical":
                 cache_key = "Merit Medical::workday_dedicated_v1"
+            elif _key in {
+                "goodbody",
+                "bristol myers squibb",
+                "sse airtricity / sse",
+                "hewlett packard enterprise (hpe)",
+                "dell technologies",
+            }:
+                cache_key = f"{name}::batch_dedicated_v1"
             else:
                 cache_key = name
             return lambda: cached_browser_scrape(browser_cache, cache_key, lambda: fn(session), 0, name)
@@ -8483,9 +8746,14 @@ def main():
         entry for entry in manual_check
         if entry["company"].strip().lower() in PRIORITY_SHEET2_COMPANIES
         and entry["company"].strip().lower() not in {
-            "wipro",  # dedicated first-party vacancy scraper
-            "iqvia",  # dedicated first-party Ireland Jobs scraper
-            "merit medical",  # dedicated official Workday route
+            "wipro",
+            "iqvia",
+            "merit medical",
+            "goodbody",
+            "bristol myers squibb",
+            "sse airtricity / sse",
+            "hewlett packard enterprise (hpe)",
+            "dell technologies",
         }
     ]
     for entry in priority_entries:
