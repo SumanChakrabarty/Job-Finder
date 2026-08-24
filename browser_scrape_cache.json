@@ -19165,7 +19165,7 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1787584554.3247662,
+    "checked_at": 1787596371.8268614,
     "consecutive_failures": 0
   },
   "Capgemini::batch_dedicated_v1": {
@@ -19201,7 +19201,7 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1787584553.8777554,
+    "checked_at": 1787596372.371938,
     "consecutive_failures": 0
   },
   "Tesco Ireland::batch_dedicated_v1": {
@@ -19483,7 +19483,7 @@
       },
       {
         "company": "AstraZeneca",
-        "title": "17 results for your search",
+        "title": "18 results for your search",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
         "posted_days_ago": 9999.0,
@@ -19498,7 +19498,7 @@
       },
       {
         "company": "AstraZeneca",
-        "title": "18 results for your search",
+        "title": "19 results for your search",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
         "posted_days_ago": 9999.0,
@@ -19513,7 +19513,7 @@
       },
       {
         "company": "AstraZeneca",
-        "title": "20 results for your search",
+        "title": "21 results for your search",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
         "posted_days_ago": 9999.0,
@@ -19528,7 +19528,7 @@
       },
       {
         "company": "AstraZeneca",
-        "title": "22 results for your search",
+        "title": "23 results for your search",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
         "posted_days_ago": 9999.0,
@@ -19542,7 +19542,7 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1787584589.2343264,
+    "checked_at": 1787596395.321654,
     "consecutive_failures": 0
   },
   "Amgen::batch_dedicated_v1": {
@@ -19788,7 +19788,7 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1787584599.0889049,
+    "checked_at": 1787596411.845194,
     "consecutive_failures": 0
   },
   "Novartis::batch_dedicated_v1": {
@@ -19959,7 +19959,7 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1787584597.2755826,
+    "checked_at": 1787596412.8409464,
     "consecutive_failures": 0
   },
   "DXC Technology::friend_logic_v1": {
@@ -24128,7 +24128,7 @@
         "source": "hpe_first_party",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-24T18:06:20.492678+00:00",
         "posted_age_known": false
       },
@@ -24196,6 +24196,21 @@
         "visa_snippet": "",
         "new_since_last_check": false,
         "first_seen_at": "2026-08-24T15:19:18.498188+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Three Ireland",
+        "title": "Retail Associate - Drogheda",
+        "location": "Drogheda, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://three-ireland.csod.com/ux/ats/careersite/5/home/requisition/2704?c=three-ireland",
+        "source": "three_cornerstone_regression_recovery",
+        "visa_sponsorship": "Unknown",
+        "visa_snippet": "",
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T02:27:29.376212+00:00",
         "posted_age_known": false
       },
       {
@@ -24470,42 +24485,12 @@
       },
       {
         "company": "Three Ireland",
-        "title": "Retail Associate - Drogheda",
-        "location": "Drogheda, Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://three-ireland.csod.com/ux/ats/careersite/5/home/requisition/2704?c=three-ireland",
-        "source": "three_cornerstone_regression_recovery",
-        "visa_sponsorship": "Unknown",
-        "visa_snippet": "",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-24T02:27:29.376212+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Three Ireland",
         "title": "Retail Associate - Henry Street",
         "location": "Ireland",
         "posted_text": "Unknown",
         "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://three-ireland.csod.com/ux/ats/careersite/5/home/requisition/2703?c=three-ireland",
-        "source": "three_cornerstone_regression_recovery",
-        "visa_sponsorship": "Unknown",
-        "visa_snippet": "",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-24T02:27:29.376212+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Three Ireland",
-        "title": "Retail Associate - Crescent, Limerick",
-        "location": "Limerick, Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://three-ireland.csod.com/ux/ats/careersite/5/home/requisition/2702?c=three-ireland",
         "source": "three_cornerstone_regression_recovery",
         "visa_sponsorship": "Unknown",
         "visa_snippet": "",
@@ -24572,9 +24557,24 @@
         "new_since_last_check": false,
         "first_seen_at": "2026-08-24T02:27:29.376212+00:00",
         "posted_age_known": false
+      },
+      {
+        "company": "Three Ireland",
+        "title": "Junior Legal Counsel",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://three-ireland.csod.com/ux/ats/careersite/5/home/requisition/2693?c=three-ireland",
+        "source": "three_cornerstone_regression_recovery",
+        "visa_sponsorship": "Unknown",
+        "visa_snippet": "",
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-24T18:34:42.391109+00:00",
+        "posted_age_known": false
       }
     ],
-    "checked_at": 1787584608.7136762,
+    "checked_at": 1787596407.4642215,
     "consecutive_failures": 0
   },
   "Ryanair": {
@@ -24586,13 +24586,13 @@
         "posted_text": "Unknown",
         "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
-        "url": "https://careers.ryanair.com/jobs/accounts-payable-representative/",
+        "url": "https://careers.ryanair.com/jobs/people-manager-inflight/",
         "source": "priority_sheet2_generic",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
         "title_source": "h1_meta",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-24T15:19:18.498188+00:00",
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-24T18:34:42.391109+00:00",
         "posted_age_known": false
       },
       {
@@ -24602,13 +24602,13 @@
         "posted_text": "Unknown",
         "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
-        "url": "https://careers.ryanair.com/jobs/accounts-payable-administrator/",
+        "url": "https://careers.ryanair.com/jobs/flight-planner/",
         "source": "priority_sheet2_generic",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
         "title_source": "h1_meta",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-24T15:19:18.498188+00:00",
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-24T18:34:42.391109+00:00",
         "posted_age_known": false
       },
       {
@@ -24618,208 +24618,208 @@
         "posted_text": "Unknown",
         "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
-        "url": "https://careers.ryanair.com/jobs/occ-administrator/",
+        "url": "https://careers.ryanair.com/jobs/hr-specialist-france/",
         "source": "priority_sheet2_generic",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
         "title_source": "h1_meta",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-24T15:19:18.498188+00:00",
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-24T18:34:42.391109+00:00",
         "posted_age_known": false
       },
       {
         "company": "Ryanair",
         "title": "It’s time to go places",
         "location": "Ireland",
-        "posted_text": "06 October 2026",
-        "posted_days_ago": 0.0,
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
-        "url": "https://careers.ryanair.com/jobs/lauda-cabin-crew-assessment-day-vienna-06-october-2026/",
+        "url": "https://careers.ryanair.com/jobs/hr-officer/",
         "source": "priority_sheet2_generic",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
         "title_source": "h1_meta",
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-24T15:19:18.498188+00:00",
-        "posted_age_known": true
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-24T18:34:42.391109+00:00",
+        "posted_age_known": false
       }
     ],
-    "checked_at": 1787584661.4428759,
+    "checked_at": 1787596449.5373483,
     "consecutive_failures": 0
   },
   "Regeneron": {
     "jobs": [],
-    "checked_at": 1787594608.7800899,
+    "checked_at": 1787596355.8619912,
     "consecutive_failures": 1
   },
   "BNY Mellon": {
     "jobs": [],
-    "checked_at": 1787594610.2148938,
+    "checked_at": 1787596356.7847667,
     "consecutive_failures": 1
   },
   "Dell Technologies::batch_dedicated_v1": {
     "jobs": [],
-    "checked_at": 1787594619.2431114,
+    "checked_at": 1787596364.9890304,
     "consecutive_failures": 1
   },
   "Aldi Ireland::batch_dedicated_v2": {
     "jobs": [],
-    "checked_at": 1787594619.7976174,
-    "consecutive_failures": 1
-  },
-  "Stryker::batch_dedicated_v1": {
-    "jobs": [],
-    "checked_at": 1787594627.2061005,
+    "checked_at": 1787596365.825554,
     "consecutive_failures": 1
   },
   "SSE Airtricity / SSE::batch_dedicated_v1": {
     "jobs": [],
-    "checked_at": 1787594636.383992,
+    "checked_at": 1787596388.925479,
     "consecutive_failures": 1
   },
-  "HP (Hewlett-Packard)::friend_next4_v1": {
+  "Stryker::batch_dedicated_v1": {
     "jobs": [],
-    "checked_at": 1787594645.414616,
-    "consecutive_failures": 1
-  },
-  "Bristol Myers Squibb::batch_dedicated_v1": {
-    "jobs": [],
-    "checked_at": 1787594645.929612,
+    "checked_at": 1787596392.1825545,
     "consecutive_failures": 1
   },
   "QIAGEN": {
     "jobs": [],
-    "checked_at": 1787594645.9859183,
+    "checked_at": 1787596392.5803585,
     "consecutive_failures": 1
   },
-  "Oracle::attempt2_plus_new_v2": {
+  "Bristol Myers Squibb::batch_dedicated_v1": {
     "jobs": [],
-    "checked_at": 1787594646.053662,
+    "checked_at": 1787596398.1607926,
     "consecutive_failures": 1
   },
   "Central Bank of Ireland": {
     "jobs": [],
-    "checked_at": 1787594649.4213822,
+    "checked_at": 1787596399.701142,
+    "consecutive_failures": 1
+  },
+  "Oracle::attempt2_plus_new_v2": {
+    "jobs": [],
+    "checked_at": 1787596406.1933215,
+    "consecutive_failures": 1
+  },
+  "HP (Hewlett-Packard)::friend_next4_v1": {
+    "jobs": [],
+    "checked_at": 1787596409.5673823,
     "consecutive_failures": 1
   },
   "Red Hat": {
     "jobs": [],
-    "checked_at": 1787594654.1636684,
-    "consecutive_failures": 1
-  },
-  "Willis Towers Watson (WTW)": {
-    "jobs": [],
-    "checked_at": 1787594666.7922611,
+    "checked_at": 1787596410.5783474,
     "consecutive_failures": 1
   },
   "Cantor Fitzgerald Ireland": {
     "jobs": [],
-    "checked_at": 1787594666.9686484,
-    "consecutive_failures": 1
-  },
-  "BDO Ireland": {
-    "jobs": [],
-    "checked_at": 1787594667.8788178,
-    "consecutive_failures": 1
-  },
-  "Aviva Ireland": {
-    "jobs": [],
-    "checked_at": 1787594669.060717,
-    "consecutive_failures": 1
-  },
-  "Glanbia / Tirlán": {
-    "jobs": [],
-    "checked_at": 1787594673.1315851,
+    "checked_at": 1787596418.8313024,
     "consecutive_failures": 1
   },
   "Fitch Ratings": {
     "jobs": [],
-    "checked_at": 1787594674.2768416,
+    "checked_at": 1787596419.0055468,
     "consecutive_failures": 1
   },
-  "Slalom": {
+  "Aviva Ireland": {
     "jobs": [],
-    "checked_at": 1787594674.4366016,
+    "checked_at": 1787596419.8992643,
+    "consecutive_failures": 1
+  },
+  "Glanbia / Tirlán": {
+    "jobs": [],
+    "checked_at": 1787596420.6988826,
+    "consecutive_failures": 1
+  },
+  "Willis Towers Watson (WTW)": {
+    "jobs": [],
+    "checked_at": 1787596426.836179,
     "consecutive_failures": 1
   },
   "UBS": {
     "jobs": [],
-    "checked_at": 1787594674.4704854,
+    "checked_at": 1787596426.8861694,
+    "consecutive_failures": 1
+  },
+  "BDO Ireland": {
+    "jobs": [],
+    "checked_at": 1787596427.1363752,
     "consecutive_failures": 1
   },
   "ABP Food Group": {
     "jobs": [],
-    "checked_at": 1787594678.7251542,
+    "checked_at": 1787596428.4195778,
+    "consecutive_failures": 1
+  },
+  "Slalom": {
+    "jobs": [],
+    "checked_at": 1787596428.7084382,
     "consecutive_failures": 1
   },
   "Zurich Insurance": {
     "jobs": [],
-    "checked_at": 1787594679.848217,
+    "checked_at": 1787596433.228346,
     "consecutive_failures": 1
   },
   "Alexion Pharmaceuticals": {
     "jobs": [],
-    "checked_at": 1787594680.6651115,
+    "checked_at": 1787596433.6361315,
     "consecutive_failures": 1
   },
   "Coillte": {
     "jobs": [],
-    "checked_at": 1787594681.2208219,
+    "checked_at": 1787596434.493213,
     "consecutive_failures": 1
   },
   "Baxter International": {
     "jobs": [],
-    "checked_at": 1787594682.5508778,
-    "consecutive_failures": 1
-  },
-  "Cook Medical": {
-    "jobs": [],
-    "checked_at": 1787594685.2505493,
-    "consecutive_failures": 1
-  },
-  "Gas Networks Ireland": {
-    "jobs": [],
-    "checked_at": 1787594687.2747025,
+    "checked_at": 1787596434.8767254,
     "consecutive_failures": 1
   },
   "ESB (Electricity Supply Board)": {
     "jobs": [],
-    "checked_at": 1787594688.0902996,
+    "checked_at": 1787596438.5193174,
+    "consecutive_failures": 1
+  },
+  "Cook Medical": {
+    "jobs": [],
+    "checked_at": 1787596440.0194795,
     "consecutive_failures": 1
   },
   "Eir": {
     "jobs": [],
-    "checked_at": 1787594688.6904197,
+    "checked_at": 1787596440.83439,
+    "consecutive_failures": 1
+  },
+  "Gas Networks Ireland": {
+    "jobs": [],
+    "checked_at": 1787596442.7033815,
     "consecutive_failures": 1
   },
   "Kepak Group": {
     "jobs": [],
-    "checked_at": 1787594690.5399227,
-    "consecutive_failures": 1
-  },
-  "Sky Ireland": {
-    "jobs": [],
-    "checked_at": 1787594692.5264807,
+    "checked_at": 1787596443.5232189,
     "consecutive_failures": 1
   },
   "Revvity (PerkinElmer)": {
     "jobs": [],
-    "checked_at": 1787594693.6730402,
+    "checked_at": 1787596445.2100887,
     "consecutive_failures": 1
   },
-  "Boston Consulting Group (BCG)": {
+  "Sky Ireland": {
     "jobs": [],
-    "checked_at": 1787594706.8315978,
-    "consecutive_failures": 1
-  },
-  "GlaxoSmithKline (GSK)": {
-    "jobs": [],
-    "checked_at": 1787594732.0263324,
+    "checked_at": 1787596445.655416,
     "consecutive_failures": 1
   },
   "Haleon": {
     "jobs": [],
-    "checked_at": 1787594732.9959517,
+    "checked_at": 1787596450.7953894,
+    "consecutive_failures": 1
+  },
+  "GlaxoSmithKline (GSK)": {
+    "jobs": [],
+    "checked_at": 1787596451.0933015,
+    "consecutive_failures": 1
+  },
+  "Boston Consulting Group (BCG)": {
+    "jobs": [],
+    "checked_at": 1787596454.4122524,
     "consecutive_failures": 1
   }
 }
