@@ -8619,6 +8619,137 @@ def scrape_tcs_ireland(session):
     print(f"      [tcs_friend] {len(results)} Ireland jobs")
     return list(results.values())
 
+
+
+def scrape_axa_ireland_friend(session):
+    return _batch_first_party_roi_scrape(
+        "AXA Ireland",
+        [
+            "https://careers.axa.com/careers-home/jobs?tags3=AXA%20Ireland&page=1&lat=53.3498&lng=-6.2603&radiusUnit=MILES&radius=25"
+        ],
+        ["careers.axa.com"],
+        ["/careers-home/jobs/"],
+        session,
+        "axa_friend_reference",
+        35,
+    )
+
+
+def scrape_agilent_ireland_friend(session):
+    results = {}
+    for site_url in (
+        "https://agilent.wd5.myworkdayjobs.com/Agilent_Careers",
+        "https://agilent.wd5.myworkdayjobs.com/Agilent_Student_Careers",
+    ):
+        for job in _workday_override_scrape("Agilent Technologies", site_url, session) or []:
+            href = str(job.get("url") or "")
+            if href:
+                results[href.split("?")[0].rstrip("/").lower()] = job
+    print(f"      [agilent_friend] {len(results)} Ireland jobs")
+    return list(results.values())
+
+
+def scrape_bnp_paribas_ireland_friend(session):
+    return _batch_first_party_roi_scrape(
+        "BNP Paribas Ireland",
+        ["https://www.bnpparibas.ie/en/join-us/vacancies/"],
+        ["bnpparibas.ie"],
+        ["/en/jobs/", "/join-us/vacancies/"],
+        session,
+        "bnp_friend_reference",
+        40,
+    )
+
+
+def scrape_coca_cola_hbc_ireland_friend(session):
+    return _batch_first_party_roi_scrape(
+        "Coca-Cola HBC Ireland",
+        ["https://careers.coca-colahellenic.com/en_US/careers/SearchJobs/ireland"],
+        ["careers.coca-colahellenic.com"],
+        ["/careers/ProjectDetail/"],
+        session,
+        "cocacola_hbc_friend_reference",
+        45,
+    )
+
+
+def scrape_hcltech_ireland_friend(session):
+    return _batch_first_party_roi_scrape(
+        "HCLTech",
+        [
+            "https://careers.hcltech.com/go/NonTPDemand/9558355/?markerViewed=&carouselIndex=&facetFilters=%7B%22custCountryRegion%22%3A%5B%22Ireland%22%5D%7D&pageNumber=0"
+        ],
+        ["careers.hcltech.com"],
+        ["/job/"],
+        session,
+        "hcl_friend_reference",
+        45,
+    )
+
+
+def scrape_infosys_ireland_friend(session):
+    return _batch_first_party_roi_scrape(
+        "Infosys",
+        ["https://digitalcareers.infosys.com/infosys/global-careers?location=Ireland"],
+        ["digitalcareers.infosys.com"],
+        ["/apply-", "/company-job/", "reqid"],
+        session,
+        "infosys_friend_reference",
+        50,
+    )
+
+
+def scrape_laya_healthcare_friend(session):
+    return _batch_first_party_roi_scrape(
+        "Laya Healthcare",
+        [
+            "https://careers.axa.com/careers-home/jobs?page=1&tags3=Laya%20Healthcare%20Ltd&location=Ireland&woe=12&regionCode=IE&stretchUnit=MILES&stretch=10"
+        ],
+        ["careers.axa.com"],
+        ["/careers-home/jobs/", "/axa-uk-careers/jobs/"],
+        session,
+        "laya_friend_reference",
+        35,
+    )
+
+
+def scrape_palo_alto_ireland_friend(session):
+    return _batch_first_party_roi_scrape(
+        "Palo Alto Networks",
+        [
+            "https://jobs.paloaltonetworks.com/en/search-jobs/Ireland/47263/2/2963597/53/-8/50/2"
+        ],
+        ["jobs.paloaltonetworks.com"],
+        ["/en/job/"],
+        session,
+        "paloalto_friend_reference",
+        45,
+    )
+
+
+def scrape_smbc_aviation_capital_friend(session):
+    return _batch_first_party_roi_scrape(
+        "SMBC Aviation Capital",
+        ["https://smbcaviationcapital.groupgti.com/VacancyPosting/Search#!/"],
+        ["smbcaviationcapital.groupgti.com"],
+        ["/viewdetails", "/VacancyPosting/"],
+        session,
+        "smbc_friend_reference",
+        35,
+    )
+
+
+def scrape_sig_ireland_friend(session):
+    return _batch_first_party_roi_scrape(
+        "Susquehanna International Group (SIG)",
+        ["https://careers.sig.com/dublin/jobs"],
+        ["careers.sig.com"],
+        ["/jobs/"],
+        session,
+        "sig_friend_reference",
+        55,
+    )
+
 def test_single_company(name):
     """Fast test mode for one company — skips the full ~30 min pipeline
     entirely. Checks known dedicated scrapers by name directly (Apple,
@@ -8668,6 +8799,16 @@ def test_single_company(name):
         "novartis": lambda: scrape_novartis_ireland(session),
         "intel": lambda: scrape_intel_ireland(session),
         "tata consultancy services (tcs)": lambda: scrape_tcs_ireland(session),
+        "axa ireland": lambda: scrape_axa_ireland_friend(session),
+        "agilent technologies": lambda: scrape_agilent_ireland_friend(session),
+        "bnp paribas ireland": lambda: scrape_bnp_paribas_ireland_friend(session),
+        "coca-cola hbc ireland": lambda: scrape_coca_cola_hbc_ireland_friend(session),
+        "hcltech": lambda: scrape_hcltech_ireland_friend(session),
+        "infosys": lambda: scrape_infosys_ireland_friend(session),
+        "laya healthcare": lambda: scrape_laya_healthcare_friend(session),
+        "palo alto networks": lambda: scrape_palo_alto_ireland_friend(session),
+        "smbc aviation capital": lambda: scrape_smbc_aviation_capital_friend(session),
+        "susquehanna international group (sig)": lambda: scrape_sig_ireland_friend(session),
         "pepsico": lambda: scrape_pepsico_ireland(session),
         "esb": lambda: scrape_esb_ireland(session),
         "irish rail": lambda: scrape_irish_rail_ireland(session),
@@ -8951,6 +9092,7 @@ def scrape_aer_lingus_ireland_recovery(session):
     )
 
 def main():
+    print("=== NONLIVE_FRIEND_BATCH_10 ACTIVE: AXA/Agilent/BNP/Coca-Cola HBC/HCL/Infosys/Laya/Palo Alto/SMBC Aviation/SIG; valid live companies untouched ===")
     print("=== GRANT_EXACT_TITLE_FIX ACTIVE: Oracle card location/date/badges stripped from Grant job titles ===")
     print("=== SINGLE_FILE_GRANT_QUALITY_FIX ACTIVE: Grant uses Oracle real-job links; navigation/CTA titles globally blocked ===")
     print("=== FRIEND_LOGIC_NONLIVE_BATCH ACTIVE: Abbott/Intel/Vodafone/DXC/DB/S&P/Three/TCS; existing live companies untouched ===")
@@ -9233,8 +9375,17 @@ def main():
         ("exact", "novartis", scrape_novartis_ireland, 60, "official Novartis careers"),
         ("exact", "intel", scrape_intel_ireland, 60, "official Intel careers"),
         ("exact", "tata consultancy services (tcs)", scrape_tcs_ireland, 45, "official TCS Candidate Manager"),
+        ("exact", "axa ireland", scrape_axa_ireland_friend, 60, "friend-referenced AXA Ireland board"),
+        ("exact", "agilent technologies", scrape_agilent_ireland_friend, 60, "friend-referenced Agilent Workday"),
+        ("exact", "bnp paribas ireland", scrape_bnp_paribas_ireland_friend, 60, "friend-referenced BNP Ireland board"),
+        ("exact", "coca-cola hbc ireland", scrape_coca_cola_hbc_ireland_friend, 60, "friend-referenced Coca-Cola HBC board"),
+        ("exact", "hcltech", scrape_hcltech_ireland_friend, 60, "friend-referenced HCLTech Ireland facet"),
+        ("exact", "infosys", scrape_infosys_ireland_friend, 60, "friend-referenced Infosys Ireland board"),
+        ("exact", "laya healthcare", scrape_laya_healthcare_friend, 60, "friend-referenced Laya AXA board"),
+        ("exact", "palo alto networks", scrape_palo_alto_ireland_friend, 60, "friend-referenced Palo Alto Ireland board"),
+        ("exact", "smbc aviation capital", scrape_smbc_aviation_capital_friend, 60, "friend-referenced SMBC Aviation board"),
+        ("exact", "susquehanna international group (sig)", scrape_sig_ireland_friend, 60, "friend-referenced SIG Dublin board"),
         ("exact", "aib (allied irish banks)", scrape_aib_ireland, 240, "filtered against UK-only postings"),
-        ("exact", "bnp paribas ireland", scrape_bnp_paribas_ireland, 240, "first-party Dublin jobs page"),
         ("exact", "blackrock", scrape_blackrock_ireland, 240, "Phenom platform"),
         ("exact", "bank of ireland", scrape_bank_of_ireland_direct, 240, "first-party jobs board"),
         ("exact", "ing", scrape_ing_ireland, 240, "Phenom platform"),
@@ -9254,7 +9405,6 @@ def main():
         ("exact", "exl", scrape_exl_ireland, 180, "Oracle Recruiting Cloud"),
         ("exact", "ntt data", scrape_ntt_data_ireland, 180, "SuccessFactors"),
         ("exact", "guidewire", scrape_guidewire_ireland, 180, "official careers listing"),
-        ("exact", "hcltech", scrape_hcltech_ireland, 180, "Ireland-filtered search"),
         ("exact", "allianz", scrape_allianz_ireland, 180, "real careers page"),
         ("exact", "siemens", scrape_siemens_ireland, 180, "Avature-powered search"),
         ("exact", "northern trust", scrape_northern_trust_ireland_direct, 75, "first-party HTTP detail verification"),
@@ -9322,6 +9472,11 @@ def main():
         "scrape_abbott_ireland", "scrape_astrazeneca_ireland", "scrape_amgen_ireland",
         "scrape_alexion_ireland", "scrape_stryker_ireland", "scrape_novartis_ireland",
         "scrape_intel_ireland",
+        "scrape_axa_ireland_friend", "scrape_bnp_paribas_ireland_friend",
+        "scrape_coca_cola_hbc_ireland_friend", "scrape_hcltech_ireland_friend",
+        "scrape_infosys_ireland_friend", "scrape_laya_healthcare_friend",
+        "scrape_palo_alto_ireland_friend", "scrape_smbc_aviation_capital_friend",
+        "scrape_sig_ireland_friend",
     }
 
     _live_company_names = {
@@ -9367,6 +9522,19 @@ def main():
                 cache_key = "IQVIA::ireland_dedicated_v1"
             elif _key == "merit medical":
                 cache_key = "Merit Medical::workday_dedicated_v1"
+            elif _key in {
+                "axa ireland",
+                "agilent technologies",
+                "bnp paribas ireland",
+                "coca-cola hbc ireland",
+                "hcltech",
+                "infosys",
+                "laya healthcare",
+                "palo alto networks",
+                "smbc aviation capital",
+                "susquehanna international group (sig)",
+            }:
+                cache_key = f"{name}::friend_nonlive_batch10_v1"
             elif _key in {
                 "goodbody",
                 "bristol myers squibb",
@@ -9516,6 +9684,16 @@ def main():
             "novartis",
             "intel",
             "tata consultancy services (tcs)",
+            "axa ireland",
+            "agilent technologies",
+            "bnp paribas ireland",
+            "coca-cola hbc ireland",
+            "hcltech",
+            "infosys",
+            "laya healthcare",
+            "palo alto networks",
+            "smbc aviation capital",
+            "susquehanna international group (sig)",
         }
     ]
     for entry in priority_entries:
