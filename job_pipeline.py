@@ -5662,84 +5662,154 @@ def scrape_ups_ireland(session):
 
 
 
+
 def scrape_three_ireland_direct(session):
-    """Three Ireland via official Cornerstone careers site."""
-    source = (
-        "https://three-ireland.csod.com/ux/ats/careersite/5/home"
-        "?c=three-ireland&lq=Ireland"
-        "&pl=ChIJ-ydAXOS6WUgRCPTbzjQSfM8"
-    )
+    """Three Ireland regression recovery via official Cornerstone Ireland board."""
+    company = "Three Ireland"
+    sources = [
+        "https://three-ireland.csod.com/ux/ats/careersite/5/home?c=three-ireland&country=ie",
+        (
+            "https://three-ireland.csod.com/ux/ats/careersite/5/home"
+            "?c=three-ireland&lq=Ireland"
+            "&pl=ChIJ-ydAXOS6WUgRCPTbzjQSfM8"
+        ),
+    ]
+
     if not HAS_PLAYWRIGHT:
         return []
 
     results = {}
+
+    def clean(x):
+        return re.sub(r"\s+", " ", str(x or "")).strip()
+
+    location_map = [
+        ("Drogheda", "Drogheda, Ireland"),
+        ("Sligo", "Sligo, Ireland"),
+        ("Mary Street", "Dublin, Ireland"),
+        ("Navan", "Navan, Ireland"),
+        ("Limerick", "Limerick, Ireland"),
+        ("Athlone", "Athlone, Ireland"),
+        ("Patrick St", "Cork, Ireland"),
+        ("Tralee", "Tralee, Ireland"),
+        ("Bray", "Bray, Ireland"),
+        ("Mahon Point", "Cork, Ireland"),
+        ("Dublin", "Dublin, Ireland"),
+        ("Cork", "Cork, Ireland"),
+        ("Galway", "Galway, Ireland"),
+    ]
+
     try:
         with sync_playwright() as pw:
             browser = pw.chromium.launch(
                 headless=True,
                 args=["--no-sandbox", "--disable-dev-shm-usage", "--disable-gpu"],
             )
-            context = browser.new_context(locale="en-IE", viewport={"width": 1400, "height": 1400})
-            page = context.new_page()
-            page.goto(source, wait_until="domcontentloaded", timeout=45000)
-            page.wait_for_timeout(2500)
-
-            links = page.locator("a").evaluate_all(
-                """els => els.map(a => ({
-                    href: a.href || "",
-                    text: (a.innerText || a.textContent || "").trim()
-                }))"""
+            context = browser.new_context(
+                user_agent=HEADERS.get("User-Agent", "Mozilla/5.0"),
+                locale="en-IE",
+                viewport={"width": 1440, "height": 1600},
             )
 
-            location_map = [
-                ("Drogheda", "Drogheda, Ireland"),
-                ("Sligo", "Sligo, Ireland"),
-                ("Mary Street", "Dublin, Ireland"),
-                ("Navan", "Navan, Ireland"),
-                ("Limerick", "Limerick, Ireland"),
-                ("Athlone", "Athlone, Ireland"),
-                ("Patrick St", "Cork, Ireland"),
-                ("Tralee", "Tralee, Ireland"),
-                ("Bray", "Bray, Ireland"),
-                ("Mahon Point", "Cork, Ireland"),
-                ("Dublin", "Dublin, Ireland"),
-                ("Cork", "Cork, Ireland"),
-                ("Galway", "Galway, Ireland"),
-            ]
+            for source in sources:
+                page = context.new_page()
+                try:
+                    page.goto(source, wait_until="domcontentloaded", timeout=45000)
+                    page.wait_for_timeout(3000)
+                    try:
+                        _browser_accept_consent(page)
+                    except Exception:
+                        pass
 
-            for item in links:
-                href = re.sub(r"\s+", " ", str(item.get("href") or "")).strip()
-                title = re.sub(r"\s+", " ", str(item.get("text") or "")).strip()
-                mm = re.search(r"/careersite/5/home/requisition/(\d+)", href, re.I)
-                if not mm or not title or _looks_like_non_job_title(title):
-                    continue
+                    # Cornerstone lazy-loads result cards.
+                    for _ in range(8):
+                        page.mouse.wheel(0, 1800)
+                        page.wait_for_timeout(250)
 
-                loc = "Ireland"
-                for needle, normalized in location_map:
-                    if re.search(rf"\b{re.escape(needle)}\b", title, re.I):
-                        loc = normalized
-                        break
+                    links = page.locator("a[href]").evaluate_all(
+                        """els => els.map(a => ({
+                            href: a.href || "",
+                            text: (a.innerText || a.textContent || "").trim()
+                        }))"""
+                    )
 
-                results[mm.group(1)] = {
-                    "company": "Three Ireland",
-                    "title": title[:300],
-                    "location": loc,
-                    "posted_text": "Unknown",
-                    "posted_days_ago": None,
-                    "employment_type": normalize_employment_type("", title),
-                    "url": href.split("#")[0],
-                    "source": "three_cornerstone",
-                    "visa_sponsorship": "Unknown",
-                    "visa_snippet": "",
-                }
+                    for item in links:
+                        href = clean(item.get("href")).split("#")[0]
+                        title = clean(item.get("text"))
+
+                        if not href or not title or _looks_like_non_job_title(title):
+                            continue
+
+                        # Prefer the known Three CSOD requisition route, but
+                        # also accept newer Cornerstone job/requisition URL shapes.
+                        req_match = re.search(
+                            r"/careersite/5/home/requisition/(\d+)",
+                            href,
+                            re.I,
+                        )
+                        is_cornerstone_detail = bool(
+                            req_match
+                            or (
+                                "three-ireland.csod.com" in href.lower()
+                                and re.search(
+                                    r"(?:job|requisition|position|ats)"
+                                    r".*(?:id|req|job|position|\d+)",
+                                    href,
+                                    re.I,
+                                )
+                            )
+                        )
+                        if not is_cornerstone_detail:
+                            continue
+
+                        # Reject obvious careers navigation text.
+                        if title.lower() in {
+                            "home", "careers", "search jobs", "job search",
+                            "three ireland", "view all jobs",
+                        }:
+                            continue
+
+                        location = "Ireland"
+                        for needle, normalized in location_map:
+                            if re.search(rf"\b{re.escape(needle)}\b", title, re.I):
+                                location = normalized
+                                break
+
+                        key = req_match.group(1) if req_match else href.rstrip("/").lower()
+
+                        results[key] = {
+                            "company": company,
+                            "title": title[:300],
+                            "location": location,
+                            "posted_text": "Unknown",
+                            "posted_days_ago": None,
+                            "employment_type": normalize_employment_type("", title),
+                            "url": href,
+                            "source": "three_cornerstone_regression_recovery",
+                            "visa_sponsorship": "Unknown",
+                            "visa_snippet": "",
+                        }
+
+                except Exception as exc:
+                    print(f"      [three-regression] source failed: {exc}")
+                finally:
+                    try:
+                        page.close()
+                    except Exception:
+                        pass
+
+                if results:
+                    break
 
             context.close()
             browser.close()
-    except Exception as exc:
-        print(f"      [three_friend] failed: {exc}")
 
-    print(f"      [three_friend] {len(results)} Ireland jobs")
+    except Exception as exc:
+        print(f"      [three-regression] failed: {exc}")
+
+    print(f"      [three-regression] {len(results)} Ireland jobs")
     return list(results.values())
+
 
 
 
@@ -9807,6 +9877,7 @@ def scrape_aer_lingus_ireland_recovery(session):
     )
 
 def main():
+    print("=== THREE_REGRESSION_RECOVERY ACTIVE: Three CSOD country=ie recovery + persistent last-known-nonzero protection ===")
     print("=== REGRESSION_GUARD_FIX ACTIVE: versioned zero caches cleared; sudden 1-run disappearances protected; count drops reported ===")
     print("=== RUNTIME_DEDUPE_FIX ACTIVE: one company = one full-run task; dedicated routes win over generic duplicates ===")
     print("=== TWO_ATTEMPT_RULE_BATCH ACTIVE: Oracle/McKinsey attempt 2 + Honeywell/Schneider attempt 1; successful live routes untouched ===")
@@ -9935,6 +10006,20 @@ def main():
             f"=== Cache recovery: cleared {len(_cleared_zero_cache)} stale zero results "
             "for companies that produced valid jobs before ==="
         )
+
+    # Persistent last-known-nonzero snapshot. Unlike jobs.json, this does not
+    # forget a company after one or more zero runs. It is generated/maintained
+    # automatically by the pipeline; no manual file replacement is required.
+    _last_nonzero_path = "last_nonzero_jobs.json"
+    _last_nonzero_by_company = {}
+    if os.path.exists(_last_nonzero_path):
+        try:
+            with open(_last_nonzero_path, encoding="utf-8") as _lf:
+                _raw_last_nonzero = json.load(_lf)
+            if isinstance(_raw_last_nonzero, dict):
+                _last_nonzero_by_company = _raw_last_nonzero
+        except Exception:
+            _last_nonzero_by_company = {}
 
     # Snapshot the immediately previous live output. This is used only as a
     # regression safety net: one transient zero/error must not instantly erase
@@ -10759,22 +10844,48 @@ def main():
         if _n:
             _cur_counts[_n] = _cur_counts.get(_n, 0) + 1
 
+    # Update the persistent snapshot with every company that is genuinely
+    # live in the current scrape BEFORE applying any preservation.
+    _current_jobs_by_company = {}
+    for _job in live_jobs:
+        _n = str((_job or {}).get("company") or "").strip()
+        if _n:
+            _current_jobs_by_company.setdefault(_n, []).append(_job)
+
+    for _name, _jobs in _current_jobs_by_company.items():
+        if _jobs:
+            _last_nonzero_by_company[_name] = [dict(j) for j in _jobs]
+
+    # Seed the snapshot from the immediately previous jobs.json for companies
+    # that were live before this feature existed.
+    for _name, _prev_jobs in _prev_by_company.items():
+        if _prev_jobs and _name not in _last_nonzero_by_company:
+            _last_nonzero_by_company[_name] = [dict(j) for j in _prev_jobs]
+
     _zero_regressions = []
     _count_decreases = []
-    for _name, _prev_jobs in _prev_by_company.items():
-        _prev_count = len(_prev_jobs)
+
+    # Union of previous-run and persistent historically-live companies.
+    _regression_names = set(_prev_by_company) | set(_last_nonzero_by_company)
+
+    for _name in sorted(_regression_names):
+        _prev_jobs = _prev_by_company.get(_name) or []
+        _last_jobs = _last_nonzero_by_company.get(_name) or []
+        _reference_jobs = _last_jobs or _prev_jobs
+        _reference_count = len(_reference_jobs)
         _cur_count = _cur_counts.get(_name, 0)
-        if _prev_count > 0 and _cur_count == 0:
-            # Preserve only the immediately previous run's records. They are
-            # marked so this safety-net behavior is visible and auditable.
-            for _old_job in _prev_jobs:
+
+        if _reference_count > 0 and _cur_count == 0:
+            # Preserve the LAST KNOWN NON-ZERO set. This survives sequences such
+            # as 25 -> 0 -> 0 instead of forgetting the original live inventory.
+            for _old_job in _reference_jobs:
                 _kept = dict(_old_job)
-                _kept["regression_guard"] = "preserved_from_previous_run_after_single_zero"
+                _kept["regression_guard"] = "preserved_from_last_known_nonzero"
                 live_jobs.append(_kept)
             automated_zero.pop(_name, None)
-            _zero_regressions.append((_name, _prev_count))
-        elif 0 < _cur_count < _prev_count:
-            _count_decreases.append((_name, _prev_count, _cur_count))
+            _zero_regressions.append((_name, _reference_count))
+        elif _prev_jobs and 0 < _cur_count < len(_prev_jobs):
+            _count_decreases.append((_name, len(_prev_jobs), _cur_count))
 
     if _zero_regressions:
         print("=== REGRESSION GUARD: prevented single-run disappearance for "
@@ -10788,6 +10899,12 @@ def main():
               "(reported only; old vacancies are NOT re-added) ===")
         for _name, _old_count, _new_count in sorted(_count_decreases):
             print(f"      [count-drop] {_name}: {_old_count} -> {_new_count}")
+
+    try:
+        with open(_last_nonzero_path, "w", encoding="utf-8") as _lf:
+            json.dump(_last_nonzero_by_company, _lf, indent=2)
+    except Exception as _exc:
+        print(f"      [regression-guard] could not save {_last_nonzero_path}: {_exc}")
 
     # Recompute after the zero-regression guard.
     current_live_companies = {
