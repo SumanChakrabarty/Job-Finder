@@ -7983,11 +7983,6 @@
     "checked_at": 1787566170.7384818,
     "consecutive_failures": 0
   },
-  "BNP Paribas Ireland": {
-    "jobs": [],
-    "checked_at": 1787566233.735326,
-    "consecutive_failures": 114
-  },
   "AIB (Allied Irish Banks)": {
     "jobs": [
       {
@@ -12315,11 +12310,6 @@
     "checked_at": 1787568318.3318381,
     "consecutive_failures": 69
   },
-  "AXA Ireland": {
-    "jobs": [],
-    "checked_at": 1787566339.0802083,
-    "consecutive_failures": 68
-  },
   "Coca-Cola HBC Ireland": {
     "jobs": [],
     "checked_at": 1787566346.353754,
@@ -13407,11 +13397,6 @@
     "jobs": [],
     "checked_at": 1787568337.9778988,
     "consecutive_failures": 56
-  },
-  "Susquehanna International Group (SIG)": {
-    "jobs": [],
-    "checked_at": 1787566372.1580513,
-    "consecutive_failures": 55
   },
   "VHI Healthcare": {
     "jobs": [],
@@ -16517,11 +16502,6 @@
     "checked_at": 1787568378.769825,
     "consecutive_failures": 51
   },
-  "Palo Alto Networks": {
-    "jobs": [],
-    "checked_at": 1787566416.2525651,
-    "consecutive_failures": 50
-  },
   "Ryanair": {
     "jobs": [
       {
@@ -16543,11 +16523,6 @@
     ],
     "checked_at": 1787566342.2534583,
     "consecutive_failures": 0
-  },
-  "SMBC Aviation Capital": {
-    "jobs": [],
-    "checked_at": 1787566408.9769382,
-    "consecutive_failures": 50
   },
   "Shannon Airport Group": {
     "jobs": [],
@@ -18778,7 +18753,7 @@
         "posted_age_known": true
       }
     ],
-    "checked_at": 1787557852.8083742,
+    "checked_at": 1787569130.455734,
     "consecutive_failures": 0
   },
   "Goodbody::batch_dedicated_v1": {
@@ -18814,7 +18789,7 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1787557843.8990383,
+    "checked_at": 1787569119.0974388,
     "consecutive_failures": 0
   },
   "Dell Technologies::batch_dedicated_v1": {
@@ -18826,21 +18801,66 @@
     "jobs": [
       {
         "company": "Hewlett Packard Enterprise (HPE)",
-        "title": "Cloud Quality Engineer - Intern Conversion",
-        "location": "Galway, Ireland",
+        "title": "Senior Technical Account Manager – Cloud Provider AI & Data Center Networking",
+        "location": "Republic of Ireland",
         "posted_text": "Unknown",
         "posted_days_ago": 9999.0,
-        "employment_type": "Internship",
-        "url": "https://careers.hpe.com/us/en/job/1211031/Cloud-Quality-Engineer-Intern-Conversion",
+        "employment_type": "Unspecified",
+        "url": "https://careers.hpe.com/us/en/job/1207759/Senior-Technical-Account-Manager-Cloud-Provider-AI-Data-Center-Networking%C2%A0",
         "source": "hpe_first_party",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
         "new_since_last_check": false,
-        "first_seen_at": "2026-08-24T07:53:50.604278+00:00",
+        "first_seen_at": "2026-08-24T04:32:09.012483+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Hewlett Packard Enterprise (HPE)",
+        "title": "Portfolio Specialist EMEA (Leasing & Asset Management)",
+        "location": "Republic of Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.hpe.com/us/en/job/1208654/Portfolio-Specialist-EMEA-Leasing-Asset-Management",
+        "source": "hpe_first_party",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T04:32:09.012483+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Hewlett Packard Enterprise (HPE)",
+        "title": "Information Developer III",
+        "location": "Galway, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.hpe.com/us/en/job/1210750/Information-Developer-III",
+        "source": "hpe_first_party",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T01:23:26.715320+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Hewlett Packard Enterprise (HPE)",
+        "title": "Senior Financial Analyst",
+        "location": "Republic of Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.hpe.com/us/en/job/1211953/Senior-Financial-Analyst",
+        "source": "hpe_first_party",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T01:23:26.715320+00:00",
         "posted_age_known": false
       }
     ],
-    "checked_at": 1787557864.574727,
+    "checked_at": 1787569133.499635,
     "consecutive_failures": 0
   },
   "Bristol Myers Squibb::batch_dedicated_v1": {
@@ -18849,70 +18869,9 @@
     "consecutive_failures": 12
   },
   "SSE Airtricity / SSE::batch_dedicated_v1": {
-    "jobs": [
-      {
-        "company": "SSE Airtricity / SSE",
-        "title": "Control Room Engineer",
-        "location": "Republic of Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.sse.com/jobs/control-room-engineer-perth-perthshire-scotland-united-kingdom-100954b3-879b-4f2d-9460-b815dfcb2830",
-        "source": "sse_first_party",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-24T01:47:58.944741+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "SSE Airtricity / SSE",
-        "title": "Corporate SHE Advisor",
-        "location": "Republic of Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.sse.com/jobs/corporate-she-advisor-portsmouth-united-kingdom-reading-berkshire-berkshire-glasgow-renfrewshire-renfrewshire-perth-perthshire-scotland",
-        "source": "sse_first_party",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-24T01:47:58.944741+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "SSE Airtricity / SSE",
-        "title": "R2R Senior Finance Manager",
-        "location": "Republic of Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.sse.com/jobs/r2r-senior-finance-manager-dublin-ireland-ireland-glasgow-renfrewshire-renfrewshire-united-kingdom-perth-perthshire-scotland",
-        "source": "sse_first_party",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-24T04:32:09.012483+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "SSE Airtricity / SSE",
-        "title": "Senior Investment Manager",
-        "location": "Republic of Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.sse.com/jobs/senior-investment-manager-reading-berkshire-berkshire-united-kingdom",
-        "source": "sse_first_party",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-24T04:32:09.012483+00:00",
-        "posted_age_known": false
-      }
-    ],
-    "checked_at": 1787557864.472113,
-    "consecutive_failures": 0
+    "jobs": [],
+    "checked_at": 1787569135.752082,
+    "consecutive_failures": 1
   },
   "Aldi Ireland::batch_dedicated_v1": {
     "jobs": [],
@@ -20850,7 +20809,7 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1787557869.4095497,
+    "checked_at": 1787569111.9154153,
     "consecutive_failures": 0
   },
   "Deutsche Bank::friend_logic_v1": {
@@ -22406,21 +22365,6 @@
     "checked_at": 1787567181.2266078,
     "consecutive_failures": 0
   },
-  "Regeneron": {
-    "jobs": [],
-    "checked_at": 1787568235.4536054,
-    "consecutive_failures": 1
-  },
-  "BNY Mellon": {
-    "jobs": [],
-    "checked_at": 1787568237.3877106,
-    "consecutive_failures": 1
-  },
-  "Oracle": {
-    "jobs": [],
-    "checked_at": 1787568240.067605,
-    "consecutive_failures": 1
-  },
   "AXA Ireland::friend_nonlive_batch10_v1": {
     "jobs": [
       {
@@ -22434,7 +22378,7 @@
         "source": "axa_friend_reference",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-24T10:46:56.330224+00:00",
         "posted_age_known": false
       }
@@ -22455,7 +22399,7 @@
         "source": "bnp_friend_reference",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-24T10:46:56.330224+00:00",
         "posted_age_known": false
       },
@@ -22470,7 +22414,7 @@
         "source": "bnp_friend_reference",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-24T10:46:56.330224+00:00",
         "posted_age_known": false
       },
@@ -22485,7 +22429,7 @@
         "source": "bnp_friend_reference",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-24T10:46:56.330224+00:00",
         "posted_age_known": false
       },
@@ -22500,7 +22444,7 @@
         "source": "bnp_friend_reference",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-24T10:46:56.330224+00:00",
         "posted_age_known": false
       },
@@ -22515,7 +22459,7 @@
         "source": "bnp_friend_reference",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-24T10:46:56.330224+00:00",
         "posted_age_known": false
       },
@@ -22530,7 +22474,7 @@
         "source": "bnp_friend_reference",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-24T10:46:56.330224+00:00",
         "posted_age_known": false
       },
@@ -22545,7 +22489,7 @@
         "source": "bnp_friend_reference",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-24T10:46:56.330224+00:00",
         "posted_age_known": false
       }
@@ -22566,7 +22510,7 @@
         "source": "paloalto_friend_reference",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-24T10:46:56.330224+00:00",
         "posted_age_known": false
       },
@@ -22581,7 +22525,7 @@
         "source": "paloalto_friend_reference",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-24T10:46:56.330224+00:00",
         "posted_age_known": false
       },
@@ -22596,7 +22540,7 @@
         "source": "paloalto_friend_reference",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-24T10:46:56.330224+00:00",
         "posted_age_known": false
       },
@@ -22611,7 +22555,7 @@
         "source": "paloalto_friend_reference",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-24T10:46:56.330224+00:00",
         "posted_age_known": false
       },
@@ -22626,7 +22570,7 @@
         "source": "paloalto_friend_reference",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-24T10:46:56.330224+00:00",
         "posted_age_known": false
       },
@@ -22641,7 +22585,7 @@
         "source": "paloalto_friend_reference",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-24T10:46:56.330224+00:00",
         "posted_age_known": false
       }
@@ -22662,7 +22606,7 @@
         "source": "laya_friend_reference",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-24T10:46:56.330224+00:00",
         "posted_age_known": false
       },
@@ -22677,7 +22621,7 @@
         "source": "laya_friend_reference",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-24T10:46:56.330224+00:00",
         "posted_age_known": false
       },
@@ -22692,7 +22636,7 @@
         "source": "laya_friend_reference",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-24T10:46:56.330224+00:00",
         "posted_age_known": false
       },
@@ -22707,7 +22651,7 @@
         "source": "laya_friend_reference",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-24T10:46:56.330224+00:00",
         "posted_age_known": false
       },
@@ -22722,7 +22666,7 @@
         "source": "laya_friend_reference",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-24T10:46:56.330224+00:00",
         "posted_age_known": false
       },
@@ -22737,7 +22681,7 @@
         "source": "laya_friend_reference",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-24T10:46:56.330224+00:00",
         "posted_age_known": false
       }
@@ -22750,11 +22694,6 @@
     "checked_at": 1787568267.5298188,
     "consecutive_failures": 1
   },
-  "Central Bank of Ireland": {
-    "jobs": [],
-    "checked_at": 1787568271.101339,
-    "consecutive_failures": 1
-  },
   "Agilent Technologies::friend_nonlive_batch10_v1": {
     "jobs": [
       {
@@ -22762,21 +22701,19 @@
         "title": "Qualification Profile: Agilent University Coordinator for Customer Training (Temporary position)",
         "location": "Ireland-Little Island-Euro Hse",
         "posted_text": "Posted 30+ Days Ago",
-        "posted_days_ago": 30,
+        "posted_days_ago": 30.0,
         "employment_type": "Temporary",
         "url": "https://agilent.wd5.myworkdayjobs.com/Agilent_Careers/job/Ireland-Little-Island-Euro-Hse/Qualification-Profile--Agilent-University-Coordinator-for-Customer-Training_4037553",
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-24T10:59:52.336162+00:00",
+        "posted_age_known": true
       }
     ],
     "checked_at": 1787568271.7600584,
     "consecutive_failures": 0
-  },
-  "QIAGEN": {
-    "jobs": [],
-    "checked_at": 1787568273.417446,
-    "consecutive_failures": 1
   },
   "SMBC Aviation Capital::friend_nonlive_batch10_v1": {
     "jobs": [
@@ -22791,7 +22728,7 @@
         "source": "smbc_friend_reference",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-24T10:46:56.330224+00:00",
         "posted_age_known": false
       },
@@ -22806,7 +22743,7 @@
         "source": "smbc_friend_reference",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-24T10:46:56.330224+00:00",
         "posted_age_known": false
       },
@@ -22821,7 +22758,7 @@
         "source": "smbc_friend_reference",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-24T10:46:56.330224+00:00",
         "posted_age_known": false
       },
@@ -22836,28 +22773,13 @@
         "source": "smbc_friend_reference",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-24T10:46:56.330224+00:00",
         "posted_age_known": false
       }
     ],
     "checked_at": 1787568275.0736701,
     "consecutive_failures": 0
-  },
-  "Red Hat": {
-    "jobs": [],
-    "checked_at": 1787568276.814779,
-    "consecutive_failures": 1
-  },
-  "DXC Technology": {
-    "jobs": [],
-    "checked_at": 1787568279.8429692,
-    "consecutive_failures": 1
-  },
-  "Willis Towers Watson (WTW)": {
-    "jobs": [],
-    "checked_at": 1787568288.571457,
-    "consecutive_failures": 2
   },
   "Susquehanna International Group (SIG)::friend_nonlive_batch10_v1": {
     "jobs": [
@@ -22872,7 +22794,7 @@
         "source": "sig_friend_reference",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-24T10:46:56.330224+00:00",
         "posted_age_known": false
       },
@@ -22887,7 +22809,7 @@
         "source": "sig_friend_reference",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-24T10:46:56.330224+00:00",
         "posted_age_known": false
       },
@@ -22902,7 +22824,7 @@
         "source": "sig_friend_reference",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-24T10:46:56.330224+00:00",
         "posted_age_known": false
       },
@@ -22917,7 +22839,7 @@
         "source": "sig_friend_reference",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-24T10:46:56.330224+00:00",
         "posted_age_known": false
       },
@@ -22932,7 +22854,7 @@
         "source": "sig_friend_reference",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-24T10:46:56.330224+00:00",
         "posted_age_known": false
       },
@@ -22947,7 +22869,7 @@
         "source": "sig_friend_reference",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-24T10:46:56.330224+00:00",
         "posted_age_known": false
       },
@@ -22962,7 +22884,7 @@
         "source": "sig_friend_reference",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-24T10:46:56.330224+00:00",
         "posted_age_known": false
       },
@@ -22977,7 +22899,7 @@
         "source": "sig_friend_reference",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-24T10:46:56.330224+00:00",
         "posted_age_known": false
       },
@@ -22992,7 +22914,7 @@
         "source": "sig_friend_reference",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-24T10:46:56.330224+00:00",
         "posted_age_known": false
       },
@@ -23007,7 +22929,7 @@
         "source": "sig_friend_reference",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-24T10:46:56.330224+00:00",
         "posted_age_known": false
       }
@@ -23015,139 +22937,179 @@
     "checked_at": 1787568282.8068545,
     "consecutive_failures": 0
   },
-  "Fitch Ratings": {
-    "jobs": [],
-    "checked_at": 1787568294.8170042,
-    "consecutive_failures": 1
-  },
-  "Cantor Fitzgerald Ireland": {
-    "jobs": [],
-    "checked_at": 1787568295.0286875,
-    "consecutive_failures": 1
-  },
-  "BDO Ireland": {
-    "jobs": [],
-    "checked_at": 1787568296.4281542,
-    "consecutive_failures": 1
-  },
-  "Aviva Ireland": {
-    "jobs": [],
-    "checked_at": 1787568296.8181953,
-    "consecutive_failures": 1
-  },
-  "Glanbia / Tirlán": {
-    "jobs": [],
-    "checked_at": 1787568298.8373652,
-    "consecutive_failures": 1
-  },
-  "Slalom": {
-    "jobs": [],
-    "checked_at": 1787568300.7125344,
-    "consecutive_failures": 1
-  },
-  "Musgrave Group (SuperValu / Centra)": {
-    "jobs": [],
-    "checked_at": 1787568301.2404313,
-    "consecutive_failures": 1
-  },
-  "UBS": {
-    "jobs": [],
-    "checked_at": 1787568301.7509243,
-    "consecutive_failures": 1
-  },
-  "ABP Food Group": {
-    "jobs": [],
-    "checked_at": 1787568304.0998378,
-    "consecutive_failures": 1
-  },
-  "Zurich Insurance": {
-    "jobs": [],
-    "checked_at": 1787568304.7036297,
-    "consecutive_failures": 1
-  },
-  "Alexion Pharmaceuticals": {
-    "jobs": [],
-    "checked_at": 1787568306.9578857,
-    "consecutive_failures": 1
-  },
-  "Coillte": {
-    "jobs": [],
-    "checked_at": 1787568307.953412,
-    "consecutive_failures": 1
-  },
-  "Baxter International": {
-    "jobs": [],
-    "checked_at": 1787568308.8031833,
-    "consecutive_failures": 1
-  },
-  "Cook Medical": {
-    "jobs": [],
-    "checked_at": 1787568310.446254,
-    "consecutive_failures": 1
-  },
-  "ESB (Electricity Supply Board)": {
-    "jobs": [],
-    "checked_at": 1787568312.2311444,
-    "consecutive_failures": 1
-  },
-  "Gas Networks Ireland": {
-    "jobs": [],
-    "checked_at": 1787568313.9325607,
-    "consecutive_failures": 1
-  },
-  "Eir": {
-    "jobs": [],
-    "checked_at": 1787568314.8167284,
-    "consecutive_failures": 1
-  },
-  "Kepak Group": {
-    "jobs": [],
-    "checked_at": 1787568315.998792,
-    "consecutive_failures": 1
-  },
   "Infosys::friend_nonlive_batch10_v1": {
     "jobs": [],
     "checked_at": 1787568316.2170653,
     "consecutive_failures": 1
   },
+  "BNY Mellon": {
+    "jobs": [],
+    "checked_at": 1787569109.098569,
+    "consecutive_failures": 1
+  },
+  "Central Bank of Ireland": {
+    "jobs": [],
+    "checked_at": 1787569109.6608908,
+    "consecutive_failures": 1
+  },
+  "Oracle": {
+    "jobs": [],
+    "checked_at": 1787569113.9237025,
+    "consecutive_failures": 1
+  },
+  "Red Hat": {
+    "jobs": [],
+    "checked_at": 1787569114.6374784,
+    "consecutive_failures": 1
+  },
+  "DXC Technology": {
+    "jobs": [],
+    "checked_at": 1787569117.064183,
+    "consecutive_failures": 1
+  },
+  "Willis Towers Watson (WTW)": {
+    "jobs": [],
+    "checked_at": 1787569127.4979944,
+    "consecutive_failures": 2
+  },
+  "Regeneron": {
+    "jobs": [],
+    "checked_at": 1787569128.495048,
+    "consecutive_failures": 1
+  },
+  "Cantor Fitzgerald Ireland": {
+    "jobs": [],
+    "checked_at": 1787569128.549368,
+    "consecutive_failures": 1
+  },
+  "Aviva Ireland": {
+    "jobs": [],
+    "checked_at": 1787569128.8490944,
+    "consecutive_failures": 1
+  },
+  "BDO Ireland": {
+    "jobs": [],
+    "checked_at": 1787569130.1809568,
+    "consecutive_failures": 1
+  },
+  "Glanbia / Tirlán": {
+    "jobs": [],
+    "checked_at": 1787569134.6976686,
+    "consecutive_failures": 1
+  },
+  "Fitch Ratings": {
+    "jobs": [],
+    "checked_at": 1787569135.4194324,
+    "consecutive_failures": 1
+  },
+  "Slalom": {
+    "jobs": [],
+    "checked_at": 1787569135.7846756,
+    "consecutive_failures": 1
+  },
+  "Musgrave Group (SuperValu / Centra)": {
+    "jobs": [],
+    "checked_at": 1787569135.9330487,
+    "consecutive_failures": 1
+  },
+  "UBS": {
+    "jobs": [],
+    "checked_at": 1787569139.9883308,
+    "consecutive_failures": 1
+  },
+  "Alexion Pharmaceuticals": {
+    "jobs": [],
+    "checked_at": 1787569141.646115,
+    "consecutive_failures": 1
+  },
+  "ABP Food Group": {
+    "jobs": [],
+    "checked_at": 1787569142.5951462,
+    "consecutive_failures": 1
+  },
+  "Coillte": {
+    "jobs": [],
+    "checked_at": 1787569143.063631,
+    "consecutive_failures": 1
+  },
+  "Zurich Insurance": {
+    "jobs": [],
+    "checked_at": 1787569143.3950348,
+    "consecutive_failures": 1
+  },
+  "Baxter International": {
+    "jobs": [],
+    "checked_at": 1787569144.020656,
+    "consecutive_failures": 1
+  },
+  "Cook Medical": {
+    "jobs": [],
+    "checked_at": 1787569146.164576,
+    "consecutive_failures": 1
+  },
+  "QIAGEN": {
+    "jobs": [],
+    "checked_at": 1787569147.0306473,
+    "consecutive_failures": 1
+  },
+  "Gas Networks Ireland": {
+    "jobs": [],
+    "checked_at": 1787569148.9509876,
+    "consecutive_failures": 1
+  },
+  "ESB (Electricity Supply Board)": {
+    "jobs": [],
+    "checked_at": 1787569149.9381435,
+    "consecutive_failures": 1
+  },
+  "Kepak Group": {
+    "jobs": [],
+    "checked_at": 1787569150.666104,
+    "consecutive_failures": 1
+  },
   "Sky Ireland": {
     "jobs": [],
-    "checked_at": 1787568317.4001813,
+    "checked_at": 1787569151.5631032,
+    "consecutive_failures": 1
+  },
+  "Eir": {
+    "jobs": [],
+    "checked_at": 1787569151.7561886,
     "consecutive_failures": 1
   },
   "Revvity (PerkinElmer)": {
     "jobs": [],
-    "checked_at": 1787568319.3841953,
-    "consecutive_failures": 1
-  },
-  "Deutsche Bank": {
-    "jobs": [],
-    "checked_at": 1787568326.71741,
-    "consecutive_failures": 1
-  },
-  "Boston Consulting Group (BCG)": {
-    "jobs": [],
-    "checked_at": 1787568332.8090713,
+    "checked_at": 1787569151.8490644,
     "consecutive_failures": 1
   },
   "S&P Global": {
     "jobs": [],
-    "checked_at": 1787568337.8829396,
+    "checked_at": 1787569155.053374,
     "consecutive_failures": 1
   },
-  "GlaxoSmithKline (GSK)": {
+  "Deutsche Bank": {
     "jobs": [],
-    "checked_at": 1787568364.1043177,
+    "checked_at": 1787569156.2431304,
     "consecutive_failures": 1
   },
   "Haleon": {
     "jobs": [],
-    "checked_at": 1787568364.8474636,
+    "checked_at": 1787569157.406708,
+    "consecutive_failures": 1
+  },
+  "GlaxoSmithKline (GSK)": {
+    "jobs": [],
+    "checked_at": 1787569158.6603103,
     "consecutive_failures": 1
   },
   "HP (Hewlett-Packard)": {
     "jobs": [],
-    "checked_at": 1787568370.3980849,
+    "checked_at": 1787569160.3683276,
+    "consecutive_failures": 1
+  },
+  "Boston Consulting Group (BCG)": {
+    "jobs": [],
+    "checked_at": 1787569164.548633,
     "consecutive_failures": 1
   }
 }
