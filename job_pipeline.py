@@ -2723,7 +2723,21 @@ def _final_job_quality_filter(live_jobs):
         # Require structural vacancy URL evidence and an explicit ROI location
         # even when the record came from browser cache.
         if source == "priority_sheet2_generic":
-            if not _strong_job_detail_url(url):
+            # Guidewire's dedicated rendered recovery verifies each candidate
+            # against the individual job detail page, but historically reuses
+            # the generic source label. Its legitimate careers.guidewire.com
+            # vacancy URLs do not match the generic URL-shape whitelist.
+            #
+            # Keep the generic URL rule unchanged for every other company.
+            _company_key = str(job.get("company") or "").strip().lower()
+            _guidewire_verified = (
+                _company_key == "guidewire"
+                and is_republic_of_ireland_location(job.get("location", ""))
+                and bool(str(title or "").strip())
+                and "guidewire" in str(url or "").lower()
+            )
+
+            if not _strong_job_detail_url(url) and not _guidewire_verified:
                 removed.append((job.get("company", ""), title, "generic non-vacancy URL"))
                 continue
             if not is_republic_of_ireland_location(job.get("location", "")):
@@ -7978,6 +7992,7 @@ def scrape_aer_lingus_ireland_recovery(session):
     )
 
 def main():
+    print("=== FAST_GUIDEWIRE_QUALITY_FIX ACTIVE: verified Guidewire ROI jobs no longer rejected only for URL shape ===")
     print("=== FAST_BASELINE_IQVIA_ONLY ACTIVE: proven IQVIA Ireland scraper added; runtime architecture unchanged ===")
     print("=== WIPRO_UNKNOWN_DATE_FIX ACTIVE: rendered date if available; otherwise Unknown ===")
     print("=== WIPRO_DATE_FIX ACTIVE: SuccessFactors posting dates parsed from labels/HTML attributes ===")
