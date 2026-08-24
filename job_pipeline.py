@@ -7781,6 +7781,16 @@ def scrape_iqvia_ireland(session):
     print(f"      [iqvia] {len(jobs)} verified Republic-of-Ireland vacancies")
     return jobs
 
+
+def scrape_merit_medical_ireland(session):
+    """Dedicated Merit Medical first-party Workday route."""
+    return _workday_override_scrape(
+        "Merit Medical",
+        "https://merit.wd503.myworkdayjobs.com/Merit",
+        session,
+    )
+
+
 def test_single_company(name):
     """Fast test mode for one company — skips the full ~30 min pipeline
     entirely. Checks known dedicated scrapers by name directly (Apple,
@@ -7811,6 +7821,7 @@ def test_single_company(name):
         "cognizant": lambda: scrape_cognizant_ireland(session),
         "wipro": lambda: scrape_wipro_ireland(session),
         "iqvia": lambda: scrape_iqvia_ireland(session),
+        "merit medical": lambda: scrape_merit_medical_ireland(session),
         "pepsico": lambda: scrape_pepsico_ireland(session),
         "esb": lambda: scrape_esb_ireland(session),
         "irish rail": lambda: scrape_irish_rail_ireland(session),
@@ -7992,6 +8003,7 @@ def scrape_aer_lingus_ireland_recovery(session):
     )
 
 def main():
+    print("=== FAST_MERIT_MEDICAL_FIX ACTIVE: official Merit Workday route; runtime architecture unchanged ===")
     print("=== FAST_GUIDEWIRE_QUALITY_FIX ACTIVE: verified Guidewire ROI jobs no longer rejected only for URL shape ===")
     print("=== FAST_BASELINE_IQVIA_ONLY ACTIVE: proven IQVIA Ireland scraper added; runtime architecture unchanged ===")
     print("=== WIPRO_UNKNOWN_DATE_FIX ACTIVE: rendered date if available; otherwise Unknown ===")
@@ -8248,6 +8260,7 @@ def main():
         ("exact", "cognizant", scrape_cognizant_ireland, 240, "verifies Ireland per job detail page"),
         ("exact", "wipro", scrape_wipro_ireland, 75, "first-party Wipro vacancy records + City/State verification"),
         ("exact", "iqvia", scrape_iqvia_ireland, 90, "first-party IQVIA Ireland Jobs page"),
+        ("exact", "merit medical", scrape_merit_medical_ireland, 75, "official Merit Medical Workday"),
         ("exact", "aib (allied irish banks)", scrape_aib_ireland, 240, "filtered against UK-only postings"),
         ("exact", "bnp paribas ireland", scrape_bnp_paribas_ireland, 240, "first-party Dublin jobs page"),
         ("exact", "blackrock", scrape_blackrock_ireland, 240, "Phenom platform"),
@@ -8370,7 +8383,13 @@ def main():
             # IQVIA has a dedicated Ireland scraper now. Keep its cache separate
             # from the old generic Sheet-2 zero-result cache so the proven
             # dedicated result cannot be shadowed by a stale generic verdict.
-            cache_key = "IQVIA::ireland_dedicated_v1" if name.strip().lower() == "iqvia" else name
+            _key = name.strip().lower()
+            if _key == "iqvia":
+                cache_key = "IQVIA::ireland_dedicated_v1"
+            elif _key == "merit medical":
+                cache_key = "Merit Medical::workday_dedicated_v1"
+            else:
+                cache_key = name
             return lambda: cached_browser_scrape(browser_cache, cache_key, lambda: fn(session), 0, name)
 
         actual_timeout = effective_timeout(browser_cache, company_name, timeout_s)
@@ -8466,6 +8485,7 @@ def main():
         and entry["company"].strip().lower() not in {
             "wipro",  # dedicated first-party vacancy scraper
             "iqvia",  # dedicated first-party Ireland Jobs scraper
+            "merit medical",  # dedicated official Workday route
         }
     ]
     for entry in priority_entries:
