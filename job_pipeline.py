@@ -8054,16 +8054,19 @@ def scrape_tesco_ireland(session):
 
 
 def scrape_aldi_ireland(session):
+    # Second pass: discovery worked previously (3 vacancy URLs), so broaden
+    # Ireland-specific result surfaces while retaining strict ROI verification.
     return _batch_first_party_roi_scrape(
         "Aldi Ireland",
         [
             "https://careers.aldirecruitment.ie/vacancies/vacancy-search-results.aspx",
+            "https://careers.aldirecruitment.ie/vacancies/",
         ],
         ["careers.aldirecruitment.ie"],
         ["vacancy-details", "/vacancies/"],
         session,
-        "aldi_first_party",
-        45,
+        "aldi_first_party_v2",
+        35,
     )
 
 
@@ -8114,6 +8117,114 @@ def scrape_vodafone_ireland(session):
     )
 
 
+
+def scrape_abbott_ireland(session):
+    return _batch_first_party_roi_scrape(
+        "Abbott",
+        [
+            "https://www.jobs.abbott/us/en/search-results?keywords=Ireland",
+            "https://www.jobs.abbott/us/en/search-results?keywords=Dublin",
+            "https://www.jobs.abbott/us/en/search-results?keywords=Galway",
+        ],
+        ["jobs.abbott"],
+        ["/job/", "/jobs/"],
+        session,
+        "abbott_first_party",
+        55,
+    )
+
+
+def scrape_astrazeneca_ireland(session):
+    return _batch_first_party_roi_scrape(
+        "AstraZeneca",
+        [
+            "https://careers.astrazeneca.com/search-jobs/Ireland",
+            "https://careers.astrazeneca.com/search-jobs/Dublin",
+        ],
+        ["careers.astrazeneca.com"],
+        ["/job/", "/jobs/", "/search-jobs/"],
+        session,
+        "astrazeneca_first_party",
+        50,
+    )
+
+
+def scrape_amgen_ireland(session):
+    return _batch_first_party_roi_scrape(
+        "Amgen",
+        [
+            "https://careers.amgen.com/en/search-jobs/Ireland",
+            "https://careers.amgen.com/en/search-jobs/Dublin",
+        ],
+        ["careers.amgen.com"],
+        ["/job/", "/jobs/", "/search-jobs/"],
+        session,
+        "amgen_first_party",
+        50,
+    )
+
+
+def scrape_alexion_ireland(session):
+    return _batch_first_party_roi_scrape(
+        "Alexion",
+        [
+            "https://careers.alexion.com/search-jobs/Ireland",
+            "https://careers.alexion.com/search-jobs/Dublin",
+        ],
+        ["careers.alexion.com"],
+        ["/job/", "/jobs/", "/search-jobs/"],
+        session,
+        "alexion_first_party",
+        45,
+    )
+
+
+def scrape_stryker_ireland(session):
+    return _batch_first_party_roi_scrape(
+        "Stryker",
+        [
+            "https://careers.stryker.com/search-jobs/Ireland",
+            "https://careers.stryker.com/search-jobs/Cork",
+            "https://careers.stryker.com/search-jobs/Limerick",
+        ],
+        ["careers.stryker.com"],
+        ["/job/", "/jobs/", "/search-jobs/"],
+        session,
+        "stryker_first_party",
+        60,
+    )
+
+
+def scrape_novartis_ireland(session):
+    return _batch_first_party_roi_scrape(
+        "Novartis",
+        [
+            "https://www.novartis.com/careers/career-search?search_api_fulltext=&country%5B0%5D=LOC_IE",
+            "https://www.novartis.com/careers/career-search?search_api_fulltext=Ireland",
+        ],
+        ["novartis.com"],
+        ["/careers/career-search/job/details/", "/job/"],
+        session,
+        "novartis_first_party",
+        45,
+    )
+
+
+def scrape_intel_ireland(session):
+    return _batch_first_party_roi_scrape(
+        "Intel",
+        [
+            "https://jobs.intel.com/en/search-jobs/Ireland",
+            "https://jobs.intel.com/en/search-jobs/Leixlip",
+        ],
+        ["jobs.intel.com"],
+        ["/job/", "/jobs/", "/search-jobs/"],
+        session,
+        "intel_first_party",
+        55,
+    )
+
+
 def test_single_company(name):
     """Fast test mode for one company — skips the full ~30 min pipeline
     entirely. Checks known dedicated scrapers by name directly (Apple,
@@ -8155,6 +8266,13 @@ def test_single_company(name):
         "fbd insurance": lambda: scrape_fbd_ireland(session),
         "capgemini": lambda: scrape_capgemini_ireland(session),
         "vodafone ireland": lambda: scrape_vodafone_ireland(session),
+        "abbott": lambda: scrape_abbott_ireland(session),
+        "astrazeneca": lambda: scrape_astrazeneca_ireland(session),
+        "amgen": lambda: scrape_amgen_ireland(session),
+        "alexion": lambda: scrape_alexion_ireland(session),
+        "stryker": lambda: scrape_stryker_ireland(session),
+        "novartis": lambda: scrape_novartis_ireland(session),
+        "intel": lambda: scrape_intel_ireland(session),
         "pepsico": lambda: scrape_pepsico_ireland(session),
         "esb": lambda: scrape_esb_ireland(session),
         "irish rail": lambda: scrape_irish_rail_ireland(session),
@@ -8336,6 +8454,7 @@ def scrape_aer_lingus_ireland_recovery(session):
     )
 
 def main():
+    print("=== FAST_BATCH_8_NEXT ACTIVE: Abbott/AZ/Amgen/Alexion/Stryker/Novartis/Intel + Aldi second pass ===")
     print("=== FAST_BATCH_6_NEXT ACTIVE: SSE fast-return + Tesco/Aldi/FBD/Capgemini/Vodafone dedicated routes ===")
     print("=== FAST_BATCH_5_RECOVERY ACTIVE: Goodbody/BMS/SSE/HPE/Dell dedicated first-party routes; runtime architecture unchanged ===")
     print("=== FAST_MERIT_MEDICAL_FIX ACTIVE: official Merit Workday route; runtime architecture unchanged ===")
@@ -8606,6 +8725,13 @@ def main():
         ("exact", "fbd insurance", scrape_fbd_ireland, 60, "official FBD careers"),
         ("exact", "capgemini", scrape_capgemini_ireland, 60, "official Capgemini careers"),
         ("exact", "vodafone ireland", scrape_vodafone_ireland, 60, "official Vodafone Ireland careers"),
+        ("exact", "abbott", scrape_abbott_ireland, 60, "official Abbott careers"),
+        ("exact", "astrazeneca", scrape_astrazeneca_ireland, 60, "official AstraZeneca careers"),
+        ("exact", "amgen", scrape_amgen_ireland, 60, "official Amgen careers"),
+        ("exact", "alexion", scrape_alexion_ireland, 60, "official Alexion careers"),
+        ("exact", "stryker", scrape_stryker_ireland, 60, "official Stryker careers"),
+        ("exact", "novartis", scrape_novartis_ireland, 60, "official Novartis careers"),
+        ("exact", "intel", scrape_intel_ireland, 60, "official Intel careers"),
         ("exact", "aib (allied irish banks)", scrape_aib_ireland, 240, "filtered against UK-only postings"),
         ("exact", "bnp paribas ireland", scrape_bnp_paribas_ireland, 240, "first-party Dublin jobs page"),
         ("exact", "blackrock", scrape_blackrock_ireland, 240, "Phenom platform"),
@@ -8692,6 +8818,9 @@ def main():
         "scrape_hpe_ireland", "scrape_dell_ireland",
         "scrape_tesco_ireland", "scrape_aldi_ireland", "scrape_fbd_ireland",
         "scrape_capgemini_ireland", "scrape_vodafone_ireland",
+        "scrape_abbott_ireland", "scrape_astrazeneca_ireland", "scrape_amgen_ireland",
+        "scrape_alexion_ireland", "scrape_stryker_ireland", "scrape_novartis_ireland",
+        "scrape_intel_ireland",
     }
 
     _live_company_names = {
@@ -8748,8 +8877,15 @@ def main():
                 "fbd insurance",
                 "capgemini",
                 "vodafone ireland",
+                "abbott",
+                "astrazeneca",
+                "amgen",
+                "alexion",
+                "stryker",
+                "novartis",
+                "intel",
             }:
-                cache_key = f"{name}::batch_dedicated_v1"
+                cache_key = ("Aldi Ireland::batch_dedicated_v2" if _key == "aldi ireland" else f"{name}::batch_dedicated_v1")
             else:
                 cache_key = name
             return lambda: cached_browser_scrape(browser_cache, cache_key, lambda: fn(session), 0, name)
@@ -8858,6 +8994,13 @@ def main():
             "fbd insurance",
             "capgemini",
             "vodafone ireland",
+            "abbott",
+            "astrazeneca",
+            "amgen",
+            "alexion",
+            "stryker",
+            "novartis",
+            "intel",
         }
     ]
     for entry in priority_entries:
