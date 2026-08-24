@@ -9807,6 +9807,7 @@ def scrape_aer_lingus_ireland_recovery(session):
     )
 
 def main():
+    print("=== RUNTIME_DEDUPE_FIX ACTIVE: one company = one full-run task; dedicated routes win over generic duplicates ===")
     print("=== TWO_ATTEMPT_RULE_BATCH ACTIVE: Oracle/McKinsey attempt 2 + Honeywell/Schneider attempt 1; successful live routes untouched ===")
     print("=== ORACLE_BAUSCH_MCKINSEY_BATCH ACTIVE: Oracle REST scheduled in full run + Bausch/McKinsey friend routes; live companies untouched ===")
     print("=== AGILENT_PLUS_FRIEND_NEXT4 ACTIVE: Agilent full dedicated timeout + Heineken/Musgrave/VHI/HP friend logic; live companies untouched ===")
@@ -10347,7 +10348,9 @@ def main():
 
     oracle_cx_targets = [
         ("jpmorgan chase", "JPMorgan Chase", "https://jpmc.fa.oraclecloud.com", "CX_1001"),
-        ("oracle", "Oracle", "https://eeho.fa.us2.oraclecloud.com", "CX_1"),
+        # Oracle is intentionally NOT listed here anymore.
+        # It is already scheduled above through scrape_oracle_ireland_attempt2.
+        # Keeping both routes caused two Oracle tasks every full run.
     ]
     for exact_name, display_name, host, site_number in oracle_cx_targets:
         company_row = next(
@@ -10424,9 +10427,20 @@ def main():
     # when new batches of companies were added on top of an un-fixed base
     # file. Confirmed via pyflakes each time: both names flagged as
     # "undefined name" at their old location.
+    # Runtime dedupe: if a company already has a dedicated/company-specific
+    # task in this run, never queue the generic Sheet-2 browser fallback for
+    # the same company as a second task. The dedicated route is more precise
+    # and the duplicate browser launch was adding runtime without coverage.
+    _already_scheduled_company_names = {
+        str(t[1] or "").strip().lower()
+        for t in task_list
+        if str(t[1] or "").strip()
+    }
+
     priority_entries = [
         entry for entry in manual_check
         if entry["company"].strip().lower() in PRIORITY_SHEET2_COMPANIES
+        and entry["company"].strip().lower() not in _already_scheduled_company_names
         and entry["company"].strip().lower() not in {
             "wipro",
             "iqvia",
@@ -10490,6 +10504,32 @@ def main():
     )
     if priority_entries:
         print("  -> " + ", ".join(e["company"] for e in priority_entries))
+
+    # Final defensive company-level dedupe. Earlier queue ordering guarantees
+    # the first task is the preferred/specific route; later duplicate generic
+    # tasks are discarded.
+    _deduped_task_list = []
+    _seen_task_companies = set()
+    _removed_duplicate_tasks = []
+
+    for _task in task_list:
+        _company_key = str(_task[1] or "").strip().lower()
+        if _company_key and _company_key in _seen_task_companies:
+            _removed_duplicate_tasks.append(str(_task[1]))
+            continue
+        if _company_key:
+            _seen_task_companies.add(_company_key)
+        _deduped_task_list.append(_task)
+
+    if _removed_duplicate_tasks:
+        print(
+            "=== Runtime dedupe: removed "
+            f"{len(_removed_duplicate_tasks)} duplicate company tasks: "
+            + ", ".join(sorted(set(_removed_duplicate_tasks)))
+            + " ==="
+        )
+
+    task_list = _deduped_task_list
 
     browser_count = sum(1 for t in task_list if t[4])
     http_count = len(task_list) - browser_count
