@@ -10171,7 +10171,128 @@ def scrape_next_manual_batch_generic(company_name, career_url, session):
     return scrape_priority_sheet2_generic(company_name, career_url, session)
 
 
+
+
+# === NEXT_RECOVERY_BATCH_7 ===
+# High-confidence first-party recoveries for currently unresolved companies.
+
+def scrape_baker_tilly_ireland_attempt2(session):
+    # Current official Baker Tilly Ireland vacancies are real detail pages
+    # under /vacancies/<slug>, with Dublin/Cork location text on each detail.
+    return _batch_first_party_roi_scrape(
+        "Baker Tilly Ireland",
+        ["https://www.bakertilly.ie/careers/vacancies"],
+        ["www.bakertilly.ie", "bakertilly.ie"],
+        ["/vacancies/"],
+        session,
+        "baker_tilly_attempt2",
+        50,
+    )
+
+
+def scrape_greencore_ireland_attempt2(session):
+    # Greencore now exposes its Dublin head-office vacancies on its dedicated
+    # careers subdomain rather than the corporate careers landing page.
+    return _batch_first_party_roi_scrape(
+        "Greencore",
+        [
+            "https://www.careers.greencore.com/branches/dublin-city",
+            "https://www.careers.greencore.com/",
+        ],
+        ["careers.greencore.com"],
+        ["/jobs/", "/vacancies/"],
+        session,
+        "greencore_attempt2",
+        70,
+    )
+
+
+def scrape_amd_ireland_attempt2(session):
+    # The old jobs.amd.com URL is dead. AMD's current official career system
+    # is careers.amd.com and exposes Dublin/Cork Ireland detail records.
+    return _batch_first_party_roi_scrape(
+        "Advanced Micro Devices (AMD)",
+        [
+            "https://careers.amd.com/careers-home/jobs?location=Ireland",
+            "https://careers.amd.com/careers-home/jobs?location=Dublin%2C%20Ireland",
+            "https://careers.amd.com/careers-home/jobs?location=Cork%2C%20Ireland",
+            "https://careers.amd.com/careers-home/jobs",
+        ],
+        ["careers.amd.com"],
+        ["/careers-home/jobs/"],
+        session,
+        "amd_current_career_attempt2",
+        100,
+    )
+
+
+def scrape_bayer_ireland_attempt2(session):
+    # Current Bayer application portal (SuccessFactors-style job detail URLs).
+    return _batch_first_party_roi_scrape(
+        "Bayer",
+        [
+            "https://jobs.bayer.com/search/?q=&locationsearch=Ireland",
+            "https://jobs.bayer.com/search/?q=Ireland",
+            "https://jobs.bayer.com/",
+        ],
+        ["jobs.bayer.com"],
+        ["/job/"],
+        session,
+        "bayer_current_portal_attempt2",
+        80,
+    )
+
+
+def scrape_bdo_ireland_pinpoint(session):
+    # BDO Ireland's current official careers host is Pinpoint.
+    raw = try_pinpoint("bdoireland", session) or []
+    jobs = []
+    for item in raw:
+        norm = normalize_pinpoint_job("BDO Ireland", "bdoireland", item)
+        if norm:
+            jobs.append(norm)
+    print(f"      [bdo_pinpoint] {len(jobs)} Ireland jobs")
+    return jobs
+
+
+def scrape_aviva_ireland_current(session):
+    # Aviva Ireland currently routes vacancies to its official Randstad
+    # talent-community site. City-scoped pages avoid UK results.
+    return _batch_first_party_roi_scrape(
+        "Aviva Ireland",
+        [
+            "https://aviva.talent-community.com/projects/in/dublin",
+            "https://aviva.talent-community.com/projects/in/cork",
+            "https://aviva.talent-community.com/projects/in/galway",
+            "https://aviva.talent-community.com/projects/in/ireland",
+        ],
+        ["aviva.talent-community.com"],
+        ["/projects/"],
+        session,
+        "aviva_current_portal",
+        80,
+    )
+
+
+def scrape_fitch_ireland_current(session):
+    # Fitch's current official job site is careers.fitch.group (SuccessFactors).
+    return _batch_first_party_roi_scrape(
+        "Fitch Ratings",
+        [
+            "https://careers.fitch.group/search/?q=&locationsearch=Ireland",
+            "https://careers.fitch.group/search/?q=&locationsearch=Dublin",
+            "https://careers.fitch.group/go/View-All-Jobs/8883701/",
+        ],
+        ["careers.fitch.group"],
+        ["/job/"],
+        session,
+        "fitch_current_portal",
+        80,
+    )
+
+
 def main():
+    print("=== NEXT_RECOVERY_BATCH_7 ACTIVE: Baker Tilly/Greencore/AMD/Bayer attempt2 + BDO/Aviva/Fitch current first-party routes; live routes untouched ===")
     print("=== NEXT_MANUAL_BATCH_20_QUEUE_FIX ACTIVE: 20 unresolved companies forced from CSV status-independently; live routes untouched ===")
     print("=== DOCUSIGN_ATKINS_RETURN_FIX_NETAPP_ATTEMPT2 ACTIVE: proven DocuSign/Atkins routes get return budget; NetApp gets second route ===")
     print("=== LARGE_NONLIVE_BATCH_8 ACTIVE: Dexcom/DocuSign attempt 2 + AECOM/NetApp/Applied Materials/Arcadis/Jacobs/AtkinsRealis attempt 1; live routes untouched ===")
@@ -10469,6 +10590,13 @@ def main():
         ("exact", "arcadis", scrape_arcadis_ireland_newbatch, 60, "official Arcadis Ireland Eightfold board"),
         ("exact", "jacobs", scrape_jacobs_ireland_newbatch, 60, "official Jacobs Ireland search"),
         ("exact", "atkinsréalis", scrape_atkinsrealis_ireland_newbatch, 105, "verified AtkinsRéalis route; extended return budget"),
+        ("exact", "baker tilly ireland", scrape_baker_tilly_ireland_attempt2, 75, "Baker Tilly attempt 2 current vacancies"),
+        ("exact", "greencore", scrape_greencore_ireland_attempt2, 75, "Greencore attempt 2 Dublin careers hub"),
+        ("exact", "advanced micro devices (amd)", scrape_amd_ireland_attempt2, 90, "AMD attempt 2 current careers host"),
+        ("exact", "bayer", scrape_bayer_ireland_attempt2, 75, "Bayer attempt 2 current job portal"),
+        ("exact", "bdo ireland", scrape_bdo_ireland_pinpoint, 30, "BDO Ireland official Pinpoint API"),
+        ("exact", "aviva ireland", scrape_aviva_ireland_current, 75, "Aviva Ireland official talent-community"),
+        ("exact", "fitch ratings", scrape_fitch_ireland_current, 75, "Fitch current official careers site"),
         ("prefix", "apple", scrape_apple_ireland, 180, "direct HTML scrape"),
         ("exact", "google", scrape_google_ireland, 240, "real browser automation"),
         ("prefix", "amazon", scrape_amazon_ireland, 180, "internal jobs search endpoint"),
@@ -10643,6 +10771,9 @@ def main():
         "scrape_netapp_ireland_attempt2", "scrape_applied_materials_ireland_newbatch",
         "scrape_arcadis_ireland_newbatch", "scrape_jacobs_ireland_newbatch",
         "scrape_atkinsrealis_ireland_newbatch",
+        "scrape_baker_tilly_ireland_attempt2", "scrape_greencore_ireland_attempt2",
+        "scrape_amd_ireland_attempt2", "scrape_bayer_ireland_attempt2",
+        "scrape_aviva_ireland_current", "scrape_fitch_ireland_current",
         "scrape_bausch_lomb_friend",
         "scrape_oracle_ireland_attempt2", "scrape_honeywell_attempt2", "scrape_schneider_attempt2",
     }
@@ -10761,6 +10892,11 @@ def main():
                 "applied materials", "arcadis", "jacobs", "atkinsréalis"
             }:
                 cache_key = f"{name}::large_nonlive_batch8_v2"
+            elif _key in {
+                "baker tilly ireland", "greencore", "advanced micro devices (amd)",
+                "bayer", "bdo ireland", "aviva ireland", "fitch ratings"
+            }:
+                cache_key = f"{name}::next_recovery_batch7_v1"
             elif _key in {"dxc technology", "deutsche bank", "s&p global", "three ireland"}:
                 cache_key = f"{name}::friend_logic_v1"
             elif _key == "grant thornton ireland":
@@ -10786,6 +10922,13 @@ def main():
             "arcadis",
             "jacobs",
             "atkinsréalis",
+            "baker tilly ireland",
+            "greencore",
+            "advanced micro devices (amd)",
+            "bayer",
+            "bdo ireland",
+            "aviva ireland",
+            "fitch ratings",
         }
         if company_name.strip().lower() in _fresh_dedicated_timeout_names:
             actual_timeout = timeout_s
