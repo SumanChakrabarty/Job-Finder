@@ -10111,7 +10111,28 @@ def scrape_atkinsrealis_ireland_newbatch(session):
         80,
     )
 
+
+
+def scrape_netapp_ireland_attempt2(session):
+    """NetApp attempt 2: rendered official search pages with Ireland city queries."""
+    return _batch_first_party_roi_scrape(
+        "NetApp",
+        [
+            "https://careers.netapp.com/search/?q=&locationsearch=Ireland",
+            "https://careers.netapp.com/search/?q=&locationsearch=Cork",
+            "https://careers.netapp.com/search/?q=&locationsearch=Dublin",
+            "https://careers.netapp.com/search/?q=Ireland",
+        ],
+        ["careers.netapp.com"],
+        ["/job/", "/jobs/"],
+        session,
+        "netapp_attempt2_rendered",
+        100,
+    )
+
+
 def main():
+    print("=== DOCUSIGN_ATKINS_RETURN_FIX_NETAPP_ATTEMPT2 ACTIVE: proven DocuSign/Atkins routes get return budget; NetApp gets second route ===")
     print("=== LARGE_NONLIVE_BATCH_8 ACTIVE: Dexcom/DocuSign attempt 2 + AECOM/NetApp/Applied Materials/Arcadis/Jacobs/AtkinsRealis attempt 1; live routes untouched ===")
     print("=== THREE_REGRESSION_RECOVERY ACTIVE: Three CSOD country=ie recovery + persistent last-known-nonzero protection ===")
     print("=== NEXT_COMPANIES_3_DIRECT_FIX ACTIVE: Ryanair/Dexcom/DocuSign first-party recovery; live routes untouched ===")
@@ -10400,13 +10421,13 @@ def main():
     dedicated_company_specs = [
         ("exact", "ryanair", scrape_ryanair_ireland_next3, 45, "official Ryanair Ireland listing"),
         ("exact", "dexcom", scrape_dexcom_ireland_attempt2, 60, "attempt 2 rendered Dexcom Ireland board"),
-        ("exact", "docusign", scrape_docusign_ireland_attempt2, 60, "attempt 2 rendered Docusign Ireland board"),
+        ("exact", "docusign", scrape_docusign_ireland_attempt2, 105, "verified Docusign route; extended return budget"),
         ("exact", "aecom", scrape_aecom_ireland_newbatch, 45, "official AECOM SmartRecruiters API"),
-        ("exact", "netapp", scrape_netapp_ireland_newbatch, 60, "official NetApp Ireland board"),
+        ("exact", "netapp", scrape_netapp_ireland_attempt2, 90, "NetApp attempt 2 rendered Ireland/city search"),
         ("exact", "applied materials", scrape_applied_materials_ireland_newbatch, 60, "official Applied Materials Ireland board"),
         ("exact", "arcadis", scrape_arcadis_ireland_newbatch, 60, "official Arcadis Ireland Eightfold board"),
         ("exact", "jacobs", scrape_jacobs_ireland_newbatch, 60, "official Jacobs Ireland search"),
-        ("exact", "atkinsréalis", scrape_atkinsrealis_ireland_newbatch, 60, "official AtkinsRéalis Ireland board"),
+        ("exact", "atkinsréalis", scrape_atkinsrealis_ireland_newbatch, 105, "verified AtkinsRéalis route; extended return budget"),
         ("prefix", "apple", scrape_apple_ireland, 180, "direct HTML scrape"),
         ("exact", "google", scrape_google_ireland, 240, "real browser automation"),
         ("prefix", "amazon", scrape_amazon_ireland, 180, "internal jobs search endpoint"),
@@ -10559,7 +10580,7 @@ def main():
         "scrape_musgrave_ireland_friend", "scrape_vhi_ireland_friend",
         "scrape_hp_ireland_friend",
         "scrape_dexcom_ireland_attempt2", "scrape_docusign_ireland_attempt2",
-        "scrape_netapp_ireland_newbatch", "scrape_applied_materials_ireland_newbatch",
+        "scrape_netapp_ireland_attempt2", "scrape_applied_materials_ireland_newbatch",
         "scrape_arcadis_ireland_newbatch", "scrape_jacobs_ireland_newbatch",
         "scrape_atkinsrealis_ireland_newbatch",
         "scrape_bausch_lomb_friend",
@@ -10673,8 +10694,10 @@ def main():
                 cache_key = name
             if _key == "ryanair":
                 cache_key = f"{name}::next_companies_3_direct_v1"
+            elif _key == "netapp":
+                cache_key = f"{name}::netapp_attempt2_v3"
             elif _key in {
-                "dexcom", "docusign", "aecom", "netapp",
+                "dexcom", "docusign", "aecom",
                 "applied materials", "arcadis", "jacobs", "atkinsréalis"
             }:
                 cache_key = f"{name}::large_nonlive_batch8_v2"
