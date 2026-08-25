@@ -12916,8 +12916,8 @@
   },
   "Goldman Sachs": {
     "jobs": [],
-    "checked_at": 1787664959.554174,
-    "consecutive_failures": 102
+    "checked_at": 1787667738.7510743,
+    "consecutive_failures": 103
   },
   "Fiserv": {
     "jobs": [
@@ -13458,8 +13458,8 @@
   },
   "Databricks": {
     "jobs": [],
-    "checked_at": 1787664902.1688042,
-    "consecutive_failures": 96
+    "checked_at": 1787667690.6396272,
+    "consecutive_failures": 97
   },
   "Infosys": {
     "jobs": [],
@@ -13488,8 +13488,8 @@
   },
   "Morgan Stanley": {
     "jobs": [],
-    "checked_at": 1787664900.5555212,
-    "consecutive_failures": 90
+    "checked_at": 1787667688.6724253,
+    "consecutive_failures": 91
   },
   "Moody's": {
     "jobs": [],
@@ -13848,8 +13848,8 @@
   },
   "Aer Lingus": {
     "jobs": [],
-    "checked_at": 1787664903.524663,
-    "consecutive_failures": 89
+    "checked_at": 1787667693.1932287,
+    "consecutive_failures": 90
   },
   "Akamai": {
     "jobs": [],
@@ -13883,8 +13883,8 @@
   },
   "Visa": {
     "jobs": [],
-    "checked_at": 1787664899.987612,
-    "consecutive_failures": 86
+    "checked_at": 1787667688.4496768,
+    "consecutive_failures": 87
   },
   "Boehringer Ingelheim": {
     "jobs": [],
@@ -14036,11 +14036,6 @@
     "jobs": [],
     "checked_at": 1787666279.0874608,
     "consecutive_failures": 34
-  },
-  "Cisco": {
-    "jobs": [],
-    "checked_at": 1787666278.4712238,
-    "consecutive_failures": 1
   },
   "Edwards Lifesciences": {
     "jobs": [],
@@ -14228,11 +14223,6 @@
     "checked_at": 1787666257.1329277,
     "consecutive_failures": 0
   },
-  "Danaher Corporation": {
-    "jobs": [],
-    "checked_at": 1787666280.6050365,
-    "consecutive_failures": 1
-  },
   "NXP Semiconductors": {
     "jobs": [],
     "checked_at": 1787666129.770414,
@@ -14282,11 +14272,6 @@
     "jobs": [],
     "checked_at": 1787666284.1621568,
     "consecutive_failures": 33
-  },
-  "Kuehne+Nagel Ireland": {
-    "jobs": [],
-    "checked_at": 1787666286.9616642,
-    "consecutive_failures": 1
   },
   "Irish Rail (Iarnród Éireann)": {
     "jobs": [
@@ -14629,11 +14614,6 @@
     "jobs": [],
     "checked_at": 1787666242.204297,
     "consecutive_failures": 31
-  },
-  "Roche": {
-    "jobs": [],
-    "checked_at": 1787666290.9422116,
-    "consecutive_failures": 1
   },
   "Tandem Diabetes Care": {
     "jobs": [],
@@ -16452,7 +16432,7 @@
         "source": "iqvia_ireland_location_page",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-25T13:36:51.513443+00:00",
         "posted_age_known": false
       },
@@ -17116,8 +17096,8 @@
   },
   "Tesco Ireland::batch_dedicated_v1": {
     "jobs": [],
-    "checked_at": 1787664939.8171742,
-    "consecutive_failures": 45
+    "checked_at": 1787667729.1575534,
+    "consecutive_failures": 46
   },
   "AstraZeneca::batch_dedicated_v1": {
     "jobs": [
@@ -17859,8 +17839,8 @@
   },
   "DXC Technology::friend_logic_v1": {
     "jobs": [],
-    "checked_at": 1787664899.2843368,
-    "consecutive_failures": 44
+    "checked_at": 1787667687.4831734,
+    "consecutive_failures": 45
   },
   "Tata Consultancy Services (TCS)::friend_logic_v1": {
     "jobs": [
@@ -18632,8 +18612,8 @@
   },
   "Deutsche Bank::friend_logic_v1": {
     "jobs": [],
-    "checked_at": 1787664968.597681,
-    "consecutive_failures": 44
+    "checked_at": 1787667765.6788728,
+    "consecutive_failures": 45
   },
   "Intel::friend_logic_v1": {
     "jobs": [
@@ -19693,8 +19673,8 @@
   },
   "Coca-Cola HBC Ireland::friend_nonlive_batch10_v1": {
     "jobs": [],
-    "checked_at": 1787664934.6233099,
-    "consecutive_failures": 34
+    "checked_at": 1787667739.0458677,
+    "consecutive_failures": 35
   },
   "Agilent Technologies::friend_nonlive_batch10_v1": {
     "jobs": [
@@ -19926,13 +19906,13 @@
   },
   "Infosys::friend_nonlive_batch10_v1": {
     "jobs": [],
-    "checked_at": 1787664996.137503,
-    "consecutive_failures": 34
+    "checked_at": 1787667798.8768325,
+    "consecutive_failures": 35
   },
   "Heineken Ireland::friend_next4_v1": {
     "jobs": [],
-    "checked_at": 1787664902.13772,
-    "consecutive_failures": 33
+    "checked_at": 1787667690.424849,
+    "consecutive_failures": 34
   },
   "VHI Healthcare::friend_next4_v1": {
     "jobs": [
@@ -20935,8 +20915,8 @@
   },
   "McKinsey & Company::attempt2_plus_new_v2": {
     "jobs": [],
-    "checked_at": 1787664924.161906,
-    "consecutive_failures": 30
+    "checked_at": 1787667712.4164004,
+    "consecutive_failures": 31
   },
   "Schneider Electric::attempt2_plus_new_v2": {
     "jobs": [],
@@ -21183,6 +21163,21 @@
     "jobs": [
       {
         "company": "Hewlett Packard Enterprise (HPE)",
+        "title": "Senior Technical Account Manager – Cloud Provider AI & Data Center Networking",
+        "location": "Republic of Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.hpe.com/us/en/job/1207759/Senior-Technical-Account-Manager-Cloud-Provider-AI-Data-Center-Networking%C2%A0",
+        "source": "hpe_first_party",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T04:32:09.012483+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Hewlett Packard Enterprise (HPE)",
         "title": "Software Engineering Intern",
         "location": "Galway, Ireland",
         "posted_text": "Unknown",
@@ -21195,24 +21190,9 @@
         "new_since_last_check": false,
         "first_seen_at": "2026-08-24T18:06:20.492678+00:00",
         "posted_age_known": false
-      },
-      {
-        "company": "Hewlett Packard Enterprise (HPE)",
-        "title": "Senior Financial Analyst",
-        "location": "Republic of Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.hpe.com/us/en/job/1211953/Senior-Financial-Analyst",
-        "source": "hpe_first_party",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-24T01:23:26.715320+00:00",
-        "posted_age_known": false
       }
     ],
-    "checked_at": 1787655326.5176487,
+    "checked_at": 1787667728.025433,
     "consecutive_failures": 0
   },
   "Three Ireland::friend_logic_v1": {
@@ -23336,7 +23316,7 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1787655329.4998713,
+    "checked_at": 1787667730.3271513,
     "consecutive_failures": 0
   },
   "Ryanair::next_companies_3_direct_v1": {
@@ -25037,230 +25017,15 @@
     "checked_at": 1787659495.0340815,
     "consecutive_failures": 0
   },
-  "Regeneron": {
-    "jobs": [],
-    "checked_at": 1787664900.757167,
-    "consecutive_failures": 1
-  },
-  "BNY Mellon": {
-    "jobs": [],
-    "checked_at": 1787664903.0932686,
-    "consecutive_failures": 1
-  },
-  "Aldi Ireland::batch_dedicated_v2": {
-    "jobs": [],
-    "checked_at": 1787664913.795809,
-    "consecutive_failures": 1
-  },
-  "Dell Technologies::batch_dedicated_v1": {
-    "jobs": [],
-    "checked_at": 1787664921.7919283,
-    "consecutive_failures": 1
-  },
-  "NetApp::netapp_attempt2_v3": {
-    "jobs": [],
-    "checked_at": 1787664928.33547,
-    "consecutive_failures": 1
-  },
-  "Stryker::batch_dedicated_v1": {
-    "jobs": [],
-    "checked_at": 1787664932.1705265,
-    "consecutive_failures": 1
-  },
-  "QIAGEN": {
-    "jobs": [],
-    "checked_at": 1787664938.9459074,
-    "consecutive_failures": 1
-  },
-  "HP (Hewlett-Packard)::friend_next4_v1": {
-    "jobs": [],
-    "checked_at": 1787664942.8144083,
-    "consecutive_failures": 1
-  },
-  "Oracle::attempt2_plus_new_v2": {
-    "jobs": [],
-    "checked_at": 1787664942.9939373,
-    "consecutive_failures": 1
-  },
   "Schneider Electric::final_attempt_v3": {
     "jobs": [],
-    "checked_at": 1787664948.7277277,
-    "consecutive_failures": 1
-  },
-  "Central Bank of Ireland": {
-    "jobs": [],
-    "checked_at": 1787664951.0143523,
-    "consecutive_failures": 1
-  },
-  "Bristol Myers Squibb::batch_dedicated_v1": {
-    "jobs": [],
-    "checked_at": 1787664954.1952894,
-    "consecutive_failures": 1
-  },
-  "Red Hat": {
-    "jobs": [],
-    "checked_at": 1787664960.6111572,
-    "consecutive_failures": 1
-  },
-  "Willis Towers Watson (WTW)": {
-    "jobs": [],
-    "checked_at": 1787664970.335947,
-    "consecutive_failures": 1
-  },
-  "Aviva Ireland": {
-    "jobs": [],
-    "checked_at": 1787664970.7041042,
-    "consecutive_failures": 1
-  },
-  "BDO Ireland": {
-    "jobs": [],
-    "checked_at": 1787664976.0451083,
-    "consecutive_failures": 1
-  },
-  "Cantor Fitzgerald Ireland": {
-    "jobs": [],
-    "checked_at": 1787664978.4603329,
-    "consecutive_failures": 1
-  },
-  "Glanbia / Tirlán": {
-    "jobs": [],
-    "checked_at": 1787664978.6600158,
-    "consecutive_failures": 1
-  },
-  "Fitch Ratings": {
-    "jobs": [],
-    "checked_at": 1787664980.6818893,
-    "consecutive_failures": 1
-  },
-  "Slalom": {
-    "jobs": [],
-    "checked_at": 1787664983.3709607,
-    "consecutive_failures": 1
-  },
-  "UBS": {
-    "jobs": [],
-    "checked_at": 1787664983.990289,
-    "consecutive_failures": 1
-  },
-  "ABP Food Group": {
-    "jobs": [],
-    "checked_at": 1787664986.9409304,
-    "consecutive_failures": 1
-  },
-  "Zurich Insurance": {
-    "jobs": [],
-    "checked_at": 1787664988.9627953,
-    "consecutive_failures": 1
+    "checked_at": 1787667747.926598,
+    "consecutive_failures": 2
   },
   "Honeywell::final_attempt_v3": {
     "jobs": [],
-    "checked_at": 1787664989.434243,
-    "consecutive_failures": 1
-  },
-  "Alexion Pharmaceuticals": {
-    "jobs": [],
-    "checked_at": 1787664990.272309,
-    "consecutive_failures": 1
-  },
-  "Baxter International": {
-    "jobs": [],
-    "checked_at": 1787664993.27689,
-    "consecutive_failures": 1
-  },
-  "Coillte": {
-    "jobs": [],
-    "checked_at": 1787664994.4502273,
-    "consecutive_failures": 1
-  },
-  "Cook Medical": {
-    "jobs": [],
-    "checked_at": 1787664998.638597,
-    "consecutive_failures": 1
-  },
-  "ESB (Electricity Supply Board)": {
-    "jobs": [],
-    "checked_at": 1787664998.7385461,
-    "consecutive_failures": 1
-  },
-  "Eir": {
-    "jobs": [],
-    "checked_at": 1787664999.0727496,
-    "consecutive_failures": 1
-  },
-  "Gas Networks Ireland": {
-    "jobs": [],
-    "checked_at": 1787665002.045893,
-    "consecutive_failures": 1
-  },
-  "Kepak Group": {
-    "jobs": [],
-    "checked_at": 1787665002.6374907,
-    "consecutive_failures": 1
-  },
-  "Sky Ireland": {
-    "jobs": [],
-    "checked_at": 1787665004.3838956,
-    "consecutive_failures": 1
-  },
-  "Revvity (PerkinElmer)": {
-    "jobs": [],
-    "checked_at": 1787665006.9899256,
-    "consecutive_failures": 1
-  },
-  "GlaxoSmithKline (GSK)": {
-    "jobs": [],
-    "checked_at": 1787665009.0668268,
-    "consecutive_failures": 1
-  },
-  "Haleon": {
-    "jobs": [],
-    "checked_at": 1787665009.6052635,
-    "consecutive_failures": 1
-  },
-  "Boston Consulting Group (BCG)": {
-    "jobs": [],
-    "checked_at": 1787665011.455411,
-    "consecutive_failures": 1
-  },
-  "BNP Paribas Ireland": {
-    "jobs": [],
-    "checked_at": 1787666120.2367668,
-    "consecutive_failures": 1
-  },
-  "Three Ireland": {
-    "jobs": [],
-    "checked_at": 1787666121.7335825,
-    "consecutive_failures": 1
-  },
-  "Bausch + Lomb": {
-    "jobs": [],
-    "checked_at": 1787666122.196506,
-    "consecutive_failures": 1
-  },
-  "Deutsche Bank": {
-    "jobs": [],
-    "checked_at": 1787666122.5347342,
-    "consecutive_failures": 1
-  },
-  "Oracle": {
-    "jobs": [],
-    "checked_at": 1787666123.1885068,
-    "consecutive_failures": 1
-  },
-  "Broadcom": {
-    "jobs": [],
-    "checked_at": 1787666123.6572757,
-    "consecutive_failures": 1
-  },
-  "Illumina": {
-    "jobs": [],
-    "checked_at": 1787666128.6890569,
-    "consecutive_failures": 1
-  },
-  "VMware (Broadcom)": {
-    "jobs": [],
-    "checked_at": 1787666131.711553,
-    "consecutive_failures": 1
+    "checked_at": 1787667808.4441736,
+    "consecutive_failures": 2
   },
   "Aldi Ireland": {
     "jobs": [
@@ -25327,11 +25092,6 @@
     ],
     "checked_at": 1787666135.4925406,
     "consecutive_failures": 0
-  },
-  "HCLTech": {
-    "jobs": [],
-    "checked_at": 1787666136.5257072,
-    "consecutive_failures": 1
   },
   "Laya Healthcare": {
     "jobs": [
@@ -28171,11 +27931,6 @@
     "checked_at": 1787666146.7030885,
     "consecutive_failures": 0
   },
-  "AXA Ireland": {
-    "jobs": [],
-    "checked_at": 1787666150.545765,
-    "consecutive_failures": 1
-  },
   "Bristol Myers Squibb": {
     "jobs": [
       {
@@ -29334,41 +29089,6 @@
     "checked_at": 1787666153.6608825,
     "consecutive_failures": 0
   },
-  "FBD Insurance": {
-    "jobs": [],
-    "checked_at": 1787666158.3265438,
-    "consecutive_failures": 1
-  },
-  "S&P Global": {
-    "jobs": [],
-    "checked_at": 1787666173.6330183,
-    "consecutive_failures": 1
-  },
-  "Tata Consultancy Services (TCS)": {
-    "jobs": [],
-    "checked_at": 1787666178.187972,
-    "consecutive_failures": 1
-  },
-  "Susquehanna International Group (SIG)": {
-    "jobs": [],
-    "checked_at": 1787666178.6246517,
-    "consecutive_failures": 1
-  },
-  "VHI Healthcare": {
-    "jobs": [],
-    "checked_at": 1787666187.467481,
-    "consecutive_failures": 1
-  },
-  "Agilent Technologies": {
-    "jobs": [],
-    "checked_at": 1787666188.811443,
-    "consecutive_failures": 1
-  },
-  "Dexcom": {
-    "jobs": [],
-    "checked_at": 1787666201.4983644,
-    "consecutive_failures": 1
-  },
   "Dell Technologies": {
     "jobs": [
       {
@@ -30004,56 +29724,6 @@
     ],
     "checked_at": 1787666203.0687985,
     "consecutive_failures": 0
-  },
-  "DocuSign": {
-    "jobs": [],
-    "checked_at": 1787666204.3407512,
-    "consecutive_failures": 1
-  },
-  "HP (Hewlett-Packard)": {
-    "jobs": [],
-    "checked_at": 1787666211.1077085,
-    "consecutive_failures": 1
-  },
-  "Intel": {
-    "jobs": [],
-    "checked_at": 1787666213.450923,
-    "consecutive_failures": 1
-  },
-  "SMBC Aviation Capital": {
-    "jobs": [],
-    "checked_at": 1787666220.8164241,
-    "consecutive_failures": 1
-  },
-  "SSE Airtricity / SSE": {
-    "jobs": [],
-    "checked_at": 1787666223.0813189,
-    "consecutive_failures": 1
-  },
-  "Novartis": {
-    "jobs": [],
-    "checked_at": 1787666223.264536,
-    "consecutive_failures": 1
-  },
-  "Palo Alto Networks": {
-    "jobs": [],
-    "checked_at": 1787666227.684487,
-    "consecutive_failures": 1
-  },
-  "Stryker": {
-    "jobs": [],
-    "checked_at": 1787666233.9695961,
-    "consecutive_failures": 1
-  },
-  "Vodafone Ireland": {
-    "jobs": [],
-    "checked_at": 1787666237.2897909,
-    "consecutive_failures": 1
-  },
-  "Zimmer Biomet": {
-    "jobs": [],
-    "checked_at": 1787666243.9370885,
-    "consecutive_failures": 1
   },
   "Baker Tilly Ireland": {
     "jobs": [
@@ -30751,24 +30421,398 @@
     "checked_at": 1787666269.2145154,
     "consecutive_failures": 0
   },
-  "Applied Materials": {
+  "BNY Mellon": {
     "jobs": [],
-    "checked_at": 1787666270.222681,
+    "checked_at": 1787667689.8788896,
     "consecutive_failures": 1
   },
-  "Charles River Laboratories": {
+  "Regeneron": {
     "jobs": [],
-    "checked_at": 1787666277.647695,
+    "checked_at": 1787667690.823177,
     "consecutive_failures": 1
   },
-  "NetApp": {
+  "Aldi Ireland::batch_dedicated_v2": {
     "jobs": [],
-    "checked_at": 1787666284.7239618,
+    "checked_at": 1787667703.6331,
     "consecutive_failures": 1
   },
-  "DHL Ireland": {
+  "Dell Technologies::batch_dedicated_v1": {
     "jobs": [],
-    "checked_at": 1787666316.8287709,
+    "checked_at": 1787667704.3657331,
+    "consecutive_failures": 1
+  },
+  "NetApp::netapp_attempt2_v3": {
+    "jobs": [],
+    "checked_at": 1787667715.0320978,
+    "consecutive_failures": 1
+  },
+  "QIAGEN": {
+    "jobs": [],
+    "checked_at": 1787667727.1264424,
+    "consecutive_failures": 1
+  },
+  "Stryker::batch_dedicated_v1": {
+    "jobs": [],
+    "checked_at": 1787667728.4253385,
+    "consecutive_failures": 1
+  },
+  "Bristol Myers Squibb::batch_dedicated_v1": {
+    "jobs": [],
+    "checked_at": 1787667739.7869518,
+    "consecutive_failures": 1
+  },
+  "Oracle::attempt2_plus_new_v2": {
+    "jobs": [],
+    "checked_at": 1787667740.0447118,
+    "consecutive_failures": 1
+  },
+  "HP (Hewlett-Packard)::friend_next4_v1": {
+    "jobs": [],
+    "checked_at": 1787667741.2066917,
+    "consecutive_failures": 1
+  },
+  "Central Bank of Ireland": {
+    "jobs": [],
+    "checked_at": 1787667744.131933,
+    "consecutive_failures": 1
+  },
+  "Baker Tilly Ireland::next_manual_batch_v2": {
+    "jobs": [],
+    "checked_at": 1787667753.2911756,
+    "consecutive_failures": 1
+  },
+  "Willis Towers Watson (WTW)": {
+    "jobs": [],
+    "checked_at": 1787667762.0040896,
+    "consecutive_failures": 1
+  },
+  "Davy::next_manual_batch_v2": {
+    "jobs": [
+      {
+        "company": "Davy",
+        "title": "Customer Service Associate (opens in a new tab)",
+        "location": "Customer Service Associate (opens in a new tab) Dublin",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://apply.workable.com/davy/j/EE5CE9A9E8/",
+        "source": "priority_sheet2_generic",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "title_source": "listing_card_roi_verified",
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-22T01:18:57.000883+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Davy",
+        "title": "Director of Fund Governance (opens in a new tab)",
+        "location": "Director of Fund Governance (opens in a new tab) Dublin",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://apply.workable.com/davy/j/F71B169C97/",
+        "source": "priority_sheet2_generic",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "title_source": "listing_card_roi_verified",
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-22T01:18:57.000883+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Davy",
+        "title": "Salesforce Developer (opens in a new tab)",
+        "location": "Salesforce Developer (opens in a new tab) Dublin",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://apply.workable.com/davy/j/930335F4B0/",
+        "source": "priority_sheet2_generic",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "title_source": "listing_card_roi_verified",
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-22T01:18:57.000883+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Davy",
+        "title": "Pension Support Senior Associate (opens in a new tab)",
+        "location": "Pension Support Senior Associate (opens in a new tab) Dublin",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://apply.workable.com/davy/j/B451940BB8/",
+        "source": "priority_sheet2_generic",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "title_source": "listing_card_roi_verified",
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-22T01:18:57.000883+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Davy",
+        "title": "Investment Associate (opens in a new tab)",
+        "location": "Investment Associate (opens in a new tab) Dublin",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://apply.workable.com/davy/j/4FFCC57E96/",
+        "source": "priority_sheet2_generic",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "title_source": "listing_card_roi_verified",
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-22T01:18:57.000883+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Davy",
+        "title": "Pensions Associate 6 month FTC (opens in a new tab)",
+        "location": "Pensions Associate 6 month FTC (opens in a new tab) Dublin",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://apply.workable.com/davy/j/6C80D379EF/",
+        "source": "priority_sheet2_generic",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "title_source": "listing_card_roi_verified",
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-22T01:18:57.000883+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Davy",
+        "title": "Business Analyst - 12m FTC (opens in a new tab)",
+        "location": "Business Analyst - 12m FTC (opens in a new tab) Dublin",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://apply.workable.com/davy/j/DEAC2C5655/",
+        "source": "priority_sheet2_generic",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "title_source": "listing_card_roi_verified",
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-22T01:18:57.000883+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Davy",
+        "title": "Dividend Associate - 6 month FTC (opens in a new tab)",
+        "location": "Dividend Associate - 6 month FTC (opens in a new tab) Dublin",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://apply.workable.com/davy/j/0DC3A115EA/",
+        "source": "priority_sheet2_generic",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "title_source": "listing_card_roi_verified",
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-22T01:18:57.000883+00:00",
+        "posted_age_known": false
+      }
+    ],
+    "checked_at": 1787667762.9119456,
+    "consecutive_failures": 0
+  },
+  "Dynatrace::next_manual_batch_v2": {
+    "jobs": [],
+    "checked_at": 1787667769.2957356,
+    "consecutive_failures": 1
+  },
+  "Forvis Mazars Ireland::next_manual_batch_v2": {
+    "jobs": [],
+    "checked_at": 1787667773.3960013,
+    "consecutive_failures": 1
+  },
+  "Red Hat": {
+    "jobs": [],
+    "checked_at": 1787667775.3747056,
+    "consecutive_failures": 1
+  },
+  "FTI Consulting::next_manual_batch_v2": {
+    "jobs": [],
+    "checked_at": 1787667775.712509,
+    "consecutive_failures": 1
+  },
+  "FactSet::next_manual_batch_v2": {
+    "jobs": [],
+    "checked_at": 1787667776.9726474,
+    "consecutive_failures": 1
+  },
+  "Moody's::next_manual_batch_v2": {
+    "jobs": [],
+    "checked_at": 1787667781.1968951,
+    "consecutive_failures": 1
+  },
+  "Morningstar::next_manual_batch_v2": {
+    "jobs": [],
+    "checked_at": 1787667781.7876716,
+    "consecutive_failures": 1
+  },
+  "Macquarie Group::next_manual_batch_v2": {
+    "jobs": [],
+    "checked_at": 1787667782.4262035,
+    "consecutive_failures": 1
+  },
+  "MSCI::next_manual_batch_v2": {
+    "jobs": [],
+    "checked_at": 1787667788.5644991,
+    "consecutive_failures": 1
+  },
+  "Refinitiv (LSEG)::next_manual_batch_v2": {
+    "jobs": [],
+    "checked_at": 1787667789.1295779,
+    "consecutive_failures": 1
+  },
+  "Societe Generale::next_manual_batch_v2": {
+    "jobs": [],
+    "checked_at": 1787667789.5229177,
+    "consecutive_failures": 1
+  },
+  "Splunk::next_manual_batch_v2": {
+    "jobs": [],
+    "checked_at": 1787667791.6452787,
+    "consecutive_failures": 1
+  },
+  "Advanced Micro Devices (AMD)::next_manual_batch_v2": {
+    "jobs": [],
+    "checked_at": 1787667792.5825794,
+    "consecutive_failures": 1
+  },
+  "Greencore::next_manual_batch_v2": {
+    "jobs": [],
+    "checked_at": 1787667796.5892053,
+    "consecutive_failures": 1
+  },
+  "Protiviti::next_manual_batch_v2": {
+    "jobs": [],
+    "checked_at": 1787667796.9492824,
+    "consecutive_failures": 1
+  },
+  "Bayer::next_manual_batch_v2": {
+    "jobs": [],
+    "checked_at": 1787667797.9396684,
+    "consecutive_failures": 1
+  },
+  "Oliver Wyman::next_manual_batch_v2": {
+    "jobs": [],
+    "checked_at": 1787667801.4118085,
+    "consecutive_failures": 1
+  },
+  "Cantor Fitzgerald Ireland": {
+    "jobs": [],
+    "checked_at": 1787667807.0124986,
+    "consecutive_failures": 1
+  },
+  "Fitch Ratings": {
+    "jobs": [],
+    "checked_at": 1787667808.4528992,
+    "consecutive_failures": 1
+  },
+  "BDO Ireland": {
+    "jobs": [],
+    "checked_at": 1787667810.0198455,
+    "consecutive_failures": 1
+  },
+  "Glanbia / Tirlán": {
+    "jobs": [],
+    "checked_at": 1787667810.066279,
+    "consecutive_failures": 1
+  },
+  "Aviva Ireland": {
+    "jobs": [],
+    "checked_at": 1787667811.2777073,
+    "consecutive_failures": 1
+  },
+  "Slalom": {
+    "jobs": [],
+    "checked_at": 1787667814.7129865,
+    "consecutive_failures": 1
+  },
+  "UBS": {
+    "jobs": [],
+    "checked_at": 1787667814.9142141,
+    "consecutive_failures": 1
+  },
+  "ABP Food Group": {
+    "jobs": [],
+    "checked_at": 1787667816.7736263,
+    "consecutive_failures": 1
+  },
+  "Alexion Pharmaceuticals": {
+    "jobs": [],
+    "checked_at": 1787667818.1938245,
+    "consecutive_failures": 1
+  },
+  "Zurich Insurance": {
+    "jobs": [],
+    "checked_at": 1787667820.9881485,
+    "consecutive_failures": 1
+  },
+  "Coillte": {
+    "jobs": [],
+    "checked_at": 1787667821.8734834,
+    "consecutive_failures": 1
+  },
+  "Baxter International": {
+    "jobs": [],
+    "checked_at": 1787667822.1897297,
+    "consecutive_failures": 1
+  },
+  "Cook Medical": {
+    "jobs": [],
+    "checked_at": 1787667824.7923822,
+    "consecutive_failures": 1
+  },
+  "ESB (Electricity Supply Board)": {
+    "jobs": [],
+    "checked_at": 1787667825.9393463,
+    "consecutive_failures": 1
+  },
+  "Eir": {
+    "jobs": [],
+    "checked_at": 1787667826.516365,
+    "consecutive_failures": 1
+  },
+  "Gas Networks Ireland": {
+    "jobs": [],
+    "checked_at": 1787667828.948689,
+    "consecutive_failures": 1
+  },
+  "Sky Ireland": {
+    "jobs": [],
+    "checked_at": 1787667830.5766137,
+    "consecutive_failures": 1
+  },
+  "Kepak Group": {
+    "jobs": [],
+    "checked_at": 1787667830.7119243,
+    "consecutive_failures": 1
+  },
+  "Revvity (PerkinElmer)": {
+    "jobs": [],
+    "checked_at": 1787667832.082439,
+    "consecutive_failures": 1
+  },
+  "GlaxoSmithKline (GSK)": {
+    "jobs": [],
+    "checked_at": 1787667835.322196,
+    "consecutive_failures": 1
+  },
+  "Haleon": {
+    "jobs": [],
+    "checked_at": 1787667835.7509534,
+    "consecutive_failures": 1
+  },
+  "Boston Consulting Group (BCG)": {
+    "jobs": [],
+    "checked_at": 1787667844.6071384,
     "consecutive_failures": 1
   }
 }
