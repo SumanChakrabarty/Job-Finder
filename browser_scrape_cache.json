@@ -318,7 +318,7 @@
         "source": "amazon_json",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-25T19:21:15.386974+00:00",
         "posted_age_known": false
       },
@@ -8526,7 +8526,7 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1787676009.5352366,
+    "checked_at": 1787687561.8556445,
     "consecutive_failures": 0
   },
   "Arup": {
@@ -8904,7 +8904,7 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1787676001.3663433,
+    "checked_at": 1787687558.4752765,
     "consecutive_failures": 0
   },
   "Netflix": {
@@ -8925,7 +8925,7 @@
         "source": "johnson_controls_browser",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-25T19:21:15.386974+00:00",
         "posted_age_known": false
       },
@@ -8940,7 +8940,7 @@
         "source": "johnson_controls_browser",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-25T19:21:15.386974+00:00",
         "posted_age_known": false
       },
@@ -8955,7 +8955,7 @@
         "source": "johnson_controls_browser",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-25T19:21:15.386974+00:00",
         "posted_age_known": false
       },
@@ -8970,7 +8970,7 @@
         "source": "johnson_controls_browser",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-25T19:21:15.386974+00:00",
         "posted_age_known": false
       },
@@ -12595,8 +12595,8 @@
   },
   "Goldman Sachs": {
     "jobs": [],
-    "checked_at": 1787685329.4490604,
-    "consecutive_failures": 110
+    "checked_at": 1787687487.8859687,
+    "consecutive_failures": 111
   },
   "Fiserv": {
     "jobs": [
@@ -13137,8 +13137,8 @@
   },
   "Databricks": {
     "jobs": [],
-    "checked_at": 1787685332.8349245,
-    "consecutive_failures": 104
+    "checked_at": 1787687489.4930565,
+    "consecutive_failures": 105
   },
   "Infosys": {
     "jobs": [],
@@ -13167,8 +13167,8 @@
   },
   "Morgan Stanley": {
     "jobs": [],
-    "checked_at": 1787685328.815275,
-    "consecutive_failures": 98
+    "checked_at": 1787687487.5305243,
+    "consecutive_failures": 99
   },
   "Moody's": {
     "jobs": [],
@@ -13517,8 +13517,8 @@
   },
   "SuperValu / Musgrave": {
     "jobs": [],
-    "checked_at": 1787685604.8151748,
-    "consecutive_failures": 97
+    "checked_at": 1787687644.1998742,
+    "consecutive_failures": 98
   },
   "Tesco Ireland": {
     "jobs": [],
@@ -13527,8 +13527,8 @@
   },
   "Aer Lingus": {
     "jobs": [],
-    "checked_at": 1787685332.685743,
-    "consecutive_failures": 97
+    "checked_at": 1787687490.3489285,
+    "consecutive_failures": 98
   },
   "Akamai": {
     "jobs": [],
@@ -13542,8 +13542,8 @@
   },
   "An Post": {
     "jobs": [],
-    "checked_at": 1787685615.8571274,
-    "consecutive_failures": 97
+    "checked_at": 1787687650.551339,
+    "consecutive_failures": 98
   },
   "ASML": {
     "jobs": [],
@@ -13552,48 +13552,48 @@
   },
   "Alkermes": {
     "jobs": [],
-    "checked_at": 1787685612.211832,
-    "consecutive_failures": 97
+    "checked_at": 1787687651.2717457,
+    "consecutive_failures": 98
   },
   "Visa": {
     "jobs": [],
-    "checked_at": 1787685329.0916457,
-    "consecutive_failures": 94
+    "checked_at": 1787687486.873511,
+    "consecutive_failures": 95
   },
   "Boehringer Ingelheim": {
     "jobs": [],
-    "checked_at": 1787685616.4220765,
-    "consecutive_failures": 96
+    "checked_at": 1787687656.086495,
+    "consecutive_failures": 97
   },
   "Box": {
     "jobs": [],
-    "checked_at": 1787685617.2641006,
-    "consecutive_failures": 96
+    "checked_at": 1787687657.2673104,
+    "consecutive_failures": 97
   },
   "Atlassian": {
     "jobs": [],
-    "checked_at": 1787685618.2601557,
-    "consecutive_failures": 96
+    "checked_at": 1787687655.2078445,
+    "consecutive_failures": 97
   },
   "Bruker": {
     "jobs": [],
-    "checked_at": 1787685620.108522,
-    "consecutive_failures": 96
+    "checked_at": 1787687657.9689517,
+    "consecutive_failures": 97
   },
   "Biotronik": {
     "jobs": [],
-    "checked_at": 1787685618.3682687,
-    "consecutive_failures": 96
+    "checked_at": 1787687657.4989107,
+    "consecutive_failures": 97
   },
   "Coloplast": {
     "jobs": [],
-    "checked_at": 1787685621.0967653,
-    "consecutive_failures": 96
+    "checked_at": 1787687659.7779293,
+    "consecutive_failures": 97
   },
   "Bord Gáis Energy": {
     "jobs": [],
-    "checked_at": 1787685621.0789957,
-    "consecutive_failures": 96
+    "checked_at": 1787687660.8367457,
+    "consecutive_failures": 97
   },
   "Carbery Group": {
     "jobs": [],
@@ -13698,8 +13698,8 @@
   },
   "DSV Ireland": {
     "jobs": [],
-    "checked_at": 1787685625.582768,
-    "consecutive_failures": 96
+    "checked_at": 1787687664.7187002,
+    "consecutive_failures": 97
   },
   "Bayer": {
     "jobs": [],
@@ -13713,8 +13713,8 @@
   },
   "Edwards Lifesciences": {
     "jobs": [],
-    "checked_at": 1787685599.902948,
-    "consecutive_failures": 96
+    "checked_at": 1787687644.0815718,
+    "consecutive_failures": 97
   },
   "Dairygold": {
     "jobs": [],
@@ -13728,18 +13728,18 @@
   },
   "Energia Group": {
     "jobs": [],
-    "checked_at": 1787685622.896794,
-    "consecutive_failures": 96
+    "checked_at": 1787687662.2314277,
+    "consecutive_failures": 97
   },
   "EirGrid Group": {
     "jobs": [],
-    "checked_at": 1787685627.0278914,
-    "consecutive_failures": 96
+    "checked_at": 1787687665.7351813,
+    "consecutive_failures": 97
   },
   "Hollister Incorporated": {
     "jobs": [],
-    "checked_at": 1787685626.5950553,
-    "consecutive_failures": 95
+    "checked_at": 1787687665.909788,
+    "consecutive_failures": 96
   },
   "FedEx Express Ireland": {
     "jobs": [],
@@ -13904,33 +13904,33 @@
   },
   "Irish Distillers (Pernod Ricard)": {
     "jobs": [],
-    "checked_at": 1787685629.6473954,
-    "consecutive_failures": 94
+    "checked_at": 1787687669.0120847,
+    "consecutive_failures": 95
   },
   "Micron Technology": {
     "jobs": [],
-    "checked_at": 1787685631.433314,
-    "consecutive_failures": 94
+    "checked_at": 1787687670.6745145,
+    "consecutive_failures": 95
   },
   "Nokia": {
     "jobs": [],
-    "checked_at": 1787685632.2570992,
-    "consecutive_failures": 94
+    "checked_at": 1787687670.3162866,
+    "consecutive_failures": 95
   },
   "Marvell Technology": {
     "jobs": [],
-    "checked_at": 1787685633.5686529,
-    "consecutive_failures": 94
+    "checked_at": 1787687673.5026557,
+    "consecutive_failures": 95
   },
   "Insulet Corporation": {
     "jobs": [],
-    "checked_at": 1787685629.0193987,
-    "consecutive_failures": 94
+    "checked_at": 1787687668.4560518,
+    "consecutive_failures": 95
   },
   "Medpace": {
     "jobs": [],
-    "checked_at": 1787685636.4257536,
-    "consecutive_failures": 94
+    "checked_at": 1787687672.4899335,
+    "consecutive_failures": 95
   },
   "Irish Ferries": {
     "jobs": [],
@@ -14256,23 +14256,23 @@
   },
   "Ornua": {
     "jobs": [],
-    "checked_at": 1787685637.3614552,
-    "consecutive_failures": 92
+    "checked_at": 1787687677.396194,
+    "consecutive_failures": 93
   },
   "Shannon Airport Group": {
     "jobs": [],
-    "checked_at": 1787685633.9451125,
-    "consecutive_failures": 92
+    "checked_at": 1787687673.7272503,
+    "consecutive_failures": 93
   },
   "Slack": {
     "jobs": [],
-    "checked_at": 1787685641.6191177,
-    "consecutive_failures": 92
+    "checked_at": 1787687680.7799954,
+    "consecutive_failures": 93
   },
   "Smurfit Westrock": {
     "jobs": [],
-    "checked_at": 1787685643.983146,
-    "consecutive_failures": 92
+    "checked_at": 1787687683.0285304,
+    "consecutive_failures": 93
   },
   "Stena Line Ireland": {
     "jobs": [],
@@ -14281,8 +14281,8 @@
   },
   "Syneos Health": {
     "jobs": [],
-    "checked_at": 1787685647.0679233,
-    "consecutive_failures": 92
+    "checked_at": 1787687687.8495288,
+    "consecutive_failures": 93
   },
   "ResMed": {
     "jobs": [],
@@ -14296,23 +14296,23 @@
   },
   "Teva Pharmaceuticals": {
     "jobs": [],
-    "checked_at": 1787685601.7429078,
-    "consecutive_failures": 92
+    "checked_at": 1787687645.988933,
+    "consecutive_failures": 93
   },
   "Texas Instruments": {
     "jobs": [],
-    "checked_at": 1787685645.2746081,
-    "consecutive_failures": 91
+    "checked_at": 1787687684.7966096,
+    "consecutive_failures": 92
   },
   "Uisce Éireann (Irish Water)": {
     "jobs": [],
-    "checked_at": 1787685649.6157436,
-    "consecutive_failures": 91
+    "checked_at": 1787687686.707933,
+    "consecutive_failures": 92
   },
   "WuXi Biologics": {
     "jobs": [],
-    "checked_at": 1787685656.9189992,
-    "consecutive_failures": 91
+    "checked_at": 1787687696.5825653,
+    "consecutive_failures": 92
   },
   "Waters Corporation": {
     "jobs": [],
@@ -15869,7 +15869,7 @@
         "source": "siemens_direct_http",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-25T19:21:15.386974+00:00",
         "posted_age_known": false
       },
@@ -15884,7 +15884,7 @@
         "source": "siemens_direct_http",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-25T19:21:15.386974+00:00",
         "posted_age_known": false
       },
@@ -15899,7 +15899,7 @@
         "source": "siemens_direct_http",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-25T19:21:15.386974+00:00",
         "posted_age_known": false
       },
@@ -15914,7 +15914,7 @@
         "source": "siemens_direct_http",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-25T19:21:15.386974+00:00",
         "posted_age_known": false
       },
@@ -15929,7 +15929,7 @@
         "source": "siemens_direct_http",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-25T19:21:15.386974+00:00",
         "posted_age_known": false
       },
@@ -15944,7 +15944,7 @@
         "source": "siemens_direct_http",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-25T19:21:15.386974+00:00",
         "posted_age_known": false
       }
@@ -15996,7 +15996,7 @@
         "source": "wipro_successfactors_search",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-25T19:21:15.386974+00:00"
       },
       {
@@ -16815,8 +16815,8 @@
   },
   "Tesco Ireland::batch_dedicated_v1": {
     "jobs": [],
-    "checked_at": 1787685417.4471695,
-    "consecutive_failures": 52
+    "checked_at": 1787687539.2911508,
+    "consecutive_failures": 53
   },
   "AstraZeneca::batch_dedicated_v1": {
     "jobs": [
@@ -17558,8 +17558,8 @@
   },
   "DXC Technology::friend_logic_v1": {
     "jobs": [],
-    "checked_at": 1787685362.2619133,
-    "consecutive_failures": 52
+    "checked_at": 1787687486.1542773,
+    "consecutive_failures": 53
   },
   "Tata Consultancy Services (TCS)::friend_logic_v1": {
     "jobs": [
@@ -18346,8 +18346,8 @@
   },
   "Deutsche Bank::friend_logic_v1": {
     "jobs": [],
-    "checked_at": 1787685528.4450276,
-    "consecutive_failures": 52
+    "checked_at": 1787687583.465536,
+    "consecutive_failures": 53
   },
   "Intel::friend_logic_v1": {
     "jobs": [
@@ -18542,432 +18542,540 @@
         "title": "Operational Excellence Manager",
         "location": "Ireland - Donegal Town",
         "posted_text": "Posted 30+ Days Ago",
-        "posted_days_ago": 30,
+        "posted_days_ago": 30.0,
         "employment_type": "Unspecified",
         "url": "https://abbott.wd5.myworkdayjobs.com/abbottcareers/job/Ireland---Donegal-Town/Operational-Excellence-Manager_31151957",
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T02:27:29.376212+00:00",
+        "posted_age_known": true
       },
       {
         "company": "Abbott",
         "title": "Senior Leadership in STEM, Shape the Future of Healthcare Innovation",
         "location": "Ireland - Donegal Town",
         "posted_text": "Posted 30+ Days Ago",
-        "posted_days_ago": 30,
+        "posted_days_ago": 30.0,
         "employment_type": "Unspecified",
         "url": "https://abbott.wd5.myworkdayjobs.com/abbottcareers/job/Ireland---Donegal-Town/Senior-Leadership-in-STEM--Shape-the-Future-of-Healthcare-Innovation_31133866",
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T02:27:29.376212+00:00",
+        "posted_age_known": true
       },
       {
         "company": "Abbott",
         "title": "Technical Team Lead",
         "location": "Ireland - Kilkenny",
         "posted_text": "Posted 30+ Days Ago",
-        "posted_days_ago": 30,
+        "posted_days_ago": 30.0,
         "employment_type": "Unspecified",
         "url": "https://abbott.wd5.myworkdayjobs.com/abbottcareers/job/Ireland---Kilkenny/Technical-Team-Lead_31145110",
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T02:27:29.376212+00:00",
+        "posted_age_known": true
       },
       {
         "company": "Abbott",
         "title": "Process Engineer",
         "location": "Ireland - Kilkenny",
         "posted_text": "Posted 30+ Days Ago",
-        "posted_days_ago": 30,
+        "posted_days_ago": 30.0,
         "employment_type": "Unspecified",
         "url": "https://abbott.wd5.myworkdayjobs.com/abbottcareers/job/Ireland---Kilkenny/Process-Engineer_31154030",
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T02:27:29.376212+00:00",
+        "posted_age_known": true
       },
       {
         "company": "Abbott",
         "title": "Process Engineer",
         "location": "Ireland - Kilkenny",
         "posted_text": "Posted 30+ Days Ago",
-        "posted_days_ago": 30,
+        "posted_days_ago": 30.0,
         "employment_type": "Unspecified",
         "url": "https://abbott.wd5.myworkdayjobs.com/abbottcareers/job/Ireland---Kilkenny/Process-Engineer_31154106-1",
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T02:27:29.376212+00:00",
+        "posted_age_known": true
       },
       {
         "company": "Abbott",
         "title": "Electrical Technician",
         "location": "Ireland - Kilkenny",
         "posted_text": "Posted 26 Days Ago",
-        "posted_days_ago": 26,
+        "posted_days_ago": 26.0,
         "employment_type": "Unspecified",
         "url": "https://abbott.wd5.myworkdayjobs.com/abbottcareers/job/Ireland---Kilkenny/Electrical-Technician_31157789",
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T02:27:29.376212+00:00",
+        "posted_age_known": true
       },
       {
         "company": "Abbott",
         "title": "Learning & Development Specialist (12 month contract)",
         "location": "Ireland - Donegal Town",
         "posted_text": "Posted 19 Days Ago",
-        "posted_days_ago": 19,
+        "posted_days_ago": 19.0,
         "employment_type": "Contract",
         "url": "https://abbott.wd5.myworkdayjobs.com/abbottcareers/job/Ireland---Donegal-Town/Learning---Development-Specialist--12-month-contract-_31157533",
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T02:27:29.376212+00:00",
+        "posted_age_known": true
       },
       {
         "company": "Abbott",
         "title": "Food Safety and Compliance Manager",
         "location": "Ireland - Cootehill",
         "posted_text": "Posted 25 Days Ago",
-        "posted_days_ago": 25,
+        "posted_days_ago": 25.0,
         "employment_type": "Unspecified",
         "url": "https://abbott.wd5.myworkdayjobs.com/abbottcareers/job/Ireland---Cootehill/Food-Safety-and-Compliance-Manager_31156982",
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T02:27:29.376212+00:00",
+        "posted_age_known": true
       },
       {
         "company": "Abbott",
         "title": "Project Lead",
         "location": "Ireland - Clonmel",
         "posted_text": "Posted 30+ Days Ago",
-        "posted_days_ago": 30,
+        "posted_days_ago": 30.0,
         "employment_type": "Unspecified",
         "url": "https://abbott.wd5.myworkdayjobs.com/abbottcareers/job/Ireland---Clonmel/Project-Lead_31156344",
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T02:27:29.376212+00:00",
+        "posted_age_known": true
       },
       {
         "company": "Abbott",
         "title": "Planning Team Lead",
         "location": "Ireland - Donegal Town",
         "posted_text": "Posted 19 Days Ago",
-        "posted_days_ago": 19,
+        "posted_days_ago": 19.0,
         "employment_type": "Unspecified",
         "url": "https://abbott.wd5.myworkdayjobs.com/abbottcareers/job/Ireland---Donegal-Town/Planning-Lead_31157628",
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T02:27:29.376212+00:00",
+        "posted_age_known": true
       },
       {
         "company": "Abbott",
         "title": "Network Engineer",
         "location": "Ireland - Dublin",
         "posted_text": "Posted 20 Days Ago",
-        "posted_days_ago": 20,
+        "posted_days_ago": 20.0,
         "employment_type": "Unspecified",
         "url": "https://abbott.wd5.myworkdayjobs.com/abbottcareers/job/Ireland---Dublin/Senior-Network-Engineer_31157032-1",
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T02:27:29.376212+00:00",
+        "posted_age_known": true
       },
       {
         "company": "Abbott",
         "title": "Manufacturing Process Engineer (Night Shift)",
         "location": "Ireland - Finisklin",
         "posted_text": "Posted 27 Days Ago",
-        "posted_days_ago": 27,
+        "posted_days_ago": 27.0,
         "employment_type": "Unspecified",
         "url": "https://abbott.wd5.myworkdayjobs.com/abbottcareers/job/Ireland---Finisklin/Engineering-Technician_31151456",
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T02:27:29.376212+00:00",
+        "posted_age_known": true
       },
       {
         "company": "Abbott",
         "title": "Warehouse Operator",
         "location": "Ireland - Kilkenny",
         "posted_text": "Posted 30+ Days Ago",
-        "posted_days_ago": 30,
+        "posted_days_ago": 30.0,
         "employment_type": "Unspecified",
         "url": "https://abbott.wd5.myworkdayjobs.com/abbottcareers/job/Ireland---Kilkenny/Warehouse-Operator_31139236",
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T02:27:29.376212+00:00",
+        "posted_age_known": true
       },
       {
         "company": "Abbott",
         "title": "Facilities Manager",
         "location": "Ireland - Kilkenny",
         "posted_text": "Posted 30+ Days Ago",
-        "posted_days_ago": 30,
+        "posted_days_ago": 30.0,
         "employment_type": "Unspecified",
         "url": "https://abbott.wd5.myworkdayjobs.com/abbottcareers/job/Ireland---Kilkenny/Facilities-Manager_31153562",
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T02:27:29.376212+00:00",
+        "posted_age_known": true
       },
       {
         "company": "Abbott",
         "title": "Clinical Specialist - Cardiac Rhythm Management",
         "location": "Ireland - Dublin",
         "posted_text": "Posted 7 Days Ago",
-        "posted_days_ago": 7,
+        "posted_days_ago": 7.0,
         "employment_type": "Unspecified",
         "url": "https://abbott.wd5.myworkdayjobs.com/abbottcareers/job/Ireland---Dublin/Clinical-Specialist---Cardiac-Rhythm-Management_31159353",
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T02:27:29.376212+00:00",
+        "posted_age_known": true
       },
       {
         "company": "Abbott",
         "title": "Engineering Lead",
         "location": "Ireland > Cork : Sanmina Rathealy road",
         "posted_text": "Posted 30+ Days Ago",
-        "posted_days_ago": 30,
+        "posted_days_ago": 30.0,
         "employment_type": "Unspecified",
         "url": "https://abbott.wd5.myworkdayjobs.com/abbottcareers/job/Ireland--Cork--Sanmina-Rathealy-road/Engineering-Lead_31151633-1",
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T02:27:29.376212+00:00",
+        "posted_age_known": true
       },
       {
         "company": "Abbott",
         "title": "General Manufacturing Operator",
         "location": "Ireland - Finisklin",
         "posted_text": "Posted Today",
-        "posted_days_ago": 0,
+        "posted_days_ago": 0.0,
         "employment_type": "Unspecified",
         "url": "https://abbott.wd5.myworkdayjobs.com/abbottcareers/job/Ireland---Finisklin/General-Manufacturing-Operator_31156812-1",
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-25T12:38:48.567655+00:00",
+        "posted_age_known": true
       },
       {
         "company": "Abbott",
         "title": "Manufacturing Technician",
         "location": "Ireland > Kilkenny : Kilkenny Business and Technology Park",
         "posted_text": "Posted 30+ Days Ago",
-        "posted_days_ago": 30,
+        "posted_days_ago": 30.0,
         "employment_type": "Unspecified",
         "url": "https://abbott.wd5.myworkdayjobs.com/abbottcareers/job/Ireland--Kilkenny--Kilkenny-Business-and-Technology-Park/Manufacturing-Technician_31147168",
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T02:27:29.376212+00:00",
+        "posted_age_known": true
       },
       {
         "company": "Abbott",
         "title": "Quality Operations Engineer Shift",
         "location": "Ireland - Donegal Town",
         "posted_text": "Posted 25 Days Ago",
-        "posted_days_ago": 25,
+        "posted_days_ago": 25.0,
         "employment_type": "Unspecified",
         "url": "https://abbott.wd5.myworkdayjobs.com/abbottcareers/job/Ireland---Donegal-Town/Quality-Operations-Engineer-Shift_31157226-1",
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T02:27:29.376212+00:00",
+        "posted_age_known": true
       },
       {
         "company": "Abbott",
         "title": "Production Operator - Permanent Contract- 2 Cycle shift",
         "location": "Ireland - Clonmel",
         "posted_text": "Posted 30+ Days Ago",
-        "posted_days_ago": 30,
+        "posted_days_ago": 30.0,
         "employment_type": "Unspecified",
         "url": "https://abbott.wd5.myworkdayjobs.com/abbottcareers/job/Ireland---Clonmel/Assembler--Permanent-Contract--2-Cycle-shift_31046901",
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T02:27:29.376212+00:00",
+        "posted_age_known": true
       },
       {
         "company": "Abbott",
         "title": "Quality Operations Engineer Shift",
         "location": "Ireland - Kilkenny",
         "posted_text": "Posted 30+ Days Ago",
-        "posted_days_ago": 30,
+        "posted_days_ago": 30.0,
         "employment_type": "Unspecified",
         "url": "https://abbott.wd5.myworkdayjobs.com/abbottcareers/job/Ireland---Kilkenny/Quality-Operations-Engineer-Shift_31155522-1",
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T02:27:29.376212+00:00",
+        "posted_age_known": true
       },
       {
         "company": "Abbott",
         "title": "Controls Engineer",
         "location": "Ireland - Kilkenny",
         "posted_text": "Posted 28 Days Ago",
-        "posted_days_ago": 28,
+        "posted_days_ago": 28.0,
         "employment_type": "Unspecified",
         "url": "https://abbott.wd5.myworkdayjobs.com/abbottcareers/job/Ireland---Kilkenny/Controls-Engineer_31157384-1",
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T02:27:29.376212+00:00",
+        "posted_age_known": true
       },
       {
         "company": "Abbott",
         "title": "Talent Development & Learning Specialist",
         "location": "Ireland - Kilkenny",
         "posted_text": "Posted 8 Days Ago",
-        "posted_days_ago": 8,
+        "posted_days_ago": 8.0,
         "employment_type": "Unspecified",
         "url": "https://abbott.wd5.myworkdayjobs.com/abbottcareers/job/Ireland---Kilkenny/Talent-Development---Learning-Specialist_31157531",
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T02:27:29.376212+00:00",
+        "posted_age_known": true
       },
       {
         "company": "Abbott",
         "title": "Site Equipment Engineering Manager",
         "location": "Ireland - Clonmel",
         "posted_text": "Posted 30+ Days Ago",
-        "posted_days_ago": 30,
+        "posted_days_ago": 30.0,
         "employment_type": "Unspecified",
         "url": "https://abbott.wd5.myworkdayjobs.com/abbottcareers/job/Ireland---Clonmel/Site-Equipment-Engineering-Manager_31148602",
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T02:27:29.376212+00:00",
+        "posted_age_known": true
       },
       {
         "company": "Abbott",
         "title": "Digital Automation Specialist – Finance (CFS)",
         "location": "Ireland - Dublin",
         "posted_text": "Posted 30+ Days Ago",
-        "posted_days_ago": 30,
+        "posted_days_ago": 30.0,
         "employment_type": "Unspecified",
         "url": "https://abbott.wd5.myworkdayjobs.com/abbottcareers/job/Ireland---Dublin/Digital-Automation-Specialist---Finance--CFS-_31149134-1",
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T02:27:29.376212+00:00",
+        "posted_age_known": true
       },
       {
         "company": "Abbott",
         "title": "Procurement To Pay Analyst - Maternity Cover",
         "location": "Ireland - Dublin",
         "posted_text": "Posted 30+ Days Ago",
-        "posted_days_ago": 30,
+        "posted_days_ago": 30.0,
         "employment_type": "Unspecified",
         "url": "https://abbott.wd5.myworkdayjobs.com/abbottcareers/job/Ireland---Dublin/Procurement-To-Pay-Analyst---Maternity-Cover_31156351",
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T02:27:29.376212+00:00",
+        "posted_age_known": true
       },
       {
         "company": "Abbott",
         "title": "Senior Financial Assistant",
         "location": "Ireland - Clonmel",
         "posted_text": "Posted 30+ Days Ago",
-        "posted_days_ago": 30,
+        "posted_days_ago": 30.0,
         "employment_type": "Unspecified",
         "url": "https://abbott.wd5.myworkdayjobs.com/abbottcareers/job/Ireland---Clonmel/Senior-Financial-Assistant_31156472-1",
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T02:27:29.376212+00:00",
+        "posted_age_known": true
       },
       {
         "company": "Abbott",
         "title": "Project Manager - Chemical Engineering",
         "location": "Ireland - Clonmel",
         "posted_text": "Posted 30+ Days Ago",
-        "posted_days_ago": 30,
+        "posted_days_ago": 30.0,
         "employment_type": "Unspecified",
         "url": "https://abbott.wd5.myworkdayjobs.com/abbottcareers/job/Ireland---Clonmel/Senior-Chemist_31148630",
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T02:27:29.376212+00:00",
+        "posted_age_known": true
       },
       {
         "company": "Abbott",
         "title": "Materials Engineer",
         "location": "Ireland - Kilkenny",
         "posted_text": "Posted 30+ Days Ago",
-        "posted_days_ago": 30,
+        "posted_days_ago": 30.0,
         "employment_type": "Unspecified",
         "url": "https://abbott.wd5.myworkdayjobs.com/abbottcareers/job/Ireland---Kilkenny/Materials-Engineer_31155211",
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T02:27:29.376212+00:00",
+        "posted_age_known": true
       },
       {
         "company": "Abbott",
         "title": "Quality Manager (Laboratory)",
         "location": "Ireland - Clonmel",
         "posted_text": "Posted 8 Days Ago",
-        "posted_days_ago": 8,
+        "posted_days_ago": 8.0,
         "employment_type": "Unspecified",
         "url": "https://abbott.wd5.myworkdayjobs.com/abbottcareers/job/Ireland---Clonmel/Quality-Manager_31154961-1",
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T02:27:29.376212+00:00",
+        "posted_age_known": true
       },
       {
         "company": "Abbott",
         "title": "Operations Quality Shift Lead",
         "location": "Ireland - Kilkenny",
         "posted_text": "Posted 30+ Days Ago",
-        "posted_days_ago": 30,
+        "posted_days_ago": 30.0,
         "employment_type": "Unspecified",
         "url": "https://abbott.wd5.myworkdayjobs.com/abbottcareers/job/Ireland---Kilkenny/Operations-Quality-Shift-Lead_31155520",
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T02:27:29.376212+00:00",
+        "posted_age_known": true
       },
       {
         "company": "Abbott",
         "title": "Microbiology Laboratory Supervisor (Shift Work Required)",
         "location": "Ireland - Cootehill",
         "posted_text": "Posted 30+ Days Ago",
-        "posted_days_ago": 30,
+        "posted_days_ago": 30.0,
         "employment_type": "Unspecified",
         "url": "https://abbott.wd5.myworkdayjobs.com/abbottcareers/job/Ireland---Cootehill/Microbiology-Laboratory-Supervisor_31155649",
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T02:27:29.376212+00:00",
+        "posted_age_known": true
       },
       {
         "company": "Abbott",
         "title": "HR Generalist (2-Year Fixed Term Contract )",
         "location": "Ireland - Finisklin",
         "posted_text": "Posted 30+ Days Ago",
-        "posted_days_ago": 30,
+        "posted_days_ago": 30.0,
         "employment_type": "Contract",
         "url": "https://abbott.wd5.myworkdayjobs.com/abbottcareers/job/Ireland---Finisklin/HR-Generalist--2-Year-Fixed-Term-Contract--_31151047",
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T02:27:29.376212+00:00",
+        "posted_age_known": true
       },
       {
         "company": "Abbott",
         "title": "Accountant",
         "location": "Ireland > Sligo : Finisklin Road",
         "posted_text": "Posted 15 Days Ago",
-        "posted_days_ago": 15,
+        "posted_days_ago": 15.0,
         "employment_type": "Unspecified",
         "url": "https://abbott.wd5.myworkdayjobs.com/abbottcareers/job/Ireland--Sligo--Finisklin-Road/Accountant_31157622",
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T02:27:29.376212+00:00",
+        "posted_age_known": true
       },
       {
         "company": "Abbott",
         "title": "Technical Services Specialist",
         "location": "Ireland - Kilkenny",
         "posted_text": "Posted 4 Days Ago",
-        "posted_days_ago": 4,
+        "posted_days_ago": 4.0,
         "employment_type": "Unspecified",
         "url": "https://abbott.wd5.myworkdayjobs.com/abbottcareers/job/Ireland---Kilkenny/Technical-Services-Specialist_31159073",
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T09:22:03.352011+00:00",
+        "posted_age_known": true
       },
       {
         "company": "Abbott",
         "title": "QualEx & PoP Site Lead",
         "location": "Ireland - Cootehill",
         "posted_text": "Posted 14 Days Ago",
-        "posted_days_ago": 14,
+        "posted_days_ago": 14.0,
         "employment_type": "Unspecified",
         "url": "https://abbott.wd5.myworkdayjobs.com/abbottcareers/job/Ireland---Cootehill/QualEx---PoP-Site-Lead_31157750-1",
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T12:39:50.473025+00:00",
+        "posted_age_known": true
       }
     ],
     "checked_at": 1787685480.0854783,
@@ -19284,8 +19392,8 @@
   },
   "Coca-Cola HBC Ireland::friend_nonlive_batch10_v1": {
     "jobs": [],
-    "checked_at": 1787685485.2048883,
-    "consecutive_failures": 42
+    "checked_at": 1787687551.8337402,
+    "consecutive_failures": 43
   },
   "Agilent Technologies::friend_nonlive_batch10_v1": {
     "jobs": [
@@ -19532,13 +19640,13 @@
   },
   "Infosys::friend_nonlive_batch10_v1": {
     "jobs": [],
-    "checked_at": 1787685529.332903,
-    "consecutive_failures": 41
+    "checked_at": 1787687610.9086568,
+    "consecutive_failures": 42
   },
   "Heineken Ireland::friend_next4_v1": {
     "jobs": [],
-    "checked_at": 1787685324.411077,
-    "consecutive_failures": 41
+    "checked_at": 1787687489.5439665,
+    "consecutive_failures": 42
   },
   "VHI Healthcare::friend_next4_v1": {
     "jobs": [
@@ -19709,7 +19817,7 @@
         "source": "musgrave_friend_reference",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-25T19:21:15.386974+00:00",
         "posted_age_known": false
       },
@@ -20571,8 +20679,8 @@
   },
   "McKinsey & Company::attempt2_plus_new_v2": {
     "jobs": [],
-    "checked_at": 1787685346.6376836,
-    "consecutive_failures": 38
+    "checked_at": 1787687511.1112711,
+    "consecutive_failures": 39
   },
   "Schneider Electric::attempt2_plus_new_v2": {
     "jobs": [],
@@ -22166,7 +22274,7 @@
         "source": "grant_oracle_job_detail",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-25T19:21:15.386974+00:00",
         "posted_age_known": false
       },
@@ -24735,13 +24843,13 @@
   },
   "Schneider Electric::final_attempt_v3": {
     "jobs": [],
-    "checked_at": 1787685502.5959396,
-    "consecutive_failures": 9
+    "checked_at": 1787687561.739279,
+    "consecutive_failures": 10
   },
   "Honeywell::final_attempt_v3": {
     "jobs": [],
-    "checked_at": 1787685575.7429533,
-    "consecutive_failures": 8
+    "checked_at": 1787687634.3753254,
+    "consecutive_failures": 9
   },
   "Aldi Ireland": {
     "jobs": [
@@ -30273,53 +30381,53 @@
   },
   "Dynatrace::next_manual_batch_v2": {
     "jobs": [],
-    "checked_at": 1787685553.5705981,
-    "consecutive_failures": 7
+    "checked_at": 1787687578.7423537,
+    "consecutive_failures": 8
   },
   "FTI Consulting::next_manual_batch_v2": {
     "jobs": [],
-    "checked_at": 1787685554.222861,
-    "consecutive_failures": 7
+    "checked_at": 1787687586.1112661,
+    "consecutive_failures": 8
   },
   "FactSet::next_manual_batch_v2": {
     "jobs": [],
-    "checked_at": 1787685557.9941416,
-    "consecutive_failures": 7
+    "checked_at": 1787687589.567298,
+    "consecutive_failures": 8
   },
   "Moody's::next_manual_batch_v2": {
     "jobs": [],
-    "checked_at": 1787685560.9749298,
-    "consecutive_failures": 7
+    "checked_at": 1787687598.624013,
+    "consecutive_failures": 8
   },
   "Morningstar::next_manual_batch_v2": {
     "jobs": [],
-    "checked_at": 1787685562.3813472,
-    "consecutive_failures": 7
+    "checked_at": 1787687599.8410656,
+    "consecutive_failures": 8
   },
   "Macquarie Group::next_manual_batch_v2": {
     "jobs": [],
-    "checked_at": 1787685561.1313553,
-    "consecutive_failures": 7
+    "checked_at": 1787687596.133964,
+    "consecutive_failures": 8
   },
   "MSCI::next_manual_batch_v2": {
     "jobs": [],
-    "checked_at": 1787685564.9910536,
-    "consecutive_failures": 7
+    "checked_at": 1787687595.224499,
+    "consecutive_failures": 8
   },
   "Refinitiv (LSEG)::next_manual_batch_v2": {
     "jobs": [],
-    "checked_at": 1787685568.7115908,
-    "consecutive_failures": 7
+    "checked_at": 1787687602.6353416,
+    "consecutive_failures": 8
   },
   "Societe Generale::next_manual_batch_v2": {
     "jobs": [],
-    "checked_at": 1787685568.8102448,
-    "consecutive_failures": 7
+    "checked_at": 1787687605.5710838,
+    "consecutive_failures": 8
   },
   "Splunk::next_manual_batch_v2": {
     "jobs": [],
-    "checked_at": 1787685571.1949897,
-    "consecutive_failures": 7
+    "checked_at": 1787687606.7116675,
+    "consecutive_failures": 8
   },
   "Greencore::next_manual_batch_v2": {
     "jobs": [],
@@ -30328,8 +30436,8 @@
   },
   "Protiviti::next_manual_batch_v2": {
     "jobs": [],
-    "checked_at": 1787685572.7989855,
-    "consecutive_failures": 7
+    "checked_at": 1787687612.8300965,
+    "consecutive_failures": 8
   },
   "Bayer::next_manual_batch_v2": {
     "jobs": [],
@@ -30338,8 +30446,8 @@
   },
   "Oliver Wyman::next_manual_batch_v2": {
     "jobs": [],
-    "checked_at": 1787685575.6069522,
-    "consecutive_failures": 7
+    "checked_at": 1787687614.339832,
+    "consecutive_failures": 8
   },
   "BDO Ireland::next_recovery_batch7_v1": {
     "jobs": [
@@ -30514,8 +30622,8 @@
   },
   "Greencore::next_recovery_batch7_v1": {
     "jobs": [],
-    "checked_at": 1787685335.441075,
-    "consecutive_failures": 8
+    "checked_at": 1787687497.9397988,
+    "consecutive_failures": 9
   },
   "Baker Tilly Ireland::next_recovery_batch7_v1": {
     "jobs": [
@@ -30711,33 +30819,33 @@
   },
   "Bayer::next_recovery_batch7_v1": {
     "jobs": [],
-    "checked_at": 1787685380.3225172,
-    "consecutive_failures": 6
+    "checked_at": 1787687541.6787827,
+    "consecutive_failures": 7
   },
   "Alvarez & Marsal::large_recovery_batch20_v1": {
     "jobs": [],
-    "checked_at": 1787685590.0455546,
-    "consecutive_failures": 6
+    "checked_at": 1787687634.3551202,
+    "consecutive_failures": 7
   },
   "Bain & Company::large_recovery_batch20_v1": {
     "jobs": [],
-    "checked_at": 1787685597.4552627,
-    "consecutive_failures": 6
+    "checked_at": 1787687643.1459043,
+    "consecutive_failures": 7
   },
   "Akamai::large_recovery_batch20_v1": {
     "jobs": [],
-    "checked_at": 1787685595.2041447,
-    "consecutive_failures": 6
+    "checked_at": 1787687639.2626863,
+    "consecutive_failures": 7
   },
   "AerCap::large_recovery_batch20_v1": {
     "jobs": [],
-    "checked_at": 1787685597.3129923,
-    "consecutive_failures": 6
+    "checked_at": 1787687642.060866,
+    "consecutive_failures": 7
   },
   "ASML::large_recovery_batch20_v1": {
     "jobs": [],
-    "checked_at": 1787685598.5660148,
-    "consecutive_failures": 6
+    "checked_at": 1787687643.401053,
+    "consecutive_failures": 7
   },
   "Willis Towers Watson (WTW)": {
     "jobs": [
@@ -30762,172 +30870,172 @@
   },
   "Regeneron": {
     "jobs": [],
-    "checked_at": 1787685327.6347218,
+    "checked_at": 1787687487.9261518,
     "consecutive_failures": 1
   },
   "BNY Mellon": {
     "jobs": [],
-    "checked_at": 1787685330.5653636,
+    "checked_at": 1787687490.6169212,
     "consecutive_failures": 1
   },
   "NetApp::netapp_attempt2_v3": {
     "jobs": [],
-    "checked_at": 1787685349.3868697,
-    "consecutive_failures": 1
-  },
-  "QIAGEN": {
-    "jobs": [],
-    "checked_at": 1787685365.0012605,
-    "consecutive_failures": 1
-  },
-  "Fitch Ratings::next_recovery_batch7_v1": {
-    "jobs": [],
-    "checked_at": 1787685365.014547,
+    "checked_at": 1787687508.941881,
     "consecutive_failures": 1
   },
   "Dell Technologies::batch_dedicated_v1": {
     "jobs": [],
-    "checked_at": 1787685395.7628658,
+    "checked_at": 1787687513.601532,
+    "consecutive_failures": 1
+  },
+  "Fitch Ratings::next_recovery_batch7_v1": {
+    "jobs": [],
+    "checked_at": 1787687525.3141627,
+    "consecutive_failures": 1
+  },
+  "QIAGEN": {
+    "jobs": [],
+    "checked_at": 1787687525.6552663,
     "consecutive_failures": 1
   },
   "Aldi Ireland::batch_dedicated_v2": {
     "jobs": [],
-    "checked_at": 1787685407.2507143,
+    "checked_at": 1787687525.657535,
     "consecutive_failures": 1
   },
   "Bristol Myers Squibb::batch_dedicated_v1": {
     "jobs": [],
-    "checked_at": 1787685416.1169355,
+    "checked_at": 1787687533.1345904,
     "consecutive_failures": 1
   },
   "Stryker::batch_dedicated_v1": {
     "jobs": [],
-    "checked_at": 1787685438.7897534,
-    "consecutive_failures": 1
-  },
-  "Aviva Ireland::next_recovery_batch7_v1": {
-    "jobs": [],
-    "checked_at": 1787685458.8557265,
-    "consecutive_failures": 1
-  },
-  "HP (Hewlett-Packard)::friend_next4_v1": {
-    "jobs": [],
-    "checked_at": 1787685493.8640525,
+    "checked_at": 1787687540.5105252,
     "consecutive_failures": 1
   },
   "Oracle::attempt2_plus_new_v2": {
     "jobs": [],
-    "checked_at": 1787685495.2948456,
+    "checked_at": 1787687553.0430324,
+    "consecutive_failures": 1
+  },
+  "HP (Hewlett-Packard)::friend_next4_v1": {
+    "jobs": [],
+    "checked_at": 1787687553.4745803,
     "consecutive_failures": 1
   },
   "Central Bank of Ireland": {
     "jobs": [],
-    "checked_at": 1787685507.1414855,
-    "consecutive_failures": 1
-  },
-  "Red Hat": {
-    "jobs": [],
-    "checked_at": 1787685529.5869536,
+    "checked_at": 1787687564.2849872,
     "consecutive_failures": 1
   },
   "Forvis Mazars Ireland::next_manual_batch_v2": {
     "jobs": [],
-    "checked_at": 1787685555.929769,
+    "checked_at": 1787687572.8850565,
     "consecutive_failures": 1
   },
-  "Glanbia / Tirlán::large_recovery_batch20_v1": {
+  "Red Hat": {
     "jobs": [],
-    "checked_at": 1787685576.1090066,
+    "checked_at": 1787687593.1468737,
+    "consecutive_failures": 1
+  },
+  "Aviva Ireland::next_recovery_batch7_v1": {
+    "jobs": [],
+    "checked_at": 1787687613.5462067,
     "consecutive_failures": 1
   },
   "Cantor Fitzgerald Ireland::large_recovery_batch20_v1": {
     "jobs": [],
-    "checked_at": 1787685576.477696,
+    "checked_at": 1787687615.0335646,
     "consecutive_failures": 1
   },
-  "Slalom::large_recovery_batch20_v1": {
+  "Glanbia / Tirlán::large_recovery_batch20_v1": {
     "jobs": [],
-    "checked_at": 1787685577.5367365,
+    "checked_at": 1787687617.7535214,
     "consecutive_failures": 1
   },
   "UBS::large_recovery_batch20_v1": {
     "jobs": [],
-    "checked_at": 1787685579.05419,
+    "checked_at": 1787687620.175674,
+    "consecutive_failures": 1
+  },
+  "Slalom::large_recovery_batch20_v1": {
+    "jobs": [],
+    "checked_at": 1787687620.4796917,
     "consecutive_failures": 1
   },
   "ABP Food Group::large_recovery_batch20_v1": {
     "jobs": [],
-    "checked_at": 1787685582.2629023,
+    "checked_at": 1787687621.379533,
     "consecutive_failures": 1
   },
   "Alexion Pharmaceuticals::large_recovery_batch20_v1": {
     "jobs": [],
-    "checked_at": 1787685583.5258687,
-    "consecutive_failures": 1
-  },
-  "Baxter International::large_recovery_batch20_v1": {
-    "jobs": [],
-    "checked_at": 1787685584.3801658,
-    "consecutive_failures": 1
-  },
-  "Coillte::large_recovery_batch20_v1": {
-    "jobs": [],
-    "checked_at": 1787685584.633681,
+    "checked_at": 1787687623.7238257,
     "consecutive_failures": 1
   },
   "Zurich Insurance::large_recovery_batch20_v1": {
     "jobs": [],
-    "checked_at": 1787685585.6435037,
+    "checked_at": 1787687624.576004,
+    "consecutive_failures": 1
+  },
+  "Coillte::large_recovery_batch20_v1": {
+    "jobs": [],
+    "checked_at": 1787687628.28802,
+    "consecutive_failures": 1
+  },
+  "Baxter International::large_recovery_batch20_v1": {
+    "jobs": [],
+    "checked_at": 1787687629.4635692,
     "consecutive_failures": 1
   },
   "Cook Medical::large_recovery_batch20_v1": {
     "jobs": [],
-    "checked_at": 1787685587.344316,
-    "consecutive_failures": 1
-  },
-  "Sky Ireland::large_recovery_batch20_v1": {
-    "jobs": [],
-    "checked_at": 1787685589.5154185,
+    "checked_at": 1787687630.2400672,
     "consecutive_failures": 1
   },
   "Eir::large_recovery_batch20_v1": {
     "jobs": [],
-    "checked_at": 1787685589.9829755,
+    "checked_at": 1787687631.1798346,
     "consecutive_failures": 1
   },
   "Gas Networks Ireland::large_recovery_batch20_v1": {
     "jobs": [],
-    "checked_at": 1787685590.8993027,
+    "checked_at": 1787687632.6072447,
+    "consecutive_failures": 1
+  },
+  "Sky Ireland::large_recovery_batch20_v1": {
+    "jobs": [],
+    "checked_at": 1787687634.3085823,
     "consecutive_failures": 1
   },
   "Kepak Group::large_recovery_batch20_v1": {
     "jobs": [],
-    "checked_at": 1787685592.9834335,
+    "checked_at": 1787687636.5027232,
     "consecutive_failures": 1
   },
   "Boston Consulting Group (BCG)::large_recovery_batch20_v1": {
     "jobs": [],
-    "checked_at": 1787685603.9556365,
+    "checked_at": 1787687648.8005261,
     "consecutive_failures": 1
   },
   "ESB (Electricity Supply Board)": {
     "jobs": [],
-    "checked_at": 1787685610.027246,
+    "checked_at": 1787687652.5469053,
     "consecutive_failures": 1
   },
   "Revvity (PerkinElmer)": {
     "jobs": [],
-    "checked_at": 1787685611.8719573,
+    "checked_at": 1787687653.379163,
     "consecutive_failures": 1
   },
   "Haleon": {
     "jobs": [],
-    "checked_at": 1787685626.8080232,
+    "checked_at": 1787687665.874698,
     "consecutive_failures": 1
   },
   "GlaxoSmithKline (GSK)": {
     "jobs": [],
-    "checked_at": 1787685627.5417552,
+    "checked_at": 1787687665.987257,
     "consecutive_failures": 1
   }
 }
