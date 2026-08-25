@@ -9876,8 +9876,110 @@ def scrape_aer_lingus_ireland_recovery(session):
         "aer_lingus_sitemap", session
     )
 
+
+# === NEXT_COMPANIES_3_DIRECT_FIX ===
+# Company-coverage phase only: these are new routes for companies that were
+# still non-live. Existing successful live-company scrapers are unchanged.
+
+def _next3_http_card_jobs(session, company, listing_urls, href_patterns, source):
+    results = {}
+    headers = {
+        "User-Agent": HEADERS.get("User-Agent", "Mozilla/5.0"),
+        "Accept-Language": "en-IE,en;q=0.9",
+    }
+    for listing in listing_urls:
+        try:
+            r = session.get(listing, headers=headers, timeout=22)
+        except Exception as exc:
+            print(f"      [{source}] listing failed: {exc}")
+            continue
+        if r.status_code != 200:
+            continue
+        html = r.text or ""
+        for pat in href_patterns:
+            for m in re.finditer(pat, html, re.I):
+                raw_href = m.group(1) if m.lastindex else m.group(0)
+                href = urllib.parse.urljoin(listing, raw_href).split("#")[0]
+                start = max(0, m.start() - 2200)
+                end = min(len(html), m.end() + 2600)
+                card_html = html[start:end]
+                card = re.sub(r"\s+", " ", _html_to_text(card_html)).strip()
+                if _ROI_NEGATIVE_RE.search(card):
+                    continue
+                if not is_republic_of_ireland_location(card):
+                    continue
+
+                title = ""
+                headings = re.findall(r"<h[1-4][^>]*>(.*?)</h[1-4]>", card_html, re.I | re.S)
+                for candidate in reversed(headings):
+                    candidate = re.sub(r"\s+", " ", _html_to_text(candidate)).strip()
+                    if candidate and not _looks_like_non_job_title(candidate):
+                        title = candidate
+                        break
+                if not title:
+                    around = html[max(0, m.start()-400):min(len(html), m.end()+700)]
+                    a = re.search(r"<a[^>]*>(.*?)</a>", around, re.I | re.S)
+                    if a:
+                        title = re.sub(r"\s+", " ", _html_to_text(a.group(1))).strip()
+                if not title or _looks_like_non_job_title(title):
+                    continue
+
+                loc = "Ireland"
+                for city in ("Dublin", "Cork", "Galway", "Limerick", "Shannon", "Athenry"):
+                    if re.search(rf"\b{re.escape(city)}\b", card, re.I):
+                        loc = f"{city}, Ireland"
+                        break
+                posted_text, posted_days = extract_posted_from_text(card)
+                sponsorship, snippet = classify_sponsorship(card[:12000])
+                canonical = href.split("?")[0].rstrip("/")
+                results[canonical.lower()] = {
+                    "company": company, "title": title[:300], "location": loc,
+                    "posted_text": posted_text, "posted_days_ago": posted_days,
+                    "employment_type": normalize_employment_type("", title),
+                    "url": canonical, "source": source,
+                    "visa_sponsorship": sponsorship, "visa_snippet": snippet,
+                }
+    print(f"      [{source}] {len(results)} Ireland jobs from first-party listing cards")
+    return list(results.values())
+
+
+def scrape_ryanair_ireland_next3(session):
+    urls = ["https://careers.ryanair.com/jobs/?search=ireland"] + [
+        f"https://careers.ryanair.com/jobs/?page={p}&search=ireland" for p in range(2, 7)
+    ]
+    return _next3_http_card_jobs(
+        session, "Ryanair", urls,
+        [r'href=["\']([^"\']*/jobs/[a-z0-9][^"\']*/?)["\']'],
+        "ryanair_direct_next3",
+    )
+
+
+def scrape_dexcom_ireland_next3(session):
+    base = ("https://careers.dexcom.com/careers?domain=dexcom.com&filter_distance=80"
+            "&filter_include_remote=1&location=Athenry%2C+G%2C+IE&sort_by=distance")
+    urls = [base + f"&start={start}" for start in (0, 10, 20, 30, 40)]
+    return _next3_http_card_jobs(
+        session, "Dexcom", urls,
+        [r'href=["\']([^"\']*/careers/job/\d+[^"\']*)["\']'],
+        "dexcom_eightfold_next3",
+    )
+
+
+def scrape_docusign_ireland_next3(session):
+    urls = [
+        "https://careers.docusign.com/careers-home/jobs?location=Ireland",
+        "https://careers.docusign.com/careers-home/jobs",
+    ]
+    return _next3_http_card_jobs(
+        session, "DocuSign", urls,
+        [r'href=["\']([^"\']*/careers-home/jobs/\d+[^"\']*)["\']'],
+        "docusign_direct_next3",
+    )
+
+
 def main():
     print("=== THREE_REGRESSION_RECOVERY ACTIVE: Three CSOD country=ie recovery + persistent last-known-nonzero protection ===")
+    print("=== NEXT_COMPANIES_3_DIRECT_FIX ACTIVE: Ryanair/Dexcom/DocuSign first-party recovery; live routes untouched ===")
     print("=== REGRESSION_GUARD_FIX ACTIVE: versioned zero caches cleared; sudden 1-run disappearances protected; count drops reported ===")
     print("=== RUNTIME_DEDUPE_FIX ACTIVE: one company = one full-run task; dedicated routes win over generic duplicates ===")
     print("=== TWO_ATTEMPT_RULE_BATCH ACTIVE: Oracle/McKinsey attempt 2 + Honeywell/Schneider attempt 1; successful live routes untouched ===")
@@ -10161,6 +10263,9 @@ def main():
     # exist; see the fix note there.
 
     dedicated_company_specs = [
+        ("exact", "ryanair", scrape_ryanair_ireland_next3, 45, "official Ryanair Ireland listing"),
+        ("exact", "dexcom", scrape_dexcom_ireland_next3, 45, "official Dexcom Athenry Eightfold listing"),
+        ("exact", "docusign", scrape_docusign_ireland_next3, 45, "official Docusign Ireland listing"),
         ("prefix", "apple", scrape_apple_ireland, 180, "direct HTML scrape"),
         ("exact", "google", scrape_google_ireland, 240, "real browser automation"),
         ("prefix", "amazon", scrape_amazon_ireland, 180, "internal jobs search endpoint"),
@@ -10421,7 +10526,9 @@ def main():
                     cache_key = f"{name}::batch_dedicated_v1"
             else:
                 cache_key = name
-            if _key in {"dxc technology", "deutsche bank", "s&p global", "three ireland"}:
+            if _key in {"ryanair", "dexcom", "docusign"}:
+                cache_key = f"{name}::next_companies_3_direct_v1"
+            elif _key in {"dxc technology", "deutsche bank", "s&p global", "three ireland"}:
                 cache_key = f"{name}::friend_logic_v1"
             elif _key == "grant thornton ireland":
                 cache_key = "Grant Thornton Ireland::oracle_exact_titles_v2"
