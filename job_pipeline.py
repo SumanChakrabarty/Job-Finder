@@ -9527,6 +9527,40 @@ def scrape_schneider_friend(session):
         55,
     )
 
+
+def scrape_honeywell_attempt2(session):
+    """Honeywell second/final attempt: alternate official Oracle search routes."""
+    return _batch_first_party_roi_scrape(
+        "Honeywell",
+        [
+            "https://ibqbjb.fa.ocs.oraclecloud.com/hcmUI/CandidateExperience/en/sites/Honeywell/jobs?keyword=Ireland",
+            "https://ibqbjb.fa.ocs.oraclecloud.com/hcmUI/CandidateExperience/en/sites/Honeywell/jobs?location=Ireland",
+            "https://ibqbjb.fa.ocs.oraclecloud.com/hcmUI/CandidateExperience/en/sites/Honeywell/jobs",
+        ],
+        ["ibqbjb.fa.ocs.oraclecloud.com"],
+        ["/sites/Honeywell/job/"],
+        session,
+        "honeywell_attempt2",
+        80,
+    )
+
+
+def scrape_schneider_attempt2(session):
+    """Schneider second/final attempt: alternate official Ireland/Dublin searches."""
+    return _batch_first_party_roi_scrape(
+        "Schneider Electric",
+        [
+            "https://careers.se.com/jobs?keywords=Ireland",
+            "https://careers.se.com/jobs?keywords=&location=Dublin%2C%20Ireland",
+            "https://careers.se.com/jobs",
+        ],
+        ["careers.se.com"],
+        ["/jobs/"],
+        session,
+        "schneider_attempt2",
+        80,
+    )
+
 def test_single_company(name):
     """Fast test mode for one company — skips the full ~30 min pipeline
     entirely. Checks known dedicated scrapers by name directly (Apple,
@@ -9633,8 +9667,8 @@ def test_single_company(name):
         "oracle": lambda: scrape_oracle_ireland_attempt2(session),
         "bausch + lomb": lambda: scrape_bausch_lomb_friend(session),
         "mckinsey & company": lambda: scrape_mckinsey_ireland_attempt2(session),
-        "honeywell": lambda: scrape_honeywell_friend(session),
-        "schneider electric": lambda: scrape_schneider_friend(session),
+        "honeywell": lambda: scrape_honeywell_attempt2(session),
+        "schneider electric": lambda: scrape_schneider_attempt2(session),
         "jpmorgan chase": lambda: scrape_oracle_candidate_experience("JPMorgan Chase", "https://jpmc.fa.oraclecloud.com", "CX_1001", session),
     }
     matched_key = next((k for k in dedicated if name_lower == k or name_lower.startswith(k)), None)
@@ -10131,7 +10165,14 @@ def scrape_netapp_ireland_attempt2(session):
     )
 
 
+
+def scrape_next_manual_batch_generic(company_name, career_url, session):
+    """Fresh-cache wrapper for the next unresolved manual-company batch."""
+    return scrape_priority_sheet2_generic(company_name, career_url, session)
+
+
 def main():
+    print("=== NEXT_MANUAL_BATCH_12 ACTIVE: Honeywell/Schneider final attempts + 10 unresolved priority companies; live routes untouched ===")
     print("=== DOCUSIGN_ATKINS_RETURN_FIX_NETAPP_ATTEMPT2 ACTIVE: proven DocuSign/Atkins routes get return budget; NetApp gets second route ===")
     print("=== LARGE_NONLIVE_BATCH_8 ACTIVE: Dexcom/DocuSign attempt 2 + AECOM/NetApp/Applied Materials/Arcadis/Jacobs/AtkinsRealis attempt 1; live routes untouched ===")
     print("=== THREE_REGRESSION_RECOVERY ACTIVE: Three CSOD country=ie recovery + persistent last-known-nonzero protection ===")
@@ -10483,8 +10524,8 @@ def main():
         ("exact", "oracle", scrape_oracle_ireland_attempt2, 60, "attempt 2 rendered Oracle Ireland board"),
         ("exact", "bausch + lomb", scrape_bausch_lomb_friend, 60, "friend-referenced Bausch + Lomb Ireland board"),
         ("exact", "mckinsey & company", scrape_mckinsey_ireland_attempt2, 45, "attempt 2 lightweight McKinsey Dublin HTTP"),
-        ("exact", "honeywell", scrape_honeywell_friend, 60, "friend-referenced Honeywell Ireland Oracle board"),
-        ("exact", "schneider electric", scrape_schneider_friend, 60, "friend-referenced Schneider Ireland board"),
+        ("exact", "honeywell", scrape_honeywell_attempt2, 90, "Honeywell second/final Ireland attempt"),
+        ("exact", "schneider electric", scrape_schneider_attempt2, 90, "Schneider second/final Ireland attempt"),
         ("exact", "aib (allied irish banks)", scrape_aib_ireland, 240, "filtered against UK-only postings"),
         ("exact", "blackrock", scrape_blackrock_ireland, 240, "Phenom platform"),
         ("exact", "bank of ireland", scrape_bank_of_ireland_direct, 240, "first-party jobs board"),
@@ -10530,6 +10571,16 @@ def main():
 
     task_list = []
     matched_entries = {}
+
+    # NEXT MANUAL BATCH: ten unresolved companies, using the existing generic
+    # Ireland-first scraper with a fresh cache key. Successful/live companies
+    # are skipped, and final dedupe prevents a second Sheet-2 task later.
+    _next_manual_batch_names = {
+        "baker tilly ireland", "davy", "dunnes stores", "forvis mazars ireland",
+        "greencore", "lidl ireland", "oliver wyman", "protiviti",
+        "advanced micro devices (amd)", "bayer",
+    }
+    _next_manual_rows = [c for c in companies if c["company_name"].strip().lower() in _next_manual_batch_names]
 
     # ------------------------------------------------------------------
     # ORDERING FIX: dedicated/oracle_cx/lightweight scrapers (all
@@ -10584,7 +10635,7 @@ def main():
         "scrape_arcadis_ireland_newbatch", "scrape_jacobs_ireland_newbatch",
         "scrape_atkinsrealis_ireland_newbatch",
         "scrape_bausch_lomb_friend",
-        "scrape_oracle_ireland_attempt2", "scrape_honeywell_friend", "scrape_schneider_friend",
+        "scrape_oracle_ireland_attempt2", "scrape_honeywell_attempt2", "scrape_schneider_attempt2",
     }
 
     _live_company_names = {
@@ -10630,11 +10681,11 @@ def main():
                 cache_key = "IQVIA::ireland_dedicated_v1"
             elif _key == "merit medical":
                 cache_key = "Merit Medical::workday_dedicated_v1"
+            elif _key in {"honeywell", "schneider electric"}:
+                cache_key = f"{name}::final_attempt_v3"
             elif _key in {
                 "oracle",
                 "mckinsey & company",
-                "honeywell",
-                "schneider electric",
             }:
                 cache_key = f"{name}::attempt2_plus_new_v2"
             elif _key in {
@@ -10810,6 +10861,20 @@ def main():
         actual_timeout = effective_timeout(browser_cache, company_name, base_timeout)
         is_browser = scraper_fn.__name__ in LIGHTWEIGHT_BROWSER_EXCEPTIONS
         task_list.append((key, company_name, make_light_task(), actual_timeout, is_browser))
+
+    for _row in _next_manual_rows:
+        _name = _row["company_name"].strip()
+        if _name.lower() in _live_company_names:
+            continue
+        _entry = next((c for c in manual_check if c["company"].strip().lower() == _name.lower()), None)
+        if _entry is None:
+            continue
+        matched_entries[_name] = _entry
+        def _make_next_manual_task(name=_name, u=_entry["url"]):
+            return lambda: cached_browser_scrape(
+                browser_cache, f"{name}::next_manual_batch_v1",
+                lambda: scrape_next_manual_batch_generic(name, u, session), 0, name)
+        task_list.append(("next_manual_batch", _name, _make_next_manual_task(), 75, True))
 
     # SHEET 2 PRIORITY COVERAGE — queued LAST, deliberately (see ordering
     # note above). Also now that task_list/matched_entries actually exist:
