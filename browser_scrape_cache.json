@@ -888,7 +888,7 @@
         "source": "amazon_json",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-25T13:10:11.912294+00:00",
         "posted_age_known": false
       },
@@ -7044,7 +7044,7 @@
         "source": "ey_successfactors",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-25T13:10:11.912294+00:00",
         "posted_age_known": false
       },
@@ -7074,7 +7074,7 @@
         "source": "ey_successfactors",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-25T13:10:11.912294+00:00",
         "posted_age_known": false
       },
@@ -8439,7 +8439,7 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1787650823.139916,
+    "checked_at": 1787664951.420691,
     "consecutive_failures": 0
   },
   "Arup": {
@@ -8575,7 +8575,7 @@
         "source": "arup_direct",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-25T13:10:11.912294+00:00",
         "posted_age_known": false
       },
@@ -8590,7 +8590,7 @@
         "source": "arup_direct",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-25T13:10:11.912294+00:00",
         "posted_age_known": false
       }
@@ -9129,7 +9129,7 @@
         "source": "citi_browser",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-25T13:10:11.912294+00:00",
         "posted_age_known": false
       },
@@ -10458,7 +10458,7 @@
         "source": "ntt_data_browser",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-25T13:10:11.912294+00:00",
         "posted_age_known": false
       },
@@ -12598,8 +12598,8 @@
   },
   "Goldman Sachs": {
     "jobs": [],
-    "checked_at": 1787661296.1705685,
-    "consecutive_failures": 101
+    "checked_at": 1787664959.554174,
+    "consecutive_failures": 102
   },
   "Fiserv": {
     "jobs": [
@@ -13106,8 +13106,8 @@
   },
   "Databricks": {
     "jobs": [],
-    "checked_at": 1787661294.9919944,
-    "consecutive_failures": 95
+    "checked_at": 1787664902.1688042,
+    "consecutive_failures": 96
   },
   "Infosys": {
     "jobs": [],
@@ -13136,8 +13136,8 @@
   },
   "Morgan Stanley": {
     "jobs": [],
-    "checked_at": 1787661293.6845675,
-    "consecutive_failures": 89
+    "checked_at": 1787664900.5555212,
+    "consecutive_failures": 90
   },
   "Moody's": {
     "jobs": [],
@@ -13496,8 +13496,8 @@
   },
   "Aer Lingus": {
     "jobs": [],
-    "checked_at": 1787661294.2062352,
-    "consecutive_failures": 88
+    "checked_at": 1787664903.524663,
+    "consecutive_failures": 89
   },
   "Akamai": {
     "jobs": [],
@@ -13531,8 +13531,8 @@
   },
   "Visa": {
     "jobs": [],
-    "checked_at": 1787661292.641863,
-    "consecutive_failures": 85
+    "checked_at": 1787664899.987612,
+    "consecutive_failures": 86
   },
   "Boehringer Ingelheim": {
     "jobs": [],
@@ -17615,7 +17615,7 @@
         "source": "teleflex_direct",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-25T13:10:11.912294+00:00",
         "posted_age_known": false
       },
@@ -17666,7 +17666,7 @@
         "source": "bd_direct",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-25T13:10:11.912294+00:00",
         "posted_age_known": false
       },
@@ -18077,7 +18077,7 @@
         "source": "siemens_direct_http",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-25T13:10:11.912294+00:00",
         "posted_age_known": false
       },
@@ -18092,7 +18092,7 @@
         "source": "siemens_direct_http",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-25T13:10:11.912294+00:00",
         "posted_age_known": false
       },
@@ -18107,7 +18107,7 @@
         "source": "siemens_direct_http",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-25T13:10:11.912294+00:00",
         "posted_age_known": false
       },
@@ -18122,7 +18122,7 @@
         "source": "siemens_direct_http",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-25T13:10:11.912294+00:00",
         "posted_age_known": false
       },
@@ -18137,7 +18137,7 @@
         "source": "siemens_direct_http",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-25T13:10:11.912294+00:00",
         "posted_age_known": false
       },
@@ -18152,7 +18152,7 @@
         "source": "siemens_direct_http",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-25T13:10:11.912294+00:00",
         "posted_age_known": false
       }
@@ -18218,336 +18218,420 @@
         "title": "Principal Statistical Programmer - FSP (Permanent Homebased) m/w/d",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Full-time",
         "url": "https://jobs.iqvia.com/en/jobs/R1521990-6",
         "source": "iqvia_ireland_location_page",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-23T17:49:21.467549+00:00",
+        "posted_age_known": false
       },
       {
         "company": "IQVIA",
         "title": "The Associate Director, Linux/Unix Systems Engineer",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Full-time",
         "url": "https://jobs.iqvia.com/en/jobs/R1528022-0",
         "source": "iqvia_ireland_location_page",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-23T17:49:21.467549+00:00",
+        "posted_age_known": false
       },
       {
         "company": "IQVIA",
         "title": "Global Scientific Lead - Clinical Outcome Assessment (COA) Strategy Consulting - Multiple locations - Hybrid/Home-based",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Full-time",
         "url": "https://jobs.iqvia.com/en/jobs/R1531174-7",
         "source": "iqvia_ireland_location_page",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-23T17:49:21.467549+00:00",
+        "posted_age_known": false
       },
       {
         "company": "IQVIA",
         "title": "PK/PD Statistical Programmer (m/w/d) - homebased",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Full-time",
         "url": "https://jobs.iqvia.com/en/jobs/R1532189-5",
         "source": "iqvia_ireland_location_page",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-23T17:49:21.467549+00:00",
+        "posted_age_known": false
       },
       {
         "company": "IQVIA",
         "title": "Associate Principal / Principal, Clinical Outcome Assessment (COA) Strategy Consulting",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Full-time",
         "url": "https://jobs.iqvia.com/en/jobs/R1537016-3",
         "source": "iqvia_ireland_location_page",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-23T17:49:21.467549+00:00",
+        "posted_age_known": false
       },
       {
         "company": "IQVIA",
         "title": "Medical Device Sales Specialist",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Full-time",
         "url": "https://jobs.iqvia.com/en/jobs/R1542341-0",
         "source": "iqvia_ireland_location_page",
         "visa_sponsorship": "no_sponsorship",
-        "visa_snippet": "r role within the company! Please note: Sponsorship is not available for this opportunity #LI-DNI #LI-CES #L"
+        "visa_snippet": "r role within the company! Please note: Sponsorship is not available for this opportunity #LI-DNI #LI-CES #L",
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-23T17:49:21.467549+00:00",
+        "posted_age_known": false
       },
       {
         "company": "IQVIA",
         "title": "Associate Principal/Principal Qualitative Research, Patient Centered Solutions",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Full-time",
         "url": "https://jobs.iqvia.com/en/jobs/R1542765-3",
         "source": "iqvia_ireland_location_page",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-23T17:49:21.467549+00:00",
+        "posted_age_known": false
       },
       {
         "company": "IQVIA",
         "title": "Global Clinical Project Manager - Vendor Management Expert (home-based in Europe)",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Full-time",
         "url": "https://jobs.iqvia.com/en/jobs/R1551981-3",
         "source": "iqvia_ireland_location_page",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-25T13:36:51.513443+00:00",
+        "posted_age_known": false
       },
       {
         "company": "IQVIA",
         "title": "Clinical Research Associate - Ireland",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Full-time",
         "url": "https://jobs.iqvia.com/en/jobs/R1555258-0",
         "source": "iqvia_ireland_location_page",
         "visa_sponsorship": "sponsors",
-        "visa_snippet": "there! *Please note - this role is not eligible for VISA sponsorship* IQVIA is a leading global provider of"
+        "visa_snippet": "there! *Please note - this role is not eligible for VISA sponsorship* IQVIA is a leading global provider of",
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-23T17:49:21.467549+00:00",
+        "posted_age_known": false
       },
       {
         "company": "IQVIA",
         "title": "Sales Account Manager",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Full-time",
         "url": "https://jobs.iqvia.com/en/jobs/R1555985-0",
         "source": "iqvia_ireland_location_page",
         "visa_sponsorship": "no_sponsorship",
-        "visa_snippet": "Device Sales, apply today! Please note: sponsorship is not available for this opportunity. #LI-DNI #LI-CES #"
+        "visa_snippet": "Device Sales, apply today! Please note: sponsorship is not available for this opportunity. #LI-DNI #LI-CES #",
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-23T17:49:21.467549+00:00",
+        "posted_age_known": false
       },
       {
         "company": "IQVIA",
         "title": "Business Development Manager - Expert Ecosystem",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Full-time",
         "url": "https://jobs.iqvia.com/en/jobs/R1557036-1",
         "source": "iqvia_ireland_location_page",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-23T17:49:21.467549+00:00",
+        "posted_age_known": false
       },
       {
         "company": "IQVIA",
         "title": "VP & Managing Director, Clinical Strategic Operations, Large Pharma Partnership",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Full-time",
         "url": "https://jobs.iqvia.com/en/jobs/R1557687-4",
         "source": "iqvia_ireland_location_page",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T20:57:28.681500+00:00",
+        "posted_age_known": false
       },
       {
         "company": "IQVIA",
         "title": "VP & Managing Director, Clinical Strategic Operations, Mid-Sized Pharma Partnerships",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Full-time",
         "url": "https://jobs.iqvia.com/en/jobs/R1557699-4",
         "source": "iqvia_ireland_location_page",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T20:57:28.681500+00:00",
+        "posted_age_known": false
       },
       {
         "company": "IQVIA",
         "title": "Snr Safety Project Lead",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Full-time",
         "url": "https://jobs.iqvia.com/en/jobs/R1560496-0",
         "source": "iqvia_ireland_location_page",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-23T17:49:21.467549+00:00",
+        "posted_age_known": false
       },
       {
         "company": "IQVIA",
         "title": "Data Team Lead",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Full-time",
         "url": "https://jobs.iqvia.com/en/jobs/R1560910-1",
         "source": "iqvia_ireland_location_page",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-23T17:49:21.467549+00:00",
+        "posted_age_known": false
       },
       {
         "company": "IQVIA",
         "title": "Nurse Advisor",
         "location": "Wexford, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://jobs.iqvia.com/en/jobs/R1561294-0",
         "source": "iqvia_ireland_location_page",
         "visa_sponsorship": "no_sponsorship",
-        "visa_snippet": "e in healthcare.APPLY NOW! Please note: Sponsorship is not available for this opportunity. #LI-DNI #LI-CES #"
+        "visa_snippet": "e in healthcare.APPLY NOW! Please note: Sponsorship is not available for this opportunity. #LI-DNI #LI-CES #",
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-23T17:49:21.467549+00:00",
+        "posted_age_known": false
       },
       {
         "company": "IQVIA",
         "title": "Nurse Advisor",
         "location": "Wexford, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://jobs.iqvia.com/en/jobs/R1561294-1",
         "source": "iqvia_ireland_location_page",
         "visa_sponsorship": "no_sponsorship",
-        "visa_snippet": "e in healthcare.APPLY NOW! Please note: Sponsorship is not available for this opportunity. #LI-DNI #LI-CES #"
+        "visa_snippet": "e in healthcare.APPLY NOW! Please note: Sponsorship is not available for this opportunity. #LI-DNI #LI-CES #",
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-23T17:49:21.467549+00:00",
+        "posted_age_known": false
       },
       {
         "company": "IQVIA",
         "title": "Nurse Advisor",
         "location": "Wexford, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://jobs.iqvia.com/en/jobs/R1561294-2",
         "source": "iqvia_ireland_location_page",
         "visa_sponsorship": "no_sponsorship",
-        "visa_snippet": "e in healthcare.APPLY NOW! Please note: Sponsorship is not available for this opportunity. #LI-DNI #LI-CES #"
+        "visa_snippet": "e in healthcare.APPLY NOW! Please note: Sponsorship is not available for this opportunity. #LI-DNI #LI-CES #",
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-23T17:49:21.467549+00:00",
+        "posted_age_known": false
       },
       {
         "company": "IQVIA",
         "title": "Nurse Advisor",
         "location": "Wexford, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Full-time",
         "url": "https://jobs.iqvia.com/en/jobs/R1561294-3",
         "source": "iqvia_ireland_location_page",
         "visa_sponsorship": "no_sponsorship",
-        "visa_snippet": "e in healthcare.APPLY NOW! Please note: Sponsorship is not available for this opportunity. #LI-DNI #LI-CES #"
+        "visa_snippet": "e in healthcare.APPLY NOW! Please note: Sponsorship is not available for this opportunity. #LI-DNI #LI-CES #",
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-23T17:49:21.467549+00:00",
+        "posted_age_known": false
       },
       {
         "company": "IQVIA",
         "title": "Snr Data Team Lead, EMEA",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Full-time",
         "url": "https://jobs.iqvia.com/en/jobs/R1562059-1",
         "source": "iqvia_ireland_location_page",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-23T17:49:21.467549+00:00",
+        "posted_age_known": false
       },
       {
         "company": "IQVIA",
         "title": "Data Team Lead, EMEA",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Full-time",
         "url": "https://jobs.iqvia.com/en/jobs/R1562063-1",
         "source": "iqvia_ireland_location_page",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-23T17:49:21.467549+00:00",
+        "posted_age_known": false
       },
       {
         "company": "IQVIA",
         "title": "Japanese Language Consultant",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Full-time",
         "url": "https://jobs.iqvia.com/en/jobs/R1562075-5",
         "source": "iqvia_ireland_location_page",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-23T17:49:21.467549+00:00",
+        "posted_age_known": false
       },
       {
         "company": "IQVIA",
         "title": "Office Manager",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Full-time",
         "url": "https://jobs.iqvia.com/en/jobs/R1562375-0",
         "source": "iqvia_ireland_location_page",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-23T17:49:21.467549+00:00",
+        "posted_age_known": false
       },
       {
         "company": "IQVIA",
         "title": "Regulatory and Start Up Specialist - Ireland",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Full-time",
         "url": "https://jobs.iqvia.com/en/jobs/R1562932-0",
         "source": "iqvia_ireland_location_page",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-23T17:49:21.467549+00:00",
+        "posted_age_known": false
       },
       {
         "company": "IQVIA",
         "title": "Client Partner, Strategy Consulting Large Pharma Advisory, 1 year contract",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Contract",
         "url": "https://jobs.iqvia.com/en/jobs/R1563704-5",
         "source": "iqvia_ireland_location_page",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-23T17:49:21.467549+00:00",
+        "posted_age_known": false
       },
       {
         "company": "IQVIA",
         "title": "Key Account Manager",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Full-time",
         "url": "https://jobs.iqvia.com/en/jobs/R1564253-0",
         "source": "iqvia_ireland_location_page",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-23T17:49:21.467549+00:00",
+        "posted_age_known": false
       },
       {
         "company": "IQVIA",
         "title": "Key Account Manager",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://jobs.iqvia.com/en/jobs/R1564300-0",
         "source": "iqvia_ireland_location_page",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-23T17:49:21.467549+00:00",
+        "posted_age_known": false
       },
       {
         "company": "IQVIA",
         "title": "Clinical Specialist",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Full-time",
         "url": "https://jobs.iqvia.com/en/jobs/R1565001-0",
         "source": "iqvia_ireland_location_page",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-23T17:49:21.467549+00:00",
+        "posted_age_known": false
       }
     ],
     "checked_at": 1787663180.0311282,
@@ -18909,8 +18993,8 @@
   },
   "Tesco Ireland::batch_dedicated_v1": {
     "jobs": [],
-    "checked_at": 1787661329.814186,
-    "consecutive_failures": 44
+    "checked_at": 1787664939.8171742,
+    "consecutive_failures": 45
   },
   "AstraZeneca::batch_dedicated_v1": {
     "jobs": [
@@ -19652,8 +19736,8 @@
   },
   "DXC Technology::friend_logic_v1": {
     "jobs": [],
-    "checked_at": 1787661291.6895711,
-    "consecutive_failures": 43
+    "checked_at": 1787664899.2843368,
+    "consecutive_failures": 44
   },
   "Tata Consultancy Services (TCS)::friend_logic_v1": {
     "jobs": [
@@ -20425,8 +20509,8 @@
   },
   "Deutsche Bank::friend_logic_v1": {
     "jobs": [],
-    "checked_at": 1787661395.8335571,
-    "consecutive_failures": 43
+    "checked_at": 1787664968.597681,
+    "consecutive_failures": 44
   },
   "Intel::friend_logic_v1": {
     "jobs": [
@@ -21486,8 +21570,8 @@
   },
   "Coca-Cola HBC Ireland::friend_nonlive_batch10_v1": {
     "jobs": [],
-    "checked_at": 1787661364.9668224,
-    "consecutive_failures": 33
+    "checked_at": 1787664934.6233099,
+    "consecutive_failures": 34
   },
   "Agilent Technologies::friend_nonlive_batch10_v1": {
     "jobs": [
@@ -21719,13 +21803,13 @@
   },
   "Infosys::friend_nonlive_batch10_v1": {
     "jobs": [],
-    "checked_at": 1787661420.1072152,
-    "consecutive_failures": 33
+    "checked_at": 1787664996.137503,
+    "consecutive_failures": 34
   },
   "Heineken Ireland::friend_next4_v1": {
     "jobs": [],
-    "checked_at": 1787661295.3014965,
-    "consecutive_failures": 32
+    "checked_at": 1787664902.13772,
+    "consecutive_failures": 33
   },
   "VHI Healthcare::friend_next4_v1": {
     "jobs": [
@@ -21860,7 +21944,7 @@
         "source": "vhi_friend_reference",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-25T13:10:11.912294+00:00",
         "posted_age_known": false
       },
@@ -21896,7 +21980,7 @@
         "source": "musgrave_friend_reference",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-25T13:10:11.912294+00:00",
         "posted_age_known": false
       },
@@ -22728,8 +22812,8 @@
   },
   "McKinsey & Company::attempt2_plus_new_v2": {
     "jobs": [],
-    "checked_at": 1787661316.4654932,
-    "consecutive_failures": 29
+    "checked_at": 1787664924.161906,
+    "consecutive_failures": 30
   },
   "Schneider Electric::attempt2_plus_new_v2": {
     "jobs": [],
@@ -26056,177 +26140,187 @@
   },
   "Regeneron": {
     "jobs": [],
-    "checked_at": 1787663060.633326,
+    "checked_at": 1787664900.757167,
     "consecutive_failures": 1
   },
   "BNY Mellon": {
     "jobs": [],
-    "checked_at": 1787663065.9580853,
-    "consecutive_failures": 1
-  },
-  "NetApp::netapp_attempt2_v3": {
-    "jobs": [],
-    "checked_at": 1787663085.03618,
-    "consecutive_failures": 1
-  },
-  "QIAGEN": {
-    "jobs": [],
-    "checked_at": 1787663098.7764413,
-    "consecutive_failures": 1
-  },
-  "Dell Technologies::batch_dedicated_v1": {
-    "jobs": [],
-    "checked_at": 1787663117.2361825,
+    "checked_at": 1787664903.0932686,
     "consecutive_failures": 1
   },
   "Aldi Ireland::batch_dedicated_v2": {
     "jobs": [],
-    "checked_at": 1787663121.2972965,
+    "checked_at": 1787664913.795809,
+    "consecutive_failures": 1
+  },
+  "Dell Technologies::batch_dedicated_v1": {
+    "jobs": [],
+    "checked_at": 1787664921.7919283,
+    "consecutive_failures": 1
+  },
+  "NetApp::netapp_attempt2_v3": {
+    "jobs": [],
+    "checked_at": 1787664928.33547,
     "consecutive_failures": 1
   },
   "Stryker::batch_dedicated_v1": {
     "jobs": [],
-    "checked_at": 1787663136.5451934,
+    "checked_at": 1787664932.1705265,
     "consecutive_failures": 1
   },
-  "Bristol Myers Squibb::batch_dedicated_v1": {
+  "QIAGEN": {
     "jobs": [],
-    "checked_at": 1787663146.4963663,
-    "consecutive_failures": 1
-  },
-  "Oracle::attempt2_plus_new_v2": {
-    "jobs": [],
-    "checked_at": 1787663178.066453,
+    "checked_at": 1787664938.9459074,
     "consecutive_failures": 1
   },
   "HP (Hewlett-Packard)::friend_next4_v1": {
     "jobs": [],
-    "checked_at": 1787663179.761691,
+    "checked_at": 1787664942.8144083,
+    "consecutive_failures": 1
+  },
+  "Oracle::attempt2_plus_new_v2": {
+    "jobs": [],
+    "checked_at": 1787664942.9939373,
+    "consecutive_failures": 1
+  },
+  "Schneider Electric::final_attempt_v3": {
+    "jobs": [],
+    "checked_at": 1787664948.7277277,
     "consecutive_failures": 1
   },
   "Central Bank of Ireland": {
     "jobs": [],
-    "checked_at": 1787663182.4538524,
+    "checked_at": 1787664951.0143523,
+    "consecutive_failures": 1
+  },
+  "Bristol Myers Squibb::batch_dedicated_v1": {
+    "jobs": [],
+    "checked_at": 1787664954.1952894,
     "consecutive_failures": 1
   },
   "Red Hat": {
     "jobs": [],
-    "checked_at": 1787663219.041016,
+    "checked_at": 1787664960.6111572,
     "consecutive_failures": 1
   },
   "Willis Towers Watson (WTW)": {
     "jobs": [],
-    "checked_at": 1787663233.698117,
-    "consecutive_failures": 1
-  },
-  "Cantor Fitzgerald Ireland": {
-    "jobs": [],
-    "checked_at": 1787663234.6774504,
+    "checked_at": 1787664970.335947,
     "consecutive_failures": 1
   },
   "Aviva Ireland": {
     "jobs": [],
-    "checked_at": 1787663237.041845,
+    "checked_at": 1787664970.7041042,
     "consecutive_failures": 1
   },
   "BDO Ireland": {
     "jobs": [],
-    "checked_at": 1787663237.5540822,
+    "checked_at": 1787664976.0451083,
+    "consecutive_failures": 1
+  },
+  "Cantor Fitzgerald Ireland": {
+    "jobs": [],
+    "checked_at": 1787664978.4603329,
     "consecutive_failures": 1
   },
   "Glanbia / Tirlán": {
     "jobs": [],
-    "checked_at": 1787663242.18258,
+    "checked_at": 1787664978.6600158,
     "consecutive_failures": 1
   },
   "Fitch Ratings": {
     "jobs": [],
-    "checked_at": 1787663244.0305204,
+    "checked_at": 1787664980.6818893,
     "consecutive_failures": 1
   },
   "Slalom": {
     "jobs": [],
-    "checked_at": 1787663245.8688314,
+    "checked_at": 1787664983.3709607,
     "consecutive_failures": 1
   },
   "UBS": {
     "jobs": [],
-    "checked_at": 1787663248.8259428,
+    "checked_at": 1787664983.990289,
     "consecutive_failures": 1
   },
   "ABP Food Group": {
     "jobs": [],
-    "checked_at": 1787663252.8405788,
+    "checked_at": 1787664986.9409304,
     "consecutive_failures": 1
   },
   "Zurich Insurance": {
     "jobs": [],
-    "checked_at": 1787663253.305443,
+    "checked_at": 1787664988.9627953,
+    "consecutive_failures": 1
+  },
+  "Honeywell::final_attempt_v3": {
+    "jobs": [],
+    "checked_at": 1787664989.434243,
     "consecutive_failures": 1
   },
   "Alexion Pharmaceuticals": {
     "jobs": [],
-    "checked_at": 1787663254.9929314,
+    "checked_at": 1787664990.272309,
     "consecutive_failures": 1
   },
   "Baxter International": {
     "jobs": [],
-    "checked_at": 1787663258.0219355,
+    "checked_at": 1787664993.27689,
     "consecutive_failures": 1
   },
   "Coillte": {
     "jobs": [],
-    "checked_at": 1787663260.2157185,
+    "checked_at": 1787664994.4502273,
     "consecutive_failures": 1
   },
   "Cook Medical": {
     "jobs": [],
-    "checked_at": 1787663261.9810765,
+    "checked_at": 1787664998.638597,
     "consecutive_failures": 1
   },
   "ESB (Electricity Supply Board)": {
     "jobs": [],
-    "checked_at": 1787663264.16103,
+    "checked_at": 1787664998.7385461,
     "consecutive_failures": 1
   },
   "Eir": {
     "jobs": [],
-    "checked_at": 1787663266.3806562,
+    "checked_at": 1787664999.0727496,
     "consecutive_failures": 1
   },
   "Gas Networks Ireland": {
     "jobs": [],
-    "checked_at": 1787663266.4551127,
+    "checked_at": 1787665002.045893,
     "consecutive_failures": 1
   },
   "Kepak Group": {
     "jobs": [],
-    "checked_at": 1787663268.6008837,
+    "checked_at": 1787665002.6374907,
     "consecutive_failures": 1
   },
   "Sky Ireland": {
     "jobs": [],
-    "checked_at": 1787663269.2174742,
+    "checked_at": 1787665004.3838956,
     "consecutive_failures": 1
   },
   "Revvity (PerkinElmer)": {
     "jobs": [],
-    "checked_at": 1787663271.1311133,
-    "consecutive_failures": 1
-  },
-  "Boston Consulting Group (BCG)": {
-    "jobs": [],
-    "checked_at": 1787663284.4701166,
+    "checked_at": 1787665006.9899256,
     "consecutive_failures": 1
   },
   "GlaxoSmithKline (GSK)": {
     "jobs": [],
-    "checked_at": 1787663317.4302154,
+    "checked_at": 1787665009.0668268,
     "consecutive_failures": 1
   },
   "Haleon": {
     "jobs": [],
-    "checked_at": 1787663317.5395944,
+    "checked_at": 1787665009.6052635,
+    "consecutive_failures": 1
+  },
+  "Boston Consulting Group (BCG)": {
+    "jobs": [],
+    "checked_at": 1787665011.455411,
     "consecutive_failures": 1
   }
 }
