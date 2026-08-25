@@ -10291,7 +10291,17 @@ def scrape_fitch_ireland_current(session):
     )
 
 
+
+
+def scrape_large_unresolved_batch(company_name, career_url, session):
+    """Fresh-cache wrapper for the next large unresolved-company batch.
+    It uses the pipeline's existing strict ROI generic scraper, so this adds
+    coverage without loosening filters or changing successful live routes."""
+    return scrape_priority_sheet2_generic(company_name, career_url, session)
+
+
 def main():
+    print("=== LARGE_RECOVERY_BATCH_20 ACTIVE: 20 unresolved companies forced into one run with fresh cache; live routes untouched ===")
     print("=== NEXT_RECOVERY_BATCH_7 ACTIVE: Baker Tilly/Greencore/AMD/Bayer attempt2 + BDO/Aviva/Fitch current first-party routes; live routes untouched ===")
     print("=== NEXT_MANUAL_BATCH_20_QUEUE_FIX ACTIVE: 20 unresolved companies forced from CSV status-independently; live routes untouched ===")
     print("=== DOCUSIGN_ATKINS_RETURN_FIX_NETAPP_ATTEMPT2 ACTIVE: proven DocuSign/Atkins routes get return budget; NetApp gets second route ===")
@@ -10719,6 +10729,34 @@ def main():
     }
     _next_manual_rows = [c for c in companies if c["company_name"].strip().lower() in _next_manual_batch_names]
 
+
+    _large_recovery_batch20_names = {
+        'cantor fitzgerald ireland',
+        'glanbia / tirlán',
+        'slalom',
+        'ubs',
+        'zurich insurance',
+        'abp food group',
+        'alexion pharmaceuticals',
+        'baxter international',
+        'coillte',
+        'cook medical',
+        'eir',
+        'gas networks ireland',
+        'kepak group',
+        'sky ireland',
+        'alvarez & marsal',
+        'bain & company',
+        'boston consulting group (bcg)',
+        'asml',
+        'aercap',
+        'akamai'
+    }
+    _large_recovery_rows = [
+        c for c in companies
+        if c["company_name"].strip().lower() in _large_recovery_batch20_names
+    ]
+
     # ------------------------------------------------------------------
     # ORDERING FIX: dedicated/oracle_cx/lightweight scrapers (all
     # long-proven, reliable companies — Microsoft, Google, Citi, JPMorgan
@@ -11038,6 +11076,40 @@ def main():
     print(f"=== Next manual queue fix: {len(_next_manual_queued)}/{len(_next_manual_batch_names)} target companies queued before final dedupe ===")
     if _next_manual_queued:
         print("  -> " + ", ".join(_next_manual_queued))
+
+
+    _large_batch_queued = []
+    for _row in _large_recovery_rows:
+        _name = _row["company_name"].strip()
+        if _name.lower() in _live_company_names:
+            continue
+        _entry = next(
+            (c for c in manual_check if c["company"].strip().lower() == _name.lower()),
+            None
+        )
+        # If the company is currently in "no jobs" rather than manual, build the
+        # minimal entry directly from the CSV row instead of silently skipping it.
+        if _entry is None:
+            _entry = {"company": _name, "url": _row["career_url"]}
+        matched_entries[_name] = _entry
+
+        def _make_large_recovery_task(name=_name, u=_entry["url"]):
+            return lambda: cached_browser_scrape(
+                browser_cache,
+                f"{name}::large_recovery_batch20_v1",
+                lambda: scrape_large_unresolved_batch(name, u, session),
+                0,
+                name,
+            )
+
+        task_list.append(
+            ("large_recovery_batch20", _name, _make_large_recovery_task(), 75, True)
+        )
+        _large_batch_queued.append(_name)
+
+    print(f"=== Large recovery batch: {len(_large_batch_queued)}/20 targets queued before final dedupe ===")
+    if _large_batch_queued:
+        print("  -> " + ", ".join(_large_batch_queued))
 
     # SHEET 2 PRIORITY COVERAGE — queued LAST, deliberately (see ordering
     # note above). Also now that task_list/matched_entries actually exist:
