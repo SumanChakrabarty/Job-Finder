@@ -9977,7 +9977,142 @@ def scrape_docusign_ireland_next3(session):
     )
 
 
+
+
+# === LARGE_NONLIVE_BATCH_8 ===
+# Dexcom + DocuSign get their second recovery attempt.
+# Six additional currently non-live companies get their first dedicated route.
+# Existing live-company routes are intentionally untouched.
+
+def scrape_dexcom_ireland_attempt2(session):
+    """Attempt 2: rendered Eightfold board, unlike attempt 1's plain HTTP cards."""
+    return _batch_first_party_roi_scrape(
+        "Dexcom",
+        [
+            "https://careers.dexcom.com/careers?domain=dexcom.com&location=Athenry%2C%20Galway%2C%20Ireland&sort_by=distance&filter_distance=100&start=0",
+            "https://careers.dexcom.com/careers?domain=dexcom.com&location=Ireland&sort_by=relevance&start=0",
+        ],
+        ["careers.dexcom.com"],
+        ["/careers/job/"],
+        session,
+        "dexcom_rendered_attempt2",
+        80,
+    )
+
+
+def scrape_docusign_ireland_attempt2(session):
+    """Attempt 2: rendered Docusign board, unlike attempt 1's plain HTML cards."""
+    return _batch_first_party_roi_scrape(
+        "DocuSign",
+        [
+            "https://careers.docusign.com/careers-home/jobs?location=Ireland",
+            "https://careers.docusign.com/careers-home/jobs?location=Dublin",
+            "https://careers.docusign.com/careers-home/jobs",
+        ],
+        ["careers.docusign.com"],
+        ["/careers-home/jobs/"],
+        session,
+        "docusign_rendered_attempt2",
+        80,
+    )
+
+
+def scrape_aecom_ireland_newbatch(session):
+    """AECOM Ireland through its official SmartRecruiters public API."""
+    raw = try_smartrecruiters("AECOM2", session) or []
+    results = []
+    for item in raw:
+        norm = normalize_smartrecruiters_job(
+            "AECOM", item, "AECOM2", session, False
+        )
+        if norm:
+            results.append(norm)
+    print(f"      [aecom_smartrecruiters] {len(results)} Ireland jobs")
+    return results
+
+
+def scrape_netapp_ireland_newbatch(session):
+    """NetApp's official Ireland location page."""
+    return _batch_first_party_roi_scrape(
+        "NetApp",
+        [
+            "https://careers.netapp.com/location/ireland-jobs/27600/2963597/2/1",
+            "https://careers.netapp.com/location/ireland-jobs/27600/2963597/2",
+        ],
+        ["careers.netapp.com"],
+        ["/job/"],
+        session,
+        "netapp_ireland_newbatch",
+        80,
+    )
+
+
+def scrape_applied_materials_ireland_newbatch(session):
+    """Applied Materials official Ireland location board."""
+    return _batch_first_party_roi_scrape(
+        "Applied Materials",
+        [
+            "https://jobs.appliedmaterials.com/location/ireland-jobs/95/2963597/2",
+            "https://jobs.appliedmaterials.com/search-jobs/ireland/95/2/2963597/53/-8/50/2",
+        ],
+        ["jobs.appliedmaterials.com"],
+        ["/job/"],
+        session,
+        "applied_materials_ireland_newbatch",
+        80,
+    )
+
+
+def scrape_arcadis_ireland_newbatch(session):
+    """Arcadis rendered Eightfold Dublin/Ireland board."""
+    return _batch_first_party_roi_scrape(
+        "Arcadis",
+        [
+            "https://jobs.arcadis.com/careers?domain=arcadis.com&location=Dublin%2C%20Dublin%2C%20Ireland&sort_by=distance&filter_distance=80&start=0",
+            "https://jobs.arcadis.com/careers?domain=arcadis.com&location=Ireland&sort_by=relevance&start=0",
+        ],
+        ["jobs.arcadis.com"],
+        ["/careers/job/"],
+        session,
+        "arcadis_ireland_newbatch",
+        80,
+    )
+
+
+def scrape_jacobs_ireland_newbatch(session):
+    """Jacobs' official Ireland-filtered Avature search."""
+    return _batch_first_party_roi_scrape(
+        "Jacobs",
+        [
+            "https://careers.jacobs.com/en_US/careers/SearchJobs/?4182=%5B76407%5D&4182_format=4422&listFilterMode=1&jobRecordsPerPage=20",
+            "https://careers.jacobs.com/en_US/careers/SearchJobs/?jobRecordsPerPage=20&search=Ireland",
+        ],
+        ["careers.jacobs.com"],
+        ["/en_US/careers/JobDetail/"],
+        session,
+        "jacobs_ireland_newbatch",
+        80,
+    )
+
+
+def scrape_atkinsrealis_ireland_newbatch(session):
+    """AtkinsRéalis first-party job-detail route."""
+    return _batch_first_party_roi_scrape(
+        "AtkinsRéalis",
+        [
+            "https://careers.atkinsrealis.com/en/jobs/?location=Ireland",
+            "https://careers.atkinsrealis.com/en/jobs/?search=&location=Dublin",
+            "https://careers.atkinsrealis.com/en",
+        ],
+        ["careers.atkinsrealis.com"],
+        ["/en/jobs/"],
+        session,
+        "atkinsrealis_ireland_newbatch",
+        80,
+    )
+
 def main():
+    print("=== LARGE_NONLIVE_BATCH_8 ACTIVE: Dexcom/DocuSign attempt 2 + AECOM/NetApp/Applied Materials/Arcadis/Jacobs/AtkinsRealis attempt 1; live routes untouched ===")
     print("=== THREE_REGRESSION_RECOVERY ACTIVE: Three CSOD country=ie recovery + persistent last-known-nonzero protection ===")
     print("=== NEXT_COMPANIES_3_DIRECT_FIX ACTIVE: Ryanair/Dexcom/DocuSign first-party recovery; live routes untouched ===")
     print("=== REGRESSION_GUARD_FIX ACTIVE: versioned zero caches cleared; sudden 1-run disappearances protected; count drops reported ===")
@@ -10264,8 +10399,14 @@ def main():
 
     dedicated_company_specs = [
         ("exact", "ryanair", scrape_ryanair_ireland_next3, 45, "official Ryanair Ireland listing"),
-        ("exact", "dexcom", scrape_dexcom_ireland_next3, 45, "official Dexcom Athenry Eightfold listing"),
-        ("exact", "docusign", scrape_docusign_ireland_next3, 45, "official Docusign Ireland listing"),
+        ("exact", "dexcom", scrape_dexcom_ireland_attempt2, 60, "attempt 2 rendered Dexcom Ireland board"),
+        ("exact", "docusign", scrape_docusign_ireland_attempt2, 60, "attempt 2 rendered Docusign Ireland board"),
+        ("exact", "aecom", scrape_aecom_ireland_newbatch, 45, "official AECOM SmartRecruiters API"),
+        ("exact", "netapp", scrape_netapp_ireland_newbatch, 60, "official NetApp Ireland board"),
+        ("exact", "applied materials", scrape_applied_materials_ireland_newbatch, 60, "official Applied Materials Ireland board"),
+        ("exact", "arcadis", scrape_arcadis_ireland_newbatch, 60, "official Arcadis Ireland Eightfold board"),
+        ("exact", "jacobs", scrape_jacobs_ireland_newbatch, 60, "official Jacobs Ireland search"),
+        ("exact", "atkinsréalis", scrape_atkinsrealis_ireland_newbatch, 60, "official AtkinsRéalis Ireland board"),
         ("prefix", "apple", scrape_apple_ireland, 180, "direct HTML scrape"),
         ("exact", "google", scrape_google_ireland, 240, "real browser automation"),
         ("prefix", "amazon", scrape_amazon_ireland, 180, "internal jobs search endpoint"),
@@ -10417,6 +10558,10 @@ def main():
         "scrape_sig_ireland_friend",
         "scrape_musgrave_ireland_friend", "scrape_vhi_ireland_friend",
         "scrape_hp_ireland_friend",
+        "scrape_dexcom_ireland_attempt2", "scrape_docusign_ireland_attempt2",
+        "scrape_netapp_ireland_newbatch", "scrape_applied_materials_ireland_newbatch",
+        "scrape_arcadis_ireland_newbatch", "scrape_jacobs_ireland_newbatch",
+        "scrape_atkinsrealis_ireland_newbatch",
         "scrape_bausch_lomb_friend",
         "scrape_oracle_ireland_attempt2", "scrape_honeywell_friend", "scrape_schneider_friend",
     }
@@ -10526,8 +10671,13 @@ def main():
                     cache_key = f"{name}::batch_dedicated_v1"
             else:
                 cache_key = name
-            if _key in {"ryanair", "dexcom", "docusign"}:
+            if _key == "ryanair":
                 cache_key = f"{name}::next_companies_3_direct_v1"
+            elif _key in {
+                "dexcom", "docusign", "aecom", "netapp",
+                "applied materials", "arcadis", "jacobs", "atkinsréalis"
+            }:
+                cache_key = f"{name}::large_nonlive_batch8_v2"
             elif _key in {"dxc technology", "deutsche bank", "s&p global", "three ireland"}:
                 cache_key = f"{name}::friend_logic_v1"
             elif _key == "grant thornton ireland":
@@ -10545,6 +10695,14 @@ def main():
             "mckinsey & company",
             "honeywell",
             "schneider electric",
+            "dexcom",
+            "docusign",
+            "aecom",
+            "netapp",
+            "applied materials",
+            "arcadis",
+            "jacobs",
+            "atkinsréalis",
         }
         if company_name.strip().lower() in _fresh_dedicated_timeout_names:
             actual_timeout = timeout_s
