@@ -8208,7 +8208,7 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1787687561.8556445,
+    "checked_at": 1787698884.309247,
     "consecutive_failures": 0
   },
   "Arup": {
@@ -8586,7 +8586,7 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1787687558.4752765,
+    "checked_at": 1787698913.1806998,
     "consecutive_failures": 0
   },
   "Netflix": {
@@ -10365,7 +10365,7 @@
         "source": "jnj_workday",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-25T22:39:58.277041+00:00",
         "posted_age_known": false
       },
@@ -11411,7 +11411,7 @@
         "source": "esb_successfactors",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-25T22:39:58.277041+00:00",
         "posted_age_known": true
       },
@@ -11991,7 +11991,7 @@
         "source": "biomarin_direct",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-25T22:39:58.277041+00:00",
         "posted_age_known": false
       },
@@ -15416,7 +15416,7 @@
         "source": "aon_sitemap",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-25T22:39:58.277041+00:00",
         "posted_age_known": false
       },
@@ -15641,7 +15641,7 @@
         "source": "siemens_direct_http",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-25T22:39:58.277041+00:00",
         "posted_age_known": false
       },
@@ -15656,7 +15656,7 @@
         "source": "siemens_direct_http",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-25T22:39:58.277041+00:00",
         "posted_age_known": false
       },
@@ -15671,7 +15671,7 @@
         "source": "siemens_direct_http",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-25T22:39:58.277041+00:00",
         "posted_age_known": false
       },
@@ -15686,7 +15686,7 @@
         "source": "siemens_direct_http",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-25T22:39:58.277041+00:00",
         "posted_age_known": false
       },
@@ -16918,156 +16918,195 @@
         "title": "Mgr Supply Chain - Product Planner",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.amgen.com/en/job/dublin/mgr-supply-chain-product-planner/87/99337747184",
         "source": "amgen_first_party",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-22T11:49:34.357935+00:00",
+        "posted_age_known": false
       },
       {
         "company": "Amgen",
         "title": "Sr. Engineer Process Development",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.amgen.com/en/job/dublin/sr-engineer-process-development/87/99346471264",
         "source": "amgen_first_party",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-22T11:49:34.357935+00:00",
+        "posted_age_known": false
       },
       {
         "company": "Amgen",
         "title": "Associate Director Operations Technology",
         "location": "Republic of Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.amgen.com/en/job/dun-laoghaire/associate-director-operations-technology/87/99030896656",
         "source": "amgen_first_party",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-22T11:49:34.357935+00:00",
+        "posted_age_known": false
       },
       {
         "company": "Amgen",
         "title": "Project Portfolio & Governance Manager",
         "location": "Republic of Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.amgen.com/en/job/dun-laoghaire/project-portfolio-and-governance-manager/87/99394951472",
         "source": "amgen_first_party",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-22T11:49:34.357935+00:00",
+        "posted_age_known": false
       },
       {
         "company": "Amgen",
         "title": "Shift Maintenance Manager",
         "location": "Republic of Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.amgen.com/en/job/dun-laoghaire/shift-maintenance-manager/87/99449555664",
         "source": "amgen_first_party",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-22T11:49:34.357935+00:00",
+        "posted_age_known": false
       },
       {
         "company": "Amgen",
         "title": "Sr. Associate Facilities & Engineering Compliance (Day role)",
         "location": "Republic of Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.amgen.com/en/job/dun-laoghaire/sr-associate-facilities-and-engineering-compliance-day-role/87/99405253712",
         "source": "amgen_first_party",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-22T11:49:34.357935+00:00",
+        "posted_age_known": false
       },
       {
         "company": "Amgen",
         "title": "Sr. Associate Process Development",
         "location": "Republic of Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.amgen.com/en/job/dun-laoghaire/sr-associate-process-development/87/99346471248",
         "source": "amgen_first_party",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-22T11:49:34.357935+00:00",
+        "posted_age_known": false
       },
       {
         "company": "Amgen",
         "title": "Sr. Validation Engineer - Automation",
         "location": "Republic of Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.amgen.com/en/job/dun-laoghaire/sr-validation-engineer-automation/87/99211231424",
         "source": "amgen_first_party",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-22T11:49:34.357935+00:00",
+        "posted_age_known": false
       },
       {
         "company": "Amgen",
         "title": "Sr Associate Benefits",
         "location": "Republic of Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.amgen.com/en/job/hyderabad/sr-associate-benefits/87/91323449280",
         "source": "amgen_first_party",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-22T11:49:34.357935+00:00",
+        "posted_age_known": false
       },
       {
         "company": "Amgen",
         "title": "Supply Chain Senior Manager - Global Supply Chain Lead",
         "location": "Republic of Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.amgen.com/en/job/washington-d-c/supply-chain-senior-manager-global-supply-chain-lead/87/99500634176",
         "source": "amgen_first_party",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-22T11:49:34.357935+00:00",
+        "posted_age_known": false
       },
       {
         "company": "Amgen",
         "title": "Search Results",
         "location": "Republic of Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.amgen.com/en/search-jobs/Ireland",
         "source": "amgen_first_party",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-22T11:49:34.357935+00:00",
+        "posted_age_known": false
       },
       {
         "company": "Amgen",
         "title": "Search Results",
         "location": "Republic of Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.amgen.com/en/search-jobs/Ireland%26p%3D1",
         "source": "amgen_first_party",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T02:27:29.376212+00:00",
+        "posted_age_known": false
       },
       {
         "company": "Amgen",
         "title": "Search Results",
         "location": "Republic of Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.amgen.com/en/search-jobs/Ireland%26p%3D2",
         "source": "amgen_first_party",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T02:27:29.376212+00:00",
+        "posted_age_known": false
       }
     ],
     "checked_at": 1787697411.3081553,
@@ -19492,11 +19531,6 @@
     "checked_at": 1787697403.8452046,
     "consecutive_failures": 0
   },
-  "Musgrave Group (SuperValu / Centra)::friend_next4_v1": {
-    "jobs": [],
-    "checked_at": 1787697394.0055132,
-    "consecutive_failures": 1
-  },
   "Agilent Technologies::friend_workday_return_v2": {
     "jobs": [
       {
@@ -20123,11 +20157,6 @@
     "jobs": [],
     "checked_at": 1787661375.9807432,
     "consecutive_failures": 29
-  },
-  "Aiven": {
-    "jobs": [],
-    "checked_at": 1787697243.3383276,
-    "consecutive_failures": 1
   },
   "Hewlett Packard Enterprise (HPE)::batch_dedicated_v1": {
     "jobs": [
@@ -30130,177 +30159,669 @@
   },
   "Regeneron": {
     "jobs": [],
-    "checked_at": 1787697229.845248,
+    "checked_at": 1787698827.751699,
     "consecutive_failures": 1
   },
   "BNY Mellon": {
     "jobs": [],
-    "checked_at": 1787697236.807901,
+    "checked_at": 1787698829.6173754,
     "consecutive_failures": 1
   },
-  "NetApp::netapp_attempt2_v3": {
-    "jobs": [],
-    "checked_at": 1787697256.0301595,
-    "consecutive_failures": 1
+  "Aiven": {
+    "jobs": [
+      {
+        "company": "Aiven",
+        "title": "Aiven role",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://aiven.io/careers/job/4715425101",
+        "source": "aiven_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-16T20:37:31.736251+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Aiven",
+        "title": "Aiven role",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://aiven.io/careers/job/4838352101",
+        "source": "aiven_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-16T20:37:31.736251+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Aiven",
+        "title": "Aiven role",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://aiven.io/careers/job/4951386101",
+        "source": "aiven_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-19T09:56:09.114432+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Aiven",
+        "title": "Aiven role",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://aiven.io/careers/job/4838490101",
+        "source": "aiven_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-16T20:37:31.736251+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Aiven",
+        "title": "Aiven role",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://aiven.io/careers/job/4770123101",
+        "source": "aiven_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-16T20:37:31.736251+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Aiven",
+        "title": "Aiven role",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://aiven.io/careers/job/4944339101",
+        "source": "aiven_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-16T20:37:31.736251+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Aiven",
+        "title": "Aiven role",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://aiven.io/careers/job/4878697101",
+        "source": "aiven_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-16T20:37:31.736251+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Aiven",
+        "title": "Aiven role",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://aiven.io/careers/job/4870465101",
+        "source": "aiven_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-16T20:37:31.736251+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Aiven",
+        "title": "Aiven role",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://aiven.io/careers/job/4938453101",
+        "source": "aiven_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-16T20:37:31.736251+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Aiven",
+        "title": "Aiven role",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://aiven.io/careers/job/4947419101",
+        "source": "aiven_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T14:32:41.622629+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Aiven",
+        "title": "Aiven role",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://aiven.io/careers/job/4912951101",
+        "source": "aiven_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-16T20:37:31.736251+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Aiven",
+        "title": "Aiven role",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://aiven.io/careers/job/4900414101",
+        "source": "aiven_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-19T14:01:51.801445+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Aiven",
+        "title": "Aiven role",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://aiven.io/careers/job/4955290101",
+        "source": "aiven_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-19T14:01:51.801445+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Aiven",
+        "title": "Aiven role",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://aiven.io/careers/job/4833444101",
+        "source": "aiven_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-19T14:01:51.801445+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Aiven",
+        "title": "Aiven role",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://aiven.io/careers/job/4911946101",
+        "source": "aiven_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-19T14:01:51.801445+00:00",
+        "posted_age_known": false
+      }
+    ],
+    "checked_at": 1787698836.9899948,
+    "consecutive_failures": 0
   },
-  "QIAGEN": {
+  "Aldi Ireland::batch_dedicated_v2": {
     "jobs": [],
-    "checked_at": 1787697269.0963984,
-    "consecutive_failures": 1
-  },
-  "Fitch Ratings::next_recovery_batch7_v1": {
-    "jobs": [],
-    "checked_at": 1787697273.4350116,
+    "checked_at": 1787698841.5289142,
     "consecutive_failures": 1
   },
   "Dell Technologies::batch_dedicated_v1": {
     "jobs": [],
-    "checked_at": 1787697299.4845285,
+    "checked_at": 1787698841.6979833,
     "consecutive_failures": 1
   },
-  "Aldi Ireland::batch_dedicated_v2": {
+  "NetApp::netapp_attempt2_v3": {
     "jobs": [],
-    "checked_at": 1787697308.5832129,
+    "checked_at": 1787698854.9577973,
     "consecutive_failures": 1
   },
-  "Bristol Myers Squibb::batch_dedicated_v1": {
+  "QIAGEN": {
     "jobs": [],
-    "checked_at": 1787697324.050511,
+    "checked_at": 1787698866.7810473,
     "consecutive_failures": 1
   },
   "Stryker::batch_dedicated_v1": {
     "jobs": [],
-    "checked_at": 1787697343.669794,
+    "checked_at": 1787698867.8535066,
     "consecutive_failures": 1
   },
-  "Aviva Ireland::next_recovery_batch7_v1": {
+  "Fitch Ratings::next_recovery_batch7_v1": {
     "jobs": [],
-    "checked_at": 1787697363.9846237,
+    "checked_at": 1787698872.83536,
+    "consecutive_failures": 1
+  },
+  "Bristol Myers Squibb::batch_dedicated_v1": {
+    "jobs": [],
+    "checked_at": 1787698872.9853497,
+    "consecutive_failures": 1
+  },
+  "Musgrave Group (SuperValu / Centra)::friend_next4_v1": {
+    "jobs": [
+      {
+        "company": "Musgrave Group (SuperValu / Centra)",
+        "title": "Replenishment Transformation Manager",
+        "location": "Cork, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://musgravegroup.com/vacancy/replenishment-transformation-manager/",
+        "source": "musgrave_friend_reference",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-25T19:21:15.386974+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Musgrave Group (SuperValu / Centra)",
+        "title": "Trading Assistant",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://musgravegroup.com/vacancy/trading-assistant/",
+        "source": "musgrave_friend_reference",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-25T16:11:35.048624+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Musgrave Group (SuperValu / Centra)",
+        "title": "IT Integration Delivery Lead",
+        "location": "Cork, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://musgravegroup.com/vacancy/it-integration-delivery-lead/",
+        "source": "musgrave_friend_reference",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T11:11:26.698832+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Musgrave Group (SuperValu / Centra)",
+        "title": "HR Officer",
+        "location": "Cork, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://musgravegroup.com/vacancy/hr-officer-2/",
+        "source": "musgrave_friend_reference",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-25T13:10:11.912294+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Musgrave Group (SuperValu / Centra)",
+        "title": "IT Integration Architect",
+        "location": "Cork, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://musgravegroup.com/vacancy/it-integration-architect/",
+        "source": "musgrave_friend_reference",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T11:11:26.698832+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Musgrave Group (SuperValu / Centra)",
+        "title": "Business Analyst – Digital",
+        "location": "Cork, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://musgravegroup.com/vacancy/business-analyst-digital/",
+        "source": "musgrave_friend_reference",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T20:57:28.681500+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Musgrave Group (SuperValu / Centra)",
+        "title": "Compliance Manager",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://musgravegroup.com/vacancy/compliance-manager/",
+        "source": "musgrave_friend_reference",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T17:34:05.058655+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Musgrave Group (SuperValu / Centra)",
+        "title": "Fresh Food & Operations Specialist",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://musgravegroup.com/vacancy/fresh-food-operations-specialist/",
+        "source": "musgrave_friend_reference",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T11:11:26.698832+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Musgrave Group (SuperValu / Centra)",
+        "title": "HR Officer",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://musgravegroup.com/vacancy/hr-officer/",
+        "source": "musgrave_friend_reference",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T11:11:26.698832+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Musgrave Group (SuperValu / Centra)",
+        "title": "Business Development Manager",
+        "location": "Waterford, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://musgravegroup.com/vacancy/business-development-manager-2/",
+        "source": "musgrave_friend_reference",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T11:11:26.698832+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Musgrave Group (SuperValu / Centra)",
+        "title": "Facilities Technician",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://musgravegroup.com/vacancy/facilities-technician/",
+        "source": "musgrave_friend_reference",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T11:11:26.698832+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Musgrave Group (SuperValu / Centra)",
+        "title": "Store Replenishment Co-ordinator",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://musgravegroup.com/vacancy/store-replenishment-co-ordinator/",
+        "source": "musgrave_friend_reference",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T11:11:26.698832+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Musgrave Group (SuperValu / Centra)",
+        "title": "Employee Experience Co-Ordinator",
+        "location": "Cork, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://musgravegroup.com/vacancy/employee-experience-co-ordinator/",
+        "source": "musgrave_friend_reference",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T11:11:26.698832+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Musgrave Group (SuperValu / Centra)",
+        "title": "Trading Manager Assistant",
+        "location": "Cork, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://musgravegroup.com/vacancy/trading-manager-assistant/",
+        "source": "musgrave_friend_reference",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T11:11:26.698832+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Musgrave Group (SuperValu / Centra)",
+        "title": "HR Business Partner",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://musgravegroup.com/vacancy/hr-business-partner/",
+        "source": "musgrave_friend_reference",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T11:11:26.698832+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Musgrave Group (SuperValu / Centra)",
+        "title": "UX/UI Designer",
+        "location": "Cork, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://musgravegroup.com/vacancy/ux-ui-designer/",
+        "source": "musgrave_friend_reference",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T11:11:26.698832+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Musgrave Group (SuperValu / Centra)",
+        "title": "Credit Controller",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://musgravegroup.com/vacancy/credit-controller/",
+        "source": "musgrave_friend_reference",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T11:11:26.698832+00:00",
+        "posted_age_known": false
+      }
+    ],
+    "checked_at": 1787698883.4213896,
+    "consecutive_failures": 0
+  },
+  "HP (Hewlett-Packard)::friend_next4_v1": {
+    "jobs": [],
+    "checked_at": 1787698883.46102,
     "consecutive_failures": 1
   },
   "Oracle::attempt2_plus_new_v2": {
     "jobs": [],
-    "checked_at": 1787697406.2178617,
-    "consecutive_failures": 1
-  },
-  "HP (Hewlett-Packard)::friend_next4_v1": {
-    "jobs": [],
-    "checked_at": 1787697406.5200086,
+    "checked_at": 1787698884.0423796,
     "consecutive_failures": 1
   },
   "Central Bank of Ireland": {
     "jobs": [],
-    "checked_at": 1787697420.130632,
+    "checked_at": 1787698888.8408303,
     "consecutive_failures": 1
   },
   "Red Hat": {
     "jobs": [],
-    "checked_at": 1787697448.5530932,
+    "checked_at": 1787698894.2500293,
     "consecutive_failures": 1
   },
   "Forvis Mazars Ireland::next_manual_batch_v2": {
     "jobs": [],
-    "checked_at": 1787697469.602922,
-    "consecutive_failures": 1
-  },
-  "Willis Towers Watson (WTW)": {
-    "jobs": [],
-    "checked_at": 1787697477.6268976,
+    "checked_at": 1787698894.693558,
     "consecutive_failures": 1
   },
   "Cantor Fitzgerald Ireland::large_recovery_batch20_v1": {
     "jobs": [],
-    "checked_at": 1787697491.3999538,
+    "checked_at": 1787698897.1754968,
     "consecutive_failures": 1
   },
-  "Glanbia / Tirlán::large_recovery_batch20_v1": {
+  "Willis Towers Watson (WTW)": {
     "jobs": [],
-    "checked_at": 1787697493.908427,
-    "consecutive_failures": 1
-  },
-  "Slalom::large_recovery_batch20_v1": {
-    "jobs": [],
-    "checked_at": 1787697495.5891757,
+    "checked_at": 1787698903.6786404,
     "consecutive_failures": 1
   },
   "UBS::large_recovery_batch20_v1": {
     "jobs": [],
-    "checked_at": 1787697495.9710171,
+    "checked_at": 1787698904.0908022,
     "consecutive_failures": 1
   },
-  "Alexion Pharmaceuticals::large_recovery_batch20_v1": {
+  "Glanbia / Tirlán::large_recovery_batch20_v1": {
     "jobs": [],
-    "checked_at": 1787697497.960558,
+    "checked_at": 1787698904.294164,
+    "consecutive_failures": 1
+  },
+  "Slalom::large_recovery_batch20_v1": {
+    "jobs": [],
+    "checked_at": 1787698904.6694994,
     "consecutive_failures": 1
   },
   "ABP Food Group::large_recovery_batch20_v1": {
     "jobs": [],
-    "checked_at": 1787697498.9520352,
+    "checked_at": 1787698911.7090127,
     "consecutive_failures": 1
   },
-  "Zurich Insurance::large_recovery_batch20_v1": {
+  "Alexion Pharmaceuticals::large_recovery_batch20_v1": {
     "jobs": [],
-    "checked_at": 1787697502.938199,
+    "checked_at": 1787698911.8762062,
     "consecutive_failures": 1
   },
   "Baxter International::large_recovery_batch20_v1": {
     "jobs": [],
-    "checked_at": 1787697503.4834223,
+    "checked_at": 1787698914.6158574,
+    "consecutive_failures": 1
+  },
+  "Zurich Insurance::large_recovery_batch20_v1": {
+    "jobs": [],
+    "checked_at": 1787698915.0269146,
     "consecutive_failures": 1
   },
   "Coillte::large_recovery_batch20_v1": {
     "jobs": [],
-    "checked_at": 1787697503.9044998,
-    "consecutive_failures": 1
-  },
-  "Eir::large_recovery_batch20_v1": {
-    "jobs": [],
-    "checked_at": 1787697505.2406256,
+    "checked_at": 1787698919.433629,
     "consecutive_failures": 1
   },
   "Cook Medical::large_recovery_batch20_v1": {
     "jobs": [],
-    "checked_at": 1787697506.1842203,
+    "checked_at": 1787698921.4015198,
+    "consecutive_failures": 1
+  },
+  "Eir::large_recovery_batch20_v1": {
+    "jobs": [],
+    "checked_at": 1787698921.8165143,
     "consecutive_failures": 1
   },
   "Gas Networks Ireland::large_recovery_batch20_v1": {
     "jobs": [],
-    "checked_at": 1787697507.8048427,
-    "consecutive_failures": 1
-  },
-  "Sky Ireland::large_recovery_batch20_v1": {
-    "jobs": [],
-    "checked_at": 1787697509.5378308,
+    "checked_at": 1787698922.6013575,
     "consecutive_failures": 1
   },
   "Kepak Group::large_recovery_batch20_v1": {
     "jobs": [],
-    "checked_at": 1787697512.1047416,
+    "checked_at": 1787698923.9030292,
     "consecutive_failures": 1
   },
-  "Boston Consulting Group (BCG)::large_recovery_batch20_v1": {
+  "Sky Ireland::large_recovery_batch20_v1": {
     "jobs": [],
-    "checked_at": 1787697521.2367258,
+    "checked_at": 1787698925.0313115,
     "consecutive_failures": 1
   },
   "ESB (Electricity Supply Board)": {
     "jobs": [],
-    "checked_at": 1787697529.8248794,
-    "consecutive_failures": 1
-  },
-  "Revvity (PerkinElmer)": {
-    "jobs": [],
-    "checked_at": 1787697531.907024,
+    "checked_at": 1787698932.8942246,
     "consecutive_failures": 1
   },
   "Haleon": {
     "jobs": [],
-    "checked_at": 1787697547.1944976,
+    "checked_at": 1787698933.26106,
+    "consecutive_failures": 1
+  },
+  "Revvity (PerkinElmer)": {
+    "jobs": [],
+    "checked_at": 1787698933.3922575,
     "consecutive_failures": 1
   },
   "GlaxoSmithKline (GSK)": {
     "jobs": [],
-    "checked_at": 1787697550.7163956,
+    "checked_at": 1787698934.6019986,
+    "consecutive_failures": 1
+  },
+  "Boston Consulting Group (BCG)::large_recovery_batch20_v1": {
+    "jobs": [],
+    "checked_at": 1787698938.396379,
+    "consecutive_failures": 1
+  },
+  "Aviva Ireland::next_recovery_batch7_v1": {
+    "jobs": [],
+    "checked_at": 1787698962.4291818,
     "consecutive_failures": 1
   }
 }
