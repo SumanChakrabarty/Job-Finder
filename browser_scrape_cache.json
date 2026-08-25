@@ -20159,55 +20159,9 @@
     "consecutive_failures": 29
   },
   "Hewlett Packard Enterprise (HPE)::batch_dedicated_v1": {
-    "jobs": [
-      {
-        "company": "Hewlett Packard Enterprise (HPE)",
-        "title": "Portfolio Specialist EMEA (Leasing & Asset Management)",
-        "location": "Republic of Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.hpe.com/us/en/job/1208654/Portfolio-Specialist-EMEA-Leasing-Asset-Management",
-        "source": "hpe_first_party",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-24T04:32:09.012483+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Hewlett Packard Enterprise (HPE)",
-        "title": "Information Developer III",
-        "location": "Galway, Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.hpe.com/us/en/job/1210750/Information-Developer-III",
-        "source": "hpe_first_party",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-24T01:23:26.715320+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Hewlett Packard Enterprise (HPE)",
-        "title": "Software Engineering Intern",
-        "location": "Galway, Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Internship",
-        "url": "https://careers.hpe.com/us/en/job/1211006/Software-Engineering-Intern",
-        "source": "hpe_first_party",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-24T18:06:20.492678+00:00",
-        "posted_age_known": false
-      }
-    ],
-    "checked_at": 1787691118.6235447,
-    "consecutive_failures": 0
+    "jobs": [],
+    "checked_at": 1787702064.1107697,
+    "consecutive_failures": 1
   },
   "Three Ireland::friend_logic_v1": {
     "jobs": [
@@ -22345,7 +22299,7 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1787691111.3455532,
+    "checked_at": 1787702072.6946373,
     "consecutive_failures": 0
   },
   "Ryanair::next_companies_3_direct_v1": {
@@ -29686,7 +29640,7 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1787691167.639524,
+    "checked_at": 1787702095.9762313,
     "consecutive_failures": 0
   },
   "Dynatrace::next_manual_batch_v2": {
@@ -30651,177 +30605,172 @@
   },
   "Regeneron": {
     "jobs": [],
-    "checked_at": 1787700245.2505746,
+    "checked_at": 1787702031.3302324,
     "consecutive_failures": 1
   },
   "BNY Mellon": {
     "jobs": [],
-    "checked_at": 1787700246.4861188,
+    "checked_at": 1787702035.0856707,
     "consecutive_failures": 1
   },
   "Dell Technologies::batch_dedicated_v1": {
     "jobs": [],
-    "checked_at": 1787700262.3496215,
+    "checked_at": 1787702047.3644652,
     "consecutive_failures": 1
   },
   "NetApp::netapp_attempt2_v3": {
     "jobs": [],
-    "checked_at": 1787700269.130371,
+    "checked_at": 1787702060.4421468,
     "consecutive_failures": 1
   },
   "Aldi Ireland::batch_dedicated_v2": {
     "jobs": [],
-    "checked_at": 1787700275.8964508,
+    "checked_at": 1787702065.7314436,
     "consecutive_failures": 1
   },
   "QIAGEN": {
     "jobs": [],
-    "checked_at": 1787700281.95175,
+    "checked_at": 1787702071.2603421,
     "consecutive_failures": 1
   },
   "Fitch Ratings::next_recovery_batch7_v1": {
     "jobs": [],
-    "checked_at": 1787700283.8579934,
-    "consecutive_failures": 1
-  },
-  "Stryker::batch_dedicated_v1": {
-    "jobs": [],
-    "checked_at": 1787700288.4444063,
-    "consecutive_failures": 1
-  },
-  "Bristol Myers Squibb::batch_dedicated_v1": {
-    "jobs": [],
-    "checked_at": 1787700291.5342917,
-    "consecutive_failures": 1
-  },
-  "HP (Hewlett-Packard)::friend_next4_v1": {
-    "jobs": [],
-    "checked_at": 1787700300.8321128,
-    "consecutive_failures": 1
-  },
-  "Oracle::attempt2_plus_new_v2": {
-    "jobs": [],
-    "checked_at": 1787700301.1800544,
+    "checked_at": 1787702076.4796681,
     "consecutive_failures": 1
   },
   "Central Bank of Ireland": {
     "jobs": [],
-    "checked_at": 1787700305.7070897,
+    "checked_at": 1787702082.2661176,
     "consecutive_failures": 1
   },
-  "Willis Towers Watson (WTW)": {
+  "Bristol Myers Squibb::batch_dedicated_v1": {
     "jobs": [],
-    "checked_at": 1787700325.1112027,
+    "checked_at": 1787702082.6716728,
     "consecutive_failures": 1
   },
-  "Forvis Mazars Ireland::next_manual_batch_v2": {
+  "Oracle::attempt2_plus_new_v2": {
     "jobs": [],
-    "checked_at": 1787700334.7317984,
+    "checked_at": 1787702086.8572218,
+    "consecutive_failures": 1
+  },
+  "HP (Hewlett-Packard)::friend_next4_v1": {
+    "jobs": [],
+    "checked_at": 1787702087.5265052,
+    "consecutive_failures": 1
+  },
+  "Stryker::batch_dedicated_v1": {
+    "jobs": [],
+    "checked_at": 1787702089.0703146,
     "consecutive_failures": 1
   },
   "Red Hat": {
     "jobs": [],
-    "checked_at": 1787700339.3253527,
+    "checked_at": 1787702094.401042,
     "consecutive_failures": 1
   },
   "Cantor Fitzgerald Ireland::large_recovery_batch20_v1": {
     "jobs": [],
-    "checked_at": 1787700363.7768779,
+    "checked_at": 1787702096.673802,
+    "consecutive_failures": 1
+  },
+  "Forvis Mazars Ireland::next_manual_batch_v2": {
+    "jobs": [],
+    "checked_at": 1787702099.61462,
     "consecutive_failures": 1
   },
   "Glanbia / Tirlán::large_recovery_batch20_v1": {
     "jobs": [],
-    "checked_at": 1787700366.0762773,
+    "checked_at": 1787702103.5229182,
+    "consecutive_failures": 1
+  },
+  "Willis Towers Watson (WTW)": {
+    "jobs": [],
+    "checked_at": 1787702104.9969132,
     "consecutive_failures": 1
   },
   "UBS::large_recovery_batch20_v1": {
     "jobs": [],
-    "checked_at": 1787700370.6583998,
+    "checked_at": 1787702105.2225857,
     "consecutive_failures": 1
   },
   "Slalom::large_recovery_batch20_v1": {
     "jobs": [],
-    "checked_at": 1787700370.762009,
-    "consecutive_failures": 1
-  },
-  "ABP Food Group::large_recovery_batch20_v1": {
-    "jobs": [],
-    "checked_at": 1787700372.5173929,
+    "checked_at": 1787702105.8480773,
     "consecutive_failures": 1
   },
   "Zurich Insurance::large_recovery_batch20_v1": {
     "jobs": [],
-    "checked_at": 1787700374.9419947,
+    "checked_at": 1787702110.8089204,
     "consecutive_failures": 1
   },
-  "Aviva Ireland::next_recovery_batch7_v1": {
+  "ABP Food Group::large_recovery_batch20_v1": {
     "jobs": [],
-    "checked_at": 1787700375.535452,
+    "checked_at": 1787702111.4724603,
     "consecutive_failures": 1
   },
   "Alexion Pharmaceuticals::large_recovery_batch20_v1": {
     "jobs": [],
-    "checked_at": 1787700377.8028743,
+    "checked_at": 1787702111.970273,
     "consecutive_failures": 1
   },
   "Coillte::large_recovery_batch20_v1": {
     "jobs": [],
-    "checked_at": 1787700380.417004,
+    "checked_at": 1787702113.7812176,
     "consecutive_failures": 1
   },
   "Baxter International::large_recovery_batch20_v1": {
     "jobs": [],
-    "checked_at": 1787700380.7533672,
-    "consecutive_failures": 1
-  },
-  "Eir::large_recovery_batch20_v1": {
-    "jobs": [],
-    "checked_at": 1787700382.175109,
-    "consecutive_failures": 1
-  },
-  "Cook Medical::large_recovery_batch20_v1": {
-    "jobs": [],
-    "checked_at": 1787700384.7583625,
+    "checked_at": 1787702114.9426057,
     "consecutive_failures": 1
   },
   "Sky Ireland::large_recovery_batch20_v1": {
     "jobs": [],
-    "checked_at": 1787700385.7156997,
+    "checked_at": 1787702120.3210433,
+    "consecutive_failures": 1
+  },
+  "Eir::large_recovery_batch20_v1": {
+    "jobs": [],
+    "checked_at": 1787702120.4881907,
+    "consecutive_failures": 1
+  },
+  "Cook Medical::large_recovery_batch20_v1": {
+    "jobs": [],
+    "checked_at": 1787702121.570017,
     "consecutive_failures": 1
   },
   "Gas Networks Ireland::large_recovery_batch20_v1": {
     "jobs": [],
-    "checked_at": 1787700386.3140128,
+    "checked_at": 1787702121.604874,
     "consecutive_failures": 1
   },
   "Kepak Group::large_recovery_batch20_v1": {
     "jobs": [],
-    "checked_at": 1787700387.9718504,
-    "consecutive_failures": 1
-  },
-  "Boston Consulting Group (BCG)::large_recovery_batch20_v1": {
-    "jobs": [],
-    "checked_at": 1787700403.687076,
-    "consecutive_failures": 1
-  },
-  "ESB (Electricity Supply Board)": {
-    "jobs": [],
-    "checked_at": 1787700404.4639304,
-    "consecutive_failures": 1
-  },
-  "Revvity (PerkinElmer)": {
-    "jobs": [],
-    "checked_at": 1787700405.4755247,
+    "checked_at": 1787702122.5815454,
     "consecutive_failures": 1
   },
   "Haleon": {
     "jobs": [],
-    "checked_at": 1787700418.8115716,
+    "checked_at": 1787702129.743551,
+    "consecutive_failures": 1
+  },
+  "ESB (Electricity Supply Board)": {
+    "jobs": [],
+    "checked_at": 1787702131.5915625,
     "consecutive_failures": 1
   },
   "GlaxoSmithKline (GSK)": {
     "jobs": [],
-    "checked_at": 1787700419.9166343,
+    "checked_at": 1787702132.3512783,
+    "consecutive_failures": 1
+  },
+  "Revvity (PerkinElmer)": {
+    "jobs": [],
+    "checked_at": 1787702132.4974911,
+    "consecutive_failures": 1
+  },
+  "Boston Consulting Group (BCG)::large_recovery_batch20_v1": {
+    "jobs": [],
+    "checked_at": 1787702137.891523,
     "consecutive_failures": 1
   }
 }
