@@ -318,7 +318,7 @@
         "source": "amazon_json",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-26T02:28:24.607016+00:00",
         "posted_age_known": false
       },
@@ -333,7 +333,7 @@
         "source": "amazon_json",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-26T02:28:24.607016+00:00",
         "posted_age_known": false
       },
@@ -11342,7 +11342,7 @@
         "source": "microsoft_browser",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-26T02:28:24.607016+00:00",
         "posted_age_known": true
       },
@@ -12757,8 +12757,8 @@
   },
   "Goldman Sachs": {
     "jobs": [],
-    "checked_at": 1787710846.4911785,
-    "consecutive_failures": 117
+    "checked_at": 1787714685.1552029,
+    "consecutive_failures": 118
   },
   "Fiserv": {
     "jobs": [
@@ -13299,8 +13299,8 @@
   },
   "Databricks": {
     "jobs": [],
-    "checked_at": 1787710848.8284,
-    "consecutive_failures": 111
+    "checked_at": 1787714686.7147763,
+    "consecutive_failures": 112
   },
   "Infosys": {
     "jobs": [],
@@ -13329,8 +13329,8 @@
   },
   "Morgan Stanley": {
     "jobs": [],
-    "checked_at": 1787710843.7148185,
-    "consecutive_failures": 105
+    "checked_at": 1787714685.010647,
+    "consecutive_failures": 106
   },
   "Moody's": {
     "jobs": [],
@@ -13679,8 +13679,8 @@
   },
   "SuperValu / Musgrave": {
     "jobs": [],
-    "checked_at": 1787711224.7201197,
-    "consecutive_failures": 104
+    "checked_at": 1787714844.9437218,
+    "consecutive_failures": 105
   },
   "Tesco Ireland": {
     "jobs": [],
@@ -13689,8 +13689,8 @@
   },
   "Aer Lingus": {
     "jobs": [],
-    "checked_at": 1787710847.2235436,
-    "consecutive_failures": 104
+    "checked_at": 1787714686.752209,
+    "consecutive_failures": 105
   },
   "Akamai": {
     "jobs": [],
@@ -13704,8 +13704,8 @@
   },
   "An Post": {
     "jobs": [],
-    "checked_at": 1787711237.8234704,
-    "consecutive_failures": 104
+    "checked_at": 1787714852.3222404,
+    "consecutive_failures": 105
   },
   "ASML": {
     "jobs": [],
@@ -13714,48 +13714,48 @@
   },
   "Alkermes": {
     "jobs": [],
-    "checked_at": 1787711233.1809733,
-    "consecutive_failures": 104
+    "checked_at": 1787714851.6715312,
+    "consecutive_failures": 105
   },
   "Visa": {
     "jobs": [],
-    "checked_at": 1787710843.3388498,
-    "consecutive_failures": 101
+    "checked_at": 1787714684.0201797,
+    "consecutive_failures": 102
   },
   "Boehringer Ingelheim": {
     "jobs": [],
-    "checked_at": 1787711237.766169,
-    "consecutive_failures": 103
+    "checked_at": 1787714857.325223,
+    "consecutive_failures": 104
   },
   "Box": {
     "jobs": [],
-    "checked_at": 1787711242.326493,
-    "consecutive_failures": 103
+    "checked_at": 1787714858.647794,
+    "consecutive_failures": 104
   },
   "Atlassian": {
     "jobs": [],
-    "checked_at": 1787711241.1052518,
-    "consecutive_failures": 103
+    "checked_at": 1787714859.907228,
+    "consecutive_failures": 104
   },
   "Bruker": {
     "jobs": [],
-    "checked_at": 1787711242.292168,
-    "consecutive_failures": 103
+    "checked_at": 1787714859.1722956,
+    "consecutive_failures": 104
   },
   "Biotronik": {
     "jobs": [],
-    "checked_at": 1787711240.2834985,
-    "consecutive_failures": 103
+    "checked_at": 1787714857.6754763,
+    "consecutive_failures": 104
   },
   "Coloplast": {
     "jobs": [],
-    "checked_at": 1787711244.916399,
-    "consecutive_failures": 103
+    "checked_at": 1787714862.423719,
+    "consecutive_failures": 104
   },
   "Bord Gáis Energy": {
     "jobs": [],
-    "checked_at": 1787711244.778538,
-    "consecutive_failures": 103
+    "checked_at": 1787714862.1242936,
+    "consecutive_failures": 104
   },
   "Carbery Group": {
     "jobs": [],
@@ -13860,8 +13860,8 @@
   },
   "DSV Ireland": {
     "jobs": [],
-    "checked_at": 1787711249.8675308,
-    "consecutive_failures": 103
+    "checked_at": 1787714868.0028844,
+    "consecutive_failures": 104
   },
   "Bayer": {
     "jobs": [],
@@ -13875,8 +13875,8 @@
   },
   "Edwards Lifesciences": {
     "jobs": [],
-    "checked_at": 1787711218.7374165,
-    "consecutive_failures": 103
+    "checked_at": 1787714844.4916782,
+    "consecutive_failures": 104
   },
   "Dairygold": {
     "jobs": [],
@@ -13890,18 +13890,18 @@
   },
   "Energia Group": {
     "jobs": [],
-    "checked_at": 1787711246.662267,
-    "consecutive_failures": 103
+    "checked_at": 1787714864.2432554,
+    "consecutive_failures": 104
   },
   "EirGrid Group": {
     "jobs": [],
-    "checked_at": 1787711253.7448213,
-    "consecutive_failures": 103
+    "checked_at": 1787714867.057757,
+    "consecutive_failures": 104
   },
   "Hollister Incorporated": {
     "jobs": [],
-    "checked_at": 1787711252.680972,
-    "consecutive_failures": 102
+    "checked_at": 1787714867.5434775,
+    "consecutive_failures": 103
   },
   "FedEx Express Ireland": {
     "jobs": [],
@@ -14066,33 +14066,33 @@
   },
   "Irish Distillers (Pernod Ricard)": {
     "jobs": [],
-    "checked_at": 1787711255.5096605,
-    "consecutive_failures": 101
+    "checked_at": 1787714871.7495034,
+    "consecutive_failures": 102
   },
   "Micron Technology": {
     "jobs": [],
-    "checked_at": 1787711258.3872604,
-    "consecutive_failures": 101
+    "checked_at": 1787714873.2166712,
+    "consecutive_failures": 102
   },
   "Nokia": {
     "jobs": [],
-    "checked_at": 1787711260.2290134,
-    "consecutive_failures": 101
+    "checked_at": 1787714874.8611608,
+    "consecutive_failures": 102
   },
   "Marvell Technology": {
     "jobs": [],
-    "checked_at": 1787711259.7981155,
-    "consecutive_failures": 101
+    "checked_at": 1787714876.0279214,
+    "consecutive_failures": 102
   },
   "Insulet Corporation": {
     "jobs": [],
-    "checked_at": 1787711255.8589113,
-    "consecutive_failures": 101
+    "checked_at": 1787714870.8136237,
+    "consecutive_failures": 102
   },
   "Medpace": {
     "jobs": [],
-    "checked_at": 1787711258.504694,
-    "consecutive_failures": 101
+    "checked_at": 1787714875.1194053,
+    "consecutive_failures": 102
   },
   "Irish Ferries": {
     "jobs": [],
@@ -14418,23 +14418,23 @@
   },
   "Ornua": {
     "jobs": [],
-    "checked_at": 1787711265.2711275,
-    "consecutive_failures": 99
+    "checked_at": 1787714881.0220478,
+    "consecutive_failures": 100
   },
   "Shannon Airport Group": {
     "jobs": [],
-    "checked_at": 1787711263.1429873,
-    "consecutive_failures": 99
+    "checked_at": 1787714876.4594388,
+    "consecutive_failures": 100
   },
   "Slack": {
     "jobs": [],
-    "checked_at": 1787711267.5043197,
-    "consecutive_failures": 99
+    "checked_at": 1787714884.4925303,
+    "consecutive_failures": 100
   },
   "Smurfit Westrock": {
     "jobs": [],
-    "checked_at": 1787711271.8223703,
-    "consecutive_failures": 99
+    "checked_at": 1787714889.661252,
+    "consecutive_failures": 100
   },
   "Stena Line Ireland": {
     "jobs": [],
@@ -14443,8 +14443,8 @@
   },
   "Syneos Health": {
     "jobs": [],
-    "checked_at": 1787711274.922425,
-    "consecutive_failures": 98
+    "checked_at": 1787714891.4140086,
+    "consecutive_failures": 99
   },
   "ResMed": {
     "jobs": [],
@@ -14458,23 +14458,23 @@
   },
   "Teva Pharmaceuticals": {
     "jobs": [],
-    "checked_at": 1787711220.6580563,
-    "consecutive_failures": 99
+    "checked_at": 1787714846.7871852,
+    "consecutive_failures": 100
   },
   "Texas Instruments": {
     "jobs": [],
-    "checked_at": 1787711273.9944491,
-    "consecutive_failures": 98
+    "checked_at": 1787714889.554315,
+    "consecutive_failures": 99
   },
   "Uisce Éireann (Irish Water)": {
     "jobs": [],
-    "checked_at": 1787711277.350299,
-    "consecutive_failures": 98
+    "checked_at": 1787714890.943348,
+    "consecutive_failures": 99
   },
   "WuXi Biologics": {
     "jobs": [],
-    "checked_at": 1787711285.9686122,
-    "consecutive_failures": 98
+    "checked_at": 1787714900.8381639,
+    "consecutive_failures": 99
   },
   "Waters Corporation": {
     "jobs": [],
@@ -16046,7 +16046,7 @@
         "source": "siemens_direct_http",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-26T02:28:24.607016+00:00",
         "posted_age_known": false
       },
@@ -16061,7 +16061,7 @@
         "source": "siemens_direct_http",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-26T02:28:24.607016+00:00",
         "posted_age_known": false
       },
@@ -16076,7 +16076,7 @@
         "source": "siemens_direct_http",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-26T02:28:24.607016+00:00",
         "posted_age_known": false
       },
@@ -16091,7 +16091,7 @@
         "source": "siemens_direct_http",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-26T02:28:24.607016+00:00",
         "posted_age_known": false
       },
@@ -16992,8 +16992,8 @@
   },
   "Tesco Ireland::batch_dedicated_v1": {
     "jobs": [],
-    "checked_at": 1787711017.4164593,
-    "consecutive_failures": 59
+    "checked_at": 1787714736.2479262,
+    "consecutive_failures": 60
   },
   "AstraZeneca::batch_dedicated_v1": {
     "jobs": [
@@ -17068,7 +17068,7 @@
         "source": "astrazeneca_first_party",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-26T02:28:24.607016+00:00",
         "posted_age_known": false
       },
@@ -17605,7 +17605,7 @@
         "source": "novartis_first_party",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-26T02:28:24.607016+00:00",
         "posted_age_known": false
       },
@@ -17705,8 +17705,8 @@
   },
   "DXC Technology::friend_logic_v1": {
     "jobs": [],
-    "checked_at": 1787710942.7191262,
-    "consecutive_failures": 59
+    "checked_at": 1787714683.458018,
+    "consecutive_failures": 60
   },
   "Tata Consultancy Services (TCS)::friend_logic_v1": {
     "jobs": [
@@ -18448,8 +18448,8 @@
   },
   "Deutsche Bank::friend_logic_v1": {
     "jobs": [],
-    "checked_at": 1787711136.954441,
-    "consecutive_failures": 59
+    "checked_at": 1787714773.1969433,
+    "consecutive_failures": 60
   },
   "Intel::friend_logic_v1": {
     "jobs": [
@@ -19494,8 +19494,8 @@
   },
   "Coca-Cola HBC Ireland::friend_nonlive_batch10_v1": {
     "jobs": [],
-    "checked_at": 1787711085.1342685,
-    "consecutive_failures": 49
+    "checked_at": 1787714747.572694,
+    "consecutive_failures": 50
   },
   "Agilent Technologies::friend_nonlive_batch10_v1": {
     "jobs": [
@@ -19742,13 +19742,13 @@
   },
   "Infosys::friend_nonlive_batch10_v1": {
     "jobs": [],
-    "checked_at": 1787711134.935343,
-    "consecutive_failures": 48
+    "checked_at": 1787714802.3403034,
+    "consecutive_failures": 49
   },
   "Heineken Ireland::friend_next4_v1": {
     "jobs": [],
-    "checked_at": 1787710833.48186,
-    "consecutive_failures": 48
+    "checked_at": 1787714686.3620474,
+    "consecutive_failures": 49
   },
   "VHI Healthcare::friend_next4_v1": {
     "jobs": [
@@ -20505,8 +20505,8 @@
   },
   "McKinsey & Company::attempt2_plus_new_v2": {
     "jobs": [],
-    "checked_at": 1787710855.9845285,
-    "consecutive_failures": 45
+    "checked_at": 1787714708.2970195,
+    "consecutive_failures": 46
   },
   "Schneider Electric::attempt2_plus_new_v2": {
     "jobs": [],
@@ -22654,7 +22654,7 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1787702072.6946373,
+    "checked_at": 1787714718.8337364,
     "consecutive_failures": 0
   },
   "Ryanair::next_companies_3_direct_v1": {
@@ -23588,7 +23588,7 @@
         "source": "jacobs_ireland_newbatch",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-26T02:28:24.607016+00:00",
         "posted_age_known": false
       },
@@ -23663,180 +23663,225 @@
         "title": "Single Position",
         "location": "Republic of Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.dexcom.com/careers/job/41103066?domain=dexcom.com",
         "source": "dexcom_rendered_attempt2",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-25T12:05:01.902124+00:00",
+        "posted_age_known": false
       },
       {
         "company": "Dexcom",
         "title": "Single Position",
         "location": "Republic of Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.dexcom.com/careers/job/41131760?domain=dexcom.com",
         "source": "dexcom_rendered_attempt2",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-25T12:05:01.902124+00:00",
+        "posted_age_known": false
       },
       {
         "company": "Dexcom",
         "title": "Single Position",
         "location": "Republic of Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.dexcom.com/careers/job/41885399?domain=dexcom.com",
         "source": "dexcom_rendered_attempt2",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-26T03:28:38.467743+00:00",
+        "posted_age_known": false
       },
       {
         "company": "Dexcom",
         "title": "Single Position",
         "location": "Republic of Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.dexcom.com/careers/job/42572721?domain=dexcom.com",
         "source": "dexcom_rendered_attempt2",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-25T12:05:01.902124+00:00",
+        "posted_age_known": false
       },
       {
         "company": "Dexcom",
         "title": "Single Position",
         "location": "Republic of Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.dexcom.com/careers/job/42572978?domain=dexcom.com",
         "source": "dexcom_rendered_attempt2",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-25T12:05:01.902124+00:00",
+        "posted_age_known": false
       },
       {
         "company": "Dexcom",
         "title": "Single Position",
         "location": "Galway, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.dexcom.com/careers/job/42801044?domain=dexcom.com",
         "source": "dexcom_rendered_attempt2",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-26T03:28:38.467743+00:00",
+        "posted_age_known": false
       },
       {
         "company": "Dexcom",
         "title": "Single Position",
         "location": "Republic of Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.dexcom.com/careers/job/42870380?domain=dexcom.com",
         "source": "dexcom_rendered_attempt2",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-25T12:05:01.902124+00:00",
+        "posted_age_known": false
       },
       {
         "company": "Dexcom",
         "title": "Single Position",
         "location": "Republic of Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.dexcom.com/careers/job/42911007?domain=dexcom.com",
         "source": "dexcom_rendered_attempt2",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-26T03:28:38.467743+00:00",
+        "posted_age_known": false
       },
       {
         "company": "Dexcom",
         "title": "Single Position",
         "location": "Republic of Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.dexcom.com/careers/job/43337015?domain=dexcom.com",
         "source": "dexcom_rendered_attempt2",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-25T12:05:01.902124+00:00",
+        "posted_age_known": false
       },
       {
         "company": "Dexcom",
         "title": "Single Position",
         "location": "Republic of Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.dexcom.com/careers/job/43814179?domain=dexcom.com",
         "source": "dexcom_rendered_attempt2",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-25T21:53:06.217977+00:00",
+        "posted_age_known": false
       },
       {
         "company": "Dexcom",
         "title": "Single Position",
         "location": "Republic of Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.dexcom.com/careers/job/43814191?domain=dexcom.com",
         "source": "dexcom_rendered_attempt2",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-26T03:28:38.467743+00:00",
+        "posted_age_known": false
       },
       {
         "company": "Dexcom",
         "title": "Single Position",
         "location": "Republic of Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.dexcom.com/careers/job/43821696?domain=dexcom.com",
         "source": "dexcom_rendered_attempt2",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-25T21:53:06.217977+00:00",
+        "posted_age_known": false
       },
       {
         "company": "Dexcom",
         "title": "Single Position",
         "location": "Republic of Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.dexcom.com/careers/job/43943818?domain=dexcom.com",
         "source": "dexcom_rendered_attempt2",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-26T03:28:38.467743+00:00",
+        "posted_age_known": false
       },
       {
         "company": "Dexcom",
         "title": "Single Position",
         "location": "Republic of Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.dexcom.com/careers/job/44087099?domain=dexcom.com",
         "source": "dexcom_rendered_attempt2",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-26T03:28:38.467743+00:00",
+        "posted_age_known": false
       },
       {
         "company": "Dexcom",
         "title": "Single Position",
         "location": "Republic of Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.dexcom.com/careers/job/44092355?domain=dexcom.com",
         "source": "dexcom_rendered_attempt2",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-25T15:08:04.285170+00:00",
+        "posted_age_known": false
       }
     ],
     "checked_at": 1787710895.5163846,
@@ -23855,7 +23900,7 @@
         "source": "arcadis_ireland_newbatch",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-26T02:28:24.607016+00:00",
         "posted_age_known": false
       },
@@ -24056,204 +24101,255 @@
         "title": "Associate Engineer (Transportation)",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.atkinsrealis.com/en/jobs/associate-engineer-transportation-r-156196",
         "source": "atkinsrealis_ireland_newbatch",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-25T12:38:48.567655+00:00",
+        "posted_age_known": false
       },
       {
         "company": "AtkinsRéalis",
         "title": "Construction Quality Manager",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.atkinsrealis.com/en/jobs/construction-quality-manager-r-159973",
         "source": "atkinsrealis_ireland_newbatch",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-25T12:38:48.567655+00:00",
+        "posted_age_known": false
       },
       {
         "company": "AtkinsRéalis",
         "title": "Hydraulic Modeller",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.atkinsrealis.com/en/jobs/hydraulic-modeller-r-158957",
         "source": "atkinsrealis_ireland_newbatch",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-25T12:38:48.567655+00:00",
+        "posted_age_known": false
       },
       {
         "company": "AtkinsRéalis",
         "title": "Hydromorphologist",
         "location": "Cork, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.atkinsrealis.com/en/jobs/hydromorphologist-r-157592",
         "source": "atkinsrealis_ireland_newbatch",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-25T12:38:48.567655+00:00",
+        "posted_age_known": false
       },
       {
         "company": "AtkinsRéalis",
         "title": "Principal EIA Consultant Energy",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.atkinsrealis.com/en/jobs/principal-eia-consultant-energy-r-162250",
         "source": "atkinsrealis_ireland_newbatch",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-25T12:38:48.567655+00:00",
+        "posted_age_known": false
       },
       {
         "company": "AtkinsRéalis",
         "title": "Principal EIA Consultant",
         "location": "Cork, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.atkinsrealis.com/en/jobs/principal-eia-consultant-r-161681",
         "source": "atkinsrealis_ireland_newbatch",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-25T12:38:48.567655+00:00",
+        "posted_age_known": false
       },
       {
         "company": "AtkinsRéalis",
         "title": "Principal Electrical Engineer",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.atkinsrealis.com/en/jobs/principal-electrical-engineer-r-158426",
         "source": "atkinsrealis_ireland_newbatch",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-25T12:38:48.567655+00:00",
+        "posted_age_known": false
       },
       {
         "company": "AtkinsRéalis",
         "title": "Principal Environmental Impact Assessment Consultant",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.atkinsrealis.com/en/jobs/principal-environmental-impact-assessment-consultant-r-162249",
         "source": "atkinsrealis_ireland_newbatch",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-25T12:38:48.567655+00:00",
+        "posted_age_known": false
       },
       {
         "company": "AtkinsRéalis",
         "title": "Professional Head of Discipline - Asset Management",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.atkinsrealis.com/en/jobs/professional-head-of-discipline-asset-management-r-160492",
         "source": "atkinsrealis_ireland_newbatch",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-25T12:38:48.567655+00:00",
+        "posted_age_known": false
       },
       {
         "company": "AtkinsRéalis",
         "title": "Project Manager (Transportation)",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.atkinsrealis.com/en/jobs/project-manager-transportation-r-156193",
         "source": "atkinsrealis_ireland_newbatch",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-25T12:38:48.567655+00:00",
+        "posted_age_known": false
       },
       {
         "company": "AtkinsRéalis",
         "title": "Rail - Civils/Structural Lead",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.atkinsrealis.com/en/jobs/rail-civils-structural-lead-r-153414",
         "source": "atkinsrealis_ireland_newbatch",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-25T12:38:48.567655+00:00",
+        "posted_age_known": false
       },
       {
         "company": "AtkinsRéalis",
         "title": "Resident Engineer",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.atkinsrealis.com/en/jobs/resident-engineer-r-153745",
         "source": "atkinsrealis_ireland_newbatch",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-25T12:38:48.567655+00:00",
+        "posted_age_known": false
       },
       {
         "company": "AtkinsRéalis",
         "title": "Senior Ecologist",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.atkinsrealis.com/en/jobs/senior-ecologist-r-156573",
         "source": "atkinsrealis_ireland_newbatch",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-25T12:38:48.567655+00:00",
+        "posted_age_known": false
       },
       {
         "company": "AtkinsRéalis",
         "title": "Senior Water Engineer",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.atkinsrealis.com/en/jobs/senior-water-engineer-r-159573",
         "source": "atkinsrealis_ireland_newbatch",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-25T12:38:48.567655+00:00",
+        "posted_age_known": false
       },
       {
         "company": "AtkinsRéalis",
         "title": "Senior Water Engineer",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.atkinsrealis.com/en/jobs/senior-water-engineer-r-159575",
         "source": "atkinsrealis_ireland_newbatch",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-25T12:38:48.567655+00:00",
+        "posted_age_known": false
       },
       {
         "company": "AtkinsRéalis",
         "title": "Senior Water Engineer",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.atkinsrealis.com/en/jobs/senior-water-engineer-r-159576",
         "source": "atkinsrealis_ireland_newbatch",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-25T12:38:48.567655+00:00",
+        "posted_age_known": false
       },
       {
         "company": "AtkinsRéalis",
         "title": "Senior Water/Wastewater Process Engineer",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.atkinsrealis.com/en/jobs/senior-water-wastewater-process-engineer-r-160818",
         "source": "atkinsrealis_ireland_newbatch",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-25T12:38:48.567655+00:00",
+        "posted_age_known": false
       }
     ],
     "checked_at": 1787710978.0710535,
@@ -24261,13 +24357,13 @@
   },
   "Schneider Electric::final_attempt_v3": {
     "jobs": [],
-    "checked_at": 1787711107.3681087,
-    "consecutive_failures": 16
+    "checked_at": 1787714756.172551,
+    "consecutive_failures": 17
   },
   "Honeywell::final_attempt_v3": {
     "jobs": [],
-    "checked_at": 1787711186.4725869,
-    "consecutive_failures": 15
+    "checked_at": 1787714822.301122,
+    "consecutive_failures": 16
   },
   "Aldi Ireland": {
     "jobs": [
@@ -29794,58 +29890,58 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1787702095.9762313,
+    "checked_at": 1787714767.3960536,
     "consecutive_failures": 0
   },
   "Dynatrace::next_manual_batch_v2": {
     "jobs": [],
-    "checked_at": 1787711160.8085108,
-    "consecutive_failures": 14
+    "checked_at": 1787714783.7768693,
+    "consecutive_failures": 15
   },
   "FTI Consulting::next_manual_batch_v2": {
     "jobs": [],
-    "checked_at": 1787711174.7439363,
-    "consecutive_failures": 14
+    "checked_at": 1787714787.4906497,
+    "consecutive_failures": 15
   },
   "FactSet::next_manual_batch_v2": {
     "jobs": [],
-    "checked_at": 1787711171.4028244,
-    "consecutive_failures": 14
+    "checked_at": 1787714789.3442276,
+    "consecutive_failures": 15
   },
   "Moody's::next_manual_batch_v2": {
     "jobs": [],
-    "checked_at": 1787711177.9129407,
-    "consecutive_failures": 14
+    "checked_at": 1787714794.8652766,
+    "consecutive_failures": 15
   },
   "Morningstar::next_manual_batch_v2": {
     "jobs": [],
-    "checked_at": 1787711179.085904,
-    "consecutive_failures": 14
+    "checked_at": 1787714797.6418762,
+    "consecutive_failures": 15
   },
   "Macquarie Group::next_manual_batch_v2": {
     "jobs": [],
-    "checked_at": 1787711179.2649403,
-    "consecutive_failures": 14
+    "checked_at": 1787714794.5863729,
+    "consecutive_failures": 15
   },
   "MSCI::next_manual_batch_v2": {
     "jobs": [],
-    "checked_at": 1787711174.4107046,
-    "consecutive_failures": 14
+    "checked_at": 1787714793.1377673,
+    "consecutive_failures": 15
   },
   "Refinitiv (LSEG)::next_manual_batch_v2": {
     "jobs": [],
-    "checked_at": 1787711182.6640677,
-    "consecutive_failures": 14
+    "checked_at": 1787714803.0570416,
+    "consecutive_failures": 15
   },
   "Societe Generale::next_manual_batch_v2": {
     "jobs": [],
-    "checked_at": 1787711186.1001413,
-    "consecutive_failures": 14
+    "checked_at": 1787714802.3601105,
+    "consecutive_failures": 15
   },
   "Splunk::next_manual_batch_v2": {
     "jobs": [],
-    "checked_at": 1787711189.2092152,
-    "consecutive_failures": 14
+    "checked_at": 1787714807.6820657,
+    "consecutive_failures": 15
   },
   "Greencore::next_manual_batch_v2": {
     "jobs": [],
@@ -29854,8 +29950,8 @@
   },
   "Protiviti::next_manual_batch_v2": {
     "jobs": [],
-    "checked_at": 1787711189.9359624,
-    "consecutive_failures": 14
+    "checked_at": 1787714812.9008703,
+    "consecutive_failures": 15
   },
   "Bayer::next_manual_batch_v2": {
     "jobs": [],
@@ -29864,8 +29960,8 @@
   },
   "Oliver Wyman::next_manual_batch_v2": {
     "jobs": [],
-    "checked_at": 1787711190.5587585,
-    "consecutive_failures": 14
+    "checked_at": 1787714816.650762,
+    "consecutive_failures": 15
   },
   "BDO Ireland::next_recovery_batch7_v1": {
     "jobs": [
@@ -30040,8 +30136,8 @@
   },
   "Greencore::next_recovery_batch7_v1": {
     "jobs": [],
-    "checked_at": 1787710878.4164712,
-    "consecutive_failures": 15
+    "checked_at": 1787714695.3739605,
+    "consecutive_failures": 16
   },
   "Baker Tilly Ireland::next_recovery_batch7_v1": {
     "jobs": [
@@ -30237,33 +30333,33 @@
   },
   "Bayer::next_recovery_batch7_v1": {
     "jobs": [],
-    "checked_at": 1787710932.3857274,
-    "consecutive_failures": 13
+    "checked_at": 1787714738.984042,
+    "consecutive_failures": 14
   },
   "Alvarez & Marsal::large_recovery_batch20_v1": {
     "jobs": [],
-    "checked_at": 1787711208.9323125,
-    "consecutive_failures": 13
+    "checked_at": 1787714834.8392143,
+    "consecutive_failures": 14
   },
   "Bain & Company::large_recovery_batch20_v1": {
     "jobs": [],
-    "checked_at": 1787711219.1851103,
-    "consecutive_failures": 13
+    "checked_at": 1787714843.485603,
+    "consecutive_failures": 14
   },
   "Akamai::large_recovery_batch20_v1": {
     "jobs": [],
-    "checked_at": 1787711213.7145734,
-    "consecutive_failures": 13
+    "checked_at": 1787714840.216075,
+    "consecutive_failures": 14
   },
   "AerCap::large_recovery_batch20_v1": {
     "jobs": [],
-    "checked_at": 1787711217.066891,
-    "consecutive_failures": 13
+    "checked_at": 1787714842.8236904,
+    "consecutive_failures": 14
   },
   "ASML::large_recovery_batch20_v1": {
     "jobs": [],
-    "checked_at": 1787711219.0764775,
-    "consecutive_failures": 13
+    "checked_at": 1787714844.0493212,
+    "consecutive_failures": 14
   },
   "Aiven": {
     "jobs": [
@@ -30765,177 +30861,177 @@
   },
   "Regeneron": {
     "jobs": [],
-    "checked_at": 1787710839.473087,
+    "checked_at": 1787714684.7993538,
     "consecutive_failures": 1
   },
   "BNY Mellon": {
     "jobs": [],
-    "checked_at": 1787710846.2225378,
+    "checked_at": 1787714686.4366481,
     "consecutive_failures": 1
   },
   "NetApp::netapp_attempt2_v3": {
     "jobs": [],
-    "checked_at": 1787710873.570329,
-    "consecutive_failures": 1
-  },
-  "QIAGEN": {
-    "jobs": [],
-    "checked_at": 1787710876.3292713,
-    "consecutive_failures": 1
-  },
-  "Fitch Ratings::next_recovery_batch7_v1": {
-    "jobs": [],
-    "checked_at": 1787710925.2049255,
+    "checked_at": 1787714706.6540956,
     "consecutive_failures": 1
   },
   "Dell Technologies::batch_dedicated_v1": {
     "jobs": [],
-    "checked_at": 1787711003.0655642,
+    "checked_at": 1787714712.214911,
+    "consecutive_failures": 1
+  },
+  "QIAGEN": {
+    "jobs": [],
+    "checked_at": 1787714721.919091,
+    "consecutive_failures": 1
+  },
+  "Fitch Ratings::next_recovery_batch7_v1": {
+    "jobs": [],
+    "checked_at": 1787714724.0600572,
     "consecutive_failures": 1
   },
   "Aldi Ireland::batch_dedicated_v2": {
     "jobs": [],
-    "checked_at": 1787711012.9240584,
+    "checked_at": 1787714725.639612,
     "consecutive_failures": 1
   },
   "Bristol Myers Squibb::batch_dedicated_v1": {
     "jobs": [],
-    "checked_at": 1787711015.9846752,
-    "consecutive_failures": 1
-  },
-  "Aviva Ireland::next_recovery_batch7_v1": {
-    "jobs": [],
-    "checked_at": 1787711026.0269547,
+    "checked_at": 1787714729.9296281,
     "consecutive_failures": 1
   },
   "Stryker::batch_dedicated_v1": {
     "jobs": [],
-    "checked_at": 1787711042.1718314,
+    "checked_at": 1787714737.9173417,
     "consecutive_failures": 1
   },
   "Oracle::attempt2_plus_new_v2": {
     "jobs": [],
-    "checked_at": 1787711096.2536392,
+    "checked_at": 1787714748.1724286,
     "consecutive_failures": 1
   },
   "HP (Hewlett-Packard)::friend_next4_v1": {
     "jobs": [],
-    "checked_at": 1787711099.1663945,
+    "checked_at": 1787714749.675664,
     "consecutive_failures": 1
   },
   "Central Bank of Ireland": {
     "jobs": [],
-    "checked_at": 1787711114.9580674,
+    "checked_at": 1787714752.264713,
     "consecutive_failures": 1
   },
   "Red Hat": {
     "jobs": [],
-    "checked_at": 1787711136.8993542,
-    "consecutive_failures": 1
-  },
-  "Forvis Mazars Ireland::next_manual_batch_v2": {
-    "jobs": [],
-    "checked_at": 1787711163.1743243,
+    "checked_at": 1787714760.3090005,
     "consecutive_failures": 1
   },
   "Willis Towers Watson (WTW)": {
     "jobs": [],
-    "checked_at": 1787711171.7716796,
+    "checked_at": 1787714773.703147,
+    "consecutive_failures": 1
+  },
+  "Forvis Mazars Ireland::next_manual_batch_v2": {
+    "jobs": [],
+    "checked_at": 1787714781.0756564,
     "consecutive_failures": 1
   },
   "Cantor Fitzgerald Ireland::large_recovery_batch20_v1": {
     "jobs": [],
-    "checked_at": 1787711192.1256042,
+    "checked_at": 1787714812.798758,
     "consecutive_failures": 1
   },
   "Glanbia / Tirlán::large_recovery_batch20_v1": {
     "jobs": [],
-    "checked_at": 1787711193.386375,
+    "checked_at": 1787714815.3701773,
     "consecutive_failures": 1
   },
-  "Slalom::large_recovery_batch20_v1": {
+  "Aviva Ireland::next_recovery_batch7_v1": {
     "jobs": [],
-    "checked_at": 1787711193.941004,
+    "checked_at": 1787714817.0985427,
     "consecutive_failures": 1
   },
   "UBS::large_recovery_batch20_v1": {
     "jobs": [],
-    "checked_at": 1787711196.6769352,
+    "checked_at": 1787714819.294549,
+    "consecutive_failures": 1
+  },
+  "Slalom::large_recovery_batch20_v1": {
+    "jobs": [],
+    "checked_at": 1787714821.8199718,
     "consecutive_failures": 1
   },
   "ABP Food Group::large_recovery_batch20_v1": {
     "jobs": [],
-    "checked_at": 1787711198.0392134,
+    "checked_at": 1787714823.159825,
     "consecutive_failures": 1
   },
   "Alexion Pharmaceuticals::large_recovery_batch20_v1": {
     "jobs": [],
-    "checked_at": 1787711199.2155075,
+    "checked_at": 1787714823.7900293,
     "consecutive_failures": 1
   },
   "Zurich Insurance::large_recovery_batch20_v1": {
     "jobs": [],
-    "checked_at": 1787711202.0163867,
-    "consecutive_failures": 1
-  },
-  "Coillte::large_recovery_batch20_v1": {
-    "jobs": [],
-    "checked_at": 1787711202.521978,
+    "checked_at": 1787714825.5103185,
     "consecutive_failures": 1
   },
   "Baxter International::large_recovery_batch20_v1": {
     "jobs": [],
-    "checked_at": 1787711204.2151346,
-    "consecutive_failures": 1
-  },
-  "Cook Medical::large_recovery_batch20_v1": {
-    "jobs": [],
-    "checked_at": 1787711205.614341,
+    "checked_at": 1787714828.5501823,
     "consecutive_failures": 1
   },
   "Eir::large_recovery_batch20_v1": {
     "jobs": [],
-    "checked_at": 1787711207.376502,
+    "checked_at": 1787714829.695147,
     "consecutive_failures": 1
   },
-  "Sky Ireland::large_recovery_batch20_v1": {
+  "Coillte::large_recovery_batch20_v1": {
     "jobs": [],
-    "checked_at": 1787711207.6415484,
+    "checked_at": 1787714830.269325,
     "consecutive_failures": 1
   },
   "Gas Networks Ireland::large_recovery_batch20_v1": {
     "jobs": [],
-    "checked_at": 1787711208.829709,
+    "checked_at": 1787714832.6982546,
     "consecutive_failures": 1
   },
   "Kepak Group::large_recovery_batch20_v1": {
     "jobs": [],
-    "checked_at": 1787711211.3724484,
+    "checked_at": 1787714834.290772,
+    "consecutive_failures": 1
+  },
+  "Sky Ireland::large_recovery_batch20_v1": {
+    "jobs": [],
+    "checked_at": 1787714834.4951968,
+    "consecutive_failures": 1
+  },
+  "Cook Medical::large_recovery_batch20_v1": {
+    "jobs": [],
+    "checked_at": 1787714836.7292433,
     "consecutive_failures": 1
   },
   "Boston Consulting Group (BCG)::large_recovery_batch20_v1": {
     "jobs": [],
-    "checked_at": 1787711222.9513032,
+    "checked_at": 1787714849.4669645,
     "consecutive_failures": 1
   },
   "ESB (Electricity Supply Board)": {
     "jobs": [],
-    "checked_at": 1787711230.8000932,
+    "checked_at": 1787714853.4411013,
     "consecutive_failures": 1
   },
   "Revvity (PerkinElmer)": {
     "jobs": [],
-    "checked_at": 1787711232.5504751,
+    "checked_at": 1787714854.1112301,
     "consecutive_failures": 1
   },
   "Haleon": {
     "jobs": [],
-    "checked_at": 1787711250.735504,
+    "checked_at": 1787714868.6558268,
     "consecutive_failures": 1
   },
   "GlaxoSmithKline (GSK)": {
     "jobs": [],
-    "checked_at": 1787711252.6449175,
+    "checked_at": 1787714870.3260431,
     "consecutive_failures": 1
   }
 }
