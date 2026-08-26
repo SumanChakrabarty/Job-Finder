@@ -10300,7 +10300,38 @@ def scrape_large_unresolved_batch(company_name, career_url, session):
     return scrape_priority_sheet2_generic(company_name, career_url, session)
 
 
+
+
+def scrape_runtime_safe_alt(company_name, career_url, session):
+    """Runtime-safe attempt 2: ONE alternate Ireland-specific first-party URL.
+    No multi-seed crawling. Strict ROI/detail verification remains unchanged."""
+    if not career_url:
+        return []
+    try:
+        parsed = urllib.parse.urlparse(career_url)
+        scheme = parsed.scheme or "https"
+        host = parsed.netloc.lower()
+        if not host:
+            return []
+        origin = f"{scheme}://{host}"
+    except Exception:
+        return []
+
+    # Exactly one alternate seed to protect runtime.
+    alt = origin + "/jobs?location=Ireland"
+    return _batch_first_party_roi_scrape(
+        company_name,
+        [alt],
+        [host],
+        ["/job/", "/jobs/", "/vacancy/", "/vacancies/", "/careers/job/", "/positions/"],
+        session,
+        "runtime_safe_alt",
+        25,
+    )
+
+
 def main():
+    print("=== RUNTIME_SAFE_NEXT20 ACTIVE: 20 unresolved companies get ONE alternate first-party Ireland URL; runtime architecture untouched ===")
     print("=== RUNTIME_SAFE_BASELINE ACTIVE: expensive NEXT_20_ATTEMPT2 removed; existing proven routes preserved ===")
     print("=== LARGE_RECOVERY_BATCH_20 ACTIVE: 20 unresolved companies forced into one run with fresh cache; live routes untouched ===")
     print("=== NEXT_RECOVERY_BATCH_7 ACTIVE: Baker Tilly/Greencore/AMD/Bayer attempt2 + BDO/Aviva/Fitch current first-party routes; live routes untouched ===")
@@ -10732,26 +10763,26 @@ def main():
 
 
     _large_recovery_batch20_names = {
-        'cantor fitzgerald ireland',
-        'glanbia / tirlán',
-        'slalom',
-        'ubs',
-        'zurich insurance',
-        'abp food group',
-        'alexion pharmaceuticals',
-        'baxter international',
-        'coillte',
-        'cook medical',
-        'eir',
-        'gas networks ireland',
-        'kepak group',
-        'sky ireland',
-        'alvarez & marsal',
-        'bain & company',
-        'boston consulting group (bcg)',
-        'asml',
-        'aercap',
-        'akamai'
+        'edwards lifesciences',
+        'teva pharmaceuticals',
+        'revvity (perkinelmer)',
+        'an post',
+        'atlassian',
+        'glaxosmithkline (gsk)',
+        'irish distillers (pernod ricard)',
+        'marvell technology',
+        'medpace',
+        'micron technology',
+        'nokia',
+        'ornua',
+        'shannon airport group',
+        'slack',
+        'smurfit westrock',
+        'syneos health',
+        'texas instruments',
+        'uisce éireann (irish water)',
+        'waters corporation',
+        'wuxi biologics',
     }
     _large_recovery_rows = [
         c for c in companies
@@ -11097,18 +11128,18 @@ def main():
         def _make_large_recovery_task(name=_name, u=_entry["url"]):
             return lambda: cached_browser_scrape(
                 browser_cache,
-                f"{name}::large_recovery_batch20_v1",
-                lambda: scrape_large_unresolved_batch(name, u, session),
+                f"{name}::runtime_safe_next20_v1",
+                lambda: scrape_runtime_safe_alt(name, u, session),
                 0,
                 name,
             )
 
         task_list.append(
-            ("large_recovery_batch20", _name, _make_large_recovery_task(), 75, True)
+            ("runtime_safe_next20", _name, _make_large_recovery_task(), 30, True)
         )
         _large_batch_queued.append(_name)
 
-    print(f"=== Large recovery batch: {len(_large_batch_queued)}/20 targets queued before final dedupe ===")
+    print(f"=== Runtime-safe next20: {len(_large_batch_queued)}/20 targets queued before final dedupe ===")
     if _large_batch_queued:
         print("  -> " + ", ".join(_large_batch_queued))
 
