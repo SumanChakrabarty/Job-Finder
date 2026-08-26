@@ -8382,19 +8382,96 @@ def scrape_dell_ireland(session):
 
 
 def scrape_tesco_ireland(session):
-    return _batch_first_party_roi_scrape(
-        "Tesco Ireland",
-        [
-            "https://apply.tesco-careers.com/v2/job/search?location=Dublin&location_country=106",
-            "https://apply.tesco-careers.com/v2/job/search?location=Cork&location_country=106",
-            "https://apply.tesco-careers.com/v2/job/search?location_country=106",
-        ],
-        ["apply.tesco-careers.com"],
-        ["/v2/job/"],
-        session,
-        "tesco_first_party",
-        45,
-    )
+    """Tesco Ireland via current official application site, plain HTTP only.
+    This deliberately avoids Playwright: the listing HTML exposes real job
+    detail links and the detail pages carry the Ireland location/title."""
+    headers = {
+        "User-Agent": HEADERS.get("User-Agent", "Mozilla/5.0"),
+        "Accept-Language": "en-IE,en;q=0.9",
+    }
+    search_urls = [
+        "https://apply.tesco-careers.com/v2/job/search?location_country=106&page=1",
+        "https://apply.tesco-careers.com/v2/job/search?location=Dublin&location_country=106&page=1",
+    ]
+
+    detail_urls = set()
+    for search_url in search_urls:
+        try:
+            r = session.get(search_url, headers=headers, timeout=12)
+        except Exception:
+            continue
+        if r.status_code != 200:
+            continue
+
+        html_text = r.text or ""
+        for href in re.findall(r'href=["\']([^"\']+)["\']', html_text, re.I):
+            full = urllib.parse.urljoin(search_url, html.unescape(href)).split("#")[0]
+            low = full.lower()
+            if "apply.tesco-careers.com" not in low:
+                continue
+            # Keep structural job detail URLs, reject the search/listing URL itself.
+            if "/v2/job/" in low and "/search" not in low:
+                detail_urls.add(full)
+
+    # A listing can contain duplicated links/buttons; keep work bounded.
+    detail_urls = list(sorted(detail_urls))[:35]
+    results = {}
+
+    for url in detail_urls:
+        try:
+            r = session.get(url, headers=headers, timeout=10)
+        except Exception:
+            continue
+        if r.status_code != 200:
+            continue
+
+        raw = r.text or ""
+        body = re.sub(r"\s+", " ", _html_to_text(raw)).strip()
+        if not is_republic_of_ireland_location(body):
+            continue
+        if _ROI_NEGATIVE_RE.search(body):
+            continue
+
+        title = ""
+        m = re.search(r"<h1[^>]*>(.*?)</h1>", raw, re.I | re.S)
+        if m:
+            title = re.sub(r"\s+", " ", _html_to_text(m.group(1))).strip()
+        if not title:
+            m = re.search(r"<title[^>]*>(.*?)</title>", raw, re.I | re.S)
+            if m:
+                title = re.sub(r"\s+", " ", _html_to_text(m.group(1))).strip()
+                title = re.sub(r"\s*[-|]\s*Tesco.*$", "", title, flags=re.I).strip()
+
+        if not title or _looks_like_non_job_title(title):
+            continue
+
+        loc = "Republic of Ireland"
+        for place in (
+            "Dublin", "Cork", "Galway", "Limerick", "Wexford", "Waterford",
+            "Tipperary", "Meath", "Louth", "Wicklow", "Clare", "Kildare",
+            "Kilkenny", "Donegal", "Sligo", "Mayo",
+        ):
+            if re.search(rf"\b{re.escape(place)}\b", body, re.I):
+                loc = f"{place}, Ireland"
+                break
+
+        sponsorship, snippet = classify_sponsorship(body[:16000])
+        canonical = url.split("?")[0]
+        results[canonical.lower()] = {
+            "company": "Tesco Ireland",
+            "title": title[:300],
+            "location": loc,
+            "posted_text": "Unknown",
+            "posted_days_ago": None,
+            "employment_type": normalize_employment_type("", title),
+            "url": canonical,
+            "source": "tesco_official_http",
+            "visa_sponsorship": sponsorship,
+            "visa_snippet": snippet,
+        }
+
+    print(f"      [tesco_http] {len(results)} verified Ireland jobs from {len(detail_urls)} detail links")
+    return list(results.values())
 
 
 def scrape_aldi_ireland(session):
@@ -10331,6 +10408,7 @@ def scrape_runtime_safe_alt(company_name, career_url, session):
 
 
 def main():
+    print("=== TRUE_FETCH_ERROR_FIX_1 ACTIVE: successful alternate routes clear false errors; Tesco uses fast official HTTP route; runtime architecture unchanged ===")
     print("=== ZERO_STATUS_PERSISTENCE_FIX ACTIVE: prior successful zero-job companies stay automated unless a hard fetch failure occurs; no runtime change ===")
     print("=== RUNTIME_SAFE_NEXT20_B ACTIVE: next 20 unresolved companies get ONE alternate first-party Ireland URL; runtime architecture untouched ===")
     print("=== RUNTIME_SAFE_BASELINE ACTIVE: expensive NEXT_20_ATTEMPT2 removed; existing proven routes preserved ===")
@@ -10849,7 +10927,7 @@ def main():
         "scrape_iqvia_ireland",
         "scrape_goodbody_ireland", "scrape_bms_ireland", "scrape_sse_ireland",
         "scrape_hpe_ireland", "scrape_dell_ireland",
-        "scrape_tesco_ireland", "scrape_aldi_ireland", "scrape_fbd_ireland",
+        "scrape_aldi_ireland", "scrape_fbd_ireland",
         "scrape_capgemini_ireland", "scrape_vodafone_ireland",
         "scrape_abbott_ireland", "scrape_astrazeneca_ireland", "scrape_amgen_ireland",
         "scrape_alexion_ireland", "scrape_stryker_ireland", "scrape_novartis_ireland",
@@ -11430,6 +11508,38 @@ def main():
         for job in live_jobs
         if job.get("company")
     }
+
+    # Route-level failure reconciliation:
+    # a company is not a true fetch failure if another route successfully
+    # produced current live jobs in the same run. This removes false errors
+    # such as a failing Workday probe followed by a successful dedicated route.
+    _live_lower = {n.lower() for n in current_live_companies}
+    _resolved_failed = {
+        n for n in failed_companies
+        if str(n).strip().lower() in _live_lower
+    }
+    if _resolved_failed:
+        failed_companies.difference_update(_resolved_failed)
+
+        def _error_company_name(err):
+            s = str(err or "")
+            # Workday errors are "Company: request failed..."
+            # Parallel errors are "label/Company: ..."
+            head = s.split(":", 1)[0].strip()
+            if "/" in head:
+                head = head.split("/", 1)[1].strip()
+            return head
+
+        errors = [
+            e for e in errors
+            if _error_company_name(e).lower()
+            not in {n.lower() for n in _resolved_failed}
+        ]
+        print(
+            "=== Fetch-error reconciliation: cleared route-level failures for "
+            + ", ".join(sorted(_resolved_failed))
+            + " because another route succeeded this run ==="
+        )
 
     # Once a company has either successfully produced real jobs OR completed
     # automation with a reliable zero-job result in the prior run, a later
