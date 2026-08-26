@@ -10331,7 +10331,7 @@ def scrape_runtime_safe_alt(company_name, career_url, session):
 
 
 def main():
-    print("=== RUNTIME_SAFE_NEXT20 ACTIVE: 20 unresolved companies get ONE alternate first-party Ireland URL; runtime architecture untouched ===")
+    print("=== RUNTIME_SAFE_NEXT20_B ACTIVE: next 20 unresolved companies get ONE alternate first-party Ireland URL; runtime architecture untouched ===")
     print("=== RUNTIME_SAFE_BASELINE ACTIVE: expensive NEXT_20_ATTEMPT2 removed; existing proven routes preserved ===")
     print("=== LARGE_RECOVERY_BATCH_20 ACTIVE: 20 unresolved companies forced into one run with fresh cache; live routes untouched ===")
     print("=== NEXT_RECOVERY_BATCH_7 ACTIVE: Baker Tilly/Greencore/AMD/Bayer attempt2 + BDO/Aviva/Fitch current first-party routes; live routes untouched ===")
@@ -10762,27 +10762,31 @@ def main():
     _next_manual_rows = [c for c in companies if c["company_name"].strip().lower() in _next_manual_batch_names]
 
 
+    # RUNTIME_SAFE_NEXT20_B: rotate away from the 20 companies already
+    # tested by NEXT20_A. Keep the exact same cheap one-seed strategy and
+    # worker architecture; this only changes which unresolved companies get
+    # the extra attempt.
     _large_recovery_batch20_names = {
-        'edwards lifesciences',
-        'teva pharmaceuticals',
-        'revvity (perkinelmer)',
-        'an post',
-        'atlassian',
-        'glaxosmithkline (gsk)',
-        'irish distillers (pernod ricard)',
-        'marvell technology',
-        'medpace',
-        'micron technology',
-        'nokia',
-        'ornua',
-        'shannon airport group',
-        'slack',
-        'smurfit westrock',
-        'syneos health',
-        'texas instruments',
-        'uisce éireann (irish water)',
-        'waters corporation',
-        'wuxi biologics',
+        'bio-rad laboratories',
+        'c&c group',
+        'carbery group',
+        'charles river laboratories',
+        'cisco',
+        'convatec',
+        'dhl ireland',
+        'dairygold',
+        'danaher corporation',
+        'dublin bus',
+        'eli lilly',
+        'fastway couriers ireland',
+        'fedex express ireland',
+        'hse (health service executive)',
+        'icon plc',
+        'integra lifesciences',
+        'irish ferries',
+        'kuehne+nagel ireland',
+        'lonza',
+        'merck group',
     }
     _large_recovery_rows = [
         c for c in companies
@@ -11128,18 +11132,18 @@ def main():
         def _make_large_recovery_task(name=_name, u=_entry["url"]):
             return lambda: cached_browser_scrape(
                 browser_cache,
-                f"{name}::runtime_safe_next20_v1",
+                f"{name}::runtime_safe_next20_b_v1",
                 lambda: scrape_runtime_safe_alt(name, u, session),
                 0,
                 name,
             )
 
         task_list.append(
-            ("runtime_safe_next20", _name, _make_large_recovery_task(), 30, True)
+            ("runtime_safe_next20_b", _name, _make_large_recovery_task(), 30, True)
         )
         _large_batch_queued.append(_name)
 
-    print(f"=== Runtime-safe next20: {len(_large_batch_queued)}/20 targets queued before final dedupe ===")
+    print(f"=== Runtime-safe next20 B: {len(_large_batch_queued)}/20 targets queued before final dedupe ===")
     if _large_batch_queued:
         print("  -> " + ", ".join(_large_batch_queued))
 
