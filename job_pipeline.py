@@ -10331,6 +10331,7 @@ def scrape_runtime_safe_alt(company_name, career_url, session):
 
 
 def main():
+    print("=== ZERO_STATUS_PERSISTENCE_FIX ACTIVE: prior successful zero-job companies stay automated unless a hard fetch failure occurs; no runtime change ===")
     print("=== RUNTIME_SAFE_NEXT20_B ACTIVE: next 20 unresolved companies get ONE alternate first-party Ireland URL; runtime architecture untouched ===")
     print("=== RUNTIME_SAFE_BASELINE ACTIVE: expensive NEXT_20_ATTEMPT2 removed; existing proven routes preserved ===")
     print("=== LARGE_RECOVERY_BATCH_20 ACTIVE: 20 unresolved companies forced into one run with fresh cache; live routes untouched ===")
@@ -10447,6 +10448,25 @@ def main():
     # automated company back into "manual" merely because this run yields zero.
     prior_history = load_history(args.history)
     historically_automated = {str(name).strip() for name in prior_history.keys()}
+
+    # Persist the previous run's successful zero-job classifications too.
+    # Previously only companies that had EVER produced a live job were sticky.
+    # That meant a successfully checked zero-job company could jump back into
+    # Manual as soon as its temporary recovery batch was rotated out.
+    prior_automated_zero = set()
+    try:
+        if os.path.exists(args.output):
+            with open(args.output, encoding="utf-8") as _prev_jobs_f:
+                _prev_jobs_payload = json.load(_prev_jobs_f)
+            for _zero_entry in (_prev_jobs_payload.get("automated_zero_companies") or []):
+                if isinstance(_zero_entry, dict):
+                    _zero_name = str(_zero_entry.get("company") or "").strip()
+                else:
+                    _zero_name = str(_zero_entry or "").strip()
+                if _zero_name:
+                    prior_automated_zero.add(_zero_name)
+    except Exception as _zero_hist_exc:
+        print(f"=== Zero-status persistence: could not read prior zero statuses ({_zero_hist_exc}); continuing normally ===")
 
     # A previous over-strict validation run may have cached an empty result
     # for a company that demonstrably produced valid jobs in earlier runs.
@@ -11411,14 +11431,15 @@ def main():
         if job.get("company")
     }
 
-    # Once a company has successfully produced real jobs in prior runs, a
-    # later zero-result run must not make it "manual" unless we have a real
+    # Once a company has either successfully produced real jobs OR completed
+    # automation with a reliable zero-job result in the prior run, a later
+    # zero-result run must not make it "manual" unless we have a real
     # technical failure (timeout, exception, not-reached, Workday error, etc.).
     #
     # This is the stability fix for companies such as Wipro/IQVIA/LinkedIn
     # that were pushed back into manual solely because a stricter detail-page
     # validator rejected today's candidate cards.
-    sticky_automated = historically_automated - failed_companies
+    sticky_automated = (historically_automated | prior_automated_zero) - failed_companies
     unresolved_before_sticky = len(manual_check)
     new_manual = []
     for entry in manual_check:
