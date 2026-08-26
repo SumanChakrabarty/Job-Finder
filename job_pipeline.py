@@ -10300,7 +10300,57 @@ def scrape_large_unresolved_batch(company_name, career_url, session):
     return scrape_priority_sheet2_generic(company_name, career_url, session)
 
 
+
+
+def scrape_multi_seed_attempt2(company_name, career_url, session):
+    """Second-pass recovery for unresolved first-party career sites.
+    Unlike the first generic pass (single career URL), this tries multiple
+    Ireland-specific search/listing URL shapes on the same official host and
+    still requires real detail URLs + strict Republic-of-Ireland proof."""
+    if not career_url:
+        return []
+    try:
+        parsed = urllib.parse.urlparse(career_url)
+        origin = f"{parsed.scheme or 'https'}://{parsed.netloc}"
+        host = parsed.netloc.lower()
+    except Exception:
+        return []
+
+    seeds = []
+    def add(u):
+        if u and u not in seeds:
+            seeds.append(u)
+
+    add(career_url)
+    add(origin + "/")
+    add(origin + "/jobs?location=Ireland")
+    add(origin + "/jobs/?location=Ireland")
+    add(origin + "/jobs?search=Ireland")
+    add(origin + "/search/?q=&locationsearch=Ireland")
+    add(origin + "/search/?q=Ireland")
+    add(origin + "/careers?location=Ireland")
+    add(origin + "/careers/?location=Ireland")
+    add(origin + "/vacancies?location=Ireland")
+    add(origin + "/vacancies/?location=Ireland")
+
+    patterns = [
+        "/job/", "/jobs/", "/job-detail/", "/jobdetail/",
+        "/vacancy/", "/vacancies/", "/careers/job/",
+        "/careers-home/jobs/", "/positions/", "/opportunities/"
+    ]
+    return _batch_first_party_roi_scrape(
+        company_name,
+        seeds,
+        [host],
+        patterns,
+        session,
+        "multi_seed_attempt2",
+        60,
+    )
+
+
 def main():
+    print("=== NEXT_20_ATTEMPT2 ACTIVE: 20 remaining unresolved companies get multi-seed first-party attempt 2; live routes untouched ===")
     print("=== LARGE_RECOVERY_BATCH_20 ACTIVE: 20 unresolved companies forced into one run with fresh cache; live routes untouched ===")
     print("=== NEXT_RECOVERY_BATCH_7 ACTIVE: Baker Tilly/Greencore/AMD/Bayer attempt2 + BDO/Aviva/Fitch current first-party routes; live routes untouched ===")
     print("=== NEXT_MANUAL_BATCH_20_QUEUE_FIX ACTIVE: 20 unresolved companies forced from CSV status-independently; live routes untouched ===")
@@ -10731,26 +10781,26 @@ def main():
 
 
     _large_recovery_batch20_names = {
-        'cantor fitzgerald ireland',
-        'glanbia / tirlán',
-        'slalom',
-        'ubs',
-        'zurich insurance',
-        'abp food group',
-        'alexion pharmaceuticals',
-        'baxter international',
-        'coillte',
-        'cook medical',
-        'eir',
-        'gas networks ireland',
-        'kepak group',
-        'sky ireland',
-        'alvarez & marsal',
-        'bain & company',
-        'boston consulting group (bcg)',
-        'asml',
-        'aercap',
-        'akamai'
+        'edwards lifesciences',
+        'teva pharmaceuticals',
+        'revvity (perkinelmer)',
+        'supervalu / musgrave',
+        'alkermes',
+        'an post',
+        'atlassian',
+        'biotronik',
+        'boehringer ingelheim',
+        'bord gáis energy',
+        'box',
+        'bruker',
+        'coloplast',
+        'dsv ireland',
+        'eirgrid group',
+        'energia group',
+        'glaxosmithkline (gsk)',
+        'haleon',
+        'hollister incorporated',
+        'insulet corporation',
     }
     _large_recovery_rows = [
         c for c in companies
@@ -11096,18 +11146,18 @@ def main():
         def _make_large_recovery_task(name=_name, u=_entry["url"]):
             return lambda: cached_browser_scrape(
                 browser_cache,
-                f"{name}::large_recovery_batch20_v1",
-                lambda: scrape_large_unresolved_batch(name, u, session),
+                f"{name}::next20_attempt2_v2",
+                lambda: scrape_multi_seed_attempt2(name, u, session),
                 0,
                 name,
             )
 
         task_list.append(
-            ("large_recovery_batch20", _name, _make_large_recovery_task(), 75, True)
+            ("next20_attempt2", _name, _make_large_recovery_task(), 65, True)
         )
         _large_batch_queued.append(_name)
 
-    print(f"=== Large recovery batch: {len(_large_batch_queued)}/20 targets queued before final dedupe ===")
+    print(f"=== Next 20 attempt-2 batch: {len(_large_batch_queued)}/20 targets queued before final dedupe ===")
     if _large_batch_queued:
         print("  -> " + ", ".join(_large_batch_queued))
 
