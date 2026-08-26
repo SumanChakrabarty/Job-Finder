@@ -31517,11 +31517,6 @@
     "checked_at": 1787754885.1103275,
     "consecutive_failures": 0
   },
-  "SuperValu / Musgrave::next20_attempt2_v2": {
-    "jobs": [],
-    "checked_at": 1787748113.896251,
-    "consecutive_failures": 1
-  },
   "Alkermes::next20_attempt2_v2": {
     "jobs": [],
     "checked_at": 1787748153.9438589,
@@ -32007,7 +32002,7 @@
         "source": "runtime_safe_alt",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-26T15:13:02.215276+00:00",
         "posted_age_known": false
       },
@@ -32022,7 +32017,7 @@
         "source": "runtime_safe_alt",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-26T15:13:02.215276+00:00",
         "posted_age_known": false
       },
@@ -32037,7 +32032,7 @@
         "source": "runtime_safe_alt",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-26T15:13:02.215276+00:00",
         "posted_age_known": false
       },
@@ -32052,7 +32047,7 @@
         "source": "runtime_safe_alt",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-26T15:13:02.215276+00:00",
         "posted_age_known": false
       },
@@ -32067,7 +32062,7 @@
         "source": "runtime_safe_alt",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-26T15:13:02.215276+00:00",
         "posted_age_known": false
       },
@@ -32082,7 +32077,7 @@
         "source": "runtime_safe_alt",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-26T15:13:02.215276+00:00",
         "posted_age_known": false
       },
@@ -32097,7 +32092,7 @@
         "source": "runtime_safe_alt",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-26T15:13:02.215276+00:00",
         "posted_age_known": false
       },
@@ -32112,7 +32107,7 @@
         "source": "runtime_safe_alt",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-26T15:13:02.215276+00:00",
         "posted_age_known": false
       },
@@ -32127,7 +32122,7 @@
         "source": "runtime_safe_alt",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-26T15:13:02.215276+00:00",
         "posted_age_known": false
       },
@@ -32142,7 +32137,7 @@
         "source": "runtime_safe_alt",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-26T15:13:02.215276+00:00",
         "posted_age_known": false
       },
@@ -32157,7 +32152,7 @@
         "source": "runtime_safe_alt",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-26T15:13:02.215276+00:00",
         "posted_age_known": false
       }
@@ -32167,212 +32162,207 @@
   },
   "Regeneron": {
     "jobs": [],
-    "checked_at": 1787756941.6474664,
+    "checked_at": 1787758358.78399,
     "consecutive_failures": 1
   },
   "BNY Mellon": {
     "jobs": [],
-    "checked_at": 1787756943.1242652,
-    "consecutive_failures": 1
-  },
-  "Dell Technologies::batch_dedicated_v1": {
-    "jobs": [],
-    "checked_at": 1787756956.9739332,
-    "consecutive_failures": 1
-  },
-  "NetApp::netapp_attempt2_v3": {
-    "jobs": [],
-    "checked_at": 1787756967.0561583,
+    "checked_at": 1787758360.3240526,
     "consecutive_failures": 1
   },
   "Aldi Ireland::batch_dedicated_v2": {
     "jobs": [],
-    "checked_at": 1787756972.606864,
+    "checked_at": 1787758374.122982,
     "consecutive_failures": 1
   },
-  "QIAGEN": {
+  "Dell Technologies::batch_dedicated_v1": {
     "jobs": [],
-    "checked_at": 1787756981.2340121,
+    "checked_at": 1787758379.5144403,
     "consecutive_failures": 1
   },
-  "Fitch Ratings::next_recovery_batch7_v1": {
+  "NetApp::netapp_attempt2_v3": {
     "jobs": [],
-    "checked_at": 1787756981.8815923,
+    "checked_at": 1787758390.0859907,
     "consecutive_failures": 1
   },
   "Stryker::batch_dedicated_v1": {
     "jobs": [],
-    "checked_at": 1787756984.9870923,
-    "consecutive_failures": 1
-  },
-  "Bristol Myers Squibb::batch_dedicated_v1": {
-    "jobs": [],
-    "checked_at": 1787756987.1573617,
-    "consecutive_failures": 1
-  },
-  "HP (Hewlett-Packard)::friend_next4_v1": {
-    "jobs": [],
-    "checked_at": 1787756998.321987,
-    "consecutive_failures": 1
-  },
-  "Oracle::attempt2_plus_new_v2": {
-    "jobs": [],
-    "checked_at": 1787756999.2960923,
+    "checked_at": 1787758392.3673928,
     "consecutive_failures": 1
   },
   "Central Bank of Ireland": {
     "jobs": [],
-    "checked_at": 1787757005.9262729,
+    "checked_at": 1787758395.223136,
+    "consecutive_failures": 1
+  },
+  "QIAGEN": {
+    "jobs": [],
+    "checked_at": 1787758397.3063731,
+    "consecutive_failures": 1
+  },
+  "Fitch Ratings::next_recovery_batch7_v1": {
+    "jobs": [],
+    "checked_at": 1787758401.7816906,
+    "consecutive_failures": 1
+  },
+  "Oracle::attempt2_plus_new_v2": {
+    "jobs": [],
+    "checked_at": 1787758403.8181581,
+    "consecutive_failures": 1
+  },
+  "HP (Hewlett-Packard)::friend_next4_v1": {
+    "jobs": [],
+    "checked_at": 1787758404.2809138,
     "consecutive_failures": 1
   },
   "Red Hat": {
     "jobs": [],
-    "checked_at": 1787757009.3308556,
-    "consecutive_failures": 1
-  },
-  "Forvis Mazars Ireland::next_manual_batch_v2": {
-    "jobs": [],
-    "checked_at": 1787757017.1837363,
-    "consecutive_failures": 1
-  },
-  "Willis Towers Watson (WTW)": {
-    "jobs": [],
-    "checked_at": 1787757026.236469,
+    "checked_at": 1787758406.7143588,
     "consecutive_failures": 1
   },
   "C&C Group::runtime_safe_next20_b_v1": {
     "jobs": [],
-    "checked_at": 1787757053.570391,
+    "checked_at": 1787758410.108854,
+    "consecutive_failures": 1
+  },
+  "Forvis Mazars Ireland::next_manual_batch_v2": {
+    "jobs": [],
+    "checked_at": 1787758413.44351,
     "consecutive_failures": 1
   },
   "DHL Ireland::runtime_safe_next20_b_v1": {
     "jobs": [],
-    "checked_at": 1787757058.4358623,
+    "checked_at": 1787758415.0136237,
+    "consecutive_failures": 1
+  },
+  "Bristol Myers Squibb::batch_dedicated_v1": {
+    "jobs": [],
+    "checked_at": 1787758416.6591427,
     "consecutive_failures": 1
   },
   "Cisco::runtime_safe_next20_b_v1": {
     "jobs": [],
-    "checked_at": 1787757063.234743,
+    "checked_at": 1787758421.6682165,
     "consecutive_failures": 1
   },
-  "Charles River Laboratories::runtime_safe_next20_b_v1": {
+  "Willis Towers Watson (WTW)": {
     "jobs": [],
-    "checked_at": 1787757063.3369713,
+    "checked_at": 1787758424.7522004,
     "consecutive_failures": 1
   },
   "Danaher Corporation::runtime_safe_next20_b_v1": {
     "jobs": [],
-    "checked_at": 1787757065.324103,
+    "checked_at": 1787758427.8172882,
+    "consecutive_failures": 1
+  },
+  "Charles River Laboratories::runtime_safe_next20_b_v1": {
+    "jobs": [],
+    "checked_at": 1787758429.5225134,
     "consecutive_failures": 1
   },
   "Kuehne+Nagel Ireland::runtime_safe_next20_b_v1": {
     "jobs": [],
-    "checked_at": 1787757071.9587379,
+    "checked_at": 1787758429.9312067,
     "consecutive_failures": 1
   },
   "Cantor Fitzgerald Ireland": {
     "jobs": [],
-    "checked_at": 1787757078.4887938,
+    "checked_at": 1787758431.7913697,
     "consecutive_failures": 1
   },
   "Glanbia / Tirlán": {
     "jobs": [],
-    "checked_at": 1787757078.9222844,
+    "checked_at": 1787758433.7553663,
     "consecutive_failures": 1
   },
   "Slalom": {
     "jobs": [],
-    "checked_at": 1787757079.859958,
+    "checked_at": 1787758435.6454399,
     "consecutive_failures": 1
   },
   "UBS": {
     "jobs": [],
-    "checked_at": 1787757080.9015255,
+    "checked_at": 1787758436.1778426,
     "consecutive_failures": 1
   },
   "ABP Food Group": {
     "jobs": [],
-    "checked_at": 1787757086.240527,
+    "checked_at": 1787758438.5167825,
     "consecutive_failures": 1
   },
   "Alexion Pharmaceuticals": {
     "jobs": [],
-    "checked_at": 1787757087.3764353,
-    "consecutive_failures": 1
-  },
-  "Aviva Ireland::next_recovery_batch7_v1": {
-    "jobs": [],
-    "checked_at": 1787757089.6666167,
+    "checked_at": 1787758441.085002,
     "consecutive_failures": 1
   },
   "Zurich Insurance": {
     "jobs": [],
-    "checked_at": 1787757090.0097265,
-    "consecutive_failures": 1
-  },
-  "Baxter International": {
-    "jobs": [],
-    "checked_at": 1787757090.585198,
+    "checked_at": 1787758441.8323474,
     "consecutive_failures": 1
   },
   "Coillte": {
     "jobs": [],
-    "checked_at": 1787757091.9990027,
+    "checked_at": 1787758444.9208808,
+    "consecutive_failures": 1
+  },
+  "Baxter International": {
+    "jobs": [],
+    "checked_at": 1787758446.1043684,
     "consecutive_failures": 1
   },
   "Cook Medical": {
     "jobs": [],
-    "checked_at": 1787757095.9150271,
-    "consecutive_failures": 1
-  },
-  "ESB (Electricity Supply Board)": {
-    "jobs": [],
-    "checked_at": 1787757097.6409044,
-    "consecutive_failures": 1
-  },
-  "Gas Networks Ireland": {
-    "jobs": [],
-    "checked_at": 1787757099.7627525,
+    "checked_at": 1787758448.4081295,
     "consecutive_failures": 1
   },
   "Eir": {
     "jobs": [],
-    "checked_at": 1787757100.0860507,
+    "checked_at": 1787758449.1986437,
+    "consecutive_failures": 1
+  },
+  "ESB (Electricity Supply Board)": {
+    "jobs": [],
+    "checked_at": 1787758450.5337923,
+    "consecutive_failures": 1
+  },
+  "Gas Networks Ireland": {
+    "jobs": [],
+    "checked_at": 1787758453.357376,
     "consecutive_failures": 1
   },
   "Kepak Group": {
     "jobs": [],
-    "checked_at": 1787757100.1452425,
-    "consecutive_failures": 1
-  },
-  "Revvity (PerkinElmer)": {
-    "jobs": [],
-    "checked_at": 1787757101.4125004,
+    "checked_at": 1787758455.1052442,
     "consecutive_failures": 1
   },
   "Sky Ireland": {
     "jobs": [],
-    "checked_at": 1787757101.600748,
+    "checked_at": 1787758455.6020787,
     "consecutive_failures": 1
   },
   "An Post": {
     "jobs": [],
-    "checked_at": 1787757118.340966,
+    "checked_at": 1787758458.9687939,
     "consecutive_failures": 1
   },
-  "Boston Consulting Group (BCG)": {
+  "Revvity (PerkinElmer)": {
     "jobs": [],
-    "checked_at": 1787757121.9370425,
+    "checked_at": 1787758459.3935585,
     "consecutive_failures": 1
   },
   "Haleon": {
     "jobs": [],
-    "checked_at": 1787757131.8052547,
+    "checked_at": 1787758463.2090938,
     "consecutive_failures": 1
   },
   "GlaxoSmithKline (GSK)": {
     "jobs": [],
-    "checked_at": 1787757131.8174584,
+    "checked_at": 1787758464.868098,
+    "consecutive_failures": 1
+  },
+  "Boston Consulting Group (BCG)": {
+    "jobs": [],
+    "checked_at": 1787758470.4803698,
     "consecutive_failures": 1
   }
 }
