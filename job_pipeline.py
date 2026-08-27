@@ -10407,7 +10407,242 @@ def scrape_runtime_safe_alt(company_name, career_url, session):
     )
 
 
+
+def _html_get(session, url, timeout=15):
+    """Small first-party HTML GET helper for targeted direct routes."""
+    headers = {
+        "User-Agent": HEADERS.get("User-Agent", "Mozilla/5.0"),
+        "Accept": "text/html,application/xhtml+xml",
+        "Accept-Language": "en-IE,en;q=0.9",
+    }
+    r = session.get(url, headers=headers, timeout=timeout)
+    r.raise_for_status()
+    return r.text or ""
+
+
+def scrape_eir_ireland_direct(session):
+    """Official eir jobs board. Listing page contains title, location and detail URL."""
+    base = "https://jobs.eir.care"
+    url = base + "/jobs"
+    raw = _html_get(session, url, 15)
+
+    jobs = {}
+    # Each job detail URL is structural /jobs/detail/<slug>.
+    for m in re.finditer(
+        r'<a[^>]+href=["\']([^"\']*/jobs/detail/[^"\']+)["\'][^>]*>(.*?)</a>',
+        raw, re.I | re.S
+    ):
+        href, title_html = m.group(1), m.group(2)
+        full = urllib.parse.urljoin(base, html.unescape(href))
+        title = re.sub(r"\s+", " ", _html_to_text(title_html)).strip()
+        if not title or _looks_like_non_job_title(title):
+            continue
+
+        # Location is rendered immediately after the card title on the listing.
+        context = raw[m.end():m.end()+900]
+        loc_m = re.search(
+            r'Location:\s*</?[^>]*>\s*([^<\r\n]+)|Location:\s*([^<\r\n]+)',
+            context, re.I
+        )
+        location = ""
+        if loc_m:
+            location = re.sub(r"\s+", " ", (loc_m.group(1) or loc_m.group(2) or "")).strip()
+        if not location:
+            # Fallback to text context.
+            ctext = re.sub(r"\s+", " ", _html_to_text(context)).strip()
+            lm = re.search(r"Location:\s*(.{1,80}?)(?:Reference\s*#|Closing Date:|$)", ctext, re.I)
+            if lm:
+                location = lm.group(1).strip(" -|")
+
+        # Strict Republic of Ireland. Belfast/Northern Ireland excluded.
+        combined = f"{title} {location}"
+        if not is_republic_of_ireland_location(combined) or _ROI_NEGATIVE_RE.search(combined):
+            continue
+
+        jobs[full.lower()] = {
+            "company": "Eir",
+            "title": title[:300],
+            "location": location or "Republic of Ireland",
+            "posted_text": "Unknown",
+            "posted_days_ago": None,
+            "employment_type": normalize_employment_type("", title),
+            "url": full,
+            "source": "eir_official_http",
+            "visa_sponsorship": "not_mentioned",
+            "visa_snippet": "",
+        }
+
+    print(f"      [eir_direct_http] {len(jobs)} verified Republic-of-Ireland vacancies")
+    return list(jobs.values())
+
+
+def scrape_gas_networks_ireland_direct(session):
+    """Official GNI vacancies page; current vacancy cards are server-rendered."""
+    base = "https://www.gasnetworks.ie"
+    url = base + "/about/careers/vacancies"
+    raw = _html_get(session, url, 15)
+    text_body = re.sub(r"\s+", " ", _html_to_text(raw)).strip()
+
+    if re.search(r"\bno current vacancies\b", text_body, re.I):
+        print("      [gas_networks_direct] official vacancies page currently empty")
+        return []
+
+    jobs = {}
+    # Capture anchors likely belonging to vacancy/apply cards.
+    anchors = list(re.finditer(
+        r'<a[^>]+href=["\']([^"\']+)["\'][^>]*>(.*?)</a>',
+        raw, re.I | re.S
+    ))
+    for a in anchors:
+        href, label_html = a.group(1), a.group(2)
+        label = re.sub(r"\s+", " ", _html_to_text(label_html)).strip()
+        context = raw[max(0, a.start()-1800):a.end()+500]
+        ctext = re.sub(r"\s+", " ", _html_to_text(context)).strip()
+
+        # Current cards contain Ref No. GNI### plus an ROI location.
+        if not re.search(r"\bGNI\d+\b", ctext, re.I):
+            continue
+        if not is_republic_of_ireland_location(ctext) or _ROI_NEGATIVE_RE.search(ctext):
+            continue
+
+        # Prefer visible card heading; avoid "Apply now".
+        title = ""
+        heads = re.findall(r'<h[2-5][^>]*>(.*?)</h[2-5]>', context, re.I | re.S)
+        for h in reversed(heads):
+            candidate = re.sub(r"\s+", " ", _html_to_text(h)).strip()
+            if candidate and not _looks_like_non_job_title(candidate):
+                title = candidate
+                break
+        if not title and label and label.lower() not in {"apply now", "learn more"}:
+            title = label
+        if not title:
+            continue
+
+        lm = re.search(
+            r'\b(Dublin/Leinster|Cork/Dublin|Dublin|Cork|Galway|Limerick|Ireland)\b',
+            ctext, re.I
+        )
+        location = lm.group(1) if lm else "Republic of Ireland"
+        full = urllib.parse.urljoin(base, html.unescape(href))
+        key = (title.lower(), full.lower())
+
+        jobs[key] = {
+            "company": "Gas Networks Ireland",
+            "title": title[:300],
+            "location": location,
+            "posted_text": "Unknown",
+            "posted_days_ago": None,
+            "employment_type": normalize_employment_type("", title),
+            "url": full,
+            "source": "gas_networks_official_http",
+            "visa_sponsorship": "not_mentioned",
+            "visa_snippet": "",
+        }
+
+    print(f"      [gas_networks_direct] {len(jobs)} verified Republic-of-Ireland vacancies")
+    return list(jobs.values())
+
+
+def scrape_baxter_ireland_direct(session):
+    """Official Baxter Ireland location page + detail verification."""
+    base = "https://jobs.baxter.com"
+    listing = base + "/en/location/ireland-jobs/152/2963597/2"
+    raw = _html_get(session, listing, 15)
+
+    detail_urls = []
+    for href in re.findall(r'href=["\']([^"\']+/en/job/[^"\']+)["\']', raw, re.I):
+        full = urllib.parse.urljoin(base, html.unescape(href)).split("?")[0]
+        if full not in detail_urls:
+            detail_urls.append(full)
+
+    jobs = {}
+    for full in detail_urls[:12]:
+        try:
+            detail = _html_get(session, full, 12)
+        except Exception:
+            continue
+        body = re.sub(r"\s+", " ", _html_to_text(detail)).strip()
+        if not is_republic_of_ireland_location(body) or _ROI_NEGATIVE_RE.search(body):
+            continue
+
+        hm = re.search(r'<h1[^>]*>(.*?)</h1>', detail, re.I | re.S)
+        title = re.sub(r"\s+", " ", _html_to_text(hm.group(1))).strip() if hm else ""
+        if not title or _looks_like_non_job_title(title):
+            continue
+
+        lm = re.search(
+            r'Location\s+([^<]{1,120}?Ireland)|Location\s+([A-Za-z ,\-]+)',
+            body, re.I
+        )
+        location = (lm.group(1) or lm.group(2)).strip() if lm else "Republic of Ireland"
+
+        dm = re.search(r'Date posted\s+(\d{2}/\d{2}/\d{4})', body, re.I)
+        posted_text = dm.group(1) if dm else "Unknown"
+
+        sponsorship, snippet = classify_sponsorship(body[:20000])
+        jobs[full.lower()] = {
+            "company": "Baxter International",
+            "title": title[:300],
+            "location": location[:160],
+            "posted_text": posted_text,
+            "posted_days_ago": None,
+            "employment_type": normalize_employment_type("", title),
+            "url": full,
+            "source": "baxter_official_http",
+            "visa_sponsorship": sponsorship,
+            "visa_snippet": snippet,
+        }
+
+    print(f"      [baxter_direct_http] {len(jobs)} verified Republic-of-Ireland vacancies")
+    return list(jobs.values())
+
+
+def scrape_coillte_direct(session):
+    """Official Coillte vacancies page. Clean zero is a valid automated result."""
+    url = "https://www.coillte.ie/careers/current-vacancies/"
+    raw = _html_get(session, url, 15)
+    body = re.sub(r"\s+", " ", _html_to_text(raw)).strip()
+
+    if re.search(r"there are no current vacancies", body, re.I):
+        print("      [coillte_direct_http] official page confirms 0 current vacancies")
+        return []
+
+    # If vacancies appear later, capture heading/link cards conservatively.
+    jobs = {}
+    for m in re.finditer(
+        r'<a[^>]+href=["\']([^"\']+)["\'][^>]*>(.*?)</a>',
+        raw, re.I | re.S
+    ):
+        href, label_html = m.group(1), m.group(2)
+        label = re.sub(r"\s+", " ", _html_to_text(label_html)).strip()
+        if not label or _looks_like_non_job_title(label):
+            continue
+        context = re.sub(
+            r"\s+", " ",
+            _html_to_text(raw[max(0, m.start()-800):m.end()+800])
+        ).strip()
+        if not is_republic_of_ireland_location(context):
+            continue
+        full = urllib.parse.urljoin(url, html.unescape(href))
+        jobs[full.lower()] = {
+            "company": "Coillte",
+            "title": label[:300],
+            "location": "Republic of Ireland",
+            "posted_text": "Unknown",
+            "posted_days_ago": None,
+            "employment_type": normalize_employment_type("", label),
+            "url": full,
+            "source": "coillte_official_http",
+            "visa_sponsorship": "not_mentioned",
+            "visa_snippet": "",
+        }
+
+    print(f"      [coillte_direct_http] {len(jobs)} verified Republic-of-Ireland vacancies")
+    return list(jobs.values())
+
+
 def main():
+    print("=== TARGETED_DIRECT_BATCH_1 ACTIVE: Eir/Gas Networks/Baxter/Coillte use verified first-party HTTP routes; generic next20 recovery disabled; live routes untouched ===")
     print("=== NEXT_RECOVERY_GOOD_BASELINE ACTIVE: next unresolved recovery group rotated in; proven live routes and production runtime untouched ===")
     print("=== EMERGENCY_ROLLBACK_GOOD_BASELINE ACTIVE: bad 660s wall-clock cap removed; restoring last known-good full-run behavior ===")
     print("=== TRUE_FETCH_ERROR_FIX_1 ACTIVE: successful alternate routes clear false errors; Tesco uses fast official HTTP route; runtime architecture unchanged ===")
@@ -10723,6 +10958,10 @@ def main():
     # exist; see the fix note there.
 
     dedicated_company_specs = [
+        ("exact", "eir", scrape_eir_ireland_direct, 30, "official eir server-rendered jobs board"),
+        ("exact", "gas networks ireland", scrape_gas_networks_ireland_direct, 30, "official GNI current vacancies page"),
+        ("exact", "baxter international", scrape_baxter_ireland_direct, 35, "official Baxter Ireland location board"),
+        ("exact", "coillte", scrape_coillte_direct, 30, "official Coillte current vacancies page"),
         ("exact", "ryanair", scrape_ryanair_ireland_next3, 45, "official Ryanair Ireland listing"),
         ("exact", "dexcom", scrape_dexcom_ireland_attempt2, 60, "attempt 2 rendered Dexcom Ireland board"),
         ("exact", "docusign", scrape_docusign_ireland_attempt2, 105, "verified Docusign route; extended return budget"),
@@ -10866,28 +11105,7 @@ def main():
     # tested by NEXT20_A. Keep the exact same cheap one-seed strategy and
     # worker architecture; this only changes which unresolved companies get
     # the extra attempt.
-    _large_recovery_batch20_names = {
-        'cantor fitzgerald ireland',
-        'glanbia / tirlán',
-        'slalom',
-        'ubs',
-        'zurich insurance',
-        'abp food group',
-        'alexion pharmaceuticals',
-        'baxter international',
-        'coillte',
-        'cook medical',
-        'eir',
-        'gas networks ireland',
-        'kepak group',
-        'sky ireland',
-        'alvarez & marsal',
-        'bain & company',
-        'boston consulting group (bcg)',
-        'asml',
-        'aercap',
-        'akamai',
-    }
+    _large_recovery_batch20_names = set()
     _large_recovery_rows = [
         c for c in companies
         if c["company_name"].strip().lower() in _large_recovery_batch20_names
@@ -10991,7 +11209,9 @@ def main():
             # from the old generic Sheet-2 zero-result cache so the proven
             # dedicated result cannot be shadowed by a stale generic verdict.
             _key = name.strip().lower()
-            if _key == "iqvia":
+            if _key in {"eir", "gas networks ireland", "baxter international", "coillte"}:
+                cache_key = f"{name}::targeted_direct_batch1_v1"
+            elif _key == "iqvia":
                 cache_key = "IQVIA::ireland_dedicated_v1"
             elif _key == "merit medical":
                 cache_key = "Merit Medical::workday_dedicated_v1"
