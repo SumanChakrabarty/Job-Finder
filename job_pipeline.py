@@ -275,7 +275,9 @@ BROWSER_WORKERS = int(os.environ.get("BROWSER_WORKERS", "7"))   # real Chrome in
 # again.
 HTTP_WORKERS = int(os.environ.get("HTTP_WORKERS", "15"))  # plain requests — cheap, can run
 # with much higher concurrency than real browser tasks without risking the runner's memory
-OVERALL_BATCH_TIMEOUT_SECONDS = int(os.environ.get("BATCH_CEILING_SECONDS", "720"))  # 12 min —
+OVERALL_BATCH_TIMEOUT_SECONDS = int(os.environ.get("BATCH_CEILING_SECONDS", "720"))
+END_TO_END_RUN_BUDGET_SECONDS = int(os.environ.get("RUN_WALL_BUDGET_SECONDS", "660"))  # 11 min target ceiling for unattended runs
+UNRESOLVED_BROWSER_PER_RUN = int(os.environ.get("UNRESOLVED_BROWSER_PER_RUN", "20"))  # rotate unresolved browser work instead of cold-cache stampede  # 12 min —
 # a hard ceiling on the whole dedicated-scraper phase. Needed once per-task deadlines were
 # fixed to start counting from actual execution, not submission: without SOME overall cap,
 # a queue deeper than the pool can clear in one run would just hang forever waiting for
@@ -345,7 +347,7 @@ def effective_timeout(cache, company_key, base_timeout):
         return max(30, int(base_timeout * 0.25))
 
 
-def run_company_tasks_in_parallel(tasks, browser_workers=None, http_workers=None):
+def run_company_tasks_in_parallel(tasks, browser_workers=None, http_workers=None, overall_timeout_seconds=None):
     """Runs company scrapers concurrently instead of one at a time — the
     real fix for a multi-hour runtime. Each task is (label, company_name,
     callable, timeout_seconds, is_browser).
@@ -425,7 +427,12 @@ def run_company_tasks_in_parallel(tasks, browser_workers=None, http_workers=None
             fut = pool.submit(wrap(fn, task_id))
             future_map[fut] = (label, company, timeout_s, task_id)
         batch_start = time.time()
-        overall_deadline = batch_start + OVERALL_BATCH_TIMEOUT_SECONDS
+        _batch_budget = (
+            OVERALL_BATCH_TIMEOUT_SECONDS
+            if overall_timeout_seconds is None
+            else max(60, min(OVERALL_BATCH_TIMEOUT_SECONDS, int(overall_timeout_seconds)))
+        )
+        overall_deadline = batch_start + _batch_budget
         pending = set(future_map)
         # Report in TRUE completion order, not submission order — a task
         # near the front of the list that happens to be slow (DXC, in a
@@ -480,10 +487,11 @@ def run_company_tasks_in_parallel(tasks, browser_workers=None, http_workers=None
                 pending.discard(fut)
                 label, company, timeout_s, task_id = future_map[fut]
                 print(f"  -> {company}: NOT REACHED — pool still busy with earlier "
-                      f"companies when the {OVERALL_BATCH_TIMEOUT_SECONDS}s batch ceiling hit; "
+                      f"companies when the {_batch_budget}s batch ceiling hit; "
                       f"never actually started this run, will be retried next run")
                 errors.append(f"{label}/{company}: not reached before batch ceiling")
-                failed_companies.add(company)
+                # This is scheduling deferral, not an observed company fetch
+                # failure. Do not demote status or erase last-known jobs.
     finally:
         browser_pool.shutdown(wait=False)
         http_pool.shutdown(wait=False)
@@ -10408,6 +10416,10 @@ def scrape_runtime_safe_alt(company_name, career_url, session):
 
 
 def main():
+    _run_started_at = time.time()
+    print("=== FULL_PIPELINE_NEXT_BATCH ACTIVE: full-run only; exhausted hard cases deferred from browser pool; next unresolved batch rotated in; runtime architecture unchanged ===")
+    print("=== FINISH_TODAY_FAST_BATCH ACTIVE: --only-many tests many companies without running the full pipeline; production runtime untouched ===")
+    print("=== UNATTENDED_STABILITY_FIX ACTIVE: cold-cache runs are bounded; unresolved browsers rotate; failed/partial live companies use last verified snapshot ===")
     print("=== TRUE_FETCH_ERROR_FIX_1 ACTIVE: successful alternate routes clear false errors; Tesco uses fast official HTTP route; runtime architecture unchanged ===")
     print("=== ZERO_STATUS_PERSISTENCE_FIX ACTIVE: prior successful zero-job companies stay automated unless a hard fetch failure occurs; no runtime change ===")
     print("=== RUNTIME_SAFE_NEXT20_B ACTIVE: next 20 unresolved companies get ONE alternate first-party Ireland URL; runtime architecture untouched ===")
@@ -10484,7 +10496,39 @@ def main():
                      help="Test a single company by name (e.g. --only \"Johnson Controls\") "
                           "instead of running the full ~30 min pipeline. Prints results directly "
                           "and exits — does not write jobs.json or touch any cache files.")
+    ap.add_argument(
+        "--only-many",
+        default=None,
+        help="Fast recovery mode: semicolon-separated company names. Tests only those companies "
+             "and exits without writing jobs.json or changing cache files."
+    )
     args = ap.parse_args()
+
+    if args.only_many:
+        _names = [x.strip() for x in args.only_many.split(";") if x.strip()]
+        # Keep this deliberately modest: it is a temporary recovery/test mode,
+        # not a production worker-setting change.
+        _fast_workers = min(4, max(1, len(_names)))
+        print(
+            f"=== Fast multi-company recovery test: {len(_names)} companies, "
+            f"up to {_fast_workers} at once; full pipeline is skipped ==="
+        )
+        _started = time.time()
+        with concurrent.futures.ThreadPoolExecutor(max_workers=_fast_workers) as _ex:
+            _future_to_name = {
+                _ex.submit(test_single_company, _name): _name for _name in _names
+            }
+            for _future in concurrent.futures.as_completed(_future_to_name):
+                _name = _future_to_name[_future]
+                try:
+                    _future.result()
+                except Exception as _exc:
+                    print(f"=== FAST RESULT ERROR: {_name}: {_exc} ===")
+        print(
+            f"=== Fast multi-company recovery test finished in "
+            f"{int(time.time() - _started)}s ==="
+        )
+        return
 
     if args.only:
         test_single_company(args.only)
@@ -10865,26 +10909,26 @@ def main():
     # worker architecture; this only changes which unresolved companies get
     # the extra attempt.
     _large_recovery_batch20_names = {
-        'bio-rad laboratories',
-        'c&c group',
-        'carbery group',
-        'charles river laboratories',
-        'cisco',
-        'convatec',
-        'dhl ireland',
-        'dairygold',
-        'danaher corporation',
-        'dublin bus',
-        'eli lilly',
-        'fastway couriers ireland',
-        'fedex express ireland',
-        'hse (health service executive)',
-        'icon plc',
-        'integra lifesciences',
-        'irish ferries',
-        'kuehne+nagel ireland',
-        'lonza',
-        'merck group',
+        'cantor fitzgerald ireland',
+        'glanbia / tirlán',
+        'slalom',
+        'ubs',
+        'zurich insurance',
+        'abp food group',
+        'alexion pharmaceuticals',
+        'baxter international',
+        'coillte',
+        'cook medical',
+        'eir',
+        'gas networks ireland',
+        'kepak group',
+        'sky ireland',
+        'alvarez & marsal',
+        'bain & company',
+        'boston consulting group (bcg)',
+        'asml',
+        'aercap',
+        'akamai',
     }
     _large_recovery_rows = [
         c for c in companies
@@ -11358,12 +11402,103 @@ def main():
 
     task_list = _deduped_task_list
 
+    # Two-attempt rule: these hard cases have now been exercised repeatedly
+    # and are deferred from expensive browser recovery during normal full runs.
+    # Cheap HTTP/ATS/Workday routes are still allowed if present.
+    _deferred_hard_browser = {
+        "aviva ireland",
+        "infosys",
+        "hcltech",
+        "waters corporation",
+        "dhl ireland",
+        "eli lilly",
+        "mckinsey & company",
+        "netapp",
+    }
+    _before_defer = len(task_list)
+    task_list = [
+        _t for _t in task_list
+        if not (
+            _t[4]
+            and str(_t[1]).strip().lower() in _deferred_hard_browser
+        )
+    ]
+    _deferred_removed = _before_defer - len(task_list)
+    if _deferred_removed:
+        print(
+            f"=== Two-attempt defer: skipped {_deferred_removed} expensive browser tasks "
+            f"for exhausted hard cases; cheap routes remain eligible ==="
+        )
+
+    # Cold-cache stability:
+    # A cache expiry used to make every unresolved browser recovery run at
+    # once. With ~150+ browser tasks that creates a resource stampede and turns
+    # an otherwise normal run into 15+ minutes. Proven-live companies are NEVER
+    # throttled here. Only unresolved/non-live browser recovery work is rotated.
+    _proven_live_lower = {
+        str(n).strip().lower()
+        for n, jobs in (_last_nonzero_by_company or {}).items()
+        if jobs
+    } | {
+        str(n).strip().lower()
+        for n in historically_automated
+    }
+
+    _always_tasks = []
+    _unresolved_browser_tasks = []
+    for _t in task_list:
+        _label, _company, _fn, _timeout, _is_browser = _t
+        if (not _is_browser) or str(_company).strip().lower() in _proven_live_lower:
+            _always_tasks.append(_t)
+        else:
+            _unresolved_browser_tasks.append(_t)
+
+    # Deterministic daily rotation. If the pipeline runs several times in one
+    # day it retries the same bounded recovery slice; on later days the slice
+    # moves through the unresolved pool automatically.
+    _unresolved_browser_tasks.sort(key=lambda t: str(t[1]).lower())
+    if len(_unresolved_browser_tasks) > UNRESOLVED_BROWSER_PER_RUN:
+        _n = len(_unresolved_browser_tasks)
+        _day_slot = int(time.time() // 86400)
+        _start = (_day_slot * UNRESOLVED_BROWSER_PER_RUN) % _n
+        _rotated = (
+            _unresolved_browser_tasks[_start:]
+            + _unresolved_browser_tasks[:_start]
+        )
+        _selected_unresolved = _rotated[:UNRESOLVED_BROWSER_PER_RUN]
+        _deferred_unresolved = _rotated[UNRESOLVED_BROWSER_PER_RUN:]
+        print(
+            f"=== Cold-cache runtime guard: running {len(_selected_unresolved)}/"
+            f"{len(_unresolved_browser_tasks)} unresolved browser recoveries this run; "
+            f"{len(_deferred_unresolved)} safely deferred to later rotation ==="
+        )
+        task_list = _always_tasks + _selected_unresolved
+    else:
+        task_list = _always_tasks + _unresolved_browser_tasks
+
     browser_count = sum(1 for t in task_list if t[4])
     http_count = len(task_list) - browser_count
     print(f"\n=== Running {len(task_list)} dedicated company scrapers "
           f"({browser_count} browser-based, up to {BROWSER_WORKERS} at once; "
           f"{http_count} plain HTTP, up to {HTTP_WORKERS} at once) ===")
-    parallel_results, parallel_errors, parallel_failed_companies = run_company_tasks_in_parallel(task_list)
+    _elapsed_before_dedicated = time.time() - _run_started_at
+    _remaining_for_dedicated = max(
+        90,
+        END_TO_END_RUN_BUDGET_SECONDS - int(_elapsed_before_dedicated) - 45
+    )
+    _remaining_for_dedicated = min(
+        OVERALL_BATCH_TIMEOUT_SECONDS,
+        _remaining_for_dedicated,
+    )
+    print(
+        f"=== Runtime budget: {int(_elapsed_before_dedicated)}s elapsed before dedicated phase; "
+        f"dedicated phase capped at {_remaining_for_dedicated}s to protect "
+        f"{END_TO_END_RUN_BUDGET_SECONDS}s end-to-end target ==="
+    )
+    parallel_results, parallel_errors, parallel_failed_companies = run_company_tasks_in_parallel(
+        task_list,
+        overall_timeout_seconds=_remaining_for_dedicated,
+    )
     failed_companies.update(parallel_failed_companies)
 
     for task_label, company_name, jobs in parallel_results:
@@ -11606,6 +11741,42 @@ def main():
         _n = str((_job or {}).get("company") or "").strip()
         if _n:
             _current_jobs_by_company.setdefault(_n, []).append(_job)
+
+    # Failed/partial scrape preservation.
+    # If a company hard-failed this run, a smaller current set is not trusted
+    # enough to overwrite the last verified snapshot. This handles both
+    # 20->0 disappearances and 20->7 partial-page failures.
+    _failed_lower_for_snapshot = {
+        str(n).strip().lower() for n in failed_companies
+    }
+    _restore_from_snapshot = {}
+    for _name, _old_jobs in (_last_nonzero_by_company or {}).items():
+        if not _old_jobs or str(_name).strip().lower() not in _failed_lower_for_snapshot:
+            continue
+        _cur_jobs = _current_jobs_by_company.get(_name) or []
+        if len(_cur_jobs) < len(_old_jobs):
+            _restore_from_snapshot[_name] = [dict(j) for j in _old_jobs]
+
+    if _restore_from_snapshot:
+        _restore_lower = {n.lower() for n in _restore_from_snapshot}
+        live_jobs = [
+            j for j in live_jobs
+            if str((j or {}).get("company") or "").strip().lower() not in _restore_lower
+        ]
+        for _name, _old_jobs in _restore_from_snapshot.items():
+            for _old in _old_jobs:
+                _kept = dict(_old)
+                _kept["regression_guard"] = "preserved_after_failed_or_partial_scrape"
+                live_jobs.append(_kept)
+            _current_jobs_by_company[_name] = [dict(j) for j in _old_jobs]
+        print(
+            "=== Snapshot continuity: restored last verified job sets for "
+            + ", ".join(
+                f"{n} ({len(js)} jobs)"
+                for n, js in sorted(_restore_from_snapshot.items())
+            )
+            + " after failed/partial scrapes ==="
+        )
 
     for _name, _jobs in _current_jobs_by_company.items():
         if _jobs:
