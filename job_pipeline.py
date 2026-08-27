@@ -10660,7 +10660,7 @@ def scrape_alexion_ireland_direct(session):
 
         # Alexion detail URLs are /job/<city>/<slug>/<org>/<jobid>
         for m in re.finditer(
-            r'<a[^>]+href=["\']([^"\']+/job/[^"\']+)["\'][^>]*>(.*?)</a>',
+            r'<a[^>]+href=["\']([^"\']*(?:/job/)[^"\']+)["\'][^>]*>(.*?)</a>',
             raw, re.I | re.S
         ):
             href, label_html = m.group(1), m.group(2)
@@ -10709,63 +10709,84 @@ def scrape_alexion_ireland_direct(session):
 
 
 def scrape_sky_ireland_direct(session):
-    """Official Sky Ireland jobs page. Current Dublin jobs are server rendered."""
-    base = "https://careers.sky.com"
-    listing = base + "/ie/jobs"
-    raw = _html_get(session, listing, 15)
+    """Official Sky Ireland jobs page, rendered because listing cards are JS-backed."""
+    url = "https://careers.sky.com/ie/jobs"
     jobs = {}
 
-    # Extract all anchors and inspect nearby card text for Dublin.
-    for m in re.finditer(
-        r'<a[^>]+href=["\']([^"\']+)["\'][^>]*>(.*?)</a>',
-        raw, re.I | re.S
-    ):
-        href, label_html = m.group(1), m.group(2)
-        if href.startswith("#") or href.lower().startswith("javascript:"):
-            continue
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=True)
+        page = browser.new_page(
+            user_agent=HEADERS.get("User-Agent", "Mozilla/5.0"),
+            locale="en-IE",
+        )
+        try:
+            page.goto(url, wait_until="domcontentloaded", timeout=25000)
+            # The page itself says "N jobs match your criteria" and renders cards.
+            try:
+                page.wait_for_selector('a[href*="/ie/jobs/"]', timeout=8000)
+            except Exception:
+                pass
 
-        context = raw[max(0, m.start()-1000):m.end()+1000]
-        ctext = re.sub(r"\s+", " ", _html_to_text(context)).strip()
-        if not re.search(r'\bDublin\b', ctext, re.I):
-            continue
+            anchors = page.locator('a[href*="/ie/jobs/"]')
+            count = min(anchors.count(), 80)
+            for i in range(count):
+                a = anchors.nth(i)
+                try:
+                    href = a.get_attribute("href") or ""
+                    label = (a.inner_text(timeout=1500) or "").strip()
+                except Exception:
+                    continue
 
-        full = urllib.parse.urljoin(base, html.unescape(href)).split("#")[0]
-        low = full.lower()
-        if "careers.sky.com" not in low:
-            continue
-        # Require a likely job detail path, not category/navigation.
-        if not any(tok in low for tok in ("/job/", "/jobs/", "/vacancy/", "/role/")):
-            continue
-        if low.rstrip("/") == listing.lower().rstrip("/"):
-            continue
+                if not href or href.rstrip("/") == "/ie/jobs":
+                    continue
+                full = urllib.parse.urljoin(url, href).split("#")[0]
 
-        label = re.sub(r"\s+", " ", _html_to_text(label_html)).strip()
-        title = label
-        if not title or title.lower() in {"view job", "view role", "apply", "apply now", "learn more"}:
-            heads = re.findall(r'<h[2-5][^>]*>(.*?)</h[2-5]>', context, re.I | re.S)
-            for h in reversed(heads):
-                candidate = re.sub(r"\s+", " ", _html_to_text(h)).strip()
-                if candidate and not _looks_like_non_job_title(candidate):
-                    title = candidate
-                    break
+                # Real Sky detail URLs observed as /ie/jobs/<ref>
+                if not re.search(r'/ie/jobs/(?:wd-|t-)?R?\d+', full, re.I):
+                    continue
 
-        if not title or _looks_like_non_job_title(title):
-            continue
+                # Pull title/location from the rendered card container.
+                title = label
+                location = ""
+                try:
+                    card = a.locator("xpath=ancestor::*[self::li or self::article or self::div][1]")
+                    ctext = re.sub(r"\s+", " ", card.inner_text(timeout=1500) or "").strip()
+                except Exception:
+                    ctext = label
 
-        jobs[full.lower()] = {
-            "company": "Sky Ireland",
-            "title": title[:300],
-            "location": "Dublin, Ireland",
-            "posted_text": "Unknown",
-            "posted_days_ago": None,
-            "employment_type": normalize_employment_type("", title),
-            "url": full,
-            "source": "sky_official_http",
-            "visa_sponsorship": "not_mentioned",
-            "visa_snippet": "",
-        }
+                if not re.search(r"\bDublin\b", ctext, re.I):
+                    continue
 
-    print(f"      [sky_direct_http] {len(jobs)} verified Dublin vacancies")
+                # Remove CTA text if anchor itself is generic.
+                if not title or title.lower() in {"view job", "view role", "apply", "apply now", "learn more"}:
+                    # Known card text usually starts with title before team/location.
+                    pieces = [x.strip() for x in re.split(r'[\r\n]+', ctext) if x.strip()]
+                    for piece in pieces:
+                        if piece.lower() in {"dublin", "apply now", "view job", "view role"}:
+                            continue
+                        if not _looks_like_non_job_title(piece):
+                            title = piece
+                            break
+
+                if not title or _looks_like_non_job_title(title):
+                    continue
+
+                jobs[full.lower()] = {
+                    "company": "Sky Ireland",
+                    "title": title[:300],
+                    "location": "Dublin, Ireland",
+                    "posted_text": "Unknown",
+                    "posted_days_ago": None,
+                    "employment_type": normalize_employment_type("", title),
+                    "url": full,
+                    "source": "sky_official_rendered",
+                    "visa_sponsorship": "not_mentioned",
+                    "visa_snippet": "",
+                }
+        finally:
+            browser.close()
+
+    print(f"      [sky_direct_rendered] {len(jobs)} verified Dublin vacancies")
     return list(jobs.values())
 
 
@@ -10787,7 +10808,7 @@ def scrape_zurich_ireland_direct(session):
 
         # SuccessFactors job detail shape: /job/<location>-<title>/<id>/
         for m in re.finditer(
-            r'<a[^>]+href=["\']([^"\']+/job/[^"\']+)["\'][^>]*>(.*?)</a>',
+            r'<a[^>]+href=["\']([^"\']*(?:/job/)[^"\']+)["\'][^>]*>(.*?)</a>',
             raw, re.I | re.S
         ):
             href, label_html = m.group(1), m.group(2)
@@ -10838,6 +10859,7 @@ def scrape_zurich_ireland_direct(session):
 
 
 def main():
+    print("=== TARGETED_DIRECT_BATCH_2_FIX ACTIVE: Alexion/Zurich relative /job links fixed; Sky moved to rendered dedicated route; no global runtime change ===")
     print("=== TARGETED_DIRECT_BATCH_2 ACTIVE: Alexion/Sky/Zurich verified first-party Ireland HTTP routes added; browser fallbacks replaced; runtime architecture untouched ===")
     print("=== TARGETED_DIRECT_BATCH_1 ACTIVE: Eir/Gas Networks/Baxter/Coillte use verified first-party HTTP routes; generic next20 recovery disabled; live routes untouched ===")
     print("=== NEXT_RECOVERY_GOOD_BASELINE ACTIVE: next unresolved recovery group rotated in; proven live routes and production runtime untouched ===")
@@ -11410,7 +11432,7 @@ def main():
             # dedicated result cannot be shadowed by a stale generic verdict.
             _key = name.strip().lower()
             if _key in {"alexion pharmaceuticals", "sky ireland", "zurich insurance"}:
-                cache_key = f"{name}::targeted_direct_batch2_v1"
+                cache_key = f"{name}::targeted_direct_batch2_fix_v2"
             elif _key in {"eir", "gas networks ireland", "baxter international", "coillte"}:
                 cache_key = f"{name}::targeted_direct_batch1_v1"
             elif _key == "iqvia":
