@@ -10408,6 +10408,7 @@ def scrape_runtime_safe_alt(company_name, career_url, session):
 
 
 def main():
+    print("=== NEXT_RECOVERY_GOOD_BASELINE ACTIVE: next unresolved recovery group rotated in; proven live routes and production runtime untouched ===")
     print("=== EMERGENCY_ROLLBACK_GOOD_BASELINE ACTIVE: bad 660s wall-clock cap removed; restoring last known-good full-run behavior ===")
     print("=== TRUE_FETCH_ERROR_FIX_1 ACTIVE: successful alternate routes clear false errors; Tesco uses fast official HTTP route; runtime architecture unchanged ===")
     print("=== ZERO_STATUS_PERSISTENCE_FIX ACTIVE: prior successful zero-job companies stay automated unless a hard fetch failure occurs; no runtime change ===")
@@ -10866,26 +10867,26 @@ def main():
     # worker architecture; this only changes which unresolved companies get
     # the extra attempt.
     _large_recovery_batch20_names = {
-        'bio-rad laboratories',
-        'c&c group',
-        'carbery group',
-        'charles river laboratories',
-        'cisco',
-        'convatec',
-        'dhl ireland',
-        'dairygold',
-        'danaher corporation',
-        'dublin bus',
-        'eli lilly',
-        'fastway couriers ireland',
-        'fedex express ireland',
-        'hse (health service executive)',
-        'icon plc',
-        'integra lifesciences',
-        'irish ferries',
-        'kuehne+nagel ireland',
-        'lonza',
-        'merck group',
+        'cantor fitzgerald ireland',
+        'glanbia / tirlán',
+        'slalom',
+        'ubs',
+        'zurich insurance',
+        'abp food group',
+        'alexion pharmaceuticals',
+        'baxter international',
+        'coillte',
+        'cook medical',
+        'eir',
+        'gas networks ireland',
+        'kepak group',
+        'sky ireland',
+        'alvarez & marsal',
+        'bain & company',
+        'boston consulting group (bcg)',
+        'asml',
+        'aercap',
+        'akamai',
     }
     _large_recovery_rows = [
         c for c in companies
