@@ -12610,8 +12610,8 @@
   },
   "Alvarez & Marsal": {
     "jobs": [],
-    "checked_at": 1787837892.113696,
-    "consecutive_failures": 115
+    "checked_at": 1787842058.7561831,
+    "consecutive_failures": 116
   },
   "Coca-Cola HBC Ireland": {
     "jobs": [],
@@ -12846,8 +12846,8 @@
   },
   "Bain & Company": {
     "jobs": [],
-    "checked_at": 1787837899.9348738,
-    "consecutive_failures": 115
+    "checked_at": 1787842067.5647714,
+    "consecutive_failures": 116
   },
   "FTI Consulting": {
     "jobs": [],
@@ -14050,18 +14050,18 @@
   },
   "Akamai": {
     "jobs": [],
-    "checked_at": 1787837900.590182,
-    "consecutive_failures": 102
+    "checked_at": 1787842065.1478102,
+    "consecutive_failures": 103
   },
   "AerCap": {
     "jobs": [],
-    "checked_at": 1787837901.7370403,
-    "consecutive_failures": 102
+    "checked_at": 1787842066.7251556,
+    "consecutive_failures": 103
   },
   "ASML": {
     "jobs": [],
-    "checked_at": 1787837905.0255551,
-    "consecutive_failures": 102
+    "checked_at": 1787842064.2635376,
+    "consecutive_failures": 103
   },
   "Alkermes": {
     "jobs": [],
@@ -31782,156 +31782,6 @@
     "checked_at": 1787837667.6244102,
     "consecutive_failures": 0
   },
-  "Avolon": {
-    "jobs": [],
-    "checked_at": 1787840208.4960637,
-    "consecutive_failures": 1
-  },
-  "Regeneron": {
-    "jobs": [],
-    "checked_at": 1787840210.3809013,
-    "consecutive_failures": 1
-  },
-  "BNY Mellon": {
-    "jobs": [],
-    "checked_at": 1787840211.9123034,
-    "consecutive_failures": 1
-  },
-  "NetApp::netapp_attempt2_v3": {
-    "jobs": [],
-    "checked_at": 1787840233.206274,
-    "consecutive_failures": 1
-  },
-  "Dell Technologies::batch_dedicated_v1": {
-    "jobs": [],
-    "checked_at": 1787840235.7039692,
-    "consecutive_failures": 1
-  },
-  "Aldi Ireland::batch_dedicated_v2": {
-    "jobs": [],
-    "checked_at": 1787840246.2604392,
-    "consecutive_failures": 1
-  },
-  "QIAGEN": {
-    "jobs": [],
-    "checked_at": 1787840248.2899375,
-    "consecutive_failures": 1
-  },
-  "SSE Airtricity / SSE::batch_dedicated_v1": {
-    "jobs": [],
-    "checked_at": 1787840249.139113,
-    "consecutive_failures": 1
-  },
-  "Fitch Ratings::next_recovery_batch7_v1": {
-    "jobs": [],
-    "checked_at": 1787840250.7990003,
-    "consecutive_failures": 1
-  },
-  "Bristol Myers Squibb::batch_dedicated_v1": {
-    "jobs": [],
-    "checked_at": 1787840251.3901865,
-    "consecutive_failures": 1
-  },
-  "Stryker::batch_dedicated_v1": {
-    "jobs": [],
-    "checked_at": 1787840255.3525264,
-    "consecutive_failures": 1
-  },
-  "HP (Hewlett-Packard)::friend_next4_v1": {
-    "jobs": [],
-    "checked_at": 1787840263.1666949,
-    "consecutive_failures": 1
-  },
-  "Oracle::attempt2_plus_new_v2": {
-    "jobs": [],
-    "checked_at": 1787840265.3463113,
-    "consecutive_failures": 1
-  },
-  "Central Bank of Ireland": {
-    "jobs": [],
-    "checked_at": 1787840268.0858712,
-    "consecutive_failures": 1
-  },
-  "Red Hat": {
-    "jobs": [],
-    "checked_at": 1787840276.6493185,
-    "consecutive_failures": 1
-  },
-  "Forvis Mazars Ireland::next_manual_batch_v2": {
-    "jobs": [],
-    "checked_at": 1787840285.3775284,
-    "consecutive_failures": 1
-  },
-  "Willis Towers Watson (WTW)": {
-    "jobs": [],
-    "checked_at": 1787840294.0061808,
-    "consecutive_failures": 1
-  },
-  "Glanbia / Tirlán::runtime_safe_next20_b_v1": {
-    "jobs": [],
-    "checked_at": 1787840315.0765762,
-    "consecutive_failures": 1
-  },
-  "Cantor Fitzgerald Ireland::runtime_safe_next20_b_v1": {
-    "jobs": [],
-    "checked_at": 1787840316.9728694,
-    "consecutive_failures": 1
-  },
-  "UBS::runtime_safe_next20_b_v1": {
-    "jobs": [],
-    "checked_at": 1787840320.226962,
-    "consecutive_failures": 1
-  },
-  "Slalom::runtime_safe_next20_b_v1": {
-    "jobs": [],
-    "checked_at": 1787840320.4035556,
-    "consecutive_failures": 1
-  },
-  "ABP Food Group::runtime_safe_next20_b_v1": {
-    "jobs": [],
-    "checked_at": 1787840322.089161,
-    "consecutive_failures": 1
-  },
-  "Zurich Insurance::runtime_safe_next20_b_v1": {
-    "jobs": [],
-    "checked_at": 1787840323.3220668,
-    "consecutive_failures": 1
-  },
-  "Alexion Pharmaceuticals::runtime_safe_next20_b_v1": {
-    "jobs": [],
-    "checked_at": 1787840324.9977062,
-    "consecutive_failures": 1
-  },
-  "Baxter International::runtime_safe_next20_b_v1": {
-    "jobs": [],
-    "checked_at": 1787840325.2167544,
-    "consecutive_failures": 1
-  },
-  "Coillte::runtime_safe_next20_b_v1": {
-    "jobs": [],
-    "checked_at": 1787840328.142123,
-    "consecutive_failures": 1
-  },
-  "Cook Medical::runtime_safe_next20_b_v1": {
-    "jobs": [],
-    "checked_at": 1787840329.6786087,
-    "consecutive_failures": 1
-  },
-  "Gas Networks Ireland::runtime_safe_next20_b_v1": {
-    "jobs": [],
-    "checked_at": 1787840330.839413,
-    "consecutive_failures": 1
-  },
-  "Eir::runtime_safe_next20_b_v1": {
-    "jobs": [],
-    "checked_at": 1787840332.039468,
-    "consecutive_failures": 1
-  },
-  "Kepak Group::runtime_safe_next20_b_v1": {
-    "jobs": [],
-    "checked_at": 1787840334.4624484,
-    "consecutive_failures": 1
-  },
   "Alvarez & Marsal::runtime_safe_next20_b_v1": {
     "jobs": [],
     "checked_at": 1787840334.779754,
@@ -31957,39 +31807,746 @@
     "checked_at": 1787840343.8335872,
     "consecutive_failures": 1
   },
-  "Boston Consulting Group (BCG)::runtime_safe_next20_b_v1": {
+  "Baxter International::targeted_direct_batch1_v1": {
     "jobs": [],
-    "checked_at": 1787840347.0575242,
+    "checked_at": 1787841978.2515786,
     "consecutive_failures": 1
   },
-  "Aviva Ireland::next_recovery_batch7_v1": {
+  "Avolon": {
     "jobs": [],
-    "checked_at": 1787840351.3750713,
+    "checked_at": 1787841978.7686684,
+    "consecutive_failures": 1
+  },
+  "Coillte::targeted_direct_batch1_v1": {
+    "jobs": [],
+    "checked_at": 1787841979.3539124,
+    "consecutive_failures": 1
+  },
+  "Gas Networks Ireland::targeted_direct_batch1_v1": {
+    "jobs": [
+      {
+        "company": "Gas Networks Ireland",
+        "title": "Design Engineer Dx",
+        "location": "Cork",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://www.gasnetworks.ie/corporate/careers/careers-overview/senior-investment-analyst-0",
+        "source": "gas_networks_official_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "",
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T14:48:25.257300+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Gas Networks Ireland",
+        "title": "Design Engineer Dx",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "mailto:recruit@gasnetworks.ie?subject=Senior Investment Analyst - Ref No. GNI147",
+        "source": "gas_networks_official_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "",
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T14:48:25.257300+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Gas Networks Ireland",
+        "title": "Construction Engineer - Leinster",
+        "location": "Cork/Dublin",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://www.gasnetworks.ie/corporate/careers/careers-overview/design-engineer-dx-1",
+        "source": "gas_networks_official_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "",
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T14:48:25.257300+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Gas Networks Ireland",
+        "title": "Construction Engineer - Leinster",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "mailto:recruit@gasnetworks.ie?subject=Design Engineer Dx - Ref No. GNI139",
+        "source": "gas_networks_official_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "",
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T14:48:25.257300+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Gas Networks Ireland",
+        "title": "Materials Engineer",
+        "location": "Cork/Dublin",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://www.gasnetworks.ie/corporate/careers/careers-overview/construction-engineer-leinster-0",
+        "source": "gas_networks_official_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "",
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T14:48:25.257300+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Gas Networks Ireland",
+        "title": "Materials Engineer",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "mailto:recruit@gasnetworks.ie?subject=Construction Engineer - Leinster - Ref No. GNI146",
+        "source": "gas_networks_official_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "",
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T14:48:25.257300+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Gas Networks Ireland",
+        "title": "Materials Engineer",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://www.gasnetworks.ie/corporate/careers/careers-overview/materials-engineer",
+        "source": "gas_networks_official_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "",
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T14:48:25.257300+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Gas Networks Ireland",
+        "title": "Materials Engineer",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "mailto:recruit@gasnetworks.ie?subject=Materials Engineer - Ref No. GNI145",
+        "source": "gas_networks_official_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "",
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T14:48:25.257300+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Gas Networks Ireland",
+        "title": "LinkedIn",
+        "location": "Cork/Dublin",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://www.linkedin.com/company/gas-networks-ireland",
+        "source": "gas_networks_official_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "",
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T14:48:25.257300+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Gas Networks Ireland",
+        "title": "Connections",
+        "location": "Cork/Dublin",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://twitter.com/GasNetIRL",
+        "source": "gas_networks_official_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "",
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T14:48:25.257300+00:00",
+        "posted_age_known": false
+      }
+    ],
+    "checked_at": 1787841979.9476202,
+    "consecutive_failures": 0
+  },
+  "Eir::targeted_direct_batch1_v1": {
+    "jobs": [
+      {
+        "company": "Eir",
+        "title": "Part Time Retail Sales Consultant Tallaght",
+        "location": "Tallaght <i class=\"fa fa-fw fa-folder-open-o\" title=\"Referenc",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Part-time",
+        "url": "https://jobs.eir.care/jobs/detail/part-time-retail-sales-consultant-tallaght-245",
+        "source": "eir_official_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "",
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T14:48:25.257300+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Eir",
+        "title": "Full Time Retail Sales Consultant- Liffey Valley Shopping Centre",
+        "location": "Dublin City <i class=\"fa fa-fw fa-folder-open-o\" title=\"Refer",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jobs.eir.care/jobs/detail/full-time-retail-sales-consultant-liffey-valley-shopping-centre-1029",
+        "source": "eir_official_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "",
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T14:48:25.257300+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Eir",
+        "title": "Team Lead – Voice and Contact Centre Services",
+        "location": "Dublin 8 <i class=\"fa fa-fw fa-folder-open-o\" title=\"Referenc",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jobs.eir.care/jobs/detail/team-lead-voice-and-contact-centre-services-2139",
+        "source": "eir_official_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "",
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T14:48:25.257300+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Eir",
+        "title": "Cloud Infrastructure Engineer",
+        "location": "Dublin <i class=\"fa fa-fw fa-folder-open-o\" title=\"Reference",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jobs.eir.care/jobs/detail/cloud-infrastructure-engineer-2140",
+        "source": "eir_official_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "",
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T14:48:25.257300+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Eir",
+        "title": "Full Time Retail Sales Consultant (6 Month Fixed Term Contract)- Tallaght",
+        "location": "Tallaght <i class=\"fa fa-fw fa-folder-open-o\" title=\"Referenc",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Contract",
+        "url": "https://jobs.eir.care/jobs/detail/full-time-retail-sales-consultant-6-month-fixed-term-contract-tallaght-710",
+        "source": "eir_official_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "",
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T14:48:25.257300+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Eir",
+        "title": "Part Time Retail Sales Consultant - Bray",
+        "location": "Bray, County Wicklow <i class=\"fa fa-fw fa-folder-open-o\" tit",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Part-time",
+        "url": "https://jobs.eir.care/jobs/detail/part-time-retail-sales-consultant-bray-1329",
+        "source": "eir_official_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "",
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T14:48:25.257300+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Eir",
+        "title": "Retail Store Manager - Carrick on Shannon",
+        "location": "Carrick on Shannon <i class=\"fa fa-fw fa-folder-open-o\" title",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jobs.eir.care/jobs/detail/retail-store-manager-carrick-on-shannon-2078",
+        "source": "eir_official_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "",
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T14:48:25.257300+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Eir",
+        "title": "Outbound Call Centre Sales Agent",
+        "location": "Dublin <i class=\"fa fa-fw fa-folder-open-o\" title=\"Reference",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jobs.eir.care/jobs/detail/outbound-call-centre-sales-agent-1965",
+        "source": "eir_official_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "",
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T14:48:25.257300+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Eir",
+        "title": "Level 2— SOC Incident Analyst",
+        "location": "Dublin <i class=\"fa fa-fw fa-folder-open-o\" title=\"Reference",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jobs.eir.care/jobs/detail/level-2-soc-incident-analyst-2124",
+        "source": "eir_official_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "",
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T14:48:25.257300+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Eir",
+        "title": "Full Time Retail Sales Consultant - Henry Street",
+        "location": "Henry Street, Dublin City Centre <i class=\"fa fa-fw fa-folder",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jobs.eir.care/jobs/detail/full-time-retail-sales-consultant-henry-street-551",
+        "source": "eir_official_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "",
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T14:48:25.257300+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Eir",
+        "title": "Retail Store Manager - Nenagh",
+        "location": "Nenagh, Tipperary <i class=\"fa fa-fw fa-folder-open-o\" title=",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jobs.eir.care/jobs/detail/retail-store-manager-nenagh-2044",
+        "source": "eir_official_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "",
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T14:48:25.257300+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Eir",
+        "title": "Service Delivery Manager",
+        "location": "Dublin <i class=\"fa fa-fw fa-folder-open-o\" title=\"Reference",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jobs.eir.care/jobs/detail/service-delivery-manager-2129",
+        "source": "eir_official_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "",
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T14:48:25.257300+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Eir",
+        "title": "Part Time Retail Sales Consultant-Douglas Cork",
+        "location": "Douglas, Cork <i class=\"fa fa-fw fa-folder-open-o\" title=\"Ref",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Part-time",
+        "url": "https://jobs.eir.care/jobs/detail/part-time-retail-sales-consultant-douglas-cork-1431",
+        "source": "eir_official_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "",
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T14:48:25.257300+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Eir",
+        "title": "Senior Citrix Consultant",
+        "location": "HSQ2, Dublin 8 & Hybrid <i class=\"fa fa-fw fa-folder-open",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jobs.eir.care/jobs/detail/senior-citrix-consultant-2135",
+        "source": "eir_official_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "",
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T14:48:25.257300+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Eir",
+        "title": "Full Time Retail Sales Consultant - Douglas",
+        "location": "Douglas, Cork <i class=\"fa fa-fw fa-folder-open-o\" title=\"Ref",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jobs.eir.care/jobs/detail/full-time-retail-sales-consultant-douglas-2042",
+        "source": "eir_official_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "",
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T14:48:25.257300+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Eir",
+        "title": "Part Time Retail Sales Consultant- Swords",
+        "location": "Swords, Dublin <i class=\"fa fa-fw fa-folder-open-o\" title=\"Re",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Part-time",
+        "url": "https://jobs.eir.care/jobs/detail/part-time-retail-sales-consultant-swords-1001",
+        "source": "eir_official_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "",
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T14:48:25.257300+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Eir",
+        "title": "Retail Store Manager- Swords",
+        "location": "Pavilions S.C Swords <i class=\"fa fa-fw fa-folder-open-o\" tit",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jobs.eir.care/jobs/detail/retail-store-manager-swords-1453",
+        "source": "eir_official_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "",
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T14:48:25.257300+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Eir",
+        "title": "Senior Cloud Consultant",
+        "location": "HSQ2, Dublin 8 & Hybrid <i class=\"fa fa-fw fa-folder-open",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jobs.eir.care/jobs/detail/senior-cloud-consultant-2137",
+        "source": "eir_official_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "",
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T14:48:25.257300+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Eir",
+        "title": "Part Time Retail Sales Consultant - Drogheda Scotch hall",
+        "location": "Drogheda <i class=\"fa fa-fw fa-folder-open-o\" title=\"Referenc",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Part-time",
+        "url": "https://jobs.eir.care/jobs/detail/part-time-retail-sales-consultant-drogheda-scotch-hall-503",
+        "source": "eir_official_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "",
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T14:48:25.257300+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Eir",
+        "title": "Part Time Retail Consultant- Fermoy",
+        "location": "Cork <i class=\"fa fa-fw fa-folder-open-o\" title=\"",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Part-time",
+        "url": "https://jobs.eir.care/jobs/detail/part-time-retail-consultant-fermoy-886",
+        "source": "eir_official_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "",
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T14:48:25.257300+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Eir",
+        "title": "Full Time Retail Sales Consultant - Swords",
+        "location": "Swords, County Dublin <i class=\"fa fa-fw fa-folder-open-o\" ti",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jobs.eir.care/jobs/detail/full-time-retail-sales-consultant-swords-841",
+        "source": "eir_official_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "",
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T14:48:25.257300+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Eir",
+        "title": "Part Time Retail Sales Consultant- Ballincollig",
+        "location": "Ballincollig, County Cork <i class=\"fa fa-fw fa-folder-open-o",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Part-time",
+        "url": "https://jobs.eir.care/jobs/detail/part-time-retail-sales-consultant-ballincollig-919",
+        "source": "eir_official_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "",
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T14:48:25.257300+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Eir",
+        "title": "Retail Store Manager- Ashbourne",
+        "location": "Ashbourne, Meath <i class=\"fa fa-fw fa-folder-open-o\" title=\"",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jobs.eir.care/jobs/detail/retail-store-manager-ashbourne-1890",
+        "source": "eir_official_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "",
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T14:48:25.257300+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Eir",
+        "title": "Transition Manager",
+        "location": "Dublin <i class=\"fa fa-fw fa-folder-open-o\" title=\"Reference",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jobs.eir.care/jobs/detail/transition-manager-2138",
+        "source": "eir_official_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "",
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T14:48:25.257300+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Eir",
+        "title": "Sales Acquisition Executive",
+        "location": "Ireland <i class=\"fa fa-fw fa-folder-open-o\" title=\"Reference",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jobs.eir.care/jobs/detail/sales-acquisition-executive-672",
+        "source": "eir_official_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "",
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T14:48:25.257300+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Eir",
+        "title": "Senior Network Firewall Engineer",
+        "location": "Dublin <i class=\"fa fa-fw fa-folder-open-o\" title=\"Reference",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jobs.eir.care/jobs/detail/senior-network-firewall-engineer-2122",
+        "source": "eir_official_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "",
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T14:48:25.257300+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Eir",
+        "title": "Akamai App & API Protection Engineer",
+        "location": "Dublin <i class=\"fa fa-fw fa-folder-open-o\" title=\"Reference",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jobs.eir.care/jobs/detail/akamai-app-api-protection-engineer-2123",
+        "source": "eir_official_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "",
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T14:48:25.257300+00:00",
+        "posted_age_known": false
+      }
+    ],
+    "checked_at": 1787841980.77221,
+    "consecutive_failures": 0
+  },
+  "Regeneron": {
+    "jobs": [],
+    "checked_at": 1787841980.999228,
+    "consecutive_failures": 1
+  },
+  "BNY Mellon": {
+    "jobs": [],
+    "checked_at": 1787841982.5140953,
+    "consecutive_failures": 1
+  },
+  "Aldi Ireland::batch_dedicated_v2": {
+    "jobs": [],
+    "checked_at": 1787841991.9580042,
+    "consecutive_failures": 1
+  },
+  "Dell Technologies::batch_dedicated_v1": {
+    "jobs": [],
+    "checked_at": 1787841997.4198022,
+    "consecutive_failures": 1
+  },
+  "NetApp::netapp_attempt2_v3": {
+    "jobs": [],
+    "checked_at": 1787842006.88602,
+    "consecutive_failures": 1
+  },
+  "SSE Airtricity / SSE::batch_dedicated_v1": {
+    "jobs": [],
+    "checked_at": 1787842015.7572784,
+    "consecutive_failures": 1
+  },
+  "QIAGEN": {
+    "jobs": [],
+    "checked_at": 1787842018.4130573,
+    "consecutive_failures": 1
+  },
+  "Stryker::batch_dedicated_v1": {
+    "jobs": [],
+    "checked_at": 1787842020.3726108,
+    "consecutive_failures": 1
+  },
+  "Fitch Ratings::next_recovery_batch7_v1": {
+    "jobs": [],
+    "checked_at": 1787842022.2195313,
+    "consecutive_failures": 1
+  },
+  "Central Bank of Ireland": {
+    "jobs": [],
+    "checked_at": 1787842024.1080263,
+    "consecutive_failures": 1
+  },
+  "HP (Hewlett-Packard)::friend_next4_v1": {
+    "jobs": [],
+    "checked_at": 1787842026.0404758,
+    "consecutive_failures": 1
+  },
+  "Oracle::attempt2_plus_new_v2": {
+    "jobs": [],
+    "checked_at": 1787842028.523177,
+    "consecutive_failures": 1
+  },
+  "Bristol Myers Squibb::batch_dedicated_v1": {
+    "jobs": [],
+    "checked_at": 1787842029.9136832,
+    "consecutive_failures": 1
+  },
+  "Red Hat": {
+    "jobs": [],
+    "checked_at": 1787842032.9893715,
+    "consecutive_failures": 1
+  },
+  "Cantor Fitzgerald Ireland": {
+    "jobs": [],
+    "checked_at": 1787842035.9879534,
+    "consecutive_failures": 1
+  },
+  "Glanbia / Tirlán": {
+    "jobs": [],
+    "checked_at": 1787842036.3800082,
+    "consecutive_failures": 1
+  },
+  "Forvis Mazars Ireland::next_manual_batch_v2": {
+    "jobs": [],
+    "checked_at": 1787842036.542198,
+    "consecutive_failures": 1
+  },
+  "Slalom": {
+    "jobs": [],
+    "checked_at": 1787842039.6332316,
+    "consecutive_failures": 1
+  },
+  "Willis Towers Watson (WTW)": {
+    "jobs": [],
+    "checked_at": 1787842044.2544014,
+    "consecutive_failures": 1
+  },
+  "UBS": {
+    "jobs": [],
+    "checked_at": 1787842044.4482045,
+    "consecutive_failures": 1
+  },
+  "ABP Food Group": {
+    "jobs": [],
+    "checked_at": 1787842044.8200848,
+    "consecutive_failures": 1
+  },
+  "Alexion Pharmaceuticals": {
+    "jobs": [],
+    "checked_at": 1787842047.7960696,
+    "consecutive_failures": 1
+  },
+  "Zurich Insurance": {
+    "jobs": [],
+    "checked_at": 1787842048.3569317,
+    "consecutive_failures": 1
+  },
+  "Cook Medical": {
+    "jobs": [],
+    "checked_at": 1787842053.6619847,
+    "consecutive_failures": 1
+  },
+  "Kepak Group": {
+    "jobs": [],
+    "checked_at": 1787842053.9024212,
+    "consecutive_failures": 1
+  },
+  "Sky Ireland": {
+    "jobs": [],
+    "checked_at": 1787842054.340955,
     "consecutive_failures": 1
   },
   "ESB (Electricity Supply Board)": {
     "jobs": [],
-    "checked_at": 1787840356.083225,
+    "checked_at": 1787842054.3606517,
     "consecutive_failures": 1
   },
   "Revvity (PerkinElmer)": {
     "jobs": [],
-    "checked_at": 1787840356.571326,
+    "checked_at": 1787842059.2058072,
     "consecutive_failures": 1
   },
-  "An Post": {
+  "Boston Consulting Group (BCG)": {
     "jobs": [],
-    "checked_at": 1787840357.0347204,
+    "checked_at": 1787842073.0730085,
     "consecutive_failures": 1
   },
   "Haleon": {
     "jobs": [],
-    "checked_at": 1787840372.1013477,
+    "checked_at": 1787842073.414891,
+    "consecutive_failures": 1
+  },
+  "An Post": {
+    "jobs": [],
+    "checked_at": 1787842073.4266307,
     "consecutive_failures": 1
   },
   "GlaxoSmithKline (GSK)": {
     "jobs": [],
-    "checked_at": 1787840374.7072875,
+    "checked_at": 1787842074.0320218,
     "consecutive_failures": 1
   }
 }
