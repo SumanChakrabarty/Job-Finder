@@ -12610,8 +12610,8 @@
   },
   "Alvarez & Marsal": {
     "jobs": [],
-    "checked_at": 1787842058.7561831,
-    "consecutive_failures": 116
+    "checked_at": 1787844269.1991765,
+    "consecutive_failures": 117
   },
   "Coca-Cola HBC Ireland": {
     "jobs": [],
@@ -12846,8 +12846,8 @@
   },
   "Bain & Company": {
     "jobs": [],
-    "checked_at": 1787842067.5647714,
-    "consecutive_failures": 116
+    "checked_at": 1787844279.506834,
+    "consecutive_failures": 117
   },
   "FTI Consulting": {
     "jobs": [],
@@ -14050,18 +14050,18 @@
   },
   "Akamai": {
     "jobs": [],
-    "checked_at": 1787842065.1478102,
-    "consecutive_failures": 103
+    "checked_at": 1787844280.039753,
+    "consecutive_failures": 104
   },
   "AerCap": {
     "jobs": [],
-    "checked_at": 1787842066.7251556,
-    "consecutive_failures": 103
+    "checked_at": 1787844280.1478424,
+    "consecutive_failures": 104
   },
   "ASML": {
     "jobs": [],
-    "checked_at": 1787842064.2635376,
-    "consecutive_failures": 103
+    "checked_at": 1787844280.2215154,
+    "consecutive_failures": 104
   },
   "Alkermes": {
     "jobs": [],
@@ -32374,184 +32374,767 @@
     "checked_at": 1787841980.77221,
     "consecutive_failures": 0
   },
-  "Sky Ireland::targeted_direct_batch2_v1": {
-    "jobs": [],
-    "checked_at": 1787843076.418738,
-    "consecutive_failures": 1
+  "Alexion Pharmaceuticals::targeted_direct_batch2_fix_v2": {
+    "jobs": [
+      {
+        "company": "Alexion Pharmaceuticals",
+        "title": "Manufacturing Shift Lead",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.alexion.com/job/athlone/manufacturing-shift-lead/43991/99799765728",
+        "source": "alexion_official_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "",
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T15:25:17.885150+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Alexion Pharmaceuticals",
+        "title": "Manufacturing Associate III (24-month Fixed Term Contract)",
+        "location": "Athlone, Leinster",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Contract",
+        "url": "https://careers.alexion.com/job/athlone/manufacturing-associate-iii-24-month-fixed-term-contract/43991/99799765712",
+        "source": "alexion_official_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "",
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T15:25:17.885150+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Alexion Pharmaceuticals",
+        "title": "Warehouse Associate (24-Month Fixed Term Contract Night Shift)",
+        "location": "Athlone, Leinster",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Contract",
+        "url": "https://careers.alexion.com/job/athlone/warehouse-associate-24-month-fixed-term-contract-night-shift/43991/99799765696",
+        "source": "alexion_official_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "",
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T15:25:17.885150+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Alexion Pharmaceuticals",
+        "title": "Warehouse Lead Operator (Permanent Night Shift)",
+        "location": "Athlone, Leinster",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.alexion.com/job/athlone/warehouse-lead-operator-permanent-night-shift/43991/99799765680",
+        "source": "alexion_official_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "",
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T15:25:17.885150+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Alexion Pharmaceuticals",
+        "title": "Process Maintenance Technician",
+        "location": "Athlone, Leinster",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.alexion.com/job/athlone/process-maintenance-technician/43991/99761985008",
+        "source": "alexion_official_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "",
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T15:25:17.885150+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Alexion Pharmaceuticals",
+        "title": "Process Maintenance Technician (24-Month Fixed Term Contract)",
+        "location": "Athlone, Leinster",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Contract",
+        "url": "https://careers.alexion.com/job/athlone/process-maintenance-technician-24-month-fixed-term-contract/43991/99761984976",
+        "source": "alexion_official_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "",
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T15:25:17.885150+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Alexion Pharmaceuticals",
+        "title": "Director, Supply Chain International Customer Operations",
+        "location": "Dublin, Leinster",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.alexion.com/job/dublin/director-supply-chain-international-customer-operations/43991/99686413936",
+        "source": "alexion_official_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "",
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T15:25:17.885150+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Alexion Pharmaceuticals",
+        "title": "Senior Real World Data Scientist",
+        "location": "Dublin, Leinster",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.alexion.com/job/dublin/senior-real-world-data-scientist/43991/95691449232",
+        "source": "alexion_official_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "",
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T15:25:17.885150+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Alexion Pharmaceuticals",
+        "title": "Specialist, Medical Writing",
+        "location": "Dublin, Leinster",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.alexion.com/job/dublin/specialist-medical-writing/43991/99529299632",
+        "source": "alexion_official_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "",
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T15:25:17.885150+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Alexion Pharmaceuticals",
+        "title": "Associate Director, Global Medical Information and Medical Review",
+        "location": "Dublin, Leinster",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.alexion.com/job/dublin/associate-director-global-medical-information-and-medical-review/43991/99441408976",
+        "source": "alexion_official_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "",
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T15:25:17.885150+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Alexion Pharmaceuticals",
+        "title": "Associate Director, Global Medical Information and Medical Review",
+        "location": "Dublin, Leinster",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.alexion.com/job/dublin/associate-director-global-medical-information-and-medical-review/43991/99441408960",
+        "source": "alexion_official_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "",
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T15:25:17.885150+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Alexion Pharmaceuticals",
+        "title": "Senior Manager, Global Medical Information and Medical Review",
+        "location": "Dublin, Leinster",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.alexion.com/job/dublin/senior-manager-global-medical-information-and-medical-review/43991/99441408944",
+        "source": "alexion_official_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "",
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T15:25:17.885150+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Alexion Pharmaceuticals",
+        "title": "Senior Manager, Global Medical Information and Medical Review",
+        "location": "Dublin, Leinster",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.alexion.com/job/dublin/senior-manager-global-medical-information-and-medical-review/43991/99441408576",
+        "source": "alexion_official_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "",
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T15:25:17.885150+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Alexion Pharmaceuticals",
+        "title": "Associate Director, Data Product & AI Portfolio Lead - 24 Month FTC",
+        "location": "Dublin, Leinster",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.alexion.com/job/dublin/associate-director-data-product-and-ai-portfolio-lead-24-month-ftc/43991/99067082096",
+        "source": "alexion_official_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "",
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T15:25:17.885150+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Alexion Pharmaceuticals",
+        "title": "Vice President R&D, Rare Disease",
+        "location": "Dublin, Leinster",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.alexion.com/job/dublin/vice-president-r-and-d-rare-disease/43991/98032583232",
+        "source": "alexion_official_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "",
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T15:25:17.885150+00:00",
+        "posted_age_known": false
+      }
+    ],
+    "checked_at": 1787844196.730805,
+    "consecutive_failures": 0
   },
-  "Baxter International::targeted_direct_batch1_v1": {
+  "Avolon": {
     "jobs": [],
-    "checked_at": 1787843076.6924677,
+    "checked_at": 1787844196.940311,
     "consecutive_failures": 1
   },
   "Coillte::targeted_direct_batch1_v1": {
     "jobs": [],
-    "checked_at": 1787843077.0414917,
+    "checked_at": 1787844197.1258047,
     "consecutive_failures": 1
   },
-  "Avolon": {
+  "Baxter International::targeted_direct_batch1_v1": {
     "jobs": [],
-    "checked_at": 1787843077.7840474,
-    "consecutive_failures": 1
-  },
-  "Alexion Pharmaceuticals::targeted_direct_batch2_v1": {
-    "jobs": [],
-    "checked_at": 1787843077.876502,
+    "checked_at": 1787844198.4099925,
     "consecutive_failures": 1
   },
   "Regeneron": {
     "jobs": [],
-    "checked_at": 1787843077.9210126,
-    "consecutive_failures": 1
-  },
-  "Zurich Insurance::targeted_direct_batch2_v1": {
-    "jobs": [],
-    "checked_at": 1787843078.3136106,
+    "checked_at": 1787844198.4199386,
     "consecutive_failures": 1
   },
   "BNY Mellon": {
     "jobs": [],
-    "checked_at": 1787843092.3228838,
+    "checked_at": 1787844200.320308,
     "consecutive_failures": 1
   },
-  "NetApp::netapp_attempt2_v3": {
+  "Sky Ireland::targeted_direct_batch2_fix_v2": {
+    "jobs": [
+      {
+        "company": "Sky Ireland",
+        "title": "Retail Sales Advisor - Tallaght\n\nCustomer Services and Sales\n\nDublin",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.sky.com/ie/jobs/t-R0058699",
+        "source": "sky_official_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "",
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T15:25:17.885150+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Sky Ireland",
+        "title": "Digital Advertising Sales Lead\n\nCommercial Management\n\nDublin",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.sky.com/ie/jobs/t-R0058558",
+        "source": "sky_official_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "",
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T15:25:17.885150+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Sky Ireland",
+        "title": "Director of Operations\n\nCustomer Services and Sales\n\nDublin",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.sky.com/ie/jobs/wd-R0058599",
+        "source": "sky_official_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "",
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T15:25:17.885150+00:00",
+        "posted_age_known": false
+      }
+    ],
+    "checked_at": 1787844201.1704113,
+    "consecutive_failures": 0
+  },
+  "Zurich Insurance::targeted_direct_batch2_fix_v2": {
+    "jobs": [
+      {
+        "company": "Zurich Insurance",
+        "title": "Entry Level Personal Lines Direct Sales Agent Hybrid - Wexford",
+        "location": "Wexford",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://www.careers.zurich.com/job/Wexford-Entry-Level-Personal-Lines-Direct-Sales-Agent-Hybrid-Wexford/1329751857/",
+        "source": "zurich_successfactors_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T15:25:17.885150+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Zurich Insurance",
+        "title": "Business Lines Underwriter - New Business Dublin / Wexford",
+        "location": "Dublin",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://www.careers.zurich.com/job/Wexford-Business-Lines-Underwriter-New-Business-Dublin-Wexford/1369293057/",
+        "source": "zurich_successfactors_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T15:25:17.885150+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Zurich Insurance",
+        "title": "Entry Level Personal Lines Agent Hybrid (12 Month Fixed Term) - Wexford",
+        "location": "Wexford",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Contract",
+        "url": "https://www.careers.zurich.com/job/Wexford-Entry-Level-Personal-Lines-Agent-Hybrid-%2812-Month-Fixed-Term%29-Wexford/1348988457/",
+        "source": "zurich_successfactors_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T15:25:17.885150+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Zurich Insurance",
+        "title": "Senior Claims Handler - Wexford",
+        "location": "Wexford",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://www.careers.zurich.com/job/Wexford-Senior-Claims-Handler-Wexford/1370086157/",
+        "source": "zurich_successfactors_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T15:25:17.885150+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Zurich Insurance",
+        "title": "HR Business Consultant, 18 Months FTC",
+        "location": "Wexford",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://www.careers.zurich.com/job/Wexford-HR-Business-Consultant%2C-18-Months-FTC/1366710857/",
+        "source": "zurich_successfactors_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T15:25:17.885150+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Zurich Insurance",
+        "title": "Agri Market Facing Underwriter",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://www.careers.zurich.com/job/Wexford-Agri-Market-Facing-Underwriter/1370081357/",
+        "source": "zurich_successfactors_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T15:25:17.885150+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Zurich Insurance",
+        "title": "Claims Handler - Wexford (Hybrid)",
+        "location": "Wexford",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://www.careers.zurich.com/job/Wexford-Claims-Handler-Wexford-%28Hybrid%29/1360113257/",
+        "source": "zurich_successfactors_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T15:25:17.885150+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Zurich Insurance",
+        "title": "Business Lines Motor Underwriter - Wexford",
+        "location": "Wexford",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://www.careers.zurich.com/job/Wexford-Business-Lines-Motor-Underwriter-Wexford/1370090357/",
+        "source": "zurich_successfactors_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T15:25:17.885150+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Zurich Insurance",
+        "title": "Entry Level Personal Lines Agent Hybrid - Wexford",
+        "location": "Wexford",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://www.careers.zurich.com/job/Wexford-Entry-Level-Personal-Lines-Agent-Hybrid-Wexford/1348737757/",
+        "source": "zurich_successfactors_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T15:25:17.885150+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Zurich Insurance",
+        "title": "German Administrator - German Risk Dept",
+        "location": "Blackrock, Co.Dublin",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://www.careers.zurich.com/job/Dublin-German-Administrator-German-Risk-Dept-IE-D/1350525857/",
+        "source": "zurich_successfactors_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T15:25:17.885150+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Zurich Insurance",
+        "title": "Group Pensions Administrator - 10 month contract",
+        "location": "Blackrock, Co Dublin",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Contract",
+        "url": "https://www.careers.zurich.com/job/Dublin-Group-Pensions-Administrator-10-month-contract-IE-D/730131602/",
+        "source": "zurich_successfactors_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T15:25:17.885150+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Zurich Insurance",
+        "title": "Data Scientist",
+        "location": "Blackrock",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://www.careers.zurich.com/job/Dublin-Data-Scientist-IE-D/1369410357/",
+        "source": "zurich_successfactors_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T15:25:17.885150+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Zurich Insurance",
+        "title": "Bodily Injury Claims Handler Motor - Dublin Hybrid",
+        "location": "Dublin",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://www.careers.zurich.com/job/Dublin-Bodily-Injury-Claims-Handler-Motor-Dublin-Hybrid-IE-D/1328126857/",
+        "source": "zurich_successfactors_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T15:25:17.885150+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Zurich Insurance",
+        "title": "HR Business Consultant, ZLAP, 12 Months FTC",
+        "location": "Blackrock, Co.Dublin",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://www.careers.zurich.com/job/Dublin-HR-Business-Consultant%2C-ZLAP%2C-12-Months-FTC-IE-D/1369909757/",
+        "source": "zurich_successfactors_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T15:25:17.885150+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Zurich Insurance",
+        "title": "Talent Acquisition Specialist (12 Month FTC)",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://www.careers.zurich.com/job/Dublin-Talent-Acquisition-Specialist-%2812-Month-FTC%29-IE-D/1369420957/",
+        "source": "zurich_successfactors_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T15:25:17.885150+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Zurich Insurance",
+        "title": "HR Payroll Generalist (12 months Fixed Term)",
+        "location": "Blackrock",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Contract",
+        "url": "https://www.careers.zurich.com/job/Dublin-HR-Payroll-Generalist-%2812-months-Fixed-Term%29-IE-D/1370108357/",
+        "source": "zurich_successfactors_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T15:25:17.885150+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Zurich Insurance",
+        "title": "Senior Engineer (Crane/Lifting)",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://www.careers.zurich.com/job/Dublin-Senior-Engineer-%28CraneLifting%29-IE-D/1366843957/",
+        "source": "zurich_successfactors_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T15:25:17.885150+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Zurich Insurance",
+        "title": "Trainee Claims Assessor",
+        "location": "Blackrock, Co.Dublin",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://www.careers.zurich.com/job/Dublin-Trainee-Claims-Assessor-IE-D/1357940057/",
+        "source": "zurich_successfactors_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T15:25:17.885150+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Zurich Insurance",
+        "title": "Salesforce Developer",
+        "location": "Blackrock",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://www.careers.zurich.com/job/Dublin-Salesforce-Developer-IE-D/1369410557/",
+        "source": "zurich_successfactors_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T15:25:17.885150+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Zurich Insurance",
+        "title": "Head of Sales and Distribution, GI",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://www.careers.zurich.com/job/Dublin-Head-of-Sales-and-Distribution%2C-GI-IE-D/1369513357/",
+        "source": "zurich_successfactors_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T15:25:17.885150+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Zurich Insurance",
+        "title": "GI Distribution Performance Manager",
+        "location": "Blackrock",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://www.careers.zurich.com/job/Dublin-GI-Distribution-Performance-Manager-IE-D/1370217557/",
+        "source": "zurich_successfactors_http",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-27T15:25:17.885150+00:00",
+        "posted_age_known": false
+      }
+    ],
+    "checked_at": 1787844206.9349968,
+    "consecutive_failures": 0
+  },
+  "Aldi Ireland::batch_dedicated_v2": {
     "jobs": [],
-    "checked_at": 1787843104.7640438,
+    "checked_at": 1787844211.268974,
     "consecutive_failures": 1
   },
   "Dell Technologies::batch_dedicated_v1": {
     "jobs": [],
-    "checked_at": 1787843107.1000106,
+    "checked_at": 1787844214.335238,
     "consecutive_failures": 1
   },
-  "QIAGEN": {
+  "NetApp::netapp_attempt2_v3": {
     "jobs": [],
-    "checked_at": 1787843117.9320133,
-    "consecutive_failures": 1
-  },
-  "Aldi Ireland::batch_dedicated_v2": {
-    "jobs": [],
-    "checked_at": 1787843120.8302643,
-    "consecutive_failures": 1
-  },
-  "Bristol Myers Squibb::batch_dedicated_v1": {
-    "jobs": [],
-    "checked_at": 1787843120.9179034,
-    "consecutive_failures": 1
-  },
-  "Fitch Ratings::next_recovery_batch7_v1": {
-    "jobs": [],
-    "checked_at": 1787843124.1162214,
+    "checked_at": 1787844228.0764272,
     "consecutive_failures": 1
   },
   "SSE Airtricity / SSE::batch_dedicated_v1": {
     "jobs": [],
-    "checked_at": 1787843125.8137045,
+    "checked_at": 1787844233.2916439,
+    "consecutive_failures": 1
+  },
+  "QIAGEN": {
+    "jobs": [],
+    "checked_at": 1787844236.5185587,
+    "consecutive_failures": 1
+  },
+  "Fitch Ratings::next_recovery_batch7_v1": {
+    "jobs": [],
+    "checked_at": 1787844241.761717,
     "consecutive_failures": 1
   },
   "Stryker::batch_dedicated_v1": {
     "jobs": [],
-    "checked_at": 1787843130.0045404,
-    "consecutive_failures": 1
-  },
-  "Oracle::attempt2_plus_new_v2": {
-    "jobs": [],
-    "checked_at": 1787843139.6976483,
-    "consecutive_failures": 1
-  },
-  "HP (Hewlett-Packard)::friend_next4_v1": {
-    "jobs": [],
-    "checked_at": 1787843142.0096412,
+    "checked_at": 1787844242.9986157,
     "consecutive_failures": 1
   },
   "Central Bank of Ireland": {
     "jobs": [],
-    "checked_at": 1787843144.8816493,
+    "checked_at": 1787844244.751187,
     "consecutive_failures": 1
   },
-  "Forvis Mazars Ireland::next_manual_batch_v2": {
+  "HP (Hewlett-Packard)::friend_next4_v1": {
     "jobs": [],
-    "checked_at": 1787843162.3471587,
+    "checked_at": 1787844245.9008439,
     "consecutive_failures": 1
   },
-  "Willis Towers Watson (WTW)": {
+  "Oracle::attempt2_plus_new_v2": {
     "jobs": [],
-    "checked_at": 1787843170.7922602,
+    "checked_at": 1787844246.26408,
+    "consecutive_failures": 1
+  },
+  "Bristol Myers Squibb::batch_dedicated_v1": {
+    "jobs": [],
+    "checked_at": 1787844246.8821814,
     "consecutive_failures": 1
   },
   "Red Hat": {
     "jobs": [],
-    "checked_at": 1787843185.1808927,
-    "consecutive_failures": 1
-  },
-  "Cantor Fitzgerald Ireland": {
-    "jobs": [],
-    "checked_at": 1787843209.023033,
+    "checked_at": 1787844252.7237291,
     "consecutive_failures": 1
   },
   "Glanbia / Tirlán": {
     "jobs": [],
-    "checked_at": 1787843210.35589,
+    "checked_at": 1787844254.316141,
+    "consecutive_failures": 1
+  },
+  "Cantor Fitzgerald Ireland": {
+    "jobs": [],
+    "checked_at": 1787844254.6170268,
+    "consecutive_failures": 1
+  },
+  "Forvis Mazars Ireland::next_manual_batch_v2": {
+    "jobs": [],
+    "checked_at": 1787844256.9701169,
     "consecutive_failures": 1
   },
   "Slalom": {
     "jobs": [],
-    "checked_at": 1787843211.523809,
+    "checked_at": 1787844259.2270763,
     "consecutive_failures": 1
   },
   "UBS": {
     "jobs": [],
-    "checked_at": 1787843212.5105958,
+    "checked_at": 1787844261.9807208,
     "consecutive_failures": 1
   },
   "ABP Food Group": {
     "jobs": [],
-    "checked_at": 1787843216.0746546,
+    "checked_at": 1787844262.4843163,
+    "consecutive_failures": 1
+  },
+  "Willis Towers Watson (WTW)": {
+    "jobs": [],
+    "checked_at": 1787844264.6196396,
     "consecutive_failures": 1
   },
   "Cook Medical": {
     "jobs": [],
-    "checked_at": 1787843220.473573,
+    "checked_at": 1787844266.6631966,
     "consecutive_failures": 1
   },
   "ESB (Electricity Supply Board)": {
     "jobs": [],
-    "checked_at": 1787843221.2519803,
+    "checked_at": 1787844268.4910908,
     "consecutive_failures": 1
   },
   "Kepak Group": {
     "jobs": [],
-    "checked_at": 1787843221.3041663,
-    "consecutive_failures": 1
-  },
-  "Aviva Ireland::next_recovery_batch7_v1": {
-    "jobs": [],
-    "checked_at": 1787843223.1998756,
+    "checked_at": 1787844272.2929187,
     "consecutive_failures": 1
   },
   "Revvity (PerkinElmer)": {
     "jobs": [],
-    "checked_at": 1787843228.1084006,
+    "checked_at": 1787844275.1389484,
     "consecutive_failures": 1
   },
   "An Post": {
     "jobs": [],
-    "checked_at": 1787843228.1789656,
+    "checked_at": 1787844285.4952984,
     "consecutive_failures": 1
   },
   "Boston Consulting Group (BCG)": {
     "jobs": [],
-    "checked_at": 1787843244.2132587,
+    "checked_at": 1787844287.1570458,
     "consecutive_failures": 1
   },
   "Haleon": {
     "jobs": [],
-    "checked_at": 1787843246.9420862,
+    "checked_at": 1787844287.1639307,
     "consecutive_failures": 1
   },
   "GlaxoSmithKline (GSK)": {
     "jobs": [],
-    "checked_at": 1787843248.9219294,
+    "checked_at": 1787844287.9142196,
     "consecutive_failures": 1
   }
 }
