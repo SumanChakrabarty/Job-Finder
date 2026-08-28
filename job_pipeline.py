@@ -11201,15 +11201,54 @@ def scrape_shannon_airport_group_http(session):
     return list(jobs.values())
 
 
-def scrape_uisce_eireann_current_portal():
+def scrape_uisce_eireann_current_portal(session):
     """Official Uisce Éireann current-vacancies portal, rendered first-party recovery."""
     return scrape_priority_sheet2_generic(
         "Uisce Éireann (Irish Water)",
         "https://www.water.ie/about/careers/portal",
+        session,
+    )
+
+
+def scrape_an_post_oracle(session):
+    """An Post official careers page -> Oracle Candidate Experience CX_2001."""
+    jobs = scrape_oracle_candidate_experience(
+        "An Post",
+        "https://fa-ewnd-saasfaprod1.fa.ocs.oraclecloud.com",
+        "CX_2001",
+        session,
+        country_code="IE",
+        max_pages=8,
+    )
+    print(f"      [an_post_oracle] {len(jobs)} verified Republic-of-Ireland vacancies")
+    return jobs
+
+
+def scrape_kepak_workable(session):
+    """Kepak official careers page -> Workable board apply.workable.com/kepak/."""
+    raw_jobs = try_workable("kepak", session) or []
+    jobs = []
+    for job in raw_jobs:
+        item = normalize_workable_job("Kepak Group", job)
+        if not item:
+            continue
+        if _ROI_NEGATIVE_RE.search(str(item.get("location") or "")):
+            continue
+        jobs.append(item)
+    print(f"      [kepak_workable] {len(jobs)} verified Republic-of-Ireland vacancies")
+    return jobs
+
+
+def scrape_gsk_ireland_current():
+    """GSK official current-jobs site, rendered Ireland-filtered fallback."""
+    return scrape_priority_sheet2_generic(
+        "GlaxoSmithKline (GSK)",
+        "https://jobs.gsk.com/us/en/search-results?keywords=Ireland",
         None,
     )
 
 def main():
+    print("=== TARGETED_DIRECT_BATCH_7_MULTI ACTIVE: Uisce argument bug fixed + An Post Oracle + Kepak Workable + GSK official current-jobs route added in ONE normal full run ===")
     print("=== TARGETED_DIRECT_BATCH_6_MULTI ACTIVE: Bord Gais Energy + Irish Distillers + Shannon Airport Group + Uisce Eireann official current routes added in ONE normal full run ===")
     print("=== TARGETED_DIRECT_BATCH_5_MULTI ACTIVE: EirGrid + DSV + WuXi Biologics + Energia direct first-party routes added in ONE normal full run; existing live routes untouched ===")
     print("=== TARGETED_DIRECT_BATCH_4_MULTI ACTIVE: Glanbia/Tirlan + Ornua + Haleon first-party direct routes added in ONE normal full run; existing live routes untouched ===")
@@ -11534,6 +11573,9 @@ def main():
     dedicated_company_specs = [
         ("exact", "alexion pharmaceuticals", scrape_alexion_ireland_direct, 35, "official Alexion Ireland jobs board"),
         ("exact", "sky ireland", scrape_sky_ireland_direct, 30, "official Sky Ireland jobs board"),
+        ("exact", "an post", scrape_an_post_oracle, 40, "official An Post Oracle Candidate Experience CX_2001"),
+        ("exact", "kepak group", scrape_kepak_workable, 35, "official Kepak Workable board"),
+        ("exact", "glaxosmithkline (gsk)", scrape_gsk_ireland_current, 55, "official GSK current-jobs Ireland search"),
         ("exact", "bord gáis energy", scrape_bord_gais_energy_workday, 40, "official Bord Gais Energy Centrica Workday route"),
         ("exact", "irish distillers (pernod ricard)", scrape_irish_distillers_workday, 40, "official Irish Distillers Pernod Ricard Workday route"),
         ("exact", "shannon airport group", scrape_shannon_airport_group_http, 30, "official Shannon Airport Group vacancies page"),
@@ -11757,6 +11799,7 @@ def main():
         "scrape_bausch_lomb_friend",
         "scrape_oracle_ireland_attempt2", "scrape_honeywell_attempt2", "scrape_schneider_attempt2",
         "Uisce Éireann (Irish Water)",
+    "GlaxoSmithKline (GSK)",
 }
 
     _live_company_names = {
@@ -11798,7 +11841,9 @@ def main():
             # from the old generic Sheet-2 zero-result cache so the proven
             # dedicated result cannot be shadowed by a stale generic verdict.
             _key = name.strip().lower()
-            if _key in {"bord gáis energy", "irish distillers (pernod ricard)", "shannon airport group", "uisce éireann (irish water)"}:
+            if _key in {"an post", "kepak group", "glaxosmithkline (gsk)", "uisce éireann (irish water)"}:
+                cache_key = f"{name}::targeted_direct_batch7_multi_v1"
+            elif _key in {"bord gáis energy", "irish distillers (pernod ricard)", "shannon airport group"}:
                 cache_key = f"{name}::targeted_direct_batch6_multi_v1"
             elif _key in {"eirgrid group", "dsv ireland", "wuxi biologics", "energia group"}:
                 cache_key = f"{name}::targeted_direct_batch5_multi_v1"
@@ -11819,6 +11864,9 @@ def main():
             elif _key in {
                 "oracle",
                 "mckinsey & company",
+            "an post",
+            "kepak group",
+            "glaxosmithkline (gsk)",
             "bord gáis energy",
             "irish distillers (pernod ricard)",
             "shannon airport group",
