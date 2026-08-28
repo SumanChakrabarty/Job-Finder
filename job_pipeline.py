@@ -10859,6 +10859,7 @@ def scrape_zurich_ireland_direct(session):
 
 
 def main():
+    print("=== TARGETED_DIRECT_BATCH_3_STABILITY ACTIVE: productive late-return scrapers get enough return budget; false timeout errors reduced; global runtime architecture unchanged ===")
     print("=== TARGETED_DIRECT_BATCH_2_FIX ACTIVE: Alexion/Zurich relative /job links fixed; Sky moved to rendered dedicated route; no global runtime change ===")
     print("=== TARGETED_DIRECT_BATCH_2 ACTIVE: Alexion/Sky/Zurich verified first-party Ireland HTTP routes added; browser fallbacks replaced; runtime architecture untouched ===")
     print("=== TARGETED_DIRECT_BATCH_1 ACTIVE: Eir/Gas Networks/Baxter/Coillte use verified first-party HTTP routes; generic next20 recovery disabled; live routes untouched ===")
@@ -11185,14 +11186,14 @@ def main():
         ("exact", "baxter international", scrape_baxter_ireland_direct, 35, "official Baxter Ireland location board"),
         ("exact", "coillte", scrape_coillte_direct, 30, "official Coillte current vacancies page"),
         ("exact", "ryanair", scrape_ryanair_ireland_next3, 45, "official Ryanair Ireland listing"),
-        ("exact", "dexcom", scrape_dexcom_ireland_attempt2, 60, "attempt 2 rendered Dexcom Ireland board"),
+        ("exact", "dexcom", scrape_dexcom_ireland_attempt2, 105, "proven rendered Dexcom Ireland board; return budget aligned to real completion"),
         ("exact", "docusign", scrape_docusign_ireland_attempt2, 105, "verified Docusign route; extended return budget"),
         ("exact", "aecom", scrape_aecom_ireland_newbatch, 45, "official AECOM SmartRecruiters API"),
         ("exact", "netapp", scrape_netapp_ireland_attempt2, 90, "NetApp attempt 2 rendered Ireland/city search"),
         ("exact", "applied materials", scrape_applied_materials_ireland_newbatch, 60, "official Applied Materials Ireland board"),
-        ("exact", "arcadis", scrape_arcadis_ireland_newbatch, 60, "official Arcadis Ireland Eightfold board"),
-        ("exact", "jacobs", scrape_jacobs_ireland_newbatch, 60, "official Jacobs Ireland search"),
-        ("exact", "atkinsréalis", scrape_atkinsrealis_ireland_newbatch, 105, "verified AtkinsRéalis route; extended return budget"),
+        ("exact", "arcadis", scrape_arcadis_ireland_newbatch, 105, "official Arcadis Ireland Eightfold board; return budget aligned to real completion"),
+        ("exact", "jacobs", scrape_jacobs_ireland_newbatch, 105, "official Jacobs Ireland search; return budget aligned to real completion"),
+        ("exact", "atkinsréalis", scrape_atkinsrealis_ireland_newbatch, 150, "verified AtkinsRéalis route; return budget aligned to real completion"),
         ("exact", "baker tilly ireland", scrape_baker_tilly_ireland_attempt2, 75, "Baker Tilly attempt 2 current vacancies"),
         ("exact", "greencore", scrape_greencore_ireland_attempt2, 75, "Greencore attempt 2 Dublin careers hub"),
         ("exact", "advanced micro devices (amd)", scrape_amd_ireland_attempt2, 90, "AMD attempt 2 current careers host"),
@@ -11431,7 +11432,9 @@ def main():
             # from the old generic Sheet-2 zero-result cache so the proven
             # dedicated result cannot be shadowed by a stale generic verdict.
             _key = name.strip().lower()
-            if _key in {"alexion pharmaceuticals", "sky ireland", "zurich insurance"}:
+            if _key in {"dexcom", "arcadis", "jacobs", "atkinsréalis"}:
+                cache_key = f"{name}::targeted_direct_batch3_stability_v1"
+            elif _key in {"alexion pharmaceuticals", "sky ireland", "zurich insurance"}:
                 cache_key = f"{name}::targeted_direct_batch2_fix_v2"
             elif _key in {"eir", "gas networks ireland", "baxter international", "coillte"}:
                 cache_key = f"{name}::targeted_direct_batch1_v1"
