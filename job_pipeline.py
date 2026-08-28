@@ -11201,13 +11201,13 @@ def scrape_shannon_airport_group_http(session):
     return list(jobs.values())
 
 
+
 def scrape_uisce_eireann_current_portal(session):
     """Official Uisce Éireann current-vacancies portal, rendered first-party recovery."""
     return scrape_priority_sheet2_generic(
+        "Uisce Éireann (Irish Water)",
         "https://www.water.ie/about/careers/portal",
-        session,
     )
-
 
 def scrape_an_post_oracle(session):
     """An Post official careers page -> Oracle Candidate Experience CX_2001."""
@@ -11238,13 +11238,13 @@ def scrape_kepak_workable(session):
     return jobs
 
 
+
 def scrape_gsk_ireland_current(session):
     """GSK official current-jobs site, rendered Ireland-filtered fallback."""
     return scrape_priority_sheet2_generic(
-            "https://jobs.gsk.com/us/en/search-results?keywords=Ireland",
-        session,
+        "GlaxoSmithKline (GSK)",
+        "https://jobs.gsk.com/us/en/search-results?keywords=Ireland",
     )
-
 
 def scrape_insulet_workday(session):
     """Insulet official corporate careers page -> current Workday tenant."""
@@ -11443,7 +11443,201 @@ def scrape_medpace_official_audit(session):
     print(f"      [medpace_audit] {len(jobs)} verified Republic-of-Ireland vacancies")
     return list(jobs.values())
 
+
+def scrape_aercap_direct_http(session):
+    """AerCap official static Open Positions table."""
+    company = "AerCap"
+    source = "https://www.aercap.com/careers/career-opportunities"
+    try:
+        raw = _html_get(session, source, 18)
+    except Exception as exc:
+        print(f"      [aercap_direct] listing failed: {exc}")
+        return []
+
+    jobs = {}
+    # Parse table rows; only Dublin, Ireland rows are accepted.
+    for row in re.findall(r"<tr\b[^>]*>(.*?)</tr>", raw, re.I | re.S):
+        card = re.sub(r"\s+", " ", _html_to_text(row)).strip()
+        if not re.search(r"\bDublin\s*,?\s*Ireland\b", card, re.I):
+            continue
+        cells = re.findall(r"<t[dh]\b[^>]*>(.*?)</t[dh]>", row, re.I | re.S)
+        if not cells:
+            continue
+        title = re.sub(r"\s+", " ", _html_to_text(cells[0])).strip()
+        if not title or _looks_like_non_job_title(title):
+            continue
+        hrefm = re.search(r'href=["\']([^"\']+)["\']', row, re.I)
+        href = urllib.parse.urljoin(source, html.unescape(hrefm.group(1))) if hrefm else source
+        key = href.lower() + "::" + title.lower()
+        sponsorship, snippet = classify_sponsorship(card[:6000])
+        jobs[key] = {
+            "company": company,
+            "title": title[:300],
+            "location": "Dublin, Ireland",
+            "posted_text": "Unknown",
+            "posted_days_ago": None,
+            "employment_type": normalize_employment_type("", title),
+            "url": href,
+            "source": "aercap_direct",
+            "visa_sponsorship": sponsorship,
+            "visa_snippet": snippet,
+        }
+    print(f"      [aercap_direct] {len(jobs)} verified Republic-of-Ireland vacancies")
+    return list(jobs.values())
+
+
+def scrape_syneos_ireland_direct(session):
+    """Syneos Health server-rendered Ireland/Dublin job search."""
+    company = "Syneos Health"
+    listing_urls = [
+        "https://www.syneoshealth.com/careers/search/jobs/in/dublin",
+        "https://www.syneoshealth.com/careers/search/jobs/in/dublin-2",
+        "https://www.syneoshealth.com/clinical-corporate-careers/search/jobs/in/dublin",
+    ]
+    jobs = {}
+    for listing in listing_urls:
+        try:
+            raw = _html_get(session, listing, 18)
+        except Exception as exc:
+            print(f"      [syneos_direct] listing failed: {exc}")
+            continue
+        for m in re.finditer(
+            r'<a[^>]+href=["\']([^"\']*(?:/jobs/)[^"\']+)["\'][^>]*>(.*?)</a>',
+            raw, re.I | re.S
+        ):
+            href = urllib.parse.urljoin(listing, html.unescape(m.group(1))).split("#")[0]
+            title = re.sub(r"\s+", " ", _html_to_text(m.group(2))).strip()
+            if not title or _looks_like_non_job_title(title):
+                continue
+            start, end = max(0, m.start()-900), min(len(raw), m.end()+1600)
+            card = re.sub(r"\s+", " ", _html_to_text(raw[start:end])).strip()
+            if _ROI_NEGATIVE_RE.search(card):
+                continue
+            if not re.search(r"\b(?:Dublin|Ireland|IRL-Remote|IRL-Client|West Cork)\b", card, re.I):
+                continue
+            loc = "Ireland"
+            lm = re.search(r"\b(?:Dublin(?:\s*2)?|West Cork|Remote,\s*Ireland|IRL-Remote|IRL-Client)\b", card, re.I)
+            if lm:
+                loc = lm.group(0)
+            sponsorship, snippet = classify_sponsorship(card[:9000])
+            jobs[href.lower()] = {
+                "company": company,
+                "title": title[:300],
+                "location": loc,
+                "posted_text": "Unknown",
+                "posted_days_ago": None,
+                "employment_type": normalize_employment_type("", title),
+                "url": href,
+                "source": "syneos_direct",
+                "visa_sponsorship": sponsorship,
+                "visa_snippet": snippet,
+            }
+    print(f"      [syneos_direct] {len(jobs)} verified Republic-of-Ireland vacancies")
+    return list(jobs.values())
+
+
+def scrape_revvity_workday(session):
+    """Revvity official careers site is backed by the External Workday tenant."""
+    return _workday_override_scrape(
+        "Revvity (PerkinElmer)",
+        "https://revvity.wd103.myworkdayjobs.com/External",
+        session,
+    )
+
+
+def scrape_coloplast_ireland_direct(session):
+    """Coloplast official SuccessFactors Ireland search."""
+    base = "https://careers.coloplast.com"
+    return _scrape_successfactors_roi_http(
+        session,
+        "Coloplast",
+        base,
+        [
+            base + "/search/?q=&locationsearch=Ireland",
+            base + "/search/?q=&locationsearch=Dublin",
+        ],
+        "coloplast_direct",
+        80,
+    )
+
+
+def scrape_abp_ireland_rendered(session):
+    """ABP Ireland official vacancies page; inspect embedded vacancy frame(s)."""
+    company = "ABP Food Group"
+    source = "https://www.abpireland.com/careers/"
+    if not HAS_PLAYWRIGHT:
+        return []
+    jobs = {}
+    try:
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch(headless=True, args=["--disable-http2"])
+            page = browser.new_page(
+                viewport={"width": 1440, "height": 1000},
+                locale="en-IE",
+                timezone_id="Europe/Dublin",
+            )
+            page.goto(source, wait_until="domcontentloaded", timeout=45000)
+            page.wait_for_timeout(1800)
+
+            # Follow the official Vacancies link if present.
+            try:
+                vac = page.get_by_role("link", name=re.compile("Vacanc", re.I))
+                if vac.count():
+                    href = vac.first.get_attribute("href")
+                    if href:
+                        page.goto(urllib.parse.urljoin(page.url, href), wait_until="domcontentloaded", timeout=45000)
+                        page.wait_for_timeout(1800)
+            except Exception:
+                pass
+
+            frames = page.frames
+            for frame in frames:
+                try:
+                    anchors = frame.locator("a[href]")
+                    n = min(anchors.count(), 2500)
+                except Exception:
+                    continue
+                for i in range(n):
+                    a = anchors.nth(i)
+                    try:
+                        href = urllib.parse.urljoin(frame.url or page.url, a.get_attribute("href") or "").split("#")[0]
+                        title = re.sub(r"\s+", " ", _browser_text(a)).strip()
+                        card = re.sub(r"\s+", " ", _browser_card(a)).strip()
+                    except Exception:
+                        continue
+                    if not href or not title or _looks_like_non_job_title(title):
+                        continue
+                    if not re.search(r"(job|vacanc|career|position|apply|requisition)", href, re.I):
+                        continue
+                    if _ROI_NEGATIVE_RE.search(card):
+                        continue
+                    if not re.search(
+                        r"\b(?:Ireland|Ardee|Louth|Wexford|Cahir|Clones|Nenagh|Waterford|"
+                        r"Cork|Dublin|Monaghan|Tipperary)\b", card, re.I
+                    ):
+                        continue
+                    sponsorship, snippet = classify_sponsorship(card[:9000])
+                    jobs[href.lower()] = {
+                        "company": company,
+                        "title": title[:300],
+                        "location": "Republic of Ireland",
+                        "posted_text": "Unknown",
+                        "posted_days_ago": None,
+                        "employment_type": normalize_employment_type("", title),
+                        "url": href,
+                        "source": "abp_ireland_rendered",
+                        "visa_sponsorship": sponsorship,
+                        "visa_snippet": snippet,
+                    }
+            browser.close()
+    except Exception as exc:
+        print(f"      [abp_ireland_rendered] failed: {exc}")
+        return []
+    print(f"      [abp_ireland_rendered] {len(jobs)} verified Republic-of-Ireland vacancies")
+    return list(jobs.values())
+
 def main():
+    print("=== TARGETED_DIRECT_BATCH_9_BULK ACTIVE: AerCap + Syneos + Revvity + Coloplast + ABP Ireland added together; GSK/Uisce wrappers repaired; same production runtime ===")
     print("=== TARGETED_DIRECT_BATCH_8_BULK ACTIVE: GSK crash fixed + ASML + Hollister + Insulet + Marvell + Cook Medical + Medpace audited together in ONE full run ===")
     print("=== TARGETED_DIRECT_BATCH_7_MULTI ACTIVE: Uisce argument bug fixed + An Post Oracle + Kepak Workable + GSK official current-jobs route added in ONE normal full run ===")
     print("=== TARGETED_DIRECT_BATCH_6_MULTI ACTIVE: Bord Gais Energy + Irish Distillers + Shannon Airport Group + Uisce Eireann official current routes added in ONE normal full run ===")
@@ -11770,6 +11964,11 @@ def main():
     dedicated_company_specs = [
         ("exact", "alexion pharmaceuticals", scrape_alexion_ireland_direct, 35, "official Alexion Ireland jobs board"),
         ("exact", "sky ireland", scrape_sky_ireland_direct, 30, "official Sky Ireland jobs board"),
+        ("exact", "aercap", scrape_aercap_direct_http, 30, "official AerCap current opportunities table"),
+        ("exact", "syneos health", scrape_syneos_ireland_direct, 35, "official Syneos Dublin/Ireland career search"),
+        ("exact", "revvity (perkinelmer)", scrape_revvity_workday, 40, "official Revvity Workday External tenant"),
+        ("exact", "coloplast", scrape_coloplast_ireland_direct, 40, "official Coloplast SuccessFactors Ireland search"),
+        ("exact", "abp food group", scrape_abp_ireland_rendered, 55, "official ABP Ireland vacancies page/frame"),
         ("exact", "asml", scrape_asml_ireland_sitemap, 45, "official ASML careers sitemap/detail pages"),
         ("exact", "hollister incorporated", scrape_hollister_ballina_direct, 40, "official Hollister Ballina SuccessFactors board"),
         ("exact", "insulet corporation", scrape_insulet_workday, 40, "official Insulet Workday tenant"),
@@ -12002,6 +12201,7 @@ def main():
         "scrape_bausch_lomb_friend",
         "scrape_oracle_ireland_attempt2", "scrape_honeywell_attempt2", "scrape_schneider_attempt2",
         "scrape_gsk_ireland_current",
+        "scrape_abp_ireland_rendered",
 }
 
     _live_company_names = {
@@ -12043,7 +12243,9 @@ def main():
             # from the old generic Sheet-2 zero-result cache so the proven
             # dedicated result cannot be shadowed by a stale generic verdict.
             _key = name.strip().lower()
-            if _key in {"asml", "hollister incorporated", "insulet corporation", "marvell technology", "cook medical", "medpace", "glaxosmithkline (gsk)"}:
+            if _key in {"aercap", "syneos health", "revvity (perkinelmer)", "coloplast", "abp food group", "glaxosmithkline (gsk)", "uisce éireann (irish water)"}:
+                cache_key = f"{name}::targeted_direct_batch9_bulk_v1"
+            elif _key in {"asml", "hollister incorporated", "insulet corporation", "marvell technology", "cook medical", "medpace"}:
                 cache_key = f"{name}::targeted_direct_batch8_bulk_v1"
             elif _key in {"an post", "kepak group", "uisce éireann (irish water)"}:
                 cache_key = f"{name}::targeted_direct_batch7_multi_v1"
@@ -12068,6 +12270,11 @@ def main():
             elif _key in {
                 "oracle",
                 "mckinsey & company",
+            "aercap",
+            "syneos health",
+            "revvity (perkinelmer)",
+            "coloplast",
+            "abp food group",
             "asml",
             "hollister incorporated",
             "insulet corporation",
