@@ -9555,7 +9555,7 @@
         "source": "citi_browser",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-28T13:51:53.103161+00:00",
         "posted_age_known": false
       },
@@ -14043,11 +14043,6 @@
     "checked_at": 1787666271.3905087,
     "consecutive_failures": 34
   },
-  "DSV Ireland": {
-    "jobs": [],
-    "checked_at": 1787921552.6928465,
-    "consecutive_failures": 132
-  },
   "Bayer": {
     "jobs": [],
     "checked_at": 1787666272.0670147,
@@ -14076,11 +14071,6 @@
   "Energia Group": {
     "jobs": [],
     "checked_at": 1787921550.444452,
-    "consecutive_failures": 132
-  },
-  "EirGrid Group": {
-    "jobs": [],
-    "checked_at": 1787921552.5157008,
     "consecutive_failures": 132
   },
   "Hollister Incorporated": {
@@ -14650,11 +14640,6 @@
     "jobs": [],
     "checked_at": 1787925082.599256,
     "consecutive_failures": 127
-  },
-  "WuXi Biologics": {
-    "jobs": [],
-    "checked_at": 1787921586.4480093,
-    "consecutive_failures": 126
   },
   "Waters Corporation": {
     "jobs": [],
@@ -31152,16 +31137,6 @@
     "checked_at": 1787748246.972717,
     "consecutive_failures": 1
   },
-  "DSV Ireland::next20_attempt2_v2": {
-    "jobs": [],
-    "checked_at": 1787748253.5975623,
-    "consecutive_failures": 1
-  },
-  "EirGrid Group::next20_attempt2_v2": {
-    "jobs": [],
-    "checked_at": 1787748258.0307171,
-    "consecutive_failures": 1
-  },
   "Hollister Incorporated::next20_attempt2_v2": {
     "jobs": [],
     "checked_at": 1787748282.9449632,
@@ -31380,11 +31355,6 @@
   "Uisce Éireann (Irish Water)::runtime_safe_next20_v1": {
     "jobs": [],
     "checked_at": 1787752577.0077372,
-    "consecutive_failures": 1
-  },
-  "WuXi Biologics::runtime_safe_next20_v1": {
-    "jobs": [],
-    "checked_at": 1787752583.6426263,
     "consecutive_failures": 1
   },
   "Bio-Rad Laboratories::runtime_safe_next20_b_v1": {
@@ -33878,11 +33848,6 @@
     "checked_at": 1787921535.5591161,
     "consecutive_failures": 0
   },
-  "Baxter International::targeted_direct_batch1_v1": {
-    "jobs": [],
-    "checked_at": 1787924932.4155114,
-    "consecutive_failures": 1
-  },
   "EirGrid Group::targeted_direct_batch5_multi_v1": {
     "jobs": [
       {
@@ -33896,7 +33861,7 @@
         "source": "eirgrid_cm_http",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-28T13:51:53.103161+00:00",
         "posted_age_known": false
       },
@@ -33911,7 +33876,7 @@
         "source": "eirgrid_cm_http",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-28T13:51:53.103161+00:00",
         "posted_age_known": false
       },
@@ -33926,7 +33891,7 @@
         "source": "eirgrid_cm_http",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-28T13:51:53.103161+00:00",
         "posted_age_known": false
       },
@@ -33941,7 +33906,7 @@
         "source": "eirgrid_cm_http",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-28T13:51:53.103161+00:00",
         "posted_age_known": false
       },
@@ -33956,7 +33921,7 @@
         "source": "eirgrid_cm_http",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-28T13:51:53.103161+00:00",
         "posted_age_known": false
       },
@@ -33971,7 +33936,7 @@
         "source": "eirgrid_cm_http",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-28T13:51:53.103161+00:00",
         "posted_age_known": false
       },
@@ -33986,7 +33951,7 @@
         "source": "eirgrid_cm_http",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-28T13:51:53.103161+00:00",
         "posted_age_known": false
       },
@@ -34001,7 +33966,7 @@
         "source": "eirgrid_cm_http",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-28T13:51:53.103161+00:00",
         "posted_age_known": false
       },
@@ -34016,7 +33981,7 @@
         "source": "eirgrid_cm_http",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-28T13:51:53.103161+00:00",
         "posted_age_known": false
       },
@@ -34031,7 +33996,7 @@
         "source": "eirgrid_cm_http",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-28T13:51:53.103161+00:00",
         "posted_age_known": false
       },
@@ -34046,7 +34011,7 @@
         "source": "eirgrid_cm_http",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-28T13:51:53.103161+00:00",
         "posted_age_known": false
       },
@@ -34061,7 +34026,7 @@
         "source": "eirgrid_cm_http",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-28T13:51:53.103161+00:00",
         "posted_age_known": false
       },
@@ -34076,7 +34041,7 @@
         "source": "eirgrid_cm_http",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-28T13:51:53.103161+00:00",
         "posted_age_known": false
       },
@@ -34091,7 +34056,7 @@
         "source": "eirgrid_cm_http",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-28T13:51:53.103161+00:00",
         "posted_age_known": false
       },
@@ -34106,7 +34071,7 @@
         "source": "eirgrid_cm_http",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-28T13:51:53.103161+00:00",
         "posted_age_known": false
       },
@@ -34121,7 +34086,7 @@
         "source": "eirgrid_cm_http",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-28T13:51:53.103161+00:00",
         "posted_age_known": false
       },
@@ -34136,7 +34101,7 @@
         "source": "eirgrid_cm_http",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-28T13:51:53.103161+00:00",
         "posted_age_known": false
       },
@@ -34151,7 +34116,7 @@
         "source": "eirgrid_cm_http",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-28T13:51:53.103161+00:00",
         "posted_age_known": false
       }
@@ -34177,43 +34142,13 @@
         "source": "wuxi_direct_http",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-28T13:51:53.103161+00:00",
         "posted_age_known": false
       }
     ],
     "checked_at": 1787924933.2338307,
     "consecutive_failures": 0
-  },
-  "Coillte::targeted_direct_batch1_v1": {
-    "jobs": [],
-    "checked_at": 1787924933.3118155,
-    "consecutive_failures": 1
-  },
-  "Regeneron": {
-    "jobs": [],
-    "checked_at": 1787924933.5648775,
-    "consecutive_failures": 1
-  },
-  "Haleon::targeted_direct_batch4_multi_v1": {
-    "jobs": [],
-    "checked_at": 1787924933.6718018,
-    "consecutive_failures": 1
-  },
-  "Avolon": {
-    "jobs": [],
-    "checked_at": 1787924934.067088,
-    "consecutive_failures": 1
-  },
-  "BNY Mellon": {
-    "jobs": [],
-    "checked_at": 1787924936.6402187,
-    "consecutive_failures": 1
-  },
-  "Dell Technologies::batch_dedicated_v1": {
-    "jobs": [],
-    "checked_at": 1787924943.8312945,
-    "consecutive_failures": 1
   },
   "DSV Ireland::targeted_direct_batch5_multi_v1": {
     "jobs": [
@@ -34228,7 +34163,7 @@
         "source": "dsv_ireland_direct",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-28T13:51:53.103161+00:00",
         "posted_age_known": false
       },
@@ -34243,7 +34178,7 @@
         "source": "dsv_ireland_direct",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-28T13:51:53.103161+00:00",
         "posted_age_known": false
       },
@@ -34258,7 +34193,7 @@
         "source": "dsv_ireland_direct",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-28T13:51:53.103161+00:00",
         "posted_age_known": false
       },
@@ -34273,7 +34208,7 @@
         "source": "dsv_ireland_direct",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-28T13:51:53.103161+00:00",
         "posted_age_known": false
       },
@@ -34288,7 +34223,7 @@
         "source": "dsv_ireland_direct",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-28T13:51:53.103161+00:00",
         "posted_age_known": false
       },
@@ -34303,7 +34238,7 @@
         "source": "dsv_ireland_direct",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-28T13:51:53.103161+00:00",
         "posted_age_known": false
       },
@@ -34318,7 +34253,7 @@
         "source": "dsv_ireland_direct",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-28T13:51:53.103161+00:00",
         "posted_age_known": false
       },
@@ -34333,7 +34268,7 @@
         "source": "dsv_ireland_direct",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-28T13:51:53.103161+00:00",
         "posted_age_known": false
       },
@@ -34348,7 +34283,7 @@
         "source": "dsv_ireland_direct",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-28T13:51:53.103161+00:00",
         "posted_age_known": false
       },
@@ -34363,7 +34298,7 @@
         "source": "dsv_ireland_direct",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-28T13:51:53.103161+00:00",
         "posted_age_known": false
       },
@@ -34378,7 +34313,7 @@
         "source": "dsv_ireland_direct",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-28T13:51:53.103161+00:00",
         "posted_age_known": false
       },
@@ -34393,7 +34328,7 @@
         "source": "dsv_ireland_direct",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-28T13:51:53.103161+00:00",
         "posted_age_known": false
       },
@@ -34408,7 +34343,7 @@
         "source": "dsv_ireland_direct",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-28T13:51:53.103161+00:00",
         "posted_age_known": false
       },
@@ -34423,7 +34358,7 @@
         "source": "dsv_ireland_direct",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-28T13:51:53.103161+00:00",
         "posted_age_known": false
       },
@@ -34438,7 +34373,7 @@
         "source": "dsv_ireland_direct",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-28T13:51:53.103161+00:00",
         "posted_age_known": false
       },
@@ -34453,7 +34388,7 @@
         "source": "dsv_ireland_direct",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-28T13:51:53.103161+00:00",
         "posted_age_known": false
       },
@@ -34468,7 +34403,7 @@
         "source": "dsv_ireland_direct",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-28T13:51:53.103161+00:00",
         "posted_age_known": false
       },
@@ -34483,7 +34418,7 @@
         "source": "dsv_ireland_direct",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-28T13:51:53.103161+00:00",
         "posted_age_known": false
       }
@@ -34491,124 +34426,350 @@
     "checked_at": 1787924944.2784195,
     "consecutive_failures": 0
   },
-  "NetApp::netapp_attempt2_v3": {
+  "Baxter International::targeted_direct_batch1_v1": {
     "jobs": [],
-    "checked_at": 1787924951.5954514,
+    "checked_at": 1787926449.5637345,
     "consecutive_failures": 1
+  },
+  "Avolon": {
+    "jobs": [],
+    "checked_at": 1787926450.0684433,
+    "consecutive_failures": 1
+  },
+  "Coillte::targeted_direct_batch1_v1": {
+    "jobs": [],
+    "checked_at": 1787926450.0700822,
+    "consecutive_failures": 1
+  },
+  "Shannon Airport Group::targeted_direct_batch6_multi_v1": {
+    "jobs": [
+      {
+        "company": "Shannon Airport Group",
+        "title": "Join the team delivering the next phase of growth at Shannon Airport.",
+        "location": "Shannon, Co. Clare, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://snnairportgroup.ie/careers/vacancies/",
+        "source": "shannon_airport_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-28T14:15:55.565001+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Shannon Airport Group",
+        "title": "Section 1 - Personal Information",
+        "location": "Shannon, Co. Clare, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": null,
+        "employment_type": "Unspecified",
+        "url": "https://snnairportgroup.ie/careers/vacancies/",
+        "source": "shannon_airport_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null
+      }
+    ],
+    "checked_at": 1787926450.1641243,
+    "consecutive_failures": 0
+  },
+  "Haleon::targeted_direct_batch4_multi_v1": {
+    "jobs": [],
+    "checked_at": 1787926450.3708434,
+    "consecutive_failures": 1
+  },
+  "Regeneron": {
+    "jobs": [],
+    "checked_at": 1787926451.600739,
+    "consecutive_failures": 1
+  },
+  "BNY Mellon": {
+    "jobs": [],
+    "checked_at": 1787926452.8430362,
+    "consecutive_failures": 1
+  },
+  "Irish Distillers (Pernod Ricard)::targeted_direct_batch6_multi_v1": {
+    "jobs": [
+      {
+        "company": "Irish Distillers (Pernod Ricard)",
+        "title": "Warehouse Team Lead",
+        "location": "Dublin",
+        "posted_text": "Posted 3 Days Ago",
+        "posted_days_ago": 3.0,
+        "employment_type": "Unspecified",
+        "url": "https://pernodricard.wd3.myworkdayjobs.com/pernod-ricard/job/Dublin/Warehouse-Team-Lead_JR-054570",
+        "source": "workday_api",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-28T14:15:55.565001+00:00",
+        "posted_age_known": true
+      },
+      {
+        "company": "Irish Distillers (Pernod Ricard)",
+        "title": "Communications Manager",
+        "location": "Dublin",
+        "posted_text": "Posted 15 Days Ago",
+        "posted_days_ago": 15.0,
+        "employment_type": "Unspecified",
+        "url": "https://pernodricard.wd3.myworkdayjobs.com/pernod-ricard/job/Dublin/Communications-Executive_JR-054662-1",
+        "source": "workday_api",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-28T14:15:55.565001+00:00",
+        "posted_age_known": true
+      },
+      {
+        "company": "Irish Distillers (Pernod Ricard)",
+        "title": "Senior Public Affairs and External Communications Manager – 12 month contract (Maternity Cover)",
+        "location": "Dublin",
+        "posted_text": "Posted 15 Days Ago",
+        "posted_days_ago": 15.0,
+        "employment_type": "Contract",
+        "url": "https://pernodricard.wd3.myworkdayjobs.com/pernod-ricard/job/Dublin/Senior-Public-Affairs-and-External-Communications-Manager---12-month-contract--Maternity-Cover-_JR-054678",
+        "source": "workday_api",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-28T14:15:55.565001+00:00",
+        "posted_age_known": true
+      },
+      {
+        "company": "Irish Distillers (Pernod Ricard)",
+        "title": "VIE Product Developer RTD",
+        "location": "Dublin",
+        "posted_text": "Posted 23 Days Ago",
+        "posted_days_ago": 23.0,
+        "employment_type": "Unspecified",
+        "url": "https://pernodricard.wd3.myworkdayjobs.com/pernod-ricard/job/Dublin/VIE-Product-Developer-RTD_JR-054612-1",
+        "source": "workday_api",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-28T14:15:55.565001+00:00",
+        "posted_age_known": true
+      },
+      {
+        "company": "Irish Distillers (Pernod Ricard)",
+        "title": "Senior Scientist (Data Science & Chemometrics)",
+        "location": "Cork",
+        "posted_text": "Posted 30+ Days Ago",
+        "posted_days_ago": 30.0,
+        "employment_type": "Unspecified",
+        "url": "https://pernodricard.wd3.myworkdayjobs.com/pernod-ricard/job/Cork/Senior-Scientist--Data-Science---Chemometrics-_JR-054530",
+        "source": "workday_api",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-28T14:15:55.565001+00:00",
+        "posted_age_known": true
+      }
+    ],
+    "checked_at": 1787926454.8933218,
+    "consecutive_failures": 0
   },
   "Aldi Ireland::batch_dedicated_v2": {
     "jobs": [],
-    "checked_at": 1787924954.01101,
+    "checked_at": 1787926464.655327,
+    "consecutive_failures": 1
+  },
+  "Dell Technologies::batch_dedicated_v1": {
+    "jobs": [],
+    "checked_at": 1787926472.2507386,
+    "consecutive_failures": 1
+  },
+  "Bord Gáis Energy::targeted_direct_batch6_multi_v1": {
+    "jobs": [
+      {
+        "company": "Bord Gáis Energy",
+        "title": "Data Centre Shift Operations - Mechanical AP",
+        "location": "Dublin",
+        "posted_text": "Posted 11 Days Ago",
+        "posted_days_ago": 11.0,
+        "employment_type": "Unspecified",
+        "url": "https://centrica.wd3.myworkdayjobs.com/Centrica/job/Dublin/Data-Centre-Shift-Operations-Mechanical-AP_R0080404",
+        "source": "workday_api",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-28T14:15:55.565001+00:00",
+        "posted_age_known": true
+      },
+      {
+        "company": "Bord Gáis Energy",
+        "title": "Data Centre Shift Operations - Electrical AP",
+        "location": "Dublin",
+        "posted_text": "Posted 30+ Days Ago",
+        "posted_days_ago": 30.0,
+        "employment_type": "Unspecified",
+        "url": "https://centrica.wd3.myworkdayjobs.com/Centrica/job/Dublin/Data-Centre-Shift-Operations-Electrical-AP_R0080403-2",
+        "source": "workday_api",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-28T14:15:55.565001+00:00",
+        "posted_age_known": true
+      },
+      {
+        "company": "Bord Gáis Energy",
+        "title": "Electrical Maintenance Engineer (Senior Authorised Person)",
+        "location": "Dublin",
+        "posted_text": "Posted 30+ Days Ago",
+        "posted_days_ago": 30.0,
+        "employment_type": "Unspecified",
+        "url": "https://centrica.wd3.myworkdayjobs.com/Centrica/job/Dublin/Site-Electrical-Lead---SAP_R0080842-1",
+        "source": "workday_api",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-28T14:15:55.565001+00:00",
+        "posted_age_known": true
+      },
+      {
+        "company": "Bord Gáis Energy",
+        "title": "Plumbing Apprenticeship - Cork",
+        "location": "Cork",
+        "posted_text": "Posted 7 Days Ago",
+        "posted_days_ago": 7.0,
+        "employment_type": "Unspecified",
+        "url": "https://centrica.wd3.myworkdayjobs.com/Centrica/job/Cork/Plumbing-Apprenticeship---Cork_R0087430",
+        "source": "workday_api",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-28T14:15:55.565001+00:00",
+        "posted_age_known": true
+      }
+    ],
+    "checked_at": 1787926478.8118024,
+    "consecutive_failures": 0
+  },
+  "NetApp::netapp_attempt2_v3": {
+    "jobs": [],
+    "checked_at": 1787926482.1061888,
     "consecutive_failures": 1
   },
   "Stryker::batch_dedicated_v1": {
     "jobs": [],
-    "checked_at": 1787924961.969145,
-    "consecutive_failures": 1
-  },
-  "Bristol Myers Squibb::batch_dedicated_v1": {
-    "jobs": [],
-    "checked_at": 1787924965.3146105,
-    "consecutive_failures": 1
-  },
-  "Fitch Ratings::next_recovery_batch7_v1": {
-    "jobs": [],
-    "checked_at": 1787924968.5614858,
+    "checked_at": 1787926486.4998488,
     "consecutive_failures": 1
   },
   "QIAGEN": {
     "jobs": [],
-    "checked_at": 1787924972.7105725,
+    "checked_at": 1787926490.3454988,
     "consecutive_failures": 1
+  },
+  "Central Bank of Ireland": {
+    "jobs": [
+      {
+        "company": "Central Bank of Ireland",
+        "title": "Associate Supervisors & Associate Policy Specialists",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://www.candidatemanager.net/cm/p/pJobDetails.aspx?mid=YUYF&sid=BDCXCX&jid=BAZBFEVGTGT&a=1bqO7eBaJhQ%253d",
+        "source": "central_bank_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-28T14:15:55.565001+00:00",
+        "posted_age_known": false
+      }
+    ],
+    "checked_at": 1787926490.765875,
+    "consecutive_failures": 0
   },
   "HP (Hewlett-Packard)::friend_next4_v1": {
     "jobs": [],
-    "checked_at": 1787924973.6404314,
+    "checked_at": 1787926495.4720082,
     "consecutive_failures": 1
   },
   "Oracle::attempt2_plus_new_v2": {
     "jobs": [],
-    "checked_at": 1787924978.281215,
+    "checked_at": 1787926497.1488514,
     "consecutive_failures": 1
   },
-  "Central Bank of Ireland": {
+  "Fitch Ratings::next_recovery_batch7_v1": {
     "jobs": [],
-    "checked_at": 1787924981.3602123,
+    "checked_at": 1787926498.0422332,
     "consecutive_failures": 1
   },
-  "Forvis Mazars Ireland::next_manual_batch_v2": {
+  "Bristol Myers Squibb::batch_dedicated_v1": {
     "jobs": [],
-    "checked_at": 1787924994.924533,
-    "consecutive_failures": 1
-  },
-  "Willis Towers Watson (WTW)": {
-    "jobs": [],
-    "checked_at": 1787925001.2616677,
+    "checked_at": 1787926498.061586,
     "consecutive_failures": 1
   },
   "Red Hat": {
     "jobs": [],
-    "checked_at": 1787925013.7879658,
+    "checked_at": 1787926502.027144,
     "consecutive_failures": 1
   },
   "Cantor Fitzgerald Ireland": {
     "jobs": [],
-    "checked_at": 1787925030.9788132,
+    "checked_at": 1787926505.5020204,
     "consecutive_failures": 1
   },
   "Slalom": {
     "jobs": [],
-    "checked_at": 1787925031.7976975,
+    "checked_at": 1787926505.5832903,
+    "consecutive_failures": 1
+  },
+  "Forvis Mazars Ireland::next_manual_batch_v2": {
+    "jobs": [],
+    "checked_at": 1787926507.8114793,
     "consecutive_failures": 1
   },
   "UBS": {
     "jobs": [],
-    "checked_at": 1787925032.5997682,
+    "checked_at": 1787926508.079342,
     "consecutive_failures": 1
   },
   "ABP Food Group": {
     "jobs": [],
-    "checked_at": 1787925033.366214,
+    "checked_at": 1787926514.3467314,
     "consecutive_failures": 1
   },
-  "Cook Medical": {
+  "Willis Towers Watson (WTW)": {
     "jobs": [],
-    "checked_at": 1787925037.5073252,
-    "consecutive_failures": 1
-  },
-  "ESB (Electricity Supply Board)": {
-    "jobs": [],
-    "checked_at": 1787925039.3858616,
+    "checked_at": 1787926516.405798,
     "consecutive_failures": 1
   },
   "Kepak Group": {
     "jobs": [],
-    "checked_at": 1787925040.467556,
+    "checked_at": 1787926517.7866817,
     "consecutive_failures": 1
   },
-  "Revvity (PerkinElmer)": {
+  "ESB (Electricity Supply Board)": {
     "jobs": [],
-    "checked_at": 1787925042.219976,
+    "checked_at": 1787926518.2817533,
+    "consecutive_failures": 1
+  },
+  "Cook Medical": {
+    "jobs": [],
+    "checked_at": 1787926518.4262674,
     "consecutive_failures": 1
   },
   "An Post": {
     "jobs": [],
-    "checked_at": 1787925054.6054258,
+    "checked_at": 1787926524.9588501,
     "consecutive_failures": 1
   },
-  "Boston Consulting Group (BCG)": {
+  "Revvity (PerkinElmer)": {
     "jobs": [],
-    "checked_at": 1787925056.5881336,
-    "consecutive_failures": 1
-  },
-  "Aviva Ireland::next_recovery_batch7_v1": {
-    "jobs": [],
-    "checked_at": 1787925058.4575539,
+    "checked_at": 1787926525.8540804,
     "consecutive_failures": 1
   },
   "GlaxoSmithKline (GSK)": {
     "jobs": [],
-    "checked_at": 1787925067.3830805,
+    "checked_at": 1787926527.154939,
+    "consecutive_failures": 1
+  },
+  "Boston Consulting Group (BCG)": {
+    "jobs": [],
+    "checked_at": 1787926530.361412,
     "consecutive_failures": 1
   }
 }
