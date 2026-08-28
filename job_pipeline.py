@@ -11204,7 +11204,6 @@ def scrape_shannon_airport_group_http(session):
 def scrape_uisce_eireann_current_portal(session):
     """Official Uisce Éireann current-vacancies portal, rendered first-party recovery."""
     return scrape_priority_sheet2_generic(
-        "Uisce Éireann (Irish Water)",
         "https://www.water.ie/about/careers/portal",
         session,
     )
@@ -11239,15 +11238,213 @@ def scrape_kepak_workable(session):
     return jobs
 
 
-def scrape_gsk_ireland_current():
+def scrape_gsk_ireland_current(session):
     """GSK official current-jobs site, rendered Ireland-filtered fallback."""
     return scrape_priority_sheet2_generic(
-        "GlaxoSmithKline (GSK)",
-        "https://jobs.gsk.com/us/en/search-results?keywords=Ireland",
-        None,
+            "https://jobs.gsk.com/us/en/search-results?keywords=Ireland",
+        session,
     )
 
+
+def scrape_insulet_workday(session):
+    """Insulet official corporate careers page -> current Workday tenant."""
+    return _workday_override_scrape(
+        "Insulet Corporation",
+        "https://insulet.wd5.myworkdayjobs.com/insuletcareers",
+        session,
+    )
+
+
+def scrape_marvell_workday(session):
+    """Marvell official corporate careers page -> current Workday tenant."""
+    return _workday_override_scrape(
+        "Marvell Technology",
+        "https://marvell.wd1.myworkdayjobs.com/MarvellCareers",
+        session,
+    )
+
+
+def scrape_hollister_ballina_direct(session):
+    """Hollister official SuccessFactors Ballina, Ireland board."""
+    base = "https://jobs.hollister.com"
+    return _scrape_successfactors_roi_http(
+        session,
+        "Hollister Incorporated",
+        base,
+        [
+            base + "/go/Ballina%2C-Ireland-Jobs/3066000/",
+            base + "/Hollister/go/Hollister-View-All-Jobs/9663600/?q=&sortColumn=sort_location&sortDirection=asc",
+        ],
+        "hollister_ballina_direct",
+        80,
+    )
+
+
+def scrape_cook_medical_icims(session):
+    """Cook Medical official EMEA iCIMS board; detail pages prove Ireland."""
+    company = "Cook Medical"
+    listing_urls = [
+        "https://emea-cookmedical.icims.com/jobs/search?ss=1&searchKeyword=Ireland",
+        "https://emea-cookmedical.icims.com/jobs/search?ss=1&searchKeyword=Limerick",
+    ]
+    candidates = {}
+    for listing in listing_urls:
+        try:
+            raw = _html_get(session, listing, 18)
+        except Exception as exc:
+            print(f"      [cook_icims] listing failed: {exc}")
+            continue
+        for href in re.findall(
+            r'href=["\']([^"\']*/jobs/\d+/[^"\']*/job(?:\?[^"\']*)?)["\']',
+            raw, re.I
+        ):
+            full = urllib.parse.urljoin(listing, html.unescape(href))
+            candidates[full.split("#")[0].lower()] = full.split("#")[0]
+
+    jobs = {}
+    for full in list(candidates.values())[:100]:
+        try:
+            detail = _html_get(session, full, 12)
+        except Exception:
+            continue
+        body = re.sub(r"\s+", " ", _html_to_text(detail)).strip()
+        if _ROI_NEGATIVE_RE.search(body):
+            continue
+        if not re.search(r'\b(?:Limerick|Ireland|IE-Limerick)\b', body, re.I):
+            continue
+        hm = re.search(r'<h1[^>]*>(.*?)</h1>', detail, re.I | re.S)
+        title = re.sub(r"\s+", " ", _html_to_text(hm.group(1))).strip() if hm else ""
+        if not title or _looks_like_non_job_title(title):
+            continue
+        sponsorship, snippet = classify_sponsorship(body[:18000])
+        jobs[full.lower()] = {
+            "company": company,
+            "title": title[:300],
+            "location": "Limerick, Ireland",
+            "posted_text": "Unknown",
+            "posted_days_ago": None,
+            "employment_type": normalize_employment_type("", title),
+            "url": full,
+            "source": "cook_icims",
+            "visa_sponsorship": sponsorship,
+            "visa_snippet": snippet,
+        }
+    print(f"      [cook_icims] {len(jobs)} verified Republic-of-Ireland vacancies")
+    return list(jobs.values())
+
+
+def scrape_asml_ireland_sitemap(session):
+    """ASML first-party sitemap recovery for current Ireland job-detail pages."""
+    company = "ASML"
+    roots = [
+        "https://www.asml.com/sitemap.xml",
+        "https://www.asml.com/en/sitemap.xml",
+    ]
+    sitemap_urls = []
+    job_urls = {}
+    for root in roots:
+        try:
+            raw = _html_get(session, root, 18)
+        except Exception:
+            continue
+        locs = re.findall(r'<loc>\s*(.*?)\s*</loc>', raw, re.I | re.S)
+        for loc in locs:
+            loc = html.unescape(loc.strip())
+            if loc.endswith(".xml"):
+                if "career" in loc.lower() or "sitemap" in loc.lower():
+                    sitemap_urls.append(loc)
+            elif "/careers/find-your-job/" in loc.lower() and "ireland" in loc.lower():
+                job_urls[loc.lower()] = loc
+
+    for sm in list(dict.fromkeys(sitemap_urls))[:12]:
+        try:
+            raw = _html_get(session, sm, 15)
+        except Exception:
+            continue
+        for loc in re.findall(r'<loc>\s*(.*?)\s*</loc>', raw, re.I | re.S):
+            loc = html.unescape(loc.strip())
+            if "/careers/find-your-job/" in loc.lower() and "ireland" in loc.lower():
+                job_urls[loc.lower()] = loc
+
+    jobs = {}
+    for full in list(job_urls.values())[:80]:
+        try:
+            detail = _html_get(session, full, 12)
+        except Exception:
+            continue
+        body = re.sub(r"\s+", " ", _html_to_text(detail)).strip()
+        if _ROI_NEGATIVE_RE.search(body):
+            continue
+        if not re.search(r'\b(?:Leixlip|Dublin|Ireland)\b', body, re.I):
+            continue
+        hm = re.search(r'<h1[^>]*>(.*?)</h1>', detail, re.I | re.S)
+        title = re.sub(r"\s+", " ", _html_to_text(hm.group(1))).strip() if hm else ""
+        if not title or _looks_like_non_job_title(title):
+            continue
+        sponsorship, snippet = classify_sponsorship(body[:18000])
+        jobs[full.lower()] = {
+            "company": company,
+            "title": title[:300],
+            "location": "Leixlip/Dublin, Ireland",
+            "posted_text": "Unknown",
+            "posted_days_ago": None,
+            "employment_type": normalize_employment_type("", title),
+            "url": full,
+            "source": "asml_sitemap",
+            "visa_sponsorship": sponsorship,
+            "visa_snippet": snippet,
+        }
+    print(f"      [asml_sitemap] {len(jobs)} verified Republic-of-Ireland vacancies")
+    return list(jobs.values())
+
+
+def scrape_medpace_official_audit(session):
+    """Medpace official location index: clean zero if Ireland is not an offered country."""
+    company = "Medpace"
+    source = "https://careers.medpace.com/jobs/locations"
+    try:
+        raw = _html_get(session, source, 18)
+    except Exception as exc:
+        print(f"      [medpace_audit] location index failed: {exc}")
+        raise
+    body = re.sub(r"\s+", " ", _html_to_text(raw)).strip()
+    if not re.search(r'\bIreland\b', body, re.I):
+        print("      [medpace_audit] official current location index has no Ireland entry -> 0 current Ireland vacancies")
+        return []
+
+    # Future-proof: if Ireland appears later, inspect current job links instead of returning zero.
+    jobs = {}
+    for href in re.findall(r'href=["\']([^"\']*/jobs/\d+[^"\']*)["\']', raw, re.I):
+        full = urllib.parse.urljoin(source, html.unescape(href))
+        try:
+            detail = _html_get(session, full, 12)
+        except Exception:
+            continue
+        dbody = re.sub(r"\s+", " ", _html_to_text(detail)).strip()
+        if _ROI_NEGATIVE_RE.search(dbody) or not re.search(r'\bIreland\b', dbody, re.I):
+            continue
+        hm = re.search(r'<h1[^>]*>(.*?)</h1>', detail, re.I | re.S)
+        title = re.sub(r"\s+", " ", _html_to_text(hm.group(1))).strip() if hm else ""
+        if not title or _looks_like_non_job_title(title):
+            continue
+        sponsorship, snippet = classify_sponsorship(dbody[:18000])
+        jobs[full.lower()] = {
+            "company": company,
+            "title": title[:300],
+            "location": "Ireland",
+            "posted_text": "Unknown",
+            "posted_days_ago": None,
+            "employment_type": normalize_employment_type("", title),
+            "url": full,
+            "source": "medpace_audit",
+            "visa_sponsorship": sponsorship,
+            "visa_snippet": snippet,
+        }
+    print(f"      [medpace_audit] {len(jobs)} verified Republic-of-Ireland vacancies")
+    return list(jobs.values())
+
 def main():
+    print("=== TARGETED_DIRECT_BATCH_8_BULK ACTIVE: GSK crash fixed + ASML + Hollister + Insulet + Marvell + Cook Medical + Medpace audited together in ONE full run ===")
     print("=== TARGETED_DIRECT_BATCH_7_MULTI ACTIVE: Uisce argument bug fixed + An Post Oracle + Kepak Workable + GSK official current-jobs route added in ONE normal full run ===")
     print("=== TARGETED_DIRECT_BATCH_6_MULTI ACTIVE: Bord Gais Energy + Irish Distillers + Shannon Airport Group + Uisce Eireann official current routes added in ONE normal full run ===")
     print("=== TARGETED_DIRECT_BATCH_5_MULTI ACTIVE: EirGrid + DSV + WuXi Biologics + Energia direct first-party routes added in ONE normal full run; existing live routes untouched ===")
@@ -11573,6 +11770,12 @@ def main():
     dedicated_company_specs = [
         ("exact", "alexion pharmaceuticals", scrape_alexion_ireland_direct, 35, "official Alexion Ireland jobs board"),
         ("exact", "sky ireland", scrape_sky_ireland_direct, 30, "official Sky Ireland jobs board"),
+        ("exact", "asml", scrape_asml_ireland_sitemap, 45, "official ASML careers sitemap/detail pages"),
+        ("exact", "hollister incorporated", scrape_hollister_ballina_direct, 40, "official Hollister Ballina SuccessFactors board"),
+        ("exact", "insulet corporation", scrape_insulet_workday, 40, "official Insulet Workday tenant"),
+        ("exact", "marvell technology", scrape_marvell_workday, 40, "official Marvell Workday tenant"),
+        ("exact", "cook medical", scrape_cook_medical_icims, 45, "official Cook Medical EMEA iCIMS"),
+        ("exact", "medpace", scrape_medpace_official_audit, 30, "official Medpace current location index"),
         ("exact", "an post", scrape_an_post_oracle, 40, "official An Post Oracle Candidate Experience CX_2001"),
         ("exact", "kepak group", scrape_kepak_workable, 35, "official Kepak Workable board"),
         ("exact", "glaxosmithkline (gsk)", scrape_gsk_ireland_current, 55, "official GSK current-jobs Ireland search"),
@@ -11798,8 +12001,7 @@ def main():
         "scrape_aviva_ireland_current", "scrape_fitch_ireland_current",
         "scrape_bausch_lomb_friend",
         "scrape_oracle_ireland_attempt2", "scrape_honeywell_attempt2", "scrape_schneider_attempt2",
-        "Uisce Éireann (Irish Water)",
-    "GlaxoSmithKline (GSK)",
+        "scrape_gsk_ireland_current",
 }
 
     _live_company_names = {
@@ -11841,7 +12043,9 @@ def main():
             # from the old generic Sheet-2 zero-result cache so the proven
             # dedicated result cannot be shadowed by a stale generic verdict.
             _key = name.strip().lower()
-            if _key in {"an post", "kepak group", "glaxosmithkline (gsk)", "uisce éireann (irish water)"}:
+            if _key in {"asml", "hollister incorporated", "insulet corporation", "marvell technology", "cook medical", "medpace", "glaxosmithkline (gsk)"}:
+                cache_key = f"{name}::targeted_direct_batch8_bulk_v1"
+            elif _key in {"an post", "kepak group", "uisce éireann (irish water)"}:
                 cache_key = f"{name}::targeted_direct_batch7_multi_v1"
             elif _key in {"bord gáis energy", "irish distillers (pernod ricard)", "shannon airport group"}:
                 cache_key = f"{name}::targeted_direct_batch6_multi_v1"
@@ -11864,6 +12068,12 @@ def main():
             elif _key in {
                 "oracle",
                 "mckinsey & company",
+            "asml",
+            "hollister incorporated",
+            "insulet corporation",
+            "marvell technology",
+            "cook medical",
+            "medpace",
             "an post",
             "kepak group",
             "glaxosmithkline (gsk)",
