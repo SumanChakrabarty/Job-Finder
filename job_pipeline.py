@@ -11132,7 +11132,85 @@ def scrape_energia_group_direct_http(session):
     print(f"      [energia_direct_http] {len(jobs)} verified Republic-of-Ireland vacancies")
     return list(jobs.values())
 
+
+def scrape_bord_gais_energy_workday(session):
+    """Official Bord Gáis Energy -> Centrica Workday route."""
+    return _workday_override_scrape(
+        "Bord Gáis Energy",
+        "https://centrica.wd3.myworkdayjobs.com/Centrica",
+        session,
+    )
+
+
+def scrape_irish_distillers_workday(session):
+    """Official Irish Distillers careers page points to Pernod Ricard Workday."""
+    return _workday_override_scrape(
+        "Irish Distillers (Pernod Ricard)",
+        "https://pernodricard.wd3.myworkdayjobs.com/pernod-ricard",
+        session,
+    )
+
+
+def scrape_shannon_airport_group_http(session):
+    """Parse the official Shannon Airport Group current-vacancies page."""
+    company = "Shannon Airport Group"
+    source = "https://snnairportgroup.ie/careers/vacancies/"
+    try:
+        raw = _html_get(session, source, 18)
+    except Exception as exc:
+        print(f"      [shannon_airport_direct] listing failed: {exc}")
+        return []
+
+    text_body = re.sub(r"\s+", " ", _html_to_text(raw)).strip()
+    jobs = {}
+
+    # Current page exposes vacancies as headings, with the application form on the same page.
+    for m in re.finditer(
+        r'<h[1-4][^>]*>\s*(?:Vacancy:\s*)?(.*?)</h[1-4]>',
+        raw, re.I | re.S
+    ):
+        title = re.sub(r"\s+", " ", _html_to_text(m.group(1))).strip(" :-")
+        if not title or _looks_like_non_job_title(title):
+            continue
+        if title.lower() in {
+            "job opportunities", "application form", "the shannon airport group",
+            "join the team delivering the next phase of growth at shannon airport"
+        }:
+            continue
+        start, end = max(0, m.start()-500), min(len(raw), m.end()+4500)
+        card = re.sub(r"\s+", " ", _html_to_text(raw[start:end])).strip()
+        # The employer/site itself is Republic of Ireland; reject explicit NI/Belfast if ever present.
+        if _ROI_NEGATIVE_RE.search(card):
+            continue
+        key = source + "#" + re.sub(r"[^a-z0-9]+", "-", title.lower()).strip("-")
+        sponsorship, snippet = classify_sponsorship(card[:10000])
+        jobs[key.lower()] = {
+            "company": company,
+            "title": title[:300],
+            "location": "Shannon, Co. Clare, Ireland",
+            "posted_text": "Unknown",
+            "posted_days_ago": None,
+            "employment_type": normalize_employment_type("", title),
+            "url": source,
+            "source": "shannon_airport_direct",
+            "visa_sponsorship": sponsorship,
+            "visa_snippet": snippet,
+        }
+
+    print(f"      [shannon_airport_direct] {len(jobs)} verified Republic-of-Ireland vacancies")
+    return list(jobs.values())
+
+
+def scrape_uisce_eireann_current_portal():
+    """Official Uisce Éireann current-vacancies portal, rendered first-party recovery."""
+    return scrape_priority_sheet2_generic(
+        "Uisce Éireann (Irish Water)",
+        "https://www.water.ie/about/careers/portal",
+        None,
+    )
+
 def main():
+    print("=== TARGETED_DIRECT_BATCH_6_MULTI ACTIVE: Bord Gais Energy + Irish Distillers + Shannon Airport Group + Uisce Eireann official current routes added in ONE normal full run ===")
     print("=== TARGETED_DIRECT_BATCH_5_MULTI ACTIVE: EirGrid + DSV + WuXi Biologics + Energia direct first-party routes added in ONE normal full run; existing live routes untouched ===")
     print("=== TARGETED_DIRECT_BATCH_4_MULTI ACTIVE: Glanbia/Tirlan + Ornua + Haleon first-party direct routes added in ONE normal full run; existing live routes untouched ===")
     print("=== TARGETED_DIRECT_BATCH_3_STABILITY ACTIVE: productive late-return scrapers get enough return budget; false timeout errors reduced; global runtime architecture unchanged ===")
@@ -11456,6 +11534,10 @@ def main():
     dedicated_company_specs = [
         ("exact", "alexion pharmaceuticals", scrape_alexion_ireland_direct, 35, "official Alexion Ireland jobs board"),
         ("exact", "sky ireland", scrape_sky_ireland_direct, 30, "official Sky Ireland jobs board"),
+        ("exact", "bord gáis energy", scrape_bord_gais_energy_workday, 40, "official Bord Gais Energy Centrica Workday route"),
+        ("exact", "irish distillers (pernod ricard)", scrape_irish_distillers_workday, 40, "official Irish Distillers Pernod Ricard Workday route"),
+        ("exact", "shannon airport group", scrape_shannon_airport_group_http, 30, "official Shannon Airport Group vacancies page"),
+        ("exact", "uisce éireann (irish water)", scrape_uisce_eireann_current_portal, 55, "official Uisce Eireann current vacancies portal"),
         ("exact", "eirgrid group", scrape_eirgrid_candidate_manager_http, 35, "official EirGrid CandidateManager board"),
         ("exact", "dsv ireland", scrape_dsv_ireland_direct, 40, "official DSV SuccessFactors Ireland route"),
         ("exact", "wuxi biologics", scrape_wuxi_biologics_direct_http, 35, "official WuXi Biologics Ireland jobs page"),
@@ -11674,7 +11756,8 @@ def main():
         "scrape_aviva_ireland_current", "scrape_fitch_ireland_current",
         "scrape_bausch_lomb_friend",
         "scrape_oracle_ireland_attempt2", "scrape_honeywell_attempt2", "scrape_schneider_attempt2",
-    }
+        "Uisce Éireann (Irish Water)",
+}
 
     _live_company_names = {
         str(j.get("company") or "").strip().lower()
@@ -11715,7 +11798,9 @@ def main():
             # from the old generic Sheet-2 zero-result cache so the proven
             # dedicated result cannot be shadowed by a stale generic verdict.
             _key = name.strip().lower()
-            if _key in {"eirgrid group", "dsv ireland", "wuxi biologics", "energia group"}:
+            if _key in {"bord gáis energy", "irish distillers (pernod ricard)", "shannon airport group", "uisce éireann (irish water)"}:
+                cache_key = f"{name}::targeted_direct_batch6_multi_v1"
+            elif _key in {"eirgrid group", "dsv ireland", "wuxi biologics", "energia group"}:
                 cache_key = f"{name}::targeted_direct_batch5_multi_v1"
             elif _key in {"glanbia / tirlán", "ornua", "haleon"}:
                 cache_key = f"{name}::targeted_direct_batch4_multi_v1"
@@ -11734,6 +11819,10 @@ def main():
             elif _key in {
                 "oracle",
                 "mckinsey & company",
+            "bord gáis energy",
+            "irish distillers (pernod ricard)",
+            "shannon airport group",
+            "uisce éireann (irish water)",
             "eirgrid group",
             "dsv ireland",
             "wuxi biologics",
