@@ -10998,7 +10998,142 @@ def scrape_haleon_direct_http(session):
     print(f"      [haleon_direct_http] {len(jobs)} verified Republic-of-Ireland vacancies")
     return list(jobs.values())
 
+
+def scrape_dsv_ireland_direct(session):
+    base = "https://jobs.dsv.com"
+    return _scrape_successfactors_roi_http(
+        session, "DSV Ireland", base,
+        [
+            base + "/search/?q=&locationsearch=Ireland",
+            base + "/search/?q=&locationsearch=Dublin",
+            base + "/go/Jobs%40DSV/2713001/",
+        ],
+        "dsv_ireland_direct", 80
+    )
+
+
+def scrape_eirgrid_candidate_manager_http(session):
+    company = "EirGrid Group"
+    source = "https://www.candidatemanager.net/cm/p/pJobs.aspx?mid=YGTAZW&sid=BEVDEV"
+    try:
+        raw = _html_get(session, source, 18)
+    except Exception as exc:
+        print(f"      [eirgrid_cm_http] listing failed: {exc}")
+        return []
+
+    jobs = {}
+    for m in re.finditer(
+        r'<a[^>]+href=["\']([^"\']*pJobDetails\.aspx[^"\']*)["\'][^>]*>(.*?)</a>',
+        raw, re.I | re.S
+    ):
+        href = urllib.parse.urljoin(source, html.unescape(m.group(1)))
+        title = re.sub(r"\s+", " ", _html_to_text(m.group(2))).strip()
+        if not title or _looks_like_non_job_title(title):
+            continue
+        start, end = max(0, m.start()-1200), min(len(raw), m.end()+1600)
+        card = re.sub(r"\s+", " ", _html_to_text(raw[start:end])).strip()
+        if _ROI_NEGATIVE_RE.search(card) or not is_republic_of_ireland_location(card):
+            continue
+        loc = _extract_location_from_card(card, "Ireland")
+        sponsorship, snippet = classify_sponsorship(card[:8000])
+        jobs[href.lower()] = {
+            "company": company,
+            "title": title[:300],
+            "location": loc,
+            "posted_text": "Unknown",
+            "posted_days_ago": None,
+            "employment_type": normalize_employment_type("", title),
+            "url": href,
+            "source": "eirgrid_cm_http",
+            "visa_sponsorship": sponsorship,
+            "visa_snippet": snippet,
+        }
+    print(f"      [eirgrid_cm_http] {len(jobs)} verified Republic-of-Ireland vacancies")
+    return list(jobs.values())
+
+
+def scrape_wuxi_biologics_direct_http(session):
+    company = "WuXi Biologics"
+    source = "https://www.wuxibiologics.com/join-us/"
+    try:
+        raw = _html_get(session, source, 18)
+    except Exception as exc:
+        print(f"      [wuxi_direct_http] listing failed: {exc}")
+        return []
+
+    jobs = {}
+    # The official WuXi page itself exposes job rows with country labels.
+    for m in re.finditer(
+        r'<a[^>]+href=["\']([^"\']+)["\'][^>]*>(.*?)</a>',
+        raw, re.I | re.S
+    ):
+        href = urllib.parse.urljoin(source, html.unescape(m.group(1)))
+        title = re.sub(r"\s+", " ", _html_to_text(m.group(2))).strip()
+        if not title or _looks_like_non_job_title(title):
+            continue
+        start, end = max(0, m.start()-900), min(len(raw), m.end()+1200)
+        card = re.sub(r"\s+", " ", _html_to_text(raw[start:end])).strip()
+        if not re.search(r'\bIreland\b', card, re.I) or _ROI_NEGATIVE_RE.search(card):
+            continue
+        if not re.search(r'(career|job|position|vacanc)', href, re.I):
+            continue
+        sponsorship, snippet = classify_sponsorship(card[:7000])
+        jobs[href.lower()] = {
+            "company": company,
+            "title": title[:300],
+            "location": "Ireland",
+            "posted_text": "Unknown",
+            "posted_days_ago": None,
+            "employment_type": normalize_employment_type("", title),
+            "url": href,
+            "source": "wuxi_direct_http",
+            "visa_sponsorship": sponsorship,
+            "visa_snippet": snippet,
+        }
+    print(f"      [wuxi_direct_http] {len(jobs)} verified Republic-of-Ireland vacancies")
+    return list(jobs.values())
+
+
+def scrape_energia_group_direct_http(session):
+    company = "Energia Group"
+    source = "https://energiagroup.current-vacancies.com/Careers/Energia%20Group%20External%20VSP-1964"
+    try:
+        raw = _html_get(session, source, 18)
+    except Exception as exc:
+        print(f"      [energia_direct_http] listing failed: {exc}")
+        return []
+    body = re.sub(r"\s+", " ", _html_to_text(raw)).strip()
+    if re.search(r"unable to find any roles matching your criteria", body, re.I):
+        print("      [energia_direct_http] official board confirms 0 current vacancies")
+        return []
+    jobs = {}
+    for m in re.finditer(r'<a[^>]+href=["\']([^"\']+)["\'][^>]*>(.*?)</a>', raw, re.I | re.S):
+        href = urllib.parse.urljoin(source, html.unescape(m.group(1)))
+        title = re.sub(r"\s+", " ", _html_to_text(m.group(2))).strip()
+        if not title or _looks_like_non_job_title(title):
+            continue
+        start, end = max(0, m.start()-1000), min(len(raw), m.end()+1500)
+        card = re.sub(r"\s+", " ", _html_to_text(raw[start:end])).strip()
+        if _ROI_NEGATIVE_RE.search(card) or not is_republic_of_ireland_location(card):
+            continue
+        sponsorship, snippet = classify_sponsorship(card[:7000])
+        jobs[href.lower()] = {
+            "company": company,
+            "title": title[:300],
+            "location": _extract_location_from_card(card, "Ireland"),
+            "posted_text": "Unknown",
+            "posted_days_ago": None,
+            "employment_type": normalize_employment_type("", title),
+            "url": href,
+            "source": "energia_direct_http",
+            "visa_sponsorship": sponsorship,
+            "visa_snippet": snippet,
+        }
+    print(f"      [energia_direct_http] {len(jobs)} verified Republic-of-Ireland vacancies")
+    return list(jobs.values())
+
 def main():
+    print("=== TARGETED_DIRECT_BATCH_5_MULTI ACTIVE: EirGrid + DSV + WuXi Biologics + Energia direct first-party routes added in ONE normal full run; existing live routes untouched ===")
     print("=== TARGETED_DIRECT_BATCH_4_MULTI ACTIVE: Glanbia/Tirlan + Ornua + Haleon first-party direct routes added in ONE normal full run; existing live routes untouched ===")
     print("=== TARGETED_DIRECT_BATCH_3_STABILITY ACTIVE: productive late-return scrapers get enough return budget; false timeout errors reduced; global runtime architecture unchanged ===")
     print("=== TARGETED_DIRECT_BATCH_2_FIX ACTIVE: Alexion/Zurich relative /job links fixed; Sky moved to rendered dedicated route; no global runtime change ===")
@@ -11321,6 +11456,10 @@ def main():
     dedicated_company_specs = [
         ("exact", "alexion pharmaceuticals", scrape_alexion_ireland_direct, 35, "official Alexion Ireland jobs board"),
         ("exact", "sky ireland", scrape_sky_ireland_direct, 30, "official Sky Ireland jobs board"),
+        ("exact", "eirgrid group", scrape_eirgrid_candidate_manager_http, 35, "official EirGrid CandidateManager board"),
+        ("exact", "dsv ireland", scrape_dsv_ireland_direct, 40, "official DSV SuccessFactors Ireland route"),
+        ("exact", "wuxi biologics", scrape_wuxi_biologics_direct_http, 35, "official WuXi Biologics Ireland jobs page"),
+        ("exact", "energia group", scrape_energia_group_direct_http, 30, "official Energia Group vacancies board"),
         ("exact", "glanbia / tirlán", scrape_glanbia_tirlan_direct, 55, "official Glanbia/Tirlan SuccessFactors ROI routes"),
         ("exact", "ornua", scrape_ornua_direct, 45, "official Ornua SuccessFactors ROI routes"),
         ("exact", "haleon", scrape_haleon_direct_http, 45, "official Haleon Ireland first-party careers route"),
@@ -11576,7 +11715,9 @@ def main():
             # from the old generic Sheet-2 zero-result cache so the proven
             # dedicated result cannot be shadowed by a stale generic verdict.
             _key = name.strip().lower()
-            if _key in {"glanbia / tirlán", "ornua", "haleon"}:
+            if _key in {"eirgrid group", "dsv ireland", "wuxi biologics", "energia group"}:
+                cache_key = f"{name}::targeted_direct_batch5_multi_v1"
+            elif _key in {"glanbia / tirlán", "ornua", "haleon"}:
                 cache_key = f"{name}::targeted_direct_batch4_multi_v1"
             elif _key in {"dexcom", "arcadis", "jacobs", "atkinsréalis"}:
                 cache_key = f"{name}::targeted_direct_batch3_stability_v1"
@@ -11593,6 +11734,10 @@ def main():
             elif _key in {
                 "oracle",
                 "mckinsey & company",
+            "eirgrid group",
+            "dsv ireland",
+            "wuxi biologics",
+            "energia group",
             "glanbia / tirlán",
             "ornua",
             "haleon",
