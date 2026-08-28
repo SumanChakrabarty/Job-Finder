@@ -34597,154 +34597,602 @@
     "checked_at": 1787926490.765875,
     "consecutive_failures": 0
   },
-  "Kepak Group::targeted_direct_batch7_multi_v1": {
-    "jobs": [],
-    "checked_at": 1787927697.1502545,
-    "consecutive_failures": 1
-  },
-  "Baxter International::targeted_direct_batch1_v1": {
-    "jobs": [],
-    "checked_at": 1787927697.4560854,
-    "consecutive_failures": 1
-  },
-  "An Post::targeted_direct_batch7_multi_v1": {
-    "jobs": [],
-    "checked_at": 1787927697.7363708,
-    "consecutive_failures": 1
-  },
-  "Coillte::targeted_direct_batch1_v1": {
-    "jobs": [],
-    "checked_at": 1787927697.8837311,
-    "consecutive_failures": 1
-  },
-  "Haleon::targeted_direct_batch4_multi_v1": {
-    "jobs": [],
-    "checked_at": 1787927698.7892938,
-    "consecutive_failures": 1
-  },
-  "Avolon": {
-    "jobs": [],
-    "checked_at": 1787927698.7964697,
-    "consecutive_failures": 1
-  },
-  "Regeneron": {
-    "jobs": [],
-    "checked_at": 1787927698.9466505,
-    "consecutive_failures": 1
-  },
-  "BNY Mellon": {
-    "jobs": [],
-    "checked_at": 1787927701.3894324,
-    "consecutive_failures": 1
-  },
   "Uisce Éireann (Irish Water)::targeted_direct_batch7_multi_v1": {
     "jobs": [],
     "checked_at": 1787927706.1926754,
     "consecutive_failures": 1
   },
+  "Kepak Group::targeted_direct_batch7_multi_v1": {
+    "jobs": [],
+    "checked_at": 1787929478.8827229,
+    "consecutive_failures": 1
+  },
+  "Cook Medical::targeted_direct_batch8_bulk_v1": {
+    "jobs": [],
+    "checked_at": 1787929478.9445696,
+    "consecutive_failures": 1
+  },
+  "Baxter International::targeted_direct_batch1_v1": {
+    "jobs": [],
+    "checked_at": 1787929479.246699,
+    "consecutive_failures": 1
+  },
+  "An Post::targeted_direct_batch7_multi_v1": {
+    "jobs": [],
+    "checked_at": 1787929479.2913358,
+    "consecutive_failures": 1
+  },
+  "Medpace::targeted_direct_batch8_bulk_v1": {
+    "jobs": [],
+    "checked_at": 1787929479.3221495,
+    "consecutive_failures": 1
+  },
+  "Avolon": {
+    "jobs": [],
+    "checked_at": 1787929479.5934403,
+    "consecutive_failures": 1
+  },
+  "Coillte::targeted_direct_batch1_v1": {
+    "jobs": [],
+    "checked_at": 1787929479.8875997,
+    "consecutive_failures": 1
+  },
+  "GlaxoSmithKline (GSK)::targeted_direct_batch8_bulk_v1": {
+    "jobs": [],
+    "checked_at": 1787929479.896389,
+    "consecutive_failures": 1
+  },
+  "Haleon::targeted_direct_batch4_multi_v1": {
+    "jobs": [],
+    "checked_at": 1787929480.2349212,
+    "consecutive_failures": 1
+  },
+  "Regeneron": {
+    "jobs": [],
+    "checked_at": 1787929480.8003302,
+    "consecutive_failures": 1
+  },
+  "ASML::targeted_direct_batch8_bulk_v1": {
+    "jobs": [
+      {
+        "company": "ASML",
+        "title": "Supply Chain Site Manager Ireland",
+        "location": "Leixlip/Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://www.asml.com/en/careers/find-your-job/supply-chain-site-manager-ireland-j00346707",
+        "source": "asml_sitemap",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-28T15:06:17.176858+00:00",
+        "posted_age_known": false
+      }
+    ],
+    "checked_at": 1787929481.1968412,
+    "consecutive_failures": 0
+  },
+  "BNY Mellon": {
+    "jobs": [],
+    "checked_at": 1787929484.336089,
+    "consecutive_failures": 1
+  },
+  "Hollister Incorporated::targeted_direct_batch8_bulk_v1": {
+    "jobs": [
+      {
+        "company": "Hollister Incorporated",
+        "title": "Senior Packaging Engineer",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jobs.hollister.com/Hollister/job/Ballina-Senior-Packaging-Engineer-MY-F26-F3X5/1308838700/",
+        "source": "hollister_ballina_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-28T15:06:17.176858+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Hollister Incorporated",
+        "title": "Spare Parts Specialist",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jobs.hollister.com/Hollister/job/Ballina-Spare-Parts-Specialist-MY-F26-F3X5/1424301700/",
+        "source": "hollister_ballina_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-28T15:06:17.176858+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Hollister Incorporated",
+        "title": "Financial Analyst",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jobs.hollister.com/Hollister/job/Ballina-Financial-Analyst-MY-F26-F3X5/1424380700/",
+        "source": "hollister_ballina_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-28T15:06:17.176858+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Hollister Incorporated",
+        "title": "Project Manager Global Engineering",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jobs.hollister.com/Hollister/job/Ballina-Project-Manager-Global-Engineering-MY-F26-F3X5/1423465200/",
+        "source": "hollister_ballina_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-28T15:06:17.176858+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Hollister Incorporated",
+        "title": "Senior Engineer, Molding",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jobs.hollister.com/Hollister/job/Ballina-Senior-Engineer%2C-Molding-MY-F26-F3X5/1423483900/",
+        "source": "hollister_ballina_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-28T15:06:17.176858+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Hollister Incorporated",
+        "title": "Senior R&D Engineer I",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jobs.hollister.com/Hollister/job/Ballina-Senior-R&D-Engineer-I-MY-F26-F3X5/1358828400/",
+        "source": "hollister_ballina_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-28T15:06:17.176858+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Hollister Incorporated",
+        "title": "Senior Project Manager R&D PMO",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jobs.hollister.com/Hollister/job/Ballina-Senior-Project-Manager-R&D-PMO-MY-F26-F3X5/1392082100/",
+        "source": "hollister_ballina_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-28T15:06:17.176858+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Hollister Incorporated",
+        "title": "Female Manufacturing Engineering Apprentice",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jobs.hollister.com/Hollister/job/Ballina-Female-Manufacturing-Engineering-Apprentice-MY-F26-F3X5/1414625800/",
+        "source": "hollister_ballina_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-28T15:06:17.176858+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Hollister Incorporated",
+        "title": "Territory Manager - Manitoba & Saskatchewan",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jobs.hollister.com/Hollister/job/Aurora-Territory-Manager-Manitoba-&-Saskatchewan-ON-L4G-0Z6/1398154500/",
+        "source": "hollister_ballina_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-28T15:06:17.176858+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Hollister Incorporated",
+        "title": "HR Traniee",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jobs.hollister.com/Hollister/job/HR-Traniee/1415591800/",
+        "source": "hollister_ballina_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-28T15:06:17.176858+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Hollister Incorporated",
+        "title": "Senior Data Developer",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jobs.hollister.com/Hollister/job/Gurugram-Senior-Data-Developer-HR-122002/1399672200/",
+        "source": "hollister_ballina_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-28T15:06:17.176858+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Hollister Incorporated",
+        "title": "RPA Developer II",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jobs.hollister.com/Hollister/job/Gurugram-RPA-Developer-II-HR-122002/1423327400/",
+        "source": "hollister_ballina_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-28T15:06:17.176858+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Hollister Incorporated",
+        "title": "Senior Business Systems Analyst I - SAP P2P",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jobs.hollister.com/Hollister/job/Gurugram-Senior-Business-Systems-Analyst-I-SAP-P2P-HR-122002/1401879200/",
+        "source": "hollister_ballina_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-28T15:06:17.176858+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Hollister Incorporated",
+        "title": "Senior Data Developer, SAP BW/Datasphere",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jobs.hollister.com/Hollister/job/Gurugram-Senior-Data-Developer%2C-SAP-BWDatasphere-HR-122002/1369457700/",
+        "source": "hollister_ballina_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-28T15:06:17.176858+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Hollister Incorporated",
+        "title": "Senior Business Systems Analyst I - SAP EWM",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jobs.hollister.com/Hollister/job/Gurugram-Senior-Business-Systems-Analyst-I-SAP-EWM-HR-122002/1405169500/",
+        "source": "hollister_ballina_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-28T15:06:17.176858+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Hollister Incorporated",
+        "title": "Senior Data Developer- SAP CI-DS",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jobs.hollister.com/Hollister/job/Gurugram-Senior-Data-Developer-SAP-CI-DS-HR-122002/1410010900/",
+        "source": "hollister_ballina_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-28T15:06:17.176858+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Hollister Incorporated",
+        "title": "Developer II - SharePoint Solution Engineer",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jobs.hollister.com/Hollister/job/Gurugram-Developer-II-SharePoint-Solution-Engineer-HR-122002/1398397900/",
+        "source": "hollister_ballina_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-28T15:06:17.176858+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Hollister Incorporated",
+        "title": "Principal Enterprise Architect - SCM",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jobs.hollister.com/Hollister/job/Gurugram-Principal-Enterprise-Architect-SCM-HR-122002/1419953800/",
+        "source": "hollister_ballina_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-28T15:06:17.176858+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Hollister Incorporated",
+        "title": "Senior Design Assurance Quality Engineer II",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jobs.hollister.com/Hollister/job/Gurugram-Senior-Design-Assurance-Quality-Engineer-II-HR-122002/1399279300/",
+        "source": "hollister_ballina_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-28T15:06:17.176858+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Hollister Incorporated",
+        "title": "Senior Developer Microsoft Dynamics CE",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jobs.hollister.com/Hollister/job/Gurugram-Senior-Developer-Microsoft-Dynamics-CE-HR-122002/1312314700/",
+        "source": "hollister_ballina_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-28T15:06:17.176858+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Hollister Incorporated",
+        "title": "Project Management Specialist II",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jobs.hollister.com/Hollister/job/Gurugram-Project-Management-Specialist-II-HR-122002/1410387900/",
+        "source": "hollister_ballina_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-28T15:06:17.176858+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Hollister Incorporated",
+        "title": "Sr Labeling Designer I",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jobs.hollister.com/Hollister/job/Gurugram-Sr-Labeling-Designer-I-HR-122002/1410893700/",
+        "source": "hollister_ballina_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-28T15:06:17.176858+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Hollister Incorporated",
+        "title": "Principal Platform Owner",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jobs.hollister.com/Hollister/job/Gurugram-Principal-Platform-Owner-HR-122002/1404772800/",
+        "source": "hollister_ballina_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-28T15:06:17.176858+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Hollister Incorporated",
+        "title": "Lead Solution Architect",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jobs.hollister.com/Hollister/job/Gurugram-Lead-Solution-Architect-HR-122002/1404759900/",
+        "source": "hollister_ballina_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-28T15:06:17.176858+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Hollister Incorporated",
+        "title": "Sales Representative (m/w/d) Stoma - Niedersachsen / Sachsen-Anhalt",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jobs.hollister.com/Hollister/job/Hannover-Sales-Representative-%28mwd%29-Stoma-Niedersachsen-Sachsen-Anhalt-30001/1390287900/",
+        "source": "hollister_ballina_direct",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-28T15:06:17.176858+00:00",
+        "posted_age_known": false
+      }
+    ],
+    "checked_at": 1787929484.9784663,
+    "consecutive_failures": 0
+  },
+  "Aldi Ireland::batch_dedicated_v2": {
+    "jobs": [],
+    "checked_at": 1787929494.9008732,
+    "consecutive_failures": 1
+  },
   "Dell Technologies::batch_dedicated_v1": {
     "jobs": [],
-    "checked_at": 1787927711.4276104,
+    "checked_at": 1787929499.7097533,
     "consecutive_failures": 1
   },
   "NetApp::netapp_attempt2_v3": {
     "jobs": [],
-    "checked_at": 1787927720.034834,
-    "consecutive_failures": 1
-  },
-  "Aldi Ireland::batch_dedicated_v2": {
-    "jobs": [],
-    "checked_at": 1787927720.355227,
+    "checked_at": 1787929510.9884794,
     "consecutive_failures": 1
   },
   "Stryker::batch_dedicated_v1": {
     "jobs": [],
-    "checked_at": 1787927731.407914,
+    "checked_at": 1787929511.6355674,
     "consecutive_failures": 1
   },
-  "Bristol Myers Squibb::batch_dedicated_v1": {
+  "Insulet Corporation::targeted_direct_batch8_bulk_v1": {
     "jobs": [],
-    "checked_at": 1787927735.259244,
-    "consecutive_failures": 1
-  },
-  "Fitch Ratings::next_recovery_batch7_v1": {
-    "jobs": [],
-    "checked_at": 1787927735.7293708,
+    "checked_at": 1787929516.440762,
     "consecutive_failures": 1
   },
   "QIAGEN": {
     "jobs": [],
-    "checked_at": 1787927736.889587,
-    "consecutive_failures": 1
-  },
-  "HP (Hewlett-Packard)::friend_next4_v1": {
-    "jobs": [],
-    "checked_at": 1787927744.1256442,
-    "consecutive_failures": 1
-  },
-  "Oracle::attempt2_plus_new_v2": {
-    "jobs": [],
-    "checked_at": 1787927744.9394028,
+    "checked_at": 1787929519.7607005,
     "consecutive_failures": 1
   },
   "Red Hat": {
     "jobs": [],
-    "checked_at": 1787927752.4866803,
+    "checked_at": 1787929522.7708063,
     "consecutive_failures": 1
   },
-  "Forvis Mazars Ireland::next_manual_batch_v2": {
+  "HP (Hewlett-Packard)::friend_next4_v1": {
     "jobs": [],
-    "checked_at": 1787927760.8575842,
+    "checked_at": 1787929523.3149831,
     "consecutive_failures": 1
   },
-  "Willis Towers Watson (WTW)": {
+  "Marvell Technology::targeted_direct_batch8_bulk_v1": {
     "jobs": [],
-    "checked_at": 1787927768.5063841,
+    "checked_at": 1787929523.4478679,
     "consecutive_failures": 1
   },
-  "Slalom": {
+  "Oracle::attempt2_plus_new_v2": {
     "jobs": [],
-    "checked_at": 1787927792.6191804,
+    "checked_at": 1787929525.3012886,
     "consecutive_failures": 1
   },
-  "UBS": {
+  "Fitch Ratings::next_recovery_batch7_v1": {
     "jobs": [],
-    "checked_at": 1787927792.8865838,
+    "checked_at": 1787929525.7472665,
+    "consecutive_failures": 1
+  },
+  "Bristol Myers Squibb::batch_dedicated_v1": {
+    "jobs": [],
+    "checked_at": 1787929528.6030881,
     "consecutive_failures": 1
   },
   "Cantor Fitzgerald Ireland": {
     "jobs": [],
-    "checked_at": 1787927793.6196167,
+    "checked_at": 1787929532.7738554,
+    "consecutive_failures": 1
+  },
+  "Slalom": {
+    "jobs": [],
+    "checked_at": 1787929533.6928587,
+    "consecutive_failures": 1
+  },
+  "Forvis Mazars Ireland::next_manual_batch_v2": {
+    "jobs": [],
+    "checked_at": 1787929533.875774,
+    "consecutive_failures": 1
+  },
+  "UBS": {
+    "jobs": [],
+    "checked_at": 1787929534.9162254,
     "consecutive_failures": 1
   },
   "ABP Food Group": {
     "jobs": [],
-    "checked_at": 1787927794.5262153,
+    "checked_at": 1787929539.4834096,
     "consecutive_failures": 1
   },
-  "Cook Medical": {
-    "jobs": [],
-    "checked_at": 1787927801.4297907,
-    "consecutive_failures": 1
+  "Willis Towers Watson (WTW)": {
+    "jobs": [
+      {
+        "company": "Willis Towers Watson (WTW)",
+        "title": "Operations Leader Life and Pensions",
+        "location": "Dublin, County Dublin, IE",
+        "posted_text": "2026-06-24T12:15:52Z",
+        "posted_days_ago": 65.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.wtwco.com/jobs/operations-leader-life-and-pensions-dublin-county-dublin-ireland",
+        "source": "wtw_sitemap",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-28T15:06:17.176858+00:00",
+        "posted_age_known": true
+      },
+      {
+        "company": "Willis Towers Watson (WTW)",
+        "title": "Compensation Survey Consultant",
+        "location": "Dublin, County Dublin, IE",
+        "posted_text": "2026-06-23T08:45:53Z",
+        "posted_days_ago": 66.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.wtwco.com/jobs/compensation-survey-consultant-dublin-county-dublin-ireland",
+        "source": "wtw_sitemap",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-25T17:26:48.221598+00:00",
+        "posted_age_known": true
+      }
+    ],
+    "checked_at": 1787929543.4990451,
+    "consecutive_failures": 0
   },
   "ESB (Electricity Supply Board)": {
     "jobs": [],
-    "checked_at": 1787927801.6674168,
+    "checked_at": 1787929544.7079499,
     "consecutive_failures": 1
   },
   "Revvity (PerkinElmer)": {
     "jobs": [],
-    "checked_at": 1787927802.956755,
+    "checked_at": 1787929545.4566913,
     "consecutive_failures": 1
   },
   "Boston Consulting Group (BCG)": {
     "jobs": [],
-    "checked_at": 1787927813.2329526,
-    "consecutive_failures": 1
-  },
-  "Aviva Ireland::next_recovery_batch7_v1": {
-    "jobs": [],
-    "checked_at": 1787927822.0134473,
+    "checked_at": 1787929550.1912408,
     "consecutive_failures": 1
   }
 }
