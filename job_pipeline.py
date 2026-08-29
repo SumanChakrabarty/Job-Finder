@@ -11837,8 +11837,9 @@ def scrape_aer_lingus_talentsoft_current(session):
             "https://aerlingus-career.talent-soft.com/job/list-of-jobs.aspx?mode=list&lcid=2057&facet_Country=2229",
         ],
         [
+            # Current Talentsoft detail links are /job/job-<slug>_<numeric>.aspx
+            r"aerlingus-career\.talent-soft\.com/job/job-[^?#]+_\d+\.aspx",
             r"aerlingus-career\.talent-soft\.com/job/[^?#]+\.aspx\?[^\"']*(?:idjob|jobid|id_job)=\d+",
-            r"aerlingus-career\.talent-soft\.com/job/[^?#]+/job/[^?#]+",
         ],
         "aer_lingus_talentsoft_roi",
         session,
@@ -11906,7 +11907,40 @@ def scrape_goldman_sachs_dublin_current(session):
 
 
 def scrape_haleon_ireland_current_bulk(session):
-    """Haleon current first-party Eightfold-style board with HTTP fallback."""
+    """Haleon: current custom-domain Eightfold PCS API, then conservative page fallback."""
+    results = []
+    try:
+        resp = session.get(
+            "https://careers.haleon.com/api/apply/v2/jobs",
+            params={"domain": "haleon.com", "hl": "en", "start": 0, "num": 100, "query": ""},
+            headers=HEADERS,
+            timeout=15,
+        )
+        if resp.status_code == 200:
+            data = resp.json()
+            for raw in data.get("positions") or []:
+                norm = normalize_eightfold_job("Haleon", "haleon", raw)
+                if not norm:
+                    continue
+                # normalize_eightfold_job builds haleon.eightfold.ai URLs when the
+                # API does not provide canonicalPositionUrl; Haleon uses a custom host.
+                jid = raw.get("id") or raw.get("position_id") or raw.get("job_id")
+                if jid and (not raw.get("canonicalPositionUrl") and not raw.get("apply_url")):
+                    norm["url"] = f"https://careers.haleon.com/careers/job/{jid}?domain=haleon.com"
+                norm["source"] = "haleon_eightfold_custom_api"
+                results.append(norm)
+    except Exception as exc:
+        print(f"      [haleon_eightfold_custom_api] failed: {exc}")
+    if results:
+        # de-dupe on canonical URL/title-location
+        dedup = {}
+        for j in results:
+            key = (j.get("url") or "").lower() or ((j.get("title") or "").lower(), (j.get("location") or "").lower())
+            dedup[key] = j
+        out = list(dedup.values())
+        print(f"      [haleon_eightfold_custom_api] {len(out)} verified Republic-of-Ireland vacancies")
+        return out
+
     jobs = scrape_haleon_direct_http(session)
     if jobs:
         return jobs
@@ -11922,7 +11956,6 @@ def scrape_haleon_ireland_current_bulk(session):
         False,
         80,
     )
-
 
 def scrape_cook_medical_current_bulk(session):
     """Cook Medical: keep iCIMS route, then broaden to all current EMEA iCIMS cards."""
@@ -11957,6 +11990,7 @@ def scrape_nokia_oracle(session):
     return jobs
 
 def main():
+    print("=== TARGETED_DIRECT_BATCH_15_FALSE_ZERO_REPAIR ACTIVE: NetApp + Cook Medical re-enabled from final defer; Aer Lingus Talentsoft link-shape fixed; Haleon custom Eightfold API; manual queue untouched ===")
     print("=== TARGETED_DIRECT_BATCH_14_ZERO_DEFERRED_BULK ACTIVE: NetApp + Aer Lingus + Goldman Sachs + Haleon + Cook Medical fresh current routes; manual queue untouched ===")
     print("=== TARGETED_DIRECT_BATCH_13_ZERO_DEFERRED_RECOVERY ACTIVE: Regeneron + Stryker + Baxter + Dell + Schneider current official backends; manual queue intentionally untouched ===")
     print("=== TARGETED_DIRECT_BATCH_12_MANUAL_ATS_BULK ACTIVE: Proofpoint + Etsy + Tenable + SentinelOne + CrowdStrike confirmed ATS routes; live routes/runtime untouched ===")
@@ -12593,7 +12627,9 @@ def main():
             # from the old generic Sheet-2 zero-result cache so the proven
             # dedicated result cannot be shadowed by a stale generic verdict.
             _key = name.strip().lower()
-            if _key in {"regeneron", "stryker", "baxter international", "dell technologies", "schneider electric"}:
+            if _key in {"netapp", "cook medical", "aer lingus", "haleon"}:
+                cache_key = f"{name}::targeted_zero_deferred_batch15_v1"
+            elif _key in {"regeneron", "stryker", "baxter international", "dell technologies", "schneider electric"}:
                 cache_key = f"{name}::targeted_zero_deferred_batch13_v1"
             elif _key in {"boehringer ingelheim", "texas instruments", "nokia"}:
                 cache_key = f"{name}::targeted_direct_batch11_bulk_v1"
@@ -13006,7 +13042,6 @@ def main():
         "waters corporation",
         "mckinsey & company",
         "honeywell",
-        "netapp",
         "greencore",
         "bayer",
         "fitch ratings",
@@ -13014,7 +13049,6 @@ def main():
         "insulet corporation",
         "marvell technology",
         "syneos health",
-        "cook medical",
     }
     _before_final_defer = len(task_list)
     task_list = [
