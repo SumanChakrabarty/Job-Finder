@@ -4365,17 +4365,12 @@ def scrape_viatris_ireland_direct(session):
 
 
 def scrape_regeneron_ireland_direct(session):
-    return _scrape_first_party_ireland_listing(
+    """Regeneron: official Workday backend exposed by current Regeneron job Apply links."""
+    return _workday_override_scrape(
         "Regeneron",
-        [
-            "https://careers.regeneron.com/en/jobs/?location=Ireland",
-            "https://careers.regeneron.com/en/jobs/?search=&location=Limerick",
-        ],
-        [r"careers\.regeneron\.com/(?:[a-z]{2}/)?job/[^?#]+", r"careers\.regeneron\.com/.*/jobs?/[^?#]+"],
-        "regeneron_direct", session, True
+        "https://regeneron.wd1.myworkdayjobs.com/Careers",
+        session,
     )
-
-
 
 def scrape_medtronic_ireland_direct(session):
     # Verified current Medtronic Workday tenant; replaces the broken jobs.medtronic.com route.
@@ -8393,19 +8388,15 @@ def scrape_hpe_ireland(session):
 
 
 def scrape_dell_ireland(session):
-    return _batch_first_party_roi_scrape(
+    """Dell: current official Oracle Candidate Experience backend, country-filtered to IE."""
+    return scrape_oracle_candidate_experience(
         "Dell Technologies",
-        [
-            "https://jobs.dell.com/en/search-jobs/Ireland/375/2/2963597/53/-8/50/2",
-            "https://jobs.dell.com/en/search-jobs?keywords=Ireland",
-        ],
-        ["jobs.dell.com"],
-        ["/job/", "/jobs/"],
+        "https://enterpriseplatform.dell.com",
+        "careers",
         session,
-        "dell_first_party",
-        80,
+        country_code="IE",
+        max_pages=8,
     )
-
 
 def scrape_tesco_ireland(session):
     """Tesco Ireland via current official application site, plain HTTP only.
@@ -8690,20 +8681,12 @@ def scrape_alexion_ireland(session):
 
 
 def scrape_stryker_ireland(session):
-    return _batch_first_party_roi_scrape(
+    """Stryker: official Workday backend exposed by current Stryker job Apply links."""
+    return _workday_override_scrape(
         "Stryker",
-        [
-            "https://careers.stryker.com/search-jobs/Ireland",
-            "https://careers.stryker.com/search-jobs/Cork",
-            "https://careers.stryker.com/search-jobs/Limerick",
-        ],
-        ["careers.stryker.com"],
-        ["/job/", "/jobs/", "/search-jobs/"],
+        "https://stryker.wd1.myworkdayjobs.com/StrykerCareers",
         session,
-        "stryker_first_party",
-        60,
     )
-
 
 def scrape_novartis_ireland(session):
     return _batch_first_party_roi_scrape(
@@ -9649,19 +9632,19 @@ def scrape_honeywell_attempt2(session):
 
 
 def scrape_schneider_attempt2(session):
-    """Schneider second/final attempt: alternate official Ireland/Dublin searches."""
-    return _batch_first_party_roi_scrape(
+    """Schneider Electric current first-party board; detail pages must prove Republic of Ireland."""
+    return _scrape_first_party_ireland_listing(
         "Schneider Electric",
         [
-            "https://careers.se.com/jobs?keywords=Ireland",
             "https://careers.se.com/jobs?keywords=&location=Dublin%2C%20Ireland",
-            "https://careers.se.com/jobs",
+            "https://careers.se.com/jobs?keywords=Ireland",
+            "https://careers.se.com/jobs?location=Ireland",
         ],
-        ["careers.se.com"],
-        ["/jobs/"],
+        [r"careers\.se\.com/jobs/\d+(?:\?[^#]*)?$"],
+        "schneider_current_direct",
         session,
-        "schneider_attempt2",
-        80,
+        False,
+        120,
     )
 
 def test_single_company(name):
@@ -10570,58 +10553,12 @@ def scrape_gas_networks_ireland_direct(session):
 
 
 def scrape_baxter_ireland_direct(session):
-    """Official Baxter Ireland location page + detail verification."""
-    base = "https://jobs.baxter.com"
-    listing = base + "/en/location/ireland-jobs/152/2963597/2"
-    raw = _html_get(session, listing, 15)
-
-    detail_urls = []
-    for href in re.findall(r'href=["\']([^"\']+/en/job/[^"\']+)["\']', raw, re.I):
-        full = urllib.parse.urljoin(base, html.unescape(href)).split("?")[0]
-        if full not in detail_urls:
-            detail_urls.append(full)
-
-    jobs = {}
-    for full in detail_urls[:12]:
-        try:
-            detail = _html_get(session, full, 12)
-        except Exception:
-            continue
-        body = re.sub(r"\s+", " ", _html_to_text(detail)).strip()
-        if not is_republic_of_ireland_location(body) or _ROI_NEGATIVE_RE.search(body):
-            continue
-
-        hm = re.search(r'<h1[^>]*>(.*?)</h1>', detail, re.I | re.S)
-        title = re.sub(r"\s+", " ", _html_to_text(hm.group(1))).strip() if hm else ""
-        if not title or _looks_like_non_job_title(title):
-            continue
-
-        lm = re.search(
-            r'Location\s+([^<]{1,120}?Ireland)|Location\s+([A-Za-z ,\-]+)',
-            body, re.I
-        )
-        location = (lm.group(1) or lm.group(2)).strip() if lm else "Republic of Ireland"
-
-        dm = re.search(r'Date posted\s+(\d{2}/\d{2}/\d{4})', body, re.I)
-        posted_text = dm.group(1) if dm else "Unknown"
-
-        sponsorship, snippet = classify_sponsorship(body[:20000])
-        jobs[full.lower()] = {
-            "company": "Baxter International",
-            "title": title[:300],
-            "location": location[:160],
-            "posted_text": posted_text,
-            "posted_days_ago": None,
-            "employment_type": normalize_employment_type("", title),
-            "url": full,
-            "source": "baxter_official_http",
-            "visa_sponsorship": sponsorship,
-            "visa_snippet": snippet,
-        }
-
-    print(f"      [baxter_direct_http] {len(jobs)} verified Republic-of-Ireland vacancies")
-    return list(jobs.values())
-
+    """Baxter: official Workday backend exposed by current Baxter Ireland job Apply links."""
+    return _workday_override_scrape(
+        "Baxter International",
+        "https://baxter.wd1.myworkdayjobs.com/baxter",
+        session,
+    )
 
 def scrape_coillte_direct(session):
     """Official Coillte vacancies page. Clean zero is a valid automated result."""
@@ -11870,6 +11807,142 @@ def scrape_crowdstrike_workday_direct(session):
         session,
     )
 
+
+# === TARGETED_DIRECT_BATCH_14_ZERO_DEFERRED_BULK ===
+# Manual queue deliberately untouched. These are only current-zero/deferred
+# companies where a live first-party Republic-of-Ireland board/role was proven.
+
+def scrape_netapp_ireland_http_current(session):
+    """NetApp's current server-rendered Ireland location page (no browser)."""
+    return _scrape_first_party_ireland_listing(
+        "NetApp",
+        [
+            "https://careers.netapp.com/location/ireland-jobs/27600/2963597/2",
+            "https://careers.netapp.com/location/cork-jobs/27600/2963597-7521315-2965140/4",
+        ],
+        [r"careers\.netapp\.com/(?:en/)?job/[^?#]+"],
+        "netapp_ireland_http_current",
+        session,
+        True,
+        80,
+    )
+
+
+def scrape_aer_lingus_talentsoft_current(session):
+    """Aer Lingus Talentsoft: explicit Republic-of-Ireland facet, server rendered."""
+    return _scrape_first_party_ireland_listing(
+        "Aer Lingus",
+        [
+            "https://aerlingus-career.talent-soft.com/job/list-of-all-jobs.aspx?mode=list&lcid=2057&facet_Country=2229",
+            "https://aerlingus-career.talent-soft.com/job/list-of-jobs.aspx?mode=list&lcid=2057&facet_Country=2229",
+        ],
+        [
+            r"aerlingus-career\.talent-soft\.com/job/[^?#]+\.aspx\?[^\"']*(?:idjob|jobid|id_job)=\d+",
+            r"aerlingus-career\.talent-soft\.com/job/[^?#]+/job/[^?#]+",
+        ],
+        "aer_lingus_talentsoft_roi",
+        session,
+        True,
+        60,
+    )
+
+
+def scrape_goldman_sachs_dublin_current(session):
+    """Goldman Sachs current higher.gs.com Dublin results; rendered search, strict detail ROI."""
+    if not HAS_PLAYWRIGHT:
+        return []
+    results = {}
+    search_urls = [
+        "https://higher.gs.com/results?LOCATION=Dublin&page=1&sort=RELEVANCE",
+        "https://higher.gs.com/results?LOCATION=Dublin&page=2&sort=RELEVANCE",
+    ]
+    try:
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch(headless=True, args=["--no-sandbox", "--disable-dev-shm-usage"])
+            page = browser.new_page(viewport={"width": 1400, "height": 1000}, user_agent=HEADERS.get("User-Agent"))
+            candidates = set()
+            for u in search_urls:
+                try:
+                    page.goto(u, wait_until="domcontentloaded", timeout=35000)
+                    page.wait_for_timeout(1200)
+                    links = page.locator('a[href*="/roles/"]')
+                    for i in range(min(links.count(), 300)):
+                        href = links.nth(i).get_attribute("href")
+                        if href:
+                            full = urllib.parse.urljoin(page.url, href).split("#")[0]
+                            if re.search(r"higher\.gs\.com/roles/\d+", full, re.I):
+                                candidates.add(full)
+                except Exception as exc:
+                    print(f"      [goldman_dublin_current] search failed: {exc}")
+            for u in list(candidates)[:100]:
+                try:
+                    page.goto(u, wait_until="domcontentloaded", timeout=25000)
+                    page.wait_for_timeout(350)
+                    body = re.sub(r"\s+", " ", page.locator("body").inner_text()).strip()
+                    if _ROI_NEGATIVE_RE.search(body) or not re.search(r"\bDublin\b[^|.;]{0,80}\bIreland\b|\bIreland\b[^|.;]{0,80}\bDublin\b", body, re.I):
+                        continue
+                    title = ""
+                    try:
+                        title = re.sub(r"\s+", " ", page.locator("h1").first.inner_text()).strip()
+                    except Exception:
+                        pass
+                    if not title or _looks_like_non_job_title(title):
+                        continue
+                    sponsorship, snippet = classify_sponsorship(body[:18000])
+                    results[page.url.rstrip('/').lower()] = {
+                        "company": "Goldman Sachs", "title": title[:300], "location": "Dublin, Ireland",
+                        "posted_text": "Unknown", "posted_days_ago": None,
+                        "employment_type": normalize_employment_type("", title), "url": page.url,
+                        "source": "goldman_higher_dublin_current", "visa_sponsorship": sponsorship,
+                        "visa_snippet": snippet,
+                    }
+                except Exception:
+                    continue
+            browser.close()
+    except Exception as exc:
+        print(f"      [goldman_dublin_current] failed: {exc}")
+    print(f"      [goldman_dublin_current] {len(results)} verified Dublin/Ireland vacancies")
+    return list(results.values())
+
+
+def scrape_haleon_ireland_current_bulk(session):
+    """Haleon current first-party Eightfold-style board with HTTP fallback."""
+    jobs = scrape_haleon_direct_http(session)
+    if jobs:
+        return jobs
+    return _scrape_first_party_ireland_listing(
+        "Haleon",
+        [
+            "https://careers.haleon.com/careers?domain=haleon.com&location=Ireland",
+            "https://careers.haleon.com/careers?domain=haleon.com&location=Dungarvan",
+        ],
+        [r"careers\.haleon\.com/careers/job/\d+"],
+        "haleon_current_bulk",
+        session,
+        False,
+        80,
+    )
+
+
+def scrape_cook_medical_current_bulk(session):
+    """Cook Medical: keep iCIMS route, then broaden to all current EMEA iCIMS cards."""
+    jobs = scrape_cook_medical_icims(session)
+    if jobs:
+        return jobs
+    return _scrape_first_party_ireland_listing(
+        "Cook Medical",
+        [
+            "https://emea-cookmedical.icims.com/jobs/search?ss=1&searchKeyword=Limerick",
+            "https://emea-cookmedical.icims.com/jobs/search?ss=1&searchKeyword=Ireland",
+            "https://emea-cookmedical.icims.com/jobs/search?ss=1",
+        ],
+        [r"emea-cookmedical\.icims\.com/jobs/\d+/[^?#]+/job"],
+        "cook_icims_current_bulk",
+        session,
+        False,
+        160,
+    )
+
 def scrape_nokia_oracle(session):
     """Nokia official Oracle Candidate Experience site."""
     jobs = scrape_oracle_candidate_experience(
@@ -11884,6 +11957,8 @@ def scrape_nokia_oracle(session):
     return jobs
 
 def main():
+    print("=== TARGETED_DIRECT_BATCH_14_ZERO_DEFERRED_BULK ACTIVE: NetApp + Aer Lingus + Goldman Sachs + Haleon + Cook Medical fresh current routes; manual queue untouched ===")
+    print("=== TARGETED_DIRECT_BATCH_13_ZERO_DEFERRED_RECOVERY ACTIVE: Regeneron + Stryker + Baxter + Dell + Schneider current official backends; manual queue intentionally untouched ===")
     print("=== TARGETED_DIRECT_BATCH_12_MANUAL_ATS_BULK ACTIVE: Proofpoint + Etsy + Tenable + SentinelOne + CrowdStrike confirmed ATS routes; live routes/runtime untouched ===")
     print("=== TARGETED_DIRECT_BATCH_11_BULK_FAST ACTIVE: Boehringer + Texas Instruments + Nokia direct routes; repeated dead routes filtered at FINAL queue; BlackRock timeout reduced with stale-positive protection ===")
     print("=== TARGETED_DIRECT_BATCH_10_BULK_STABILITY ACTIVE: stale-positive timeout protection + repeated-dead-route defer + Micron/Slack/Box bulk recovery ===")
@@ -12234,7 +12309,7 @@ def main():
         ("exact", "hollister incorporated", scrape_hollister_ballina_direct, 40, "official Hollister Ballina SuccessFactors board"),
         ("exact", "insulet corporation", scrape_insulet_workday, 40, "official Insulet Workday tenant"),
         ("exact", "marvell technology", scrape_marvell_workday, 40, "official Marvell Workday tenant"),
-        ("exact", "cook medical", scrape_cook_medical_icims, 45, "official Cook Medical EMEA iCIMS"),
+        ("exact", "cook medical", scrape_cook_medical_current_bulk, 50, "Cook Medical current EMEA iCIMS bulk route"),
         ("exact", "medpace", scrape_medpace_official_audit, 30, "official Medpace current location index"),
         ("exact", "an post", scrape_an_post_oracle, 40, "official An Post Oracle Candidate Experience CX_2001"),
         ("exact", "kepak group", scrape_kepak_workable, 35, "official Kepak Workable board"),
@@ -12249,7 +12324,7 @@ def main():
         ("exact", "energia group", scrape_energia_group_direct_http, 30, "official Energia Group vacancies board"),
         ("exact", "glanbia / tirlán", scrape_glanbia_tirlan_direct, 55, "official Glanbia/Tirlan SuccessFactors ROI routes"),
         ("exact", "ornua", scrape_ornua_direct, 45, "official Ornua SuccessFactors ROI routes"),
-        ("exact", "haleon", scrape_haleon_direct_http, 45, "official Haleon Ireland first-party careers route"),
+        ("exact", "haleon", scrape_haleon_ireland_current_bulk, 45, "Haleon current Ireland first-party board"),
         ("exact", "zurich insurance", scrape_zurich_ireland_direct, 40, "official Zurich SuccessFactors Ireland search"),
         ("exact", "eir", scrape_eir_ireland_direct, 30, "official eir server-rendered jobs board"),
         ("exact", "gas networks ireland", scrape_gas_networks_ireland_direct, 30, "official GNI current vacancies page"),
@@ -12259,7 +12334,7 @@ def main():
         ("exact", "dexcom", scrape_dexcom_ireland_attempt2, 105, "proven rendered Dexcom Ireland board; return budget aligned to real completion"),
         ("exact", "docusign", scrape_docusign_ireland_attempt2, 105, "verified Docusign route; extended return budget"),
         ("exact", "aecom", scrape_aecom_ireland_newbatch, 45, "official AECOM SmartRecruiters API"),
-        ("exact", "netapp", scrape_netapp_ireland_attempt2, 90, "NetApp attempt 2 rendered Ireland/city search"),
+        ("exact", "netapp", scrape_netapp_ireland_http_current, 40, "NetApp current server-rendered Ireland location board"),
         ("exact", "applied materials", scrape_applied_materials_ireland_newbatch, 60, "official Applied Materials Ireland board"),
         ("exact", "arcadis", scrape_arcadis_ireland_newbatch, 105, "official Arcadis Ireland Eightfold board; return budget aligned to real completion"),
         ("exact", "jacobs", scrape_jacobs_ireland_newbatch, 105, "official Jacobs Ireland search; return budget aligned to real completion"),
@@ -12362,12 +12437,12 @@ def main():
         ("exact", "medtronic", scrape_medtronic_ireland_direct, 75, "first-party Medtronic Ireland search"),
         ("exact", "fidelity investments", scrape_fidelity_investments_ireland_direct, 75, "Ireland-scoped first-party listing"),
         ("exact", "bny mellon", scrape_bny_mellon_ireland_recovery, 75, "first-party sitemap recovery"),
-        ("exact", "goldman sachs", scrape_goldman_sachs_ireland_recovery, 75, "first-party sitemap recovery"),
+        ("exact", "goldman sachs", scrape_goldman_sachs_dublin_current, 75, "Goldman higher.gs.com Dublin-filtered current roles"),
         ("exact", "morgan stanley", scrape_morgan_stanley_ireland_recovery, 75, "first-party sitemap recovery"),
         ("exact", "s&p global", scrape_sp_global_ireland_recovery, 75, "first-party sitemap recovery"),
         ("exact", "databricks", scrape_databricks_ireland_recovery, 75, "first-party sitemap recovery"),
         ("exact", "visa", scrape_visa_ireland_recovery, 75, "first-party sitemap recovery"),
-        ("exact", "aer lingus", scrape_aer_lingus_ireland_recovery, 75, "first-party sitemap recovery"),
+        ("exact", "aer lingus", scrape_aer_lingus_talentsoft_current, 40, "Aer Lingus Talentsoft Republic-of-Ireland facet"),
         ("exact", "pepsico", scrape_pepsico_ireland, 180, "official careers search"),
     ]
 
@@ -12462,6 +12537,7 @@ def main():
         "scrape_bausch_lomb_friend",
         "scrape_oracle_ireland_attempt2", "scrape_honeywell_attempt2", "scrape_schneider_attempt2",
         "scrape_gsk_ireland_current",
+        "scrape_goldman_sachs_dublin_current",
         "scrape_abp_ireland_rendered",
 }
 
@@ -12478,8 +12554,6 @@ def main():
         "waters corporation",
         "mckinsey & company",
         "honeywell",
-        "schneider electric",
-        "netapp",
         "greencore",
         "bayer",
         "fitch ratings",
@@ -12519,7 +12593,9 @@ def main():
             # from the old generic Sheet-2 zero-result cache so the proven
             # dedicated result cannot be shadowed by a stale generic verdict.
             _key = name.strip().lower()
-            if _key in {"boehringer ingelheim", "texas instruments", "nokia"}:
+            if _key in {"regeneron", "stryker", "baxter international", "dell technologies", "schneider electric"}:
+                cache_key = f"{name}::targeted_zero_deferred_batch13_v1"
+            elif _key in {"boehringer ingelheim", "texas instruments", "nokia"}:
                 cache_key = f"{name}::targeted_direct_batch11_bulk_v1"
             elif _key in {"micron technology", "slack", "box"}:
                 cache_key = f"{name}::targeted_direct_batch10_bulk_v1"
@@ -12930,7 +13006,6 @@ def main():
         "waters corporation",
         "mckinsey & company",
         "honeywell",
-        "schneider electric",
         "netapp",
         "greencore",
         "bayer",
