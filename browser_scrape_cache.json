@@ -318,7 +318,7 @@
         "source": "amazon_json",
         "visa_sponsorship": "sponsors",
         "visa_snippet": "t Amazon Hiring Support Amazon does not provide immigration sponsorship or support for this role. More jobs Ama",
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
         "posted_age_known": false
       },
@@ -3930,7 +3930,7 @@
         "source": "tiktok_browser",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
         "posted_age_known": false
       },
@@ -3945,7 +3945,7 @@
         "source": "tiktok_browser",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
         "posted_age_known": false
       },
@@ -3960,7 +3960,7 @@
         "source": "tiktok_browser",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
         "posted_age_known": false
       },
@@ -3975,7 +3975,7 @@
         "source": "tiktok_browser",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
         "posted_age_known": false
       },
@@ -4005,7 +4005,7 @@
         "source": "tiktok_browser",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
         "posted_age_known": false
       },
@@ -4065,7 +4065,7 @@
         "source": "tiktok_browser",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
         "posted_age_known": false
       },
@@ -4080,7 +4080,7 @@
         "source": "tiktok_browser",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
         "posted_age_known": false
       },
@@ -6885,7 +6885,7 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1788003595.6915545,
+    "checked_at": 1788017273.2798438,
     "consecutive_failures": 0
   },
   "Arup": {
@@ -10510,8 +10510,8 @@
   },
   "Alvarez & Marsal": {
     "jobs": [],
-    "checked_at": 1788011771.6129289,
-    "consecutive_failures": 131
+    "checked_at": 1788017312.1871226,
+    "consecutive_failures": 132
   },
   "Coca-Cola HBC Ireland": {
     "jobs": [],
@@ -10746,8 +10746,8 @@
   },
   "Bain & Company": {
     "jobs": [],
-    "checked_at": 1788011780.2355852,
-    "consecutive_failures": 131
+    "checked_at": 1788017323.9823272,
+    "consecutive_failures": 132
   },
   "FTI Consulting": {
     "jobs": [],
@@ -11318,8 +11318,8 @@
   },
   "Morgan Stanley": {
     "jobs": [],
-    "checked_at": 1788011726.9308946,
-    "consecutive_failures": 146
+    "checked_at": 1788017255.383498,
+    "consecutive_failures": 147
   },
   "Moody's": {
     "jobs": [],
@@ -11411,18 +11411,18 @@
   },
   "Akamai": {
     "jobs": [],
-    "checked_at": 1788011776.0258245,
-    "consecutive_failures": 118
+    "checked_at": 1788017317.433684,
+    "consecutive_failures": 119
   },
   "Alkermes": {
     "jobs": [],
-    "checked_at": 1788011779.5776982,
-    "consecutive_failures": 143
+    "checked_at": 1788017322.3179128,
+    "consecutive_failures": 144
   },
   "Visa": {
     "jobs": [],
-    "checked_at": 1788011726.818978,
-    "consecutive_failures": 142
+    "checked_at": 1788017254.6194623,
+    "consecutive_failures": 143
   },
   "Boehringer Ingelheim": {
     "jobs": [],
@@ -11436,18 +11436,18 @@
   },
   "Atlassian": {
     "jobs": [],
-    "checked_at": 1788011780.9172251,
-    "consecutive_failures": 141
+    "checked_at": 1788017324.6571794,
+    "consecutive_failures": 142
   },
   "Bruker": {
     "jobs": [],
-    "checked_at": 1788011781.4314098,
-    "consecutive_failures": 142
+    "checked_at": 1788017323.170627,
+    "consecutive_failures": 143
   },
   "Biotronik": {
     "jobs": [],
-    "checked_at": 1788011780.7770953,
-    "consecutive_failures": 142
+    "checked_at": 1788017324.5598192,
+    "consecutive_failures": 143
   },
   "Carbery Group": {
     "jobs": [],
@@ -11546,8 +11546,8 @@
   },
   "Edwards Lifesciences": {
     "jobs": [],
-    "checked_at": 1788011765.0399663,
-    "consecutive_failures": 141
+    "checked_at": 1788017306.4839432,
+    "consecutive_failures": 142
   },
   "Dairygold": {
     "jobs": [],
@@ -12064,8 +12064,8 @@
   },
   "Smurfit Westrock": {
     "jobs": [],
-    "checked_at": 1788011784.875135,
-    "consecutive_failures": 137
+    "checked_at": 1788017328.243796,
+    "consecutive_failures": 138
   },
   "Stena Line Ireland": {
     "jobs": [],
@@ -12077,11 +12077,6 @@
     "checked_at": 1787927836.118643,
     "consecutive_failures": 128
   },
-  "ResMed": {
-    "jobs": [],
-    "checked_at": 1787666242.204297,
-    "consecutive_failures": 31
-  },
   "Tandem Diabetes Care": {
     "jobs": [],
     "checked_at": 1787666289.2041326,
@@ -12089,8 +12084,8 @@
   },
   "Teva Pharmaceuticals": {
     "jobs": [],
-    "checked_at": 1788011768.8545961,
-    "consecutive_failures": 137
+    "checked_at": 1788017309.8908212,
+    "consecutive_failures": 138
   },
   "Texas Instruments": {
     "jobs": [],
@@ -13978,312 +13973,390 @@
         "title": "Principal Statistical Programmer - FSP (Permanent Homebased) m/w/d",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Full-time",
         "url": "https://jobs.iqvia.com/en/jobs/R1521990-6",
         "source": "iqvia_ireland_location_page",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-23T17:49:21.467549+00:00",
+        "posted_age_known": false
       },
       {
         "company": "IQVIA",
         "title": "The Associate Director, Linux/Unix Systems Engineer",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Full-time",
         "url": "https://jobs.iqvia.com/en/jobs/R1528022-0",
         "source": "iqvia_ireland_location_page",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-23T17:49:21.467549+00:00",
+        "posted_age_known": false
       },
       {
         "company": "IQVIA",
         "title": "PK/PD Statistical Programmer (m/w/d) - homebased",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Full-time",
         "url": "https://jobs.iqvia.com/en/jobs/R1532189-5",
         "source": "iqvia_ireland_location_page",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-23T17:49:21.467549+00:00",
+        "posted_age_known": false
       },
       {
         "company": "IQVIA",
         "title": "Associate Principal / Principal, Clinical Outcome Assessment (COA) Strategy Consulting",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Full-time",
         "url": "https://jobs.iqvia.com/en/jobs/R1537016-3",
         "source": "iqvia_ireland_location_page",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-23T17:49:21.467549+00:00",
+        "posted_age_known": false
       },
       {
         "company": "IQVIA",
         "title": "Medical Device Sales Specialist",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Full-time",
         "url": "https://jobs.iqvia.com/en/jobs/R1542341-0",
         "source": "iqvia_ireland_location_page",
         "visa_sponsorship": "no_sponsorship",
-        "visa_snippet": "r role within the company! Please note: Sponsorship is not available for this opportunity #LI-DNI #LI-CES #L"
+        "visa_snippet": "r role within the company! Please note: Sponsorship is not available for this opportunity #LI-DNI #LI-CES #L",
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-23T17:49:21.467549+00:00",
+        "posted_age_known": false
       },
       {
         "company": "IQVIA",
         "title": "Account Management, Associate Director - Healthcare Data & Technology",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Full-time",
         "url": "https://jobs.iqvia.com/en/jobs/R1543693-0",
         "source": "iqvia_ireland_location_page",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-25T16:11:35.048624+00:00",
+        "posted_age_known": false
       },
       {
         "company": "IQVIA",
         "title": "Global Clinical Project Manager - Vendor Management Expert (home-based in Europe)",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Full-time",
         "url": "https://jobs.iqvia.com/en/jobs/R1551981-3",
         "source": "iqvia_ireland_location_page",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-25T13:36:51.513443+00:00",
+        "posted_age_known": false
       },
       {
         "company": "IQVIA",
         "title": "Clinical Research Associate - Ireland",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Full-time",
         "url": "https://jobs.iqvia.com/en/jobs/R1555258-0",
         "source": "iqvia_ireland_location_page",
         "visa_sponsorship": "sponsors",
-        "visa_snippet": "there! *Please note - this role is not eligible for VISA sponsorship* IQVIA is a leading global provider of"
+        "visa_snippet": "there! *Please note - this role is not eligible for VISA sponsorship* IQVIA is a leading global provider of",
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-23T17:49:21.467549+00:00",
+        "posted_age_known": false
       },
       {
         "company": "IQVIA",
         "title": "Business Development Manager - Expert Ecosystem",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Full-time",
         "url": "https://jobs.iqvia.com/en/jobs/R1557036-1",
         "source": "iqvia_ireland_location_page",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-23T17:49:21.467549+00:00",
+        "posted_age_known": false
       },
       {
         "company": "IQVIA",
         "title": "VP & Managing Director, Clinical Strategic Operations, Large Pharma Partnership",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Full-time",
         "url": "https://jobs.iqvia.com/en/jobs/R1557687-4",
         "source": "iqvia_ireland_location_page",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T20:57:28.681500+00:00",
+        "posted_age_known": false
       },
       {
         "company": "IQVIA",
         "title": "VP & Managing Director, Clinical Strategic Operations, Mid-Sized Pharma Partnerships",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Full-time",
         "url": "https://jobs.iqvia.com/en/jobs/R1557699-4",
         "source": "iqvia_ireland_location_page",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T20:57:28.681500+00:00",
+        "posted_age_known": false
       },
       {
         "company": "IQVIA",
         "title": "Snr Safety Project Lead",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Full-time",
         "url": "https://jobs.iqvia.com/en/jobs/R1560496-0",
         "source": "iqvia_ireland_location_page",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-23T17:49:21.467549+00:00",
+        "posted_age_known": false
       },
       {
         "company": "IQVIA",
         "title": "Data Team Lead",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Full-time",
         "url": "https://jobs.iqvia.com/en/jobs/R1560910-1",
         "source": "iqvia_ireland_location_page",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-23T17:49:21.467549+00:00",
+        "posted_age_known": false
       },
       {
         "company": "IQVIA",
         "title": "Nurse Advisor",
         "location": "Wexford, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://jobs.iqvia.com/en/jobs/R1561294-0",
         "source": "iqvia_ireland_location_page",
         "visa_sponsorship": "no_sponsorship",
-        "visa_snippet": "e in healthcare.APPLY NOW! Please note: Sponsorship is not available for this opportunity. #LI-DNI #LI-CES #"
+        "visa_snippet": "e in healthcare.APPLY NOW! Please note: Sponsorship is not available for this opportunity. #LI-DNI #LI-CES #",
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-23T17:49:21.467549+00:00",
+        "posted_age_known": false
       },
       {
         "company": "IQVIA",
         "title": "Nurse Advisor",
         "location": "Wexford, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://jobs.iqvia.com/en/jobs/R1561294-1",
         "source": "iqvia_ireland_location_page",
         "visa_sponsorship": "no_sponsorship",
-        "visa_snippet": "e in healthcare.APPLY NOW! Please note: Sponsorship is not available for this opportunity. #LI-DNI #LI-CES #"
+        "visa_snippet": "e in healthcare.APPLY NOW! Please note: Sponsorship is not available for this opportunity. #LI-DNI #LI-CES #",
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-23T17:49:21.467549+00:00",
+        "posted_age_known": false
       },
       {
         "company": "IQVIA",
         "title": "Nurse Advisor",
         "location": "Wexford, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://jobs.iqvia.com/en/jobs/R1561294-2",
         "source": "iqvia_ireland_location_page",
         "visa_sponsorship": "no_sponsorship",
-        "visa_snippet": "e in healthcare.APPLY NOW! Please note: Sponsorship is not available for this opportunity. #LI-DNI #LI-CES #"
+        "visa_snippet": "e in healthcare.APPLY NOW! Please note: Sponsorship is not available for this opportunity. #LI-DNI #LI-CES #",
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-23T17:49:21.467549+00:00",
+        "posted_age_known": false
       },
       {
         "company": "IQVIA",
         "title": "Nurse Advisor",
         "location": "Wexford, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Full-time",
         "url": "https://jobs.iqvia.com/en/jobs/R1561294-3",
         "source": "iqvia_ireland_location_page",
         "visa_sponsorship": "no_sponsorship",
-        "visa_snippet": "e in healthcare.APPLY NOW! Please note: Sponsorship is not available for this opportunity. #LI-DNI #LI-CES #"
+        "visa_snippet": "e in healthcare.APPLY NOW! Please note: Sponsorship is not available for this opportunity. #LI-DNI #LI-CES #",
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-23T17:49:21.467549+00:00",
+        "posted_age_known": false
       },
       {
         "company": "IQVIA",
         "title": "Snr Data Team Lead, EMEA",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Full-time",
         "url": "https://jobs.iqvia.com/en/jobs/R1562059-1",
         "source": "iqvia_ireland_location_page",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-23T17:49:21.467549+00:00",
+        "posted_age_known": false
       },
       {
         "company": "IQVIA",
         "title": "Data Team Lead, EMEA",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Full-time",
         "url": "https://jobs.iqvia.com/en/jobs/R1562063-1",
         "source": "iqvia_ireland_location_page",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-23T17:49:21.467549+00:00",
+        "posted_age_known": false
       },
       {
         "company": "IQVIA",
         "title": "Japanese Language Consultant",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Full-time",
         "url": "https://jobs.iqvia.com/en/jobs/R1562075-5",
         "source": "iqvia_ireland_location_page",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-23T17:49:21.467549+00:00",
+        "posted_age_known": false
       },
       {
         "company": "IQVIA",
         "title": "Office Manager",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Full-time",
         "url": "https://jobs.iqvia.com/en/jobs/R1562375-0",
         "source": "iqvia_ireland_location_page",
         "visa_sponsorship": "no_sponsorship",
-        "visa_snippet": "d client-focused team. Please note that sponsorship is not available for this role. #LI-DNI #LI-CES #LI-LK1"
+        "visa_snippet": "d client-focused team. Please note that sponsorship is not available for this role. #LI-DNI #LI-CES #LI-LK1",
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-23T17:49:21.467549+00:00",
+        "posted_age_known": false
       },
       {
         "company": "IQVIA",
         "title": "Regulatory and Start Up Specialist - Ireland",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Full-time",
         "url": "https://jobs.iqvia.com/en/jobs/R1562932-0",
         "source": "iqvia_ireland_location_page",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-23T17:49:21.467549+00:00",
+        "posted_age_known": false
       },
       {
         "company": "IQVIA",
         "title": "Client Partner, Strategy Consulting Large Pharma Advisory, 1 year contract",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Contract",
         "url": "https://jobs.iqvia.com/en/jobs/R1563704-5",
         "source": "iqvia_ireland_location_page",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-23T17:49:21.467549+00:00",
+        "posted_age_known": false
       },
       {
         "company": "IQVIA",
         "title": "Key Account Manager",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Full-time",
         "url": "https://jobs.iqvia.com/en/jobs/R1564253-0",
         "source": "iqvia_ireland_location_page",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-23T17:49:21.467549+00:00",
+        "posted_age_known": false
       },
       {
         "company": "IQVIA",
         "title": "Key Account Manager",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://jobs.iqvia.com/en/jobs/R1564300-0",
         "source": "iqvia_ireland_location_page",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-23T17:49:21.467549+00:00",
+        "posted_age_known": false
       },
       {
         "company": "IQVIA",
         "title": "Clinical Specialist",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Full-time",
         "url": "https://jobs.iqvia.com/en/jobs/R1565001-0",
         "source": "iqvia_ireland_location_page",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-23T17:49:21.467549+00:00",
+        "posted_age_known": false
       }
     ],
     "checked_at": 1788013043.8323374,
@@ -14588,8 +14661,8 @@
   },
   "Tesco Ireland::batch_dedicated_v1": {
     "jobs": [],
-    "checked_at": 1788011726.5340421,
-    "consecutive_failures": 99
+    "checked_at": 1788017254.8602767,
+    "consecutive_failures": 100
   },
   "AstraZeneca::batch_dedicated_v1": {
     "jobs": [
@@ -15436,8 +15509,8 @@
   },
   "DXC Technology::friend_logic_v1": {
     "jobs": [],
-    "checked_at": 1788011723.9547968,
-    "consecutive_failures": 99
+    "checked_at": 1788017252.3121576,
+    "consecutive_failures": 100
   },
   "Tata Consultancy Services (TCS)::friend_logic_v1": {
     "jobs": [
@@ -17271,8 +17344,8 @@
   },
   "Coca-Cola HBC Ireland::friend_nonlive_batch10_v1": {
     "jobs": [],
-    "checked_at": 1788011749.0293653,
-    "consecutive_failures": 88
+    "checked_at": 1788017277.3328514,
+    "consecutive_failures": 89
   },
   "Agilent Technologies::friend_nonlive_batch10_v1": {
     "jobs": [
@@ -17524,8 +17597,8 @@
   },
   "Heineken Ireland::friend_next4_v1": {
     "jobs": [],
-    "checked_at": 1788011727.1559935,
-    "consecutive_failures": 88
+    "checked_at": 1788017255.619925,
+    "consecutive_failures": 89
   },
   "VHI Healthcare::friend_next4_v1": {
     "jobs": [
@@ -21680,7 +21753,7 @@
         "source": "dexcom_rendered_attempt2",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
         "posted_age_known": false
       },
@@ -21830,7 +21903,7 @@
         "source": "dexcom_rendered_attempt2",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
         "posted_age_known": false
       }
@@ -27784,53 +27857,53 @@
   },
   "Dynatrace::next_manual_batch_v2": {
     "jobs": [],
-    "checked_at": 1788011744.8567238,
-    "consecutive_failures": 53
+    "checked_at": 1788017279.5808063,
+    "consecutive_failures": 54
   },
   "FTI Consulting::next_manual_batch_v2": {
     "jobs": [],
-    "checked_at": 1788011750.1169908,
-    "consecutive_failures": 53
+    "checked_at": 1788017290.7188804,
+    "consecutive_failures": 54
   },
   "FactSet::next_manual_batch_v2": {
     "jobs": [],
-    "checked_at": 1788011753.2354283,
-    "consecutive_failures": 53
+    "checked_at": 1788017292.0636165,
+    "consecutive_failures": 54
   },
   "Moody's::next_manual_batch_v2": {
     "jobs": [],
-    "checked_at": 1788011755.7876081,
-    "consecutive_failures": 53
+    "checked_at": 1788017298.5139554,
+    "consecutive_failures": 54
   },
   "Morningstar::next_manual_batch_v2": {
     "jobs": [],
-    "checked_at": 1788011755.4016967,
-    "consecutive_failures": 53
+    "checked_at": 1788017294.1510005,
+    "consecutive_failures": 54
   },
   "Macquarie Group::next_manual_batch_v2": {
     "jobs": [],
-    "checked_at": 1788011758.3659182,
-    "consecutive_failures": 53
+    "checked_at": 1788017298.8730507,
+    "consecutive_failures": 54
   },
   "MSCI::next_manual_batch_v2": {
     "jobs": [],
-    "checked_at": 1788011758.4255638,
-    "consecutive_failures": 53
+    "checked_at": 1788017303.9041386,
+    "consecutive_failures": 54
   },
   "Refinitiv (LSEG)::next_manual_batch_v2": {
     "jobs": [],
-    "checked_at": 1788011761.833947,
-    "consecutive_failures": 53
+    "checked_at": 1788017303.7658553,
+    "consecutive_failures": 54
   },
   "Societe Generale::next_manual_batch_v2": {
     "jobs": [],
-    "checked_at": 1788011762.9454587,
-    "consecutive_failures": 53
+    "checked_at": 1788017301.681886,
+    "consecutive_failures": 54
   },
   "Splunk::next_manual_batch_v2": {
     "jobs": [],
-    "checked_at": 1788011765.9082658,
-    "consecutive_failures": 53
+    "checked_at": 1788017306.965892,
+    "consecutive_failures": 54
   },
   "Greencore::next_manual_batch_v2": {
     "jobs": [],
@@ -27839,8 +27912,8 @@
   },
   "Protiviti::next_manual_batch_v2": {
     "jobs": [],
-    "checked_at": 1788011767.6310687,
-    "consecutive_failures": 53
+    "checked_at": 1788017310.2338107,
+    "consecutive_failures": 54
   },
   "Bayer::next_manual_batch_v2": {
     "jobs": [],
@@ -27849,8 +27922,8 @@
   },
   "Oliver Wyman::next_manual_batch_v2": {
     "jobs": [],
-    "checked_at": 1788011767.0802271,
-    "consecutive_failures": 53
+    "checked_at": 1788017306.9498942,
+    "consecutive_failures": 54
   },
   "BDO Ireland::next_recovery_batch7_v1": {
     "jobs": [
@@ -31188,8 +31261,8 @@
   },
   "Energia Group::targeted_direct_batch5_multi_v1": {
     "jobs": [],
-    "checked_at": 1788011724.4589915,
-    "consecutive_failures": 10
+    "checked_at": 1788017253.5080888,
+    "consecutive_failures": 11
   },
   "WuXi Biologics::targeted_direct_batch5_multi_v1": {
     "jobs": [
@@ -31420,8 +31493,8 @@
   },
   "Medpace::targeted_direct_batch8_bulk_v1": {
     "jobs": [],
-    "checked_at": 1788011724.3734608,
-    "consecutive_failures": 8
+    "checked_at": 1788017252.6659563,
+    "consecutive_failures": 9
   },
   "ASML::targeted_direct_batch8_bulk_v1": {
     "jobs": [
@@ -31878,8 +31951,8 @@
   },
   "Uisce Éireann (Irish Water)::targeted_direct_batch9_bulk_v1": {
     "jobs": [],
-    "checked_at": 1788011734.015459,
-    "consecutive_failures": 8
+    "checked_at": 1788017263.2825541,
+    "consecutive_failures": 9
   },
   "GlaxoSmithKline (GSK)::targeted_direct_batch9_bulk_v1": {
     "jobs": [
@@ -32271,18 +32344,18 @@
   },
   "Micron Technology::targeted_direct_batch10_bulk_v1": {
     "jobs": [],
-    "checked_at": 1788011724.3990958,
-    "consecutive_failures": 5
+    "checked_at": 1788017252.6984746,
+    "consecutive_failures": 6
   },
   "Slack::targeted_direct_batch10_bulk_v1": {
     "jobs": [],
-    "checked_at": 1788011725.3016522,
-    "consecutive_failures": 5
+    "checked_at": 1788017252.8201456,
+    "consecutive_failures": 6
   },
   "Box::targeted_direct_batch10_bulk_v1": {
     "jobs": [],
-    "checked_at": 1788011725.5205595,
-    "consecutive_failures": 5
+    "checked_at": 1788017253.374224,
+    "consecutive_failures": 6
   },
   "Coloplast::targeted_direct_batch9_bulk_v1": {
     "jobs": [
@@ -35020,11 +35093,6 @@
     "checked_at": 1788013103.0393672,
     "consecutive_failures": 0
   },
-  "Willis Towers Watson (WTW)": {
-    "jobs": [],
-    "checked_at": 1788013137.7222793,
-    "consecutive_failures": 1
-  },
   "SAP": {
     "jobs": [
       {
@@ -35273,23 +35341,23 @@
   },
   "Texas Instruments::targeted_direct_batch11_bulk_v1": {
     "jobs": [],
-    "checked_at": 1788011724.2150626,
-    "consecutive_failures": 4
+    "checked_at": 1788017252.525482,
+    "consecutive_failures": 5
   },
   "Nokia::targeted_direct_batch11_bulk_v1": {
     "jobs": [],
-    "checked_at": 1788011725.3273926,
-    "consecutive_failures": 4
+    "checked_at": 1788017253.6891975,
+    "consecutive_failures": 5
   },
   "Boehringer Ingelheim::targeted_direct_batch11_bulk_v1": {
     "jobs": [],
-    "checked_at": 1788011726.839986,
-    "consecutive_failures": 4
+    "checked_at": 1788017254.1500468,
+    "consecutive_failures": 5
   },
   "SentinelOne": {
     "jobs": [],
-    "checked_at": 1788011723.8252866,
-    "consecutive_failures": 3
+    "checked_at": 1788017251.9918735,
+    "consecutive_failures": 4
   },
   "Tenable": {
     "jobs": [
@@ -35339,7 +35407,7 @@
         "posted_age_known": true
       }
     ],
-    "checked_at": 1788006317.6931767,
+    "checked_at": 1788017252.0556014,
     "consecutive_failures": 0
   },
   "CrowdStrike": {
@@ -35360,7 +35428,7 @@
         "posted_age_known": true
       }
     ],
-    "checked_at": 1788006319.1323018,
+    "checked_at": 1788017253.7091901,
     "consecutive_failures": 0
   },
   "Proofpoint": {
@@ -35456,7 +35524,7 @@
         "posted_age_known": true
       }
     ],
-    "checked_at": 1788006321.1882834,
+    "checked_at": 1788017255.685648,
     "consecutive_failures": 0
   },
   "Etsy": {
@@ -35507,7 +35575,7 @@
         "posted_age_known": true
       }
     ],
-    "checked_at": 1788006339.5327399,
+    "checked_at": 1788017273.2823253,
     "consecutive_failures": 0
   },
   "Dell Technologies::targeted_zero_deferred_batch13_v1": {
@@ -36783,13 +36851,13 @@
   },
   "Syneos Health::targeted_zero_deferred_batch16_v1": {
     "jobs": [],
-    "checked_at": 1788011725.3620613,
-    "consecutive_failures": 1
+    "checked_at": 1788017263.8348744,
+    "consecutive_failures": 2
   },
   "Schneider Electric::targeted_zero_deferred_batch16_v1": {
     "jobs": [],
-    "checked_at": 1788011731.9961922,
-    "consecutive_failures": 1
+    "checked_at": 1788017260.0183122,
+    "consecutive_failures": 2
   },
   "Goldman Sachs::targeted_zero_deferred_batch16_v1": {
     "jobs": [
@@ -36842,30 +36910,10 @@
     "checked_at": 1788011749.1766768,
     "consecutive_failures": 0
   },
-  "Cook Medical::targeted_zero_deferred_batch15_v1": {
-    "jobs": [],
-    "checked_at": 1788012846.155003,
-    "consecutive_failures": 1
-  },
-  "Kepak Group::targeted_direct_batch7_multi_v1": {
-    "jobs": [],
-    "checked_at": 1788012846.2168398,
-    "consecutive_failures": 1
-  },
-  "An Post::targeted_direct_batch7_multi_v1": {
-    "jobs": [],
-    "checked_at": 1788012846.7373204,
-    "consecutive_failures": 1
-  },
-  "Coillte::targeted_direct_batch1_v1": {
-    "jobs": [],
-    "checked_at": 1788012848.3813717,
-    "consecutive_failures": 1
-  },
   "Zendesk::targeted_zero_deferred_batch17_v1": {
     "jobs": [],
-    "checked_at": 1788012867.1599119,
-    "consecutive_failures": 1
+    "checked_at": 1788017256.8912902,
+    "consecutive_failures": 2
   },
   "ResMed::targeted_zero_deferred_batch17_v1": {
     "jobs": [
@@ -36880,7 +36928,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
         "posted_age_known": true
       },
@@ -36895,7 +36943,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
         "posted_age_known": true
       },
@@ -36910,18 +36958,13 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
         "posted_age_known": true
       }
     ],
     "checked_at": 1788012867.9076126,
     "consecutive_failures": 0
-  },
-  "Revvity (PerkinElmer)::targeted_direct_batch9_bulk_v1": {
-    "jobs": [],
-    "checked_at": 1788012870.4143069,
-    "consecutive_failures": 1
   },
   "BNY Mellon::targeted_zero_deferred_batch17_v1": {
     "jobs": [
@@ -36936,7 +36979,7 @@
         "source": "oracle_cx",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
         "posted_age_known": false
       },
@@ -36951,7 +36994,7 @@
         "source": "oracle_cx",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
         "posted_age_known": false
       },
@@ -36966,7 +37009,7 @@
         "source": "oracle_cx",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
         "posted_age_known": false
       },
@@ -36981,7 +37024,7 @@
         "source": "oracle_cx",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
         "posted_age_known": false
       },
@@ -36996,7 +37039,7 @@
         "source": "oracle_cx",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
         "posted_age_known": false
       },
@@ -37011,7 +37054,7 @@
         "source": "oracle_cx",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
         "posted_age_known": false
       },
@@ -37026,7 +37069,7 @@
         "source": "oracle_cx",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
         "posted_age_known": false
       },
@@ -37041,7 +37084,7 @@
         "source": "oracle_cx",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
         "posted_age_known": false
       },
@@ -37056,7 +37099,7 @@
         "source": "oracle_cx",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
         "posted_age_known": false
       },
@@ -37071,7 +37114,7 @@
         "source": "oracle_cx",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
         "posted_age_known": false
       },
@@ -37086,7 +37129,7 @@
         "source": "oracle_cx",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
         "posted_age_known": false
       },
@@ -37101,7 +37144,7 @@
         "source": "oracle_cx",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
         "posted_age_known": false
       },
@@ -37116,7 +37159,7 @@
         "source": "oracle_cx",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
         "posted_age_known": false
       },
@@ -37131,7 +37174,7 @@
         "source": "oracle_cx",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
         "posted_age_known": false
       },
@@ -37146,7 +37189,7 @@
         "source": "oracle_cx",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
         "posted_age_known": false
       }
@@ -37167,7 +37210,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
         "posted_age_known": true
       },
@@ -37182,33 +37225,13 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
         "posted_age_known": true
       }
     ],
     "checked_at": 1788012875.3309,
     "consecutive_failures": 0
-  },
-  "Haleon::targeted_zero_deferred_batch15_v1": {
-    "jobs": [],
-    "checked_at": 1788012875.629836,
-    "consecutive_failures": 1
-  },
-  "Broadcom::targeted_zero_deferred_batch17_v1": {
-    "jobs": [],
-    "checked_at": 1788012875.8092906,
-    "consecutive_failures": 1
-  },
-  "VMware (Broadcom)::targeted_zero_deferred_batch17_v1": {
-    "jobs": [],
-    "checked_at": 1788012878.8710148,
-    "consecutive_failures": 1
-  },
-  "Avolon": {
-    "jobs": [],
-    "checked_at": 1788012879.1306107,
-    "consecutive_failures": 1
   },
   "Fiserv::targeted_zero_deferred_batch17_v1": {
     "jobs": [
@@ -37223,7 +37246,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
         "posted_age_known": true
       },
@@ -37238,7 +37261,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
         "posted_age_known": true
       },
@@ -37253,7 +37276,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
         "posted_age_known": true
       },
@@ -37268,7 +37291,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
         "posted_age_known": true
       },
@@ -37283,7 +37306,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
         "posted_age_known": true
       },
@@ -37298,7 +37321,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
         "posted_age_known": true
       },
@@ -37313,7 +37336,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
         "posted_age_known": true
       },
@@ -37328,7 +37351,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
         "posted_age_known": true
       },
@@ -37343,7 +37366,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
         "posted_age_known": true
       },
@@ -37358,7 +37381,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
         "posted_age_known": true
       },
@@ -37373,7 +37396,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
         "posted_age_known": true
       },
@@ -37388,7 +37411,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
         "posted_age_known": true
       },
@@ -37403,7 +37426,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
         "posted_age_known": true
       },
@@ -37418,7 +37441,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
         "posted_age_known": true
       },
@@ -37433,7 +37456,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
         "posted_age_known": true
       },
@@ -37448,7 +37471,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
         "posted_age_known": true
       },
@@ -37463,7 +37486,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
         "posted_age_known": true
       },
@@ -37478,7 +37501,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
         "posted_age_known": true
       }
@@ -37499,7 +37522,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
         "posted_age_known": true
       },
@@ -37514,7 +37537,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
         "posted_age_known": true
       },
@@ -37529,7 +37552,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
         "posted_age_known": true
       },
@@ -37544,7 +37567,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
         "posted_age_known": true
       },
@@ -37559,7 +37582,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
         "posted_age_known": true
       },
@@ -37574,7 +37597,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
         "posted_age_known": true
       },
@@ -37589,7 +37612,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
         "posted_age_known": true
       },
@@ -37604,7 +37627,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
         "posted_age_known": true
       },
@@ -37619,7 +37642,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
         "posted_age_known": true
       },
@@ -37634,7 +37657,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
         "posted_age_known": true
       },
@@ -37649,7 +37672,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
         "posted_age_known": true
       },
@@ -37664,7 +37687,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
         "posted_age_known": true
       },
@@ -37679,7 +37702,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
         "posted_age_known": true
       },
@@ -37694,7 +37717,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
         "posted_age_known": true
       },
@@ -37709,7 +37732,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
         "posted_age_known": true
       },
@@ -37724,7 +37747,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
         "posted_age_known": true
       },
@@ -37739,7 +37762,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
         "posted_age_known": true
       },
@@ -37754,7 +37777,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
         "posted_age_known": true
       },
@@ -37769,7 +37792,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
         "posted_age_known": true
       },
@@ -37784,7 +37807,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
         "posted_age_known": true
       },
@@ -37799,7 +37822,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
         "posted_age_known": true
       },
@@ -37814,7 +37837,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
         "posted_age_known": true
       },
@@ -37829,7 +37852,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
         "posted_age_known": true
       }
@@ -37839,77 +37862,127 @@
   },
   "Qualcomm::targeted_zero_deferred_batch17_v1": {
     "jobs": [],
-    "checked_at": 1788012894.4801993,
-    "consecutive_failures": 1
-  },
-  "Rockwell Automation::targeted_zero_deferred_batch17_v1": {
-    "jobs": [],
-    "checked_at": 1788012901.9054108,
-    "consecutive_failures": 1
-  },
-  "QIAGEN": {
-    "jobs": [],
-    "checked_at": 1788012904.162525,
-    "consecutive_failures": 1
+    "checked_at": 1788017285.1769273,
+    "consecutive_failures": 2
   },
   "NXP Semiconductors::targeted_zero_deferred_batch17_v1": {
     "jobs": [],
-    "checked_at": 1788012909.696738,
+    "checked_at": 1788017292.6863763,
+    "consecutive_failures": 2
+  },
+  "Kepak Group::targeted_direct_batch7_multi_v1": {
+    "jobs": [],
+    "checked_at": 1788017252.306465,
+    "consecutive_failures": 1
+  },
+  "An Post::targeted_direct_batch7_multi_v1": {
+    "jobs": [],
+    "checked_at": 1788017252.7286105,
+    "consecutive_failures": 1
+  },
+  "Cook Medical::targeted_zero_deferred_batch15_v1": {
+    "jobs": [],
+    "checked_at": 1788017252.7379978,
+    "consecutive_failures": 1
+  },
+  "Coillte::targeted_direct_batch1_v1": {
+    "jobs": [],
+    "checked_at": 1788017253.878196,
+    "consecutive_failures": 1
+  },
+  "Avolon": {
+    "jobs": [],
+    "checked_at": 1788017256.122933,
+    "consecutive_failures": 1
+  },
+  "Broadcom::targeted_zero_deferred_batch17_v1": {
+    "jobs": [],
+    "checked_at": 1788017261.5741413,
+    "consecutive_failures": 1
+  },
+  "VMware (Broadcom)::targeted_zero_deferred_batch17_v1": {
+    "jobs": [],
+    "checked_at": 1788017261.6407366,
     "consecutive_failures": 1
   },
   "Goodbody::batch_dedicated_v1": {
     "jobs": [],
-    "checked_at": 1788012983.9578466,
+    "checked_at": 1788017264.8439088,
     "consecutive_failures": 1
   },
   "Aldi Ireland::batch_dedicated_v2": {
     "jobs": [],
-    "checked_at": 1788013002.6833222,
-    "consecutive_failures": 1
-  },
-  "Bristol Myers Squibb::batch_dedicated_v1": {
-    "jobs": [],
-    "checked_at": 1788013024.0033805,
+    "checked_at": 1788017267.5751286,
     "consecutive_failures": 1
   },
   "HP (Hewlett-Packard)::friend_next4_v1": {
     "jobs": [],
-    "checked_at": 1788013088.9206111,
+    "checked_at": 1788017270.6545389,
     "consecutive_failures": 1
   },
-  "Red Hat::targeted_zero_deferred_batch16_v1": {
+  "Revvity (PerkinElmer)::targeted_direct_batch9_bulk_v1": {
     "jobs": [],
-    "checked_at": 1788013111.3323333,
-    "consecutive_failures": 1
-  },
-  "Cantor Fitzgerald Ireland": {
-    "jobs": [],
-    "checked_at": 1788013131.206961,
+    "checked_at": 1788017274.7281563,
     "consecutive_failures": 1
   },
   "Forvis Mazars Ireland::next_manual_batch_v2": {
     "jobs": [],
-    "checked_at": 1788013131.6595075,
+    "checked_at": 1788017282.8951054,
+    "consecutive_failures": 1
+  },
+  "Haleon::targeted_zero_deferred_batch15_v1": {
+    "jobs": [],
+    "checked_at": 1788017286.957147,
+    "consecutive_failures": 1
+  },
+  "Red Hat::targeted_zero_deferred_batch16_v1": {
+    "jobs": [],
+    "checked_at": 1788017287.5612607,
+    "consecutive_failures": 1
+  },
+  "Willis Towers Watson (WTW)": {
+    "jobs": [],
+    "checked_at": 1788017288.7282481,
+    "consecutive_failures": 1
+  },
+  "Rockwell Automation::targeted_zero_deferred_batch17_v1": {
+    "jobs": [],
+    "checked_at": 1788017289.4812953,
+    "consecutive_failures": 1
+  },
+  "Bristol Myers Squibb::batch_dedicated_v1": {
+    "jobs": [],
+    "checked_at": 1788017294.2868798,
+    "consecutive_failures": 1
+  },
+  "QIAGEN": {
+    "jobs": [],
+    "checked_at": 1788017294.9379945,
+    "consecutive_failures": 1
+  },
+  "Cantor Fitzgerald Ireland": {
+    "jobs": [],
+    "checked_at": 1788017312.9968011,
     "consecutive_failures": 1
   },
   "UBS": {
     "jobs": [],
-    "checked_at": 1788013138.1821496,
+    "checked_at": 1788017313.2251132,
     "consecutive_failures": 1
   },
   "Slalom": {
     "jobs": [],
-    "checked_at": 1788013139.7622626,
+    "checked_at": 1788017313.6108897,
     "consecutive_failures": 1
   },
   "ESB (Electricity Supply Board)": {
     "jobs": [],
-    "checked_at": 1788013148.051618,
+    "checked_at": 1788017319.9607005,
     "consecutive_failures": 1
   },
   "Boston Consulting Group (BCG)": {
     "jobs": [],
-    "checked_at": 1788013154.484718,
+    "checked_at": 1788017330.2373002,
     "consecutive_failures": 1
   }
 }
