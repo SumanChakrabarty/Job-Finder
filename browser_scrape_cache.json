@@ -35599,36 +35599,6 @@
     "checked_at": 1788006339.5327399,
     "consecutive_failures": 0
   },
-  "Kepak Group::targeted_direct_batch7_multi_v1": {
-    "jobs": [],
-    "checked_at": 1788009499.3005042,
-    "consecutive_failures": 1
-  },
-  "An Post::targeted_direct_batch7_multi_v1": {
-    "jobs": [],
-    "checked_at": 1788009499.6170106,
-    "consecutive_failures": 1
-  },
-  "Coillte::targeted_direct_batch1_v1": {
-    "jobs": [],
-    "checked_at": 1788009500.7963727,
-    "consecutive_failures": 1
-  },
-  "Avolon": {
-    "jobs": [],
-    "checked_at": 1788009501.7681432,
-    "consecutive_failures": 1
-  },
-  "Haleon::targeted_direct_batch4_multi_v1": {
-    "jobs": [],
-    "checked_at": 1788009502.94289,
-    "consecutive_failures": 1
-  },
-  "BNY Mellon": {
-    "jobs": [],
-    "checked_at": 1788009504.712011,
-    "consecutive_failures": 1
-  },
   "Dell Technologies::targeted_zero_deferred_batch13_v1": {
     "jobs": [
       {
@@ -35642,7 +35612,7 @@
         "source": "oracle_cx",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": false
       },
@@ -35657,7 +35627,7 @@
         "source": "oracle_cx",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": false
       },
@@ -35672,7 +35642,7 @@
         "source": "oracle_cx",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": false
       },
@@ -35687,7 +35657,7 @@
         "source": "oracle_cx",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": false
       },
@@ -35702,7 +35672,7 @@
         "source": "oracle_cx",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": false
       },
@@ -35717,7 +35687,7 @@
         "source": "oracle_cx",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": false
       },
@@ -35732,7 +35702,7 @@
         "source": "oracle_cx",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": false
       },
@@ -35747,7 +35717,7 @@
         "source": "oracle_cx",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": false
       },
@@ -35762,7 +35732,7 @@
         "source": "oracle_cx",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": false
       },
@@ -35777,7 +35747,7 @@
         "source": "oracle_cx",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": false
       },
@@ -35792,7 +35762,7 @@
         "source": "oracle_cx",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": false
       },
@@ -35807,7 +35777,7 @@
         "source": "oracle_cx",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": false
       },
@@ -35822,7 +35792,7 @@
         "source": "oracle_cx",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": false
       },
@@ -35837,7 +35807,7 @@
         "source": "oracle_cx",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": false
       },
@@ -35852,7 +35822,7 @@
         "source": "oracle_cx",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": false
       },
@@ -35867,7 +35837,7 @@
         "source": "oracle_cx",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": false
       },
@@ -35882,7 +35852,7 @@
         "source": "oracle_cx",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": false
       },
@@ -35897,7 +35867,7 @@
         "source": "oracle_cx",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": false
       },
@@ -35912,7 +35882,7 @@
         "source": "oracle_cx",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": false
       },
@@ -35927,7 +35897,7 @@
         "source": "oracle_cx",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": false
       },
@@ -35942,7 +35912,7 @@
         "source": "oracle_cx",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": false
       }
@@ -35953,16 +35923,6 @@
   "Schneider Electric::targeted_zero_deferred_batch13_v1": {
     "jobs": [],
     "checked_at": 1788009507.7624066,
-    "consecutive_failures": 1
-  },
-  "Goodbody::batch_dedicated_v1": {
-    "jobs": [],
-    "checked_at": 1788009512.1867113,
-    "consecutive_failures": 1
-  },
-  "Aldi Ireland::batch_dedicated_v2": {
-    "jobs": [],
-    "checked_at": 1788009513.602395,
     "consecutive_failures": 1
   },
   "Regeneron::targeted_zero_deferred_batch13_v1": {
@@ -35978,7 +35938,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": true
       },
@@ -35993,7 +35953,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": true
       },
@@ -36008,7 +35968,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": true
       },
@@ -36023,7 +35983,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": true
       },
@@ -36038,7 +35998,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": true
       },
@@ -36053,7 +36013,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": true
       },
@@ -36068,7 +36028,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": true
       },
@@ -36083,7 +36043,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": true
       },
@@ -36098,28 +36058,13 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": true
       }
     ],
     "checked_at": 1788009516.9830525,
     "consecutive_failures": 0
-  },
-  "Red Hat": {
-    "jobs": [],
-    "checked_at": 1788009518.6675878,
-    "consecutive_failures": 1
-  },
-  "HP (Hewlett-Packard)::friend_next4_v1": {
-    "jobs": [],
-    "checked_at": 1788009520.0715945,
-    "consecutive_failures": 1
-  },
-  "Revvity (PerkinElmer)::targeted_direct_batch9_bulk_v1": {
-    "jobs": [],
-    "checked_at": 1788009522.042086,
-    "consecutive_failures": 1
   },
   "Baxter International::targeted_zero_deferred_batch13_v1": {
     "jobs": [
@@ -36134,7 +36079,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": true
       },
@@ -36149,28 +36094,13 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": true
       }
     ],
     "checked_at": 1788009524.418454,
     "consecutive_failures": 0
-  },
-  "Forvis Mazars Ireland::next_manual_batch_v2": {
-    "jobs": [],
-    "checked_at": 1788009530.1331968,
-    "consecutive_failures": 1
-  },
-  "QIAGEN": {
-    "jobs": [],
-    "checked_at": 1788009540.969451,
-    "consecutive_failures": 1
-  },
-  "Bristol Myers Squibb::batch_dedicated_v1": {
-    "jobs": [],
-    "checked_at": 1788009541.796881,
-    "consecutive_failures": 1
   },
   "Stryker::targeted_zero_deferred_batch13_v1": {
     "jobs": [
@@ -36185,7 +36115,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": true
       },
@@ -36200,7 +36130,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": true
       },
@@ -36215,7 +36145,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": true
       },
@@ -36230,7 +36160,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": true
       },
@@ -36245,7 +36175,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": true
       },
@@ -36260,7 +36190,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": true
       },
@@ -36275,7 +36205,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": true
       },
@@ -36290,7 +36220,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": true
       },
@@ -36305,7 +36235,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": true
       },
@@ -36320,7 +36250,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": true
       },
@@ -36335,7 +36265,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": true
       },
@@ -36350,7 +36280,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": true
       },
@@ -36365,7 +36295,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": true
       },
@@ -36380,7 +36310,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": true
       },
@@ -36395,7 +36325,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": true
       },
@@ -36410,7 +36340,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": true
       },
@@ -36425,7 +36355,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": true
       },
@@ -36440,7 +36370,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": true
       },
@@ -36455,7 +36385,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": true
       },
@@ -36470,7 +36400,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": true
       },
@@ -36485,7 +36415,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": true
       },
@@ -36500,7 +36430,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": true
       },
@@ -36515,7 +36445,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": true
       },
@@ -36530,7 +36460,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": true
       },
@@ -36545,7 +36475,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": true
       },
@@ -36560,7 +36490,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": true
       },
@@ -36575,7 +36505,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": true
       },
@@ -36590,7 +36520,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": true
       },
@@ -36605,7 +36535,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": true
       },
@@ -36620,7 +36550,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": true
       },
@@ -36635,7 +36565,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": true
       },
@@ -36650,7 +36580,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": true
       },
@@ -36665,7 +36595,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": true
       },
@@ -36680,7 +36610,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": true
       },
@@ -36695,7 +36625,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": true
       },
@@ -36710,7 +36640,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": true
       },
@@ -36725,7 +36655,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": true
       },
@@ -36740,7 +36670,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": true
       },
@@ -36755,7 +36685,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": true
       },
@@ -36770,7 +36700,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-29T13:19:29.548442+00:00",
         "posted_age_known": true
       }
@@ -36778,29 +36708,266 @@
     "checked_at": 1788009551.6404934,
     "consecutive_failures": 0
   },
-  "Cantor Fitzgerald Ireland": {
+  "Kepak Group::targeted_direct_batch7_multi_v1": {
     "jobs": [],
-    "checked_at": 1788009554.0530107,
+    "checked_at": 1788010307.7758024,
     "consecutive_failures": 1
   },
-  "UBS": {
+  "Cook Medical::targeted_zero_deferred_batch15_v1": {
     "jobs": [],
-    "checked_at": 1788009554.0788784,
+    "checked_at": 1788010307.9485147,
+    "consecutive_failures": 1
+  },
+  "An Post::targeted_direct_batch7_multi_v1": {
+    "jobs": [],
+    "checked_at": 1788010308.0368795,
+    "consecutive_failures": 1
+  },
+  "Avolon": {
+    "jobs": [],
+    "checked_at": 1788010308.5972877,
+    "consecutive_failures": 1
+  },
+  "Coillte::targeted_direct_batch1_v1": {
+    "jobs": [],
+    "checked_at": 1788010309.1324816,
+    "consecutive_failures": 1
+  },
+  "Aer Lingus::targeted_zero_deferred_batch15_v1": {
+    "jobs": [
+      {
+        "company": "Aer Lingus",
+        "title": "Identity Security Engineer",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://aerlingus-career.talent-soft.com/job/job-identity-security-engineer_1968.aspx",
+        "source": "aer_lingus_talentsoft_roi",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-29T13:32:29.082278+00:00",
+        "posted_age_known": false
+      }
+    ],
+    "checked_at": 1788010309.5416846,
+    "consecutive_failures": 0
+  },
+  "NetApp::netapp_attempt2_v3": {
+    "jobs": [
+      {
+        "company": "NetApp",
+        "title": "Professional Services Engineer",
+        "location": "Cork, Munster, IE",
+        "posted_text": "2026-7-30",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.netapp.com/job/cork/professional-services-engineer/27600/98508239792",
+        "source": "netapp_ireland_http_current",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-29T13:32:29.082278+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "NetApp",
+        "title": "Software Engineer",
+        "location": "Cork, Munster, IE, Ireland",
+        "posted_text": "2026-8-25",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.netapp.com/job/cork/software-engineer/27600/97996135664",
+        "source": "netapp_ireland_http_current",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-29T13:32:29.082278+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "NetApp",
+        "title": "People Consultant - French speaking",
+        "location": "Cork, Munster, IE, Paris, Île-de-France Region, France",
+        "posted_text": "2026-8-18",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.netapp.com/job/cork/people-consultant-french-speaking/27600/99388527920",
+        "source": "netapp_ireland_http_current",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-29T13:32:29.082278+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "NetApp",
+        "title": "Renewal Specialist",
+        "location": "Paris, FR, Cork, Munster, Ireland",
+        "posted_text": "2026-8-8",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.netapp.com/job/paris/renewal-specialist/27600/98920486656",
+        "source": "netapp_ireland_http_current",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-29T13:32:29.082278+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "NetApp",
+        "title": "System Software Engineer C/C++",
+        "location": "Cork, Munster, IE",
+        "posted_text": "2026-8-5",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.netapp.com/job/cork/system-software-engineer-c-c/27600/96546594576",
+        "source": "netapp_ireland_http_current",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-29T13:32:29.082278+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "NetApp",
+        "title": "Mgr, Professional Services",
+        "location": "Cork, Munster, IE",
+        "posted_text": "2026-7-30",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.netapp.com/job/cork/mgr-professional-services/27600/98518036384",
+        "source": "netapp_ireland_http_current",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-29T13:32:29.082278+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "NetApp",
+        "title": "Firmware and Embedded Systems Engineer",
+        "location": "Cork, Munster, IE",
+        "posted_text": "2026-8-4",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.netapp.com/job/cork/firmware-and-embedded-systems-engineer/27600/96811457184",
+        "source": "netapp_ireland_http_current",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-29T13:32:29.082278+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "NetApp",
+        "title": "Professional Services Engineer - Spanish Speaker",
+        "location": "Cork, Munster, IE",
+        "posted_text": "2026-7-30",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.netapp.com/job/cork/professional-services-engineer-spanish-speaker/27600/98508239856",
+        "source": "netapp_ireland_http_current",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-29T13:32:29.082278+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "NetApp",
+        "title": "Professional Services Engineer - French Speaker",
+        "location": "Cork, Munster, IE",
+        "posted_text": "2026-7-30",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.netapp.com/job/cork/professional-services-engineer-french-speaker/27600/98508239824",
+        "source": "netapp_ireland_http_current",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-29T13:32:29.082278+00:00",
+        "posted_age_known": false
+      }
+    ],
+    "checked_at": 1788010310.291803,
+    "consecutive_failures": 0
+  },
+  "Haleon::targeted_zero_deferred_batch15_v1": {
+    "jobs": [],
+    "checked_at": 1788010311.1600926,
+    "consecutive_failures": 1
+  },
+  "BNY Mellon": {
+    "jobs": [],
+    "checked_at": 1788010313.1256185,
+    "consecutive_failures": 1
+  },
+  "Cantor Fitzgerald Ireland": {
+    "jobs": [],
+    "checked_at": 1788010318.2789369,
+    "consecutive_failures": 1
+  },
+  "Goodbody::batch_dedicated_v1": {
+    "jobs": [],
+    "checked_at": 1788010320.0255325,
+    "consecutive_failures": 1
+  },
+  "Red Hat": {
+    "jobs": [],
+    "checked_at": 1788010320.5933874,
+    "consecutive_failures": 1
+  },
+  "Aldi Ireland::batch_dedicated_v2": {
+    "jobs": [],
+    "checked_at": 1788010322.298898,
+    "consecutive_failures": 1
+  },
+  "Forvis Mazars Ireland::next_manual_batch_v2": {
+    "jobs": [],
+    "checked_at": 1788010322.7073457,
     "consecutive_failures": 1
   },
   "Slalom": {
     "jobs": [],
-    "checked_at": 1788009557.5384464,
+    "checked_at": 1788010326.243157,
+    "consecutive_failures": 1
+  },
+  "UBS": {
+    "jobs": [],
+    "checked_at": 1788010326.765221,
+    "consecutive_failures": 1
+  },
+  "HP (Hewlett-Packard)::friend_next4_v1": {
+    "jobs": [],
+    "checked_at": 1788010327.2236817,
     "consecutive_failures": 1
   },
   "ESB (Electricity Supply Board)": {
     "jobs": [],
-    "checked_at": 1788009560.822578,
+    "checked_at": 1788010329.8918152,
+    "consecutive_failures": 1
+  },
+  "Revvity (PerkinElmer)::targeted_direct_batch9_bulk_v1": {
+    "jobs": [],
+    "checked_at": 1788010330.4678397,
     "consecutive_failures": 1
   },
   "Boston Consulting Group (BCG)": {
     "jobs": [],
-    "checked_at": 1788009568.6397893,
+    "checked_at": 1788010335.2828548,
+    "consecutive_failures": 1
+  },
+  "Bristol Myers Squibb::batch_dedicated_v1": {
+    "jobs": [],
+    "checked_at": 1788010344.523724,
+    "consecutive_failures": 1
+  },
+  "QIAGEN": {
+    "jobs": [],
+    "checked_at": 1788010349.022102,
     "consecutive_failures": 1
   }
 }
