@@ -11981,7 +11981,103 @@ def scrape_nokia_oracle(session):
     print(f"      [nokia_oracle] {len(jobs)} verified Republic-of-Ireland vacancies")
     return jobs
 
+
+
+# === TARGETED_DIRECT_BATCH_17_LARGE_ZERO_RECOVERY ===
+# Large zero-company recovery group. Manual queue untouched. These routes use
+# current first-party ATS backends or official boards and preserve strict ROI.
+
+def scrape_qualcomm_ireland_current(session):
+    return _workday_override_scrape(
+        "Qualcomm",
+        "https://qualcomm.wd12.myworkdayjobs.com/External",
+        session,
+    )
+
+def scrape_roche_ireland_current(session):
+    return _workday_override_scrape(
+        "Roche",
+        "https://roche.wd3.myworkdayjobs.com/roche-ext",
+        session,
+    )
+
+def scrape_resmed_ireland_current(session):
+    return _workday_override_scrape(
+        "ResMed",
+        "https://resmed.wd3.myworkdayjobs.com/ResMed_External_Careers",
+        session,
+    )
+
+def scrape_zendesk_ireland_current(session):
+    return _workday_override_scrape(
+        "Zendesk",
+        "https://zendesk.wd1.myworkdayjobs.com/zendesk",
+        session,
+    )
+
+def scrape_rockwell_ireland_current(session):
+    return _workday_override_scrape(
+        "Rockwell Automation",
+        "https://rockwellautomation.wd1.myworkdayjobs.com/External_Rockwell_Automation",
+        session,
+    )
+
+def scrape_fiserv_ireland_current(session):
+    return _workday_override_scrape(
+        "Fiserv",
+        "https://fiserv.wd5.myworkdayjobs.com/EXT",
+        session,
+    )
+
+def scrape_bny_ireland_oracle_current(session):
+    return scrape_oracle_candidate_experience(
+        "BNY Mellon",
+        "https://eofe.fa.us2.oraclecloud.com",
+        "BNY-Careers",
+        session,
+        country_code="IE",
+        max_pages=12,
+    )
+
+def scrape_thermo_fisher_ireland_current(session):
+    return _workday_override_scrape(
+        "Thermo Fisher Scientific",
+        "https://thermofisher.wd5.myworkdayjobs.com/ThermoFisherCareers",
+        session,
+    )
+
+def scrape_broadcom_ireland_current(session):
+    return _workday_override_scrape(
+        "Broadcom",
+        "https://broadcom.wd1.myworkdayjobs.com/External_Career",
+        session,
+    )
+
+def scrape_vmware_broadcom_ireland_current(session):
+    # VMware vacancies now live on Broadcom's current Workday board.
+    jobs = _workday_override_scrape(
+        "VMware (Broadcom)",
+        "https://broadcom.wd1.myworkdayjobs.com/External_Career",
+        session,
+    )
+    # Keep only records whose title/detail evidence identifies VMware/VCF when
+    # available; generic Broadcom vacancies are owned by the Broadcom row.
+    filtered = []
+    for j in jobs:
+        text = " ".join(str(j.get(k) or "") for k in ("title", "location", "url", "visa_snippet"))
+        if re.search(r"\b(?:VMware|VCF|Cloud Foundation)\b", text, re.I):
+            filtered.append(j)
+    return filtered
+
+def scrape_nxp_ireland_current(session):
+    return _workday_override_scrape(
+        "NXP Semiconductors",
+        "https://nxp.wd3.myworkdayjobs.com/careers",
+        session,
+    )
+
 def main():
+    print("=== TARGETED_DIRECT_BATCH_17_LARGE_ZERO_RECOVERY ACTIVE: Qualcomm + Roche + ResMed + Zendesk + Rockwell + Fiserv + BNY + Thermo Fisher + Broadcom/VMware + NXP current ATS routes; manual queue untouched ===")
     print("=== TARGETED_DIRECT_BATCH_16_BULK_FALSE_ZERO ACTIVE: Red Hat Workday + Goldman Oracle + Cook iCIMS hashed route + Schneider rendered + Haleon rendered + Syneos re-enabled; manual queue untouched ===")
     print("=== TARGETED_DIRECT_BATCH_15_FALSE_ZERO_REPAIR ACTIVE: NetApp + Cook Medical re-enabled from final defer; Aer Lingus Talentsoft link-shape fixed; Haleon custom Eightfold API; manual queue untouched ===")
     print("=== TARGETED_DIRECT_BATCH_14_ZERO_DEFERRED_BULK ACTIVE: NetApp + Aer Lingus + Goldman Sachs + Haleon + Cook Medical fresh current routes; manual queue untouched ===")
@@ -12463,13 +12559,23 @@ def main():
         ("exact", "regeneron", scrape_regeneron_ireland_direct, 75, "first-party Regeneron Ireland listing"),
         ("exact", "medtronic", scrape_medtronic_ireland_direct, 75, "first-party Medtronic Ireland search"),
         ("exact", "fidelity investments", scrape_fidelity_investments_ireland_direct, 75, "Ireland-scoped first-party listing"),
-        ("exact", "bny mellon", scrape_bny_mellon_ireland_recovery, 75, "first-party sitemap recovery"),
         ("exact", "goldman sachs", scrape_goldman_sachs_dublin_current, 75, "Goldman higher.gs.com Dublin-filtered current roles"),
         ("exact", "morgan stanley", scrape_morgan_stanley_ireland_recovery, 75, "first-party sitemap recovery"),
         ("exact", "s&p global", scrape_sp_global_ireland_recovery, 75, "first-party sitemap recovery"),
         ("exact", "databricks", scrape_databricks_ireland_recovery, 75, "first-party sitemap recovery"),
         ("exact", "visa", scrape_visa_ireland_recovery, 75, "first-party sitemap recovery"),
         ("exact", "aer lingus", scrape_aer_lingus_talentsoft_current, 40, "Aer Lingus Talentsoft Republic-of-Ireland facet"),
+        ("exact", "qualcomm", scrape_qualcomm_ireland_current, 45, "current Qualcomm Workday Ireland route"),
+        ("exact", "roche", scrape_roche_ireland_current, 45, "current Roche Workday Dublin route"),
+        ("exact", "resmed", scrape_resmed_ireland_current, 45, "current ResMed Workday Dublin route"),
+        ("exact", "zendesk", scrape_zendesk_ireland_current, 45, "current Zendesk Workday Dublin route"),
+        ("exact", "rockwell automation", scrape_rockwell_ireland_current, 45, "current Rockwell Workday Ireland route"),
+        ("exact", "fiserv", scrape_fiserv_ireland_current, 45, "current Fiserv Workday Dublin route"),
+        ("exact", "bny mellon", scrape_bny_ireland_oracle_current, 45, "current BNY Oracle Candidate Experience Ireland route"),
+        ("exact", "thermo fisher scientific", scrape_thermo_fisher_ireland_current, 45, "current Thermo Fisher Workday Ireland route"),
+        ("exact", "broadcom", scrape_broadcom_ireland_current, 45, "current Broadcom Workday Cork route"),
+        ("exact", "vmware (broadcom)", scrape_vmware_broadcom_ireland_current, 45, "current Broadcom Workday VMware/VCF Ireland route"),
+        ("exact", "nxp semiconductors", scrape_nxp_ireland_current, 45, "current NXP Workday Ireland audit route"),
         ("exact", "pepsico", scrape_pepsico_ireland, 180, "official careers search"),
     ]
 
@@ -12621,7 +12727,13 @@ def main():
             # from the old generic Sheet-2 zero-result cache so the proven
             # dedicated result cannot be shadowed by a stale generic verdict.
             _key = name.strip().lower()
-            if _key in {"netapp", "cook medical", "aer lingus", "haleon"}:
+            if _key in {
+                "qualcomm", "roche", "resmed", "zendesk", "rockwell automation",
+                "fiserv", "bny mellon", "thermo fisher scientific", "broadcom",
+                "vmware (broadcom)", "nxp semiconductors"
+            }:
+                cache_key = f"{name}::targeted_zero_deferred_batch17_v1"
+            elif _key in {"netapp", "cook medical", "aer lingus", "haleon"}:
                 cache_key = f"{name}::targeted_zero_deferred_batch15_v1"
             elif _key in {"red hat", "goldman sachs", "cook medical", "haleon", "syneos health", "schneider electric"}:
                 cache_key = f"{name}::targeted_zero_deferred_batch16_v1"
