@@ -345,7 +345,7 @@ def effective_timeout(cache, company_key, base_timeout):
         return max(30, int(base_timeout * 0.25))
 
 
-def run_company_tasks_in_parallel(tasks, browser_workers=None, http_workers=None):
+def run_company_tasks_in_parallel(tasks, browser_workers=None, http_workers=None, timeout_fallbacks=None):
     """Runs company scrapers concurrently instead of one at a time — the
     real fix for a multi-hour runtime. Each task is (label, company_name,
     callable, timeout_seconds, is_browser).
@@ -406,6 +406,8 @@ def run_company_tasks_in_parallel(tasks, browser_workers=None, http_workers=None
     or hanging the run — so it's visible in the log which companies are
     structurally being starved out, instead of that fact being invisible."""
     results, errors, failed_companies = [], [], set()
+    if timeout_fallbacks is None:
+        timeout_fallbacks = {}
     if not tasks:
         return results, errors, failed_companies
     browser_pool = ThreadPoolExecutor(max_workers=browser_workers or BROWSER_WORKERS)
@@ -447,9 +449,17 @@ def run_company_tasks_in_parallel(tasks, browser_workers=None, http_workers=None
                             print(f"  -> {company}: found nothing this time")
                         results.append((label, company, jobs))
                     except Exception as exc:
-                        print(f"  -> {company}: task failed ({exc})")
+                        fallback_jobs = [dict(j) for j in (timeout_fallbacks.get(company) or [])]
+                        if fallback_jobs:
+                            for _j in fallback_jobs:
+                                _j["stale_positive_fallback"] = "task_exception"
+                            print(f"  -> {company}: task failed ({exc}); preserving "
+                                  f"{len(fallback_jobs)} last-known positive cached jobs")
+                            results.append((label, company, fallback_jobs))
+                        else:
+                            print(f"  -> {company}: task failed ({exc})")
+                            failed_companies.add(company)
                         errors.append(f"{label}/{company}: {exc}")
-                        failed_companies.add(company)
             except FuturesTimeoutError:
                 pass  # normal — just means nothing finished within this poll window
             # Anything still pending gets checked two ways: if it's actually
@@ -472,18 +482,34 @@ def run_company_tasks_in_parallel(tasks, browser_workers=None, http_workers=None
             for fut in timed_out_now:
                 pending.discard(fut)
                 label, company, timeout_s, task_id = future_map[fut]
-                print(f"  -> {company}: HARD TIMEOUT after {timeout_s}s "
-                      f"(pipeline continues normally with whatever else it already found)")
+                fallback_jobs = [dict(j) for j in (timeout_fallbacks.get(company) or [])]
+                if fallback_jobs:
+                    for _j in fallback_jobs:
+                        _j["stale_positive_fallback"] = "hard_timeout"
+                    print(f"  -> {company}: HARD TIMEOUT after {timeout_s}s; preserving "
+                          f"{len(fallback_jobs)} last-known positive cached jobs")
+                    results.append((label, company, fallback_jobs))
+                else:
+                    print(f"  -> {company}: HARD TIMEOUT after {timeout_s}s "
+                          f"(pipeline continues normally with whatever else it already found)")
+                    failed_companies.add(company)
                 errors.append(f"{label}/{company}: timed out after {timeout_s}s")
-                failed_companies.add(company)
             for fut in not_reached_now:
                 pending.discard(fut)
                 label, company, timeout_s, task_id = future_map[fut]
-                print(f"  -> {company}: NOT REACHED — pool still busy with earlier "
-                      f"companies when the {OVERALL_BATCH_TIMEOUT_SECONDS}s batch ceiling hit; "
-                      f"never actually started this run, will be retried next run")
+                fallback_jobs = [dict(j) for j in (timeout_fallbacks.get(company) or [])]
+                if fallback_jobs:
+                    for _j in fallback_jobs:
+                        _j["stale_positive_fallback"] = "not_reached"
+                    print(f"  -> {company}: NOT REACHED before batch ceiling; preserving "
+                          f"{len(fallback_jobs)} last-known positive cached jobs")
+                    results.append((label, company, fallback_jobs))
+                else:
+                    print(f"  -> {company}: NOT REACHED — pool still busy with earlier "
+                          f"companies when the {OVERALL_BATCH_TIMEOUT_SECONDS}s batch ceiling hit; "
+                          f"never actually started this run, will be retried next run")
+                    failed_companies.add(company)
                 errors.append(f"{label}/{company}: not reached before batch ceiling")
-                failed_companies.add(company)
     finally:
         browser_pool.shutdown(wait=False)
         http_pool.shutdown(wait=False)
@@ -11636,7 +11662,128 @@ def scrape_abp_ireland_rendered(session):
     print(f"      [abp_ireland_rendered] {len(jobs)} verified Republic-of-Ireland vacancies")
     return list(jobs.values())
 
+
+def scrape_micron_eightfold_direct(session):
+    """Micron's official current careers site is Eightfold."""
+    jobs = []
+    raw_jobs = try_eightfold("micron", session) or []
+    for raw in raw_jobs:
+        norm = normalize_eightfold_job("Micron Technology", "micron", raw)
+        if not norm:
+            continue
+        blob = " ".join([
+            str(norm.get("location") or ""),
+            str(raw.get("location") or ""),
+            str(raw.get("locations") or ""),
+            str(raw.get("location_name") or ""),
+        ])
+        if _ROI_NEGATIVE_RE.search(blob):
+            continue
+        if is_republic_of_ireland_location(blob) or re.search(r"\bIreland\b", blob, re.I):
+            jobs.append(norm)
+    print(f"      [micron_eightfold_direct] {len(jobs)} verified Republic-of-Ireland vacancies")
+    return jobs
+
+
+def scrape_slack_salesforce_direct(session):
+    """Slack-branded roles on the official Salesforce careers site."""
+    company = "Slack"
+    listing_urls = [
+        "https://careers.salesforce.com/en/jobs/?search=Slack&location=Ireland",
+        "https://careers.salesforce.com/en/jobs/?search=Slack&location=Dublin",
+    ]
+    candidates = {}
+    for listing in listing_urls:
+        try:
+            raw = _html_get(session, listing, 18)
+        except Exception as exc:
+            print(f"      [slack_salesforce] listing failed: {exc}")
+            continue
+        for href in re.findall(
+            r'href=["\']([^"\']*/en/jobs/jr[^"\']+)["\']',
+            raw, re.I
+        ):
+            full = urllib.parse.urljoin(listing, html.unescape(href)).split("#")[0]
+            candidates[full.lower()] = full
+
+    jobs = {}
+    for full in list(candidates.values())[:80]:
+        try:
+            detail = _html_get(session, full, 12)
+        except Exception:
+            continue
+        body = re.sub(r"\s+", " ", _html_to_text(detail)).strip()
+        if _ROI_NEGATIVE_RE.search(body):
+            continue
+        if not re.search(r"\bIreland\s*-\s*Dublin\b|\bDublin,\s*Ireland\b", body, re.I):
+            continue
+        if not re.search(r"\bSlack\b", body, re.I):
+            continue
+        hm = re.search(r'<h1[^>]*>(.*?)</h1>', detail, re.I | re.S)
+        title = re.sub(r"\s+", " ", _html_to_text(hm.group(1))).strip() if hm else ""
+        if not title or _looks_like_non_job_title(title):
+            continue
+        sponsorship, snippet = classify_sponsorship(body[:18000])
+        jobs[full.lower()] = {
+            "company": company,
+            "title": title[:300],
+            "location": "Dublin, Ireland",
+            "posted_text": "Unknown",
+            "posted_days_ago": None,
+            "employment_type": normalize_employment_type("", title),
+            "url": full,
+            "source": "slack_salesforce_direct",
+            "visa_sponsorship": sponsorship,
+            "visa_snippet": snippet,
+        }
+    print(f"      [slack_salesforce] {len(jobs)} verified Republic-of-Ireland Slack vacancies")
+    return list(jobs.values())
+
+
+def scrape_box_official_audit(session):
+    """Box current official board audit; clean zero if Ireland/Dublin is absent."""
+    company = "Box"
+    jobs = {}
+    ireland_seen = False
+    for page_num in range(1, 8):
+        url = "https://careers.box.com/en/jobs/" + (f"?page={page_num}" if page_num > 1 else "")
+        raw = _html_get(session, url, 18)
+        body = re.sub(r"\s+", " ", _html_to_text(raw)).strip()
+        if re.search(r"\bIreland\b|\bDublin\b", body, re.I):
+            ireland_seen = True
+        for m in re.finditer(
+            r'<a[^>]+href=["\']([^"\']*/en/jobs/[^"\']+)["\'][^>]*>(.*?)</a>',
+            raw, re.I | re.S
+        ):
+            href = urllib.parse.urljoin(url, html.unescape(m.group(1))).split("#")[0]
+            title = re.sub(r"\s+", " ", _html_to_text(m.group(2))).strip()
+            start, end = max(0, m.start()-700), min(len(raw), m.end()+1000)
+            card = re.sub(r"\s+", " ", _html_to_text(raw[start:end])).strip()
+            if not re.search(r"\bIreland\b|\bDublin\b", card, re.I):
+                continue
+            if not title or _looks_like_non_job_title(title):
+                continue
+            sponsorship, snippet = classify_sponsorship(card[:7000])
+            jobs[href.lower()] = {
+                "company": company,
+                "title": title[:300],
+                "location": "Dublin, Ireland",
+                "posted_text": "Unknown",
+                "posted_days_ago": None,
+                "employment_type": normalize_employment_type("", title),
+                "url": href,
+                "source": "box_audit",
+                "visa_sponsorship": sponsorship,
+                "visa_snippet": snippet,
+            }
+    if not ireland_seen:
+        print("      [box_audit] official current board has no Ireland/Dublin listings -> 0 current Ireland vacancies")
+        return []
+    print(f"      [box_audit] {len(jobs)} verified Republic-of-Ireland vacancies")
+    return list(jobs.values())
+
 def main():
+    print("=== TARGETED_DIRECT_BATCH_10_BULK_STABILITY ACTIVE: stale-positive timeout protection + repeated-dead-route defer + Micron/Slack/Box bulk recovery ===")
     print("=== TARGETED_DIRECT_BATCH_9_BULK ACTIVE: AerCap + Syneos + Revvity + Coloplast + ABP Ireland added together; GSK/Uisce wrappers repaired; same production runtime ===")
     print("=== TARGETED_DIRECT_BATCH_8_BULK ACTIVE: GSK crash fixed + ASML + Hollister + Insulet + Marvell + Cook Medical + Medpace audited together in ONE full run ===")
     print("=== TARGETED_DIRECT_BATCH_7_MULTI ACTIVE: Uisce argument bug fixed + An Post Oracle + Kepak Workable + GSK official current-jobs route added in ONE normal full run ===")
@@ -11964,6 +12111,9 @@ def main():
     dedicated_company_specs = [
         ("exact", "alexion pharmaceuticals", scrape_alexion_ireland_direct, 35, "official Alexion Ireland jobs board"),
         ("exact", "sky ireland", scrape_sky_ireland_direct, 30, "official Sky Ireland jobs board"),
+        ("exact", "micron technology", scrape_micron_eightfold_direct, 35, "official Micron Eightfold route"),
+        ("exact", "slack", scrape_slack_salesforce_direct, 35, "official Salesforce careers pages explicitly identifying Slack roles"),
+        ("exact", "box", scrape_box_official_audit, 30, "official Box current jobs audit"),
         ("exact", "aercap", scrape_aercap_direct_http, 30, "official AerCap current opportunities table"),
         ("exact", "syneos health", scrape_syneos_ireland_direct, 35, "official Syneos Dublin/Ireland career search"),
         ("exact", "revvity (perkinelmer)", scrape_revvity_workday, 40, "official Revvity Workday External tenant"),
@@ -12210,6 +12360,21 @@ def main():
         if j.get("company")
     }
 
+    _DEFERRED_AFTER_TWO_ATTEMPTS = {
+        "aviva ireland",
+        "infosys",
+        "hcltech",
+        "waters corporation",
+        "mckinsey & company",
+        "honeywell",
+        "schneider electric",
+        "netapp",
+        "greencore",
+        "bayer",
+        "fitch ratings",
+        "oracle",
+    }
+
     for match_type, key, scraper_fn, timeout_s, description in dedicated_company_specs:
         if match_type == "exact":
             company_row = next(
@@ -12243,7 +12408,9 @@ def main():
             # from the old generic Sheet-2 zero-result cache so the proven
             # dedicated result cannot be shadowed by a stale generic verdict.
             _key = name.strip().lower()
-            if _key in {"aercap", "syneos health", "revvity (perkinelmer)", "coloplast", "abp food group", "glaxosmithkline (gsk)", "uisce éireann (irish water)"}:
+            if _key in {"micron technology", "slack", "box"}:
+                cache_key = f"{name}::targeted_direct_batch10_bulk_v1"
+            elif _key in {"aercap", "syneos health", "revvity (perkinelmer)", "coloplast", "abp food group", "glaxosmithkline (gsk)", "uisce éireann (irish water)"}:
                 cache_key = f"{name}::targeted_direct_batch9_bulk_v1"
             elif _key in {"asml", "hollister incorporated", "insulet corporation", "marvell technology", "cook medical", "medpace"}:
                 cache_key = f"{name}::targeted_direct_batch8_bulk_v1"
@@ -12270,6 +12437,10 @@ def main():
             elif _key in {
                 "oracle",
                 "mckinsey & company",
+            "waters corporation",
+            "micron technology",
+            "slack",
+            "box",
             "aercap",
             "syneos health",
             "revvity (perkinelmer)",
@@ -12427,6 +12598,10 @@ def main():
         if not company_row:
             continue
         company_name = company_row["company_name"].strip()
+        if company_name.lower() in _DEFERRED_AFTER_TWO_ATTEMPTS:
+            print(f"  [{company_name}] deferred after repeated failed/zero attempts; "
+                  "left Manual without spending another browser timeout this run")
+            continue
         if company_name.lower() in _live_company_names:
             continue
         entry = next(
@@ -12662,7 +12837,22 @@ def main():
     print(f"\n=== Running {len(task_list)} dedicated company scrapers "
           f"({browser_count} browser-based, up to {BROWSER_WORKERS} at once; "
           f"{http_count} plain HTTP, up to {HTTP_WORKERS} at once) ===")
-    parallel_results, parallel_errors, parallel_failed_companies = run_company_tasks_in_parallel(task_list)
+    _timeout_fallbacks = {}
+    _timeout_fallback_checked_at = {}
+    for _ckey, _centry in (browser_cache or {}).items():
+        _jobs = list((_centry or {}).get("jobs") or [])
+        if not _jobs:
+            continue
+        _base = str(_ckey).split("::", 1)[0].strip()
+        _checked = float((_centry or {}).get("checked_at") or 0)
+        if (_base not in _timeout_fallbacks
+                or _checked > _timeout_fallback_checked_at.get(_base, -1)):
+            _timeout_fallbacks[_base] = [dict(j) for j in _jobs]
+            _timeout_fallback_checked_at[_base] = _checked
+
+    parallel_results, parallel_errors, parallel_failed_companies = run_company_tasks_in_parallel(
+        task_list, timeout_fallbacks=_timeout_fallbacks
+    )
     failed_companies.update(parallel_failed_companies)
 
     for task_label, company_name, jobs in parallel_results:
