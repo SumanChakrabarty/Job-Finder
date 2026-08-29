@@ -4470,71 +4470,12 @@ def scrape_dxc_ireland_direct_http(session):
 
 
 def scrape_red_hat_ireland(session):
-    direct = scrape_red_hat_ireland_direct_http(session)
-    if direct:
-        return direct
-    """Red Hat's locations page links into its live country search. Use a
-    browser so the Ireland country link and subsequent dynamic results are
-    actually rendered rather than scraping navigation text as jobs."""
-    if not HAS_PLAYWRIGHT:
-        print("      [red-hat] playwright not installed — skipping")
-        return []
-    start = "https://www.redhat.com/en/jobs/locations"
-    results = {}
-    try:
-        with sync_playwright() as pw:
-            browser = pw.chromium.launch(headless=True, args=["--disable-http2"])
-            page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
-            page.goto(start, wait_until="domcontentloaded", timeout=60000)
-            page.wait_for_timeout(1200)
-            _browser_accept_consent(page)
-            # Prefer the actual Ireland country link; if it is not a direct
-            # href, click the visible text and let the site route normally.
-            ireland_link = page.get_by_role("link", name=re.compile(r"^Ireland$", re.I))
-            ireland_link_found = ireland_link.count() > 0
-            if ireland_link_found:
-                try:
-                    ireland_link.first.click(timeout=3000)
-                    page.wait_for_timeout(3000)  # was 1500 — real results page needs more time to render
-                except Exception:
-                    pass
-            try:
-                all_links = page.locator("a[href]")
-                hrefs = [all_links.nth(i).get_attribute("href") or "" for i in range(all_links.count())]
-                matching = sum(1 for h in hrefs if re.search(r"redhat\.com/.*job", h, re.I))
-                print(f"      [red-hat] Ireland link found={ireland_link_found}, page title={page.title()!r}, "
-                      f"total links={len(hrefs)}, matching job-pattern links={matching}")
-                sample = [h for h in hrefs if h and "redhat" in h.lower()][:10]
-                print(f"      [red-hat] sample real hrefs on page: {sample}")
-            except Exception as e:
-                print(f"      [red-hat] diagnostic read failed: {e}")
-            _collect_browser_job_links(
-                page, "Red Hat",
-                [r"redhat\.com/.*job", r"redhat\.com/en/jobs/", r"redhat\.com/jobs/"],
-                "redhat_browser", results, "Ireland")
-            for _ in range(20):
-                for txt in ("Load more", "Show more", "See more", "Next"):
-                    try:
-                        b = page.get_by_role("button", name=txt, exact=False)
-                        if b.count() and b.first.is_visible():
-                            b.first.click(timeout=1200)
-                            page.wait_for_timeout(500)
-                    except Exception:
-                        pass
-                page.mouse.wheel(0, 3500)
-                page.wait_for_timeout(400)
-                before = len(results)
-                _collect_browser_job_links(
-                    page, "Red Hat",
-                    [r"redhat\.com/.*job", r"redhat\.com/en/jobs/", r"redhat\.com/jobs/"],
-                    "redhat_browser", results, "Ireland")
-                if len(results) == before:
-                    break
-            browser.close()
-    except Exception as e:
-        print(f"      [red-hat] browser scrape failed: {e}")
-    print(f"      [red-hat] {len(results)} unique Ireland jobs accumulated")
-    return list(results.values())
+    """Red Hat: official Ireland country link now points directly to its Workday board."""
+    return _workday_override_scrape(
+        "Red Hat",
+        "https://redhat.wd5.myworkdayjobs.com/jobs",
+        session,
+    )
 
 
 def scrape_jnj_ireland(session):
@@ -9632,20 +9573,64 @@ def scrape_honeywell_attempt2(session):
 
 
 def scrape_schneider_attempt2(session):
-    """Schneider Electric current first-party board; detail pages must prove Republic of Ireland."""
-    return _scrape_first_party_ireland_listing(
-        "Schneider Electric",
-        [
-            "https://careers.se.com/jobs?keywords=&location=Dublin%2C%20Ireland",
-            "https://careers.se.com/jobs?keywords=Ireland",
-            "https://careers.se.com/jobs?location=Ireland",
-        ],
-        [r"careers\.se\.com/jobs/\d+(?:\?[^#]*)?$"],
-        "schneider_current_direct",
-        session,
-        False,
-        120,
-    )
+    """Schneider Electric: rendered current board, then strict ROI detail verification."""
+    if not HAS_PLAYWRIGHT:
+        return []
+    results = {}
+    search_urls = [
+        "https://careers.se.com/jobs?keywords=&location=Dublin%2C%20Ireland",
+        "https://careers.se.com/jobs?keywords=Ireland",
+        "https://careers.se.com/jobs?location=Ireland",
+    ]
+    try:
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch(headless=True, args=["--no-sandbox", "--disable-dev-shm-usage"])
+            page = browser.new_page(viewport={"width": 1400, "height": 1000}, locale="en-IE")
+            candidates = set()
+            for u in search_urls:
+                try:
+                    page.goto(u, wait_until="domcontentloaded", timeout=30000)
+                    page.wait_for_timeout(1800)
+                    links = page.locator('a[href*="/jobs/"]')
+                    for i in range(min(links.count(), 300)):
+                        href = links.nth(i).get_attribute("href")
+                        if href:
+                            full = urllib.parse.urljoin(page.url, href).split("#")[0]
+                            if re.search(r"careers\.se\.com/jobs/\d+", full, re.I):
+                                candidates.add(full)
+                except Exception as exc:
+                    print(f"      [schneider_rendered] search failed: {exc}")
+            for u in list(candidates)[:120]:
+                try:
+                    page.goto(u, wait_until="domcontentloaded", timeout=22000)
+                    page.wait_for_timeout(250)
+                    body = re.sub(r"\s+", " ", page.locator("body").inner_text()).strip()
+                    if _ROI_NEGATIVE_RE.search(body) or not is_republic_of_ireland_location(body):
+                        continue
+                    title = ""
+                    try:
+                        title = re.sub(r"\s+", " ", page.locator("h1").first.inner_text()).strip()
+                    except Exception:
+                        pass
+                    if not title or _looks_like_non_job_title(title):
+                        continue
+                    loc = "Dublin, Ireland" if re.search(r"\bDublin\b", body, re.I) else "Ireland"
+                    sponsorship, snippet = classify_sponsorship(body[:18000])
+                    results[page.url.rstrip('/').lower()] = {
+                        "company": "Schneider Electric", "title": title[:300], "location": loc,
+                        "posted_text": "Unknown", "posted_days_ago": None,
+                        "employment_type": normalize_employment_type("", title), "url": page.url,
+                        "source": "schneider_rendered_current", "visa_sponsorship": sponsorship,
+                        "visa_snippet": snippet,
+                    }
+                except Exception:
+                    continue
+            browser.close()
+    except Exception as exc:
+        print(f"      [schneider_rendered] failed: {exc}")
+    print(f"      [schneider_rendered] {len(results)} verified Republic-of-Ireland vacancies")
+    return list(results.values())
+
 
 def test_single_company(name):
     """Fast test mode for one company — skips the full ~30 min pipeline
@@ -11247,8 +11232,8 @@ def scrape_cook_medical_icims(session):
     """Cook Medical official EMEA iCIMS board; detail pages prove Ireland."""
     company = "Cook Medical"
     listing_urls = [
-        "https://emea-cookmedical.icims.com/jobs/search?ss=1&searchKeyword=Ireland",
-        "https://emea-cookmedical.icims.com/jobs/search?ss=1&searchKeyword=Limerick",
+        "https://emea-cookmedical.icims.com/jobs/search?hashed=-435656091&ss=1&searchKeyword=Ireland",
+        "https://emea-cookmedical.icims.com/jobs/search?hashed=-435656091&ss=1&searchKeyword=Limerick",
     ]
     candidates = {}
     for listing in listing_urls:
@@ -11849,61 +11834,15 @@ def scrape_aer_lingus_talentsoft_current(session):
 
 
 def scrape_goldman_sachs_dublin_current(session):
-    """Goldman Sachs current higher.gs.com Dublin results; rendered search, strict detail ROI."""
-    if not HAS_PLAYWRIGHT:
-        return []
-    results = {}
-    search_urls = [
-        "https://higher.gs.com/results?LOCATION=Dublin&page=1&sort=RELEVANCE",
-        "https://higher.gs.com/results?LOCATION=Dublin&page=2&sort=RELEVANCE",
-    ]
-    try:
-        with sync_playwright() as pw:
-            browser = pw.chromium.launch(headless=True, args=["--no-sandbox", "--disable-dev-shm-usage"])
-            page = browser.new_page(viewport={"width": 1400, "height": 1000}, user_agent=HEADERS.get("User-Agent"))
-            candidates = set()
-            for u in search_urls:
-                try:
-                    page.goto(u, wait_until="domcontentloaded", timeout=35000)
-                    page.wait_for_timeout(1200)
-                    links = page.locator('a[href*="/roles/"]')
-                    for i in range(min(links.count(), 300)):
-                        href = links.nth(i).get_attribute("href")
-                        if href:
-                            full = urllib.parse.urljoin(page.url, href).split("#")[0]
-                            if re.search(r"higher\.gs\.com/roles/\d+", full, re.I):
-                                candidates.add(full)
-                except Exception as exc:
-                    print(f"      [goldman_dublin_current] search failed: {exc}")
-            for u in list(candidates)[:100]:
-                try:
-                    page.goto(u, wait_until="domcontentloaded", timeout=25000)
-                    page.wait_for_timeout(350)
-                    body = re.sub(r"\s+", " ", page.locator("body").inner_text()).strip()
-                    if _ROI_NEGATIVE_RE.search(body) or not re.search(r"\bDublin\b[^|.;]{0,80}\bIreland\b|\bIreland\b[^|.;]{0,80}\bDublin\b", body, re.I):
-                        continue
-                    title = ""
-                    try:
-                        title = re.sub(r"\s+", " ", page.locator("h1").first.inner_text()).strip()
-                    except Exception:
-                        pass
-                    if not title or _looks_like_non_job_title(title):
-                        continue
-                    sponsorship, snippet = classify_sponsorship(body[:18000])
-                    results[page.url.rstrip('/').lower()] = {
-                        "company": "Goldman Sachs", "title": title[:300], "location": "Dublin, Ireland",
-                        "posted_text": "Unknown", "posted_days_ago": None,
-                        "employment_type": normalize_employment_type("", title), "url": page.url,
-                        "source": "goldman_higher_dublin_current", "visa_sponsorship": sponsorship,
-                        "visa_snippet": snippet,
-                    }
-                except Exception:
-                    continue
-            browser.close()
-    except Exception as exc:
-        print(f"      [goldman_dublin_current] failed: {exc}")
-    print(f"      [goldman_dublin_current] {len(results)} verified Dublin/Ireland vacancies")
-    return list(results.values())
+    """Goldman Sachs: current official Oracle Candidate Experience backend, country-filtered to IE."""
+    return scrape_oracle_candidate_experience(
+        "Goldman Sachs",
+        "https://hdpc.fa.us2.oraclecloud.com",
+        "LateralHiring",
+        session,
+        country_code="IE",
+        max_pages=8,
+    )
 
 
 def scrape_haleon_ireland_current_bulk(session):
@@ -11944,7 +11883,7 @@ def scrape_haleon_ireland_current_bulk(session):
     jobs = scrape_haleon_direct_http(session)
     if jobs:
         return jobs
-    return _scrape_first_party_ireland_listing(
+    fallback = _scrape_first_party_ireland_listing(
         "Haleon",
         [
             "https://careers.haleon.com/careers?domain=haleon.com&location=Ireland",
@@ -11956,6 +11895,59 @@ def scrape_haleon_ireland_current_bulk(session):
         False,
         80,
     )
+    if fallback:
+        return fallback
+    if not HAS_PLAYWRIGHT:
+        return []
+    rendered = {}
+    try:
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch(headless=True, args=["--no-sandbox", "--disable-dev-shm-usage"])
+            page = browser.new_page(viewport={"width": 1400, "height": 1000}, locale="en-IE")
+            for u in [
+                "https://careers.haleon.com/careers?domain=haleon.com&location=Ireland",
+                "https://careers.haleon.com/careers?domain=haleon.com&location=Dungarvan",
+            ]:
+                try:
+                    page.goto(u, wait_until="domcontentloaded", timeout=30000)
+                    page.wait_for_timeout(1800)
+                    links = page.locator('a[href*="/careers/job/"]')
+                    for i in range(min(links.count(), 200)):
+                        href = links.nth(i).get_attribute("href")
+                        if not href:
+                            continue
+                        full = urllib.parse.urljoin(page.url, href).split("#")[0]
+                        if not re.search(r"careers\.haleon\.com/careers/job/\d+", full, re.I):
+                            continue
+                        try:
+                            detail = session.get(full, headers=HEADERS, timeout=12)
+                            if detail.status_code != 200:
+                                continue
+                            body = re.sub(r"\s+", " ", _html_to_text(detail.text)).strip()
+                            if _ROI_NEGATIVE_RE.search(body) or not is_republic_of_ireland_location(body):
+                                continue
+                            hm = re.search(r"<h[12][^>]*>(.*?)</h[12]>", detail.text, re.I | re.S)
+                            title = re.sub(r"\s+", " ", _html_to_text(hm.group(1))).strip() if hm else ""
+                            if not title or _looks_like_non_job_title(title):
+                                continue
+                            sponsorship, snippet = classify_sponsorship(body[:18000])
+                            rendered[full.rstrip('/').lower()] = {
+                                "company": "Haleon", "title": title[:300],
+                                "location": "Dungarvan, Ireland" if re.search(r"Dungarvan", body, re.I) else "Ireland",
+                                "posted_text": "Unknown", "posted_days_ago": None,
+                                "employment_type": normalize_employment_type("", title), "url": full,
+                                "source": "haleon_rendered_current", "visa_sponsorship": sponsorship,
+                                "visa_snippet": snippet,
+                            }
+                        except Exception:
+                            continue
+                except Exception:
+                    continue
+            browser.close()
+    except Exception as exc:
+        print(f"      [haleon_rendered_current] failed: {exc}")
+    print(f"      [haleon_rendered_current] {len(rendered)} verified Republic-of-Ireland vacancies")
+    return list(rendered.values())
 
 def scrape_cook_medical_current_bulk(session):
     """Cook Medical: keep iCIMS route, then broaden to all current EMEA iCIMS cards."""
@@ -11965,9 +11957,9 @@ def scrape_cook_medical_current_bulk(session):
     return _scrape_first_party_ireland_listing(
         "Cook Medical",
         [
-            "https://emea-cookmedical.icims.com/jobs/search?ss=1&searchKeyword=Limerick",
-            "https://emea-cookmedical.icims.com/jobs/search?ss=1&searchKeyword=Ireland",
-            "https://emea-cookmedical.icims.com/jobs/search?ss=1",
+            "https://emea-cookmedical.icims.com/jobs/search?hashed=-435656091&ss=1&searchKeyword=Limerick",
+            "https://emea-cookmedical.icims.com/jobs/search?hashed=-435656091&ss=1&searchKeyword=Ireland",
+            "https://emea-cookmedical.icims.com/jobs/search?hashed=-435656091&ss=1",
         ],
         [r"emea-cookmedical\.icims\.com/jobs/\d+/[^?#]+/job"],
         "cook_icims_current_bulk",
@@ -11990,6 +11982,7 @@ def scrape_nokia_oracle(session):
     return jobs
 
 def main():
+    print("=== TARGETED_DIRECT_BATCH_16_BULK_FALSE_ZERO ACTIVE: Red Hat Workday + Goldman Oracle + Cook iCIMS hashed route + Schneider rendered + Haleon rendered + Syneos re-enabled; manual queue untouched ===")
     print("=== TARGETED_DIRECT_BATCH_15_FALSE_ZERO_REPAIR ACTIVE: NetApp + Cook Medical re-enabled from final defer; Aer Lingus Talentsoft link-shape fixed; Haleon custom Eightfold API; manual queue untouched ===")
     print("=== TARGETED_DIRECT_BATCH_14_ZERO_DEFERRED_BULK ACTIVE: NetApp + Aer Lingus + Goldman Sachs + Haleon + Cook Medical fresh current routes; manual queue untouched ===")
     print("=== TARGETED_DIRECT_BATCH_13_ZERO_DEFERRED_RECOVERY ACTIVE: Regeneron + Stryker + Baxter + Dell + Schneider current official backends; manual queue intentionally untouched ===")
@@ -12572,6 +12565,7 @@ def main():
         "scrape_oracle_ireland_attempt2", "scrape_honeywell_attempt2", "scrape_schneider_attempt2",
         "scrape_gsk_ireland_current",
         "scrape_goldman_sachs_dublin_current",
+        "scrape_haleon_ireland_current_bulk",
         "scrape_abp_ireland_rendered",
 }
 
@@ -12629,7 +12623,9 @@ def main():
             _key = name.strip().lower()
             if _key in {"netapp", "cook medical", "aer lingus", "haleon"}:
                 cache_key = f"{name}::targeted_zero_deferred_batch15_v1"
-            elif _key in {"regeneron", "stryker", "baxter international", "dell technologies", "schneider electric"}:
+            elif _key in {"red hat", "goldman sachs", "cook medical", "haleon", "syneos health", "schneider electric"}:
+                cache_key = f"{name}::targeted_zero_deferred_batch16_v1"
+            elif _key in {"regeneron", "stryker", "baxter international", "dell technologies"}:
                 cache_key = f"{name}::targeted_zero_deferred_batch13_v1"
             elif _key in {"boehringer ingelheim", "texas instruments", "nokia"}:
                 cache_key = f"{name}::targeted_direct_batch11_bulk_v1"
@@ -12670,8 +12666,7 @@ def main():
             "slack",
             "box",
             "aercap",
-            "syneos health",
-            "revvity (perkinelmer)",
+                "revvity (perkinelmer)",
             "coloplast",
             "abp food group",
             "asml",
@@ -13048,7 +13043,6 @@ def main():
         "oracle",
         "insulet corporation",
         "marvell technology",
-        "syneos health",
     }
     _before_final_defer = len(task_list)
     task_list = [
