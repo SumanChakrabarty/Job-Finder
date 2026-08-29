@@ -11782,7 +11782,52 @@ def scrape_box_official_audit(session):
     print(f"      [box_audit] {len(jobs)} verified Republic-of-Ireland vacancies")
     return list(jobs.values())
 
+
+def scrape_boehringer_ireland_direct(session):
+    """Boehringer Ingelheim official SuccessFactors/jobs2web Ireland search."""
+    base = "https://jobs.boehringer-ingelheim.com"
+    return _scrape_successfactors_roi_http(
+        session,
+        "Boehringer Ingelheim",
+        base,
+        [
+            base + "/search/?q=&locationsearch=Ireland",
+            base + "/search/?q=&locationsearch=Dublin",
+        ],
+        "boehringer_direct",
+        100,
+    )
+
+
+def scrape_texas_instruments_oracle(session):
+    """Texas Instruments official Oracle Candidate Experience site."""
+    jobs = scrape_oracle_candidate_experience(
+        "Texas Instruments",
+        "https://careers.ti.com",
+        "CX",
+        session,
+        country_code="IE",
+        max_pages=8,
+    )
+    print(f"      [ti_oracle] {len(jobs)} verified Republic-of-Ireland vacancies")
+    return jobs
+
+
+def scrape_nokia_oracle(session):
+    """Nokia official Oracle Candidate Experience site."""
+    jobs = scrape_oracle_candidate_experience(
+        "Nokia",
+        "https://jobs.nokia.com",
+        "CX_1",
+        session,
+        country_code="IE",
+        max_pages=8,
+    )
+    print(f"      [nokia_oracle] {len(jobs)} verified Republic-of-Ireland vacancies")
+    return jobs
+
 def main():
+    print("=== TARGETED_DIRECT_BATCH_11_BULK_FAST ACTIVE: Boehringer + Texas Instruments + Nokia direct routes; repeated dead routes filtered at FINAL queue; BlackRock timeout reduced with stale-positive protection ===")
     print("=== TARGETED_DIRECT_BATCH_10_BULK_STABILITY ACTIVE: stale-positive timeout protection + repeated-dead-route defer + Micron/Slack/Box bulk recovery ===")
     print("=== TARGETED_DIRECT_BATCH_9_BULK ACTIVE: AerCap + Syneos + Revvity + Coloplast + ABP Ireland added together; GSK/Uisce wrappers repaired; same production runtime ===")
     print("=== TARGETED_DIRECT_BATCH_8_BULK ACTIVE: GSK crash fixed + ASML + Hollister + Insulet + Marvell + Cook Medical + Medpace audited together in ONE full run ===")
@@ -12111,6 +12156,9 @@ def main():
     dedicated_company_specs = [
         ("exact", "alexion pharmaceuticals", scrape_alexion_ireland_direct, 35, "official Alexion Ireland jobs board"),
         ("exact", "sky ireland", scrape_sky_ireland_direct, 30, "official Sky Ireland jobs board"),
+        ("exact", "boehringer ingelheim", scrape_boehringer_ireland_direct, 40, "official Boehringer SuccessFactors Ireland search"),
+        ("exact", "texas instruments", scrape_texas_instruments_oracle, 40, "official Texas Instruments Oracle Candidate Experience"),
+        ("exact", "nokia", scrape_nokia_oracle, 40, "official Nokia Oracle Candidate Experience"),
         ("exact", "micron technology", scrape_micron_eightfold_direct, 35, "official Micron Eightfold route"),
         ("exact", "slack", scrape_slack_salesforce_direct, 35, "official Salesforce careers pages explicitly identifying Slack roles"),
         ("exact", "box", scrape_box_official_audit, 30, "official Box current jobs audit"),
@@ -12218,7 +12266,7 @@ def main():
         ("exact", "honeywell", scrape_honeywell_attempt2, 90, "Honeywell second/final Ireland attempt"),
         ("exact", "schneider electric", scrape_schneider_attempt2, 90, "Schneider second/final Ireland attempt"),
         ("exact", "aib (allied irish banks)", scrape_aib_ireland, 240, "filtered against UK-only postings"),
-        ("exact", "blackrock", scrape_blackrock_ireland, 240, "Phenom platform"),
+        ("exact", "blackrock", scrape_blackrock_ireland, 90, "Phenom platform"),
         ("exact", "bank of ireland", scrape_bank_of_ireland_direct, 240, "first-party jobs board"),
         ("exact", "ing", scrape_ing_ireland, 240, "Phenom platform"),
         ("exact", "deutsche bank", scrape_deutsche_bank_ireland, 240, "first-party roles search"),
@@ -12408,7 +12456,9 @@ def main():
             # from the old generic Sheet-2 zero-result cache so the proven
             # dedicated result cannot be shadowed by a stale generic verdict.
             _key = name.strip().lower()
-            if _key in {"micron technology", "slack", "box"}:
+            if _key in {"boehringer ingelheim", "texas instruments", "nokia"}:
+                cache_key = f"{name}::targeted_direct_batch11_bulk_v1"
+            elif _key in {"micron technology", "slack", "box"}:
                 cache_key = f"{name}::targeted_direct_batch10_bulk_v1"
             elif _key in {"aercap", "syneos health", "revvity (perkinelmer)", "coloplast", "abp food group", "glaxosmithkline (gsk)", "uisce éireann (irish water)"}:
                 cache_key = f"{name}::targeted_direct_batch9_bulk_v1"
@@ -12438,6 +12488,9 @@ def main():
                 "oracle",
                 "mckinsey & company",
             "waters corporation",
+            "boehringer ingelheim",
+            "texas instruments",
+            "nokia",
             "micron technology",
             "slack",
             "box",
@@ -12805,6 +12858,37 @@ def main():
     )
     if priority_entries:
         print("  -> " + ", ".join(e["company"] for e in priority_entries))
+
+
+    _FINAL_DEFERRED_COMPANIES = {
+        "aviva ireland",
+        "infosys",
+        "hcltech",
+        "waters corporation",
+        "mckinsey & company",
+        "honeywell",
+        "schneider electric",
+        "netapp",
+        "greencore",
+        "bayer",
+        "fitch ratings",
+        "oracle",
+        "insulet corporation",
+        "marvell technology",
+        "syneos health",
+        "cook medical",
+    }
+    _before_final_defer = len(task_list)
+    task_list = [
+        _t for _t in task_list
+        if str(_t[1] or "").strip().lower() not in _FINAL_DEFERRED_COMPANIES
+    ]
+    _deferred_removed = _before_final_defer - len(task_list)
+    if _deferred_removed:
+        print(
+            f"=== Final two-attempt defer: removed {_deferred_removed} repeated dead/slow "
+            "company tasks from this run; their existing Manual status is preserved ==="
+        )
 
     # Final defensive company-level dedupe. Earlier queue ordering guarantees
     # the first task is the preferred/specific route; later duplicate generic
