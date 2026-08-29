@@ -11813,6 +11813,63 @@ def scrape_texas_instruments_oracle(session):
     return jobs
 
 
+
+def scrape_proofpoint_workday_direct(session):
+    """Proofpoint official current Workday tenant; first-party Cork/Ireland jobs."""
+    return _workday_override_scrape(
+        "Proofpoint",
+        "https://proofpoint.wd5.myworkdayjobs.com/ProofpointCareers",
+        session,
+    )
+
+
+def scrape_etsy_workday_direct(session):
+    """Etsy official current Workday tenant; first-party Dublin/Ireland jobs."""
+    return _workday_override_scrape(
+        "Etsy",
+        "https://etsy.wd5.myworkdayjobs.com/Etsy_Careers",
+        session,
+    )
+
+
+def _greenhouse_direct_roi(company_name, slug, session, source_tag):
+    """Confirmed first-party Greenhouse board -> normalized Republic-of-Ireland jobs."""
+    raw_jobs = try_greenhouse(slug, session) or []
+    jobs = []
+    for raw in raw_jobs:
+        item = normalize_greenhouse_job(company_name, raw)
+        if not item:
+            continue
+        loc = str(item.get("location") or "")
+        blob = " ".join([loc, str(raw.get("location") or ""), str(raw.get("title") or "")])
+        if _ROI_NEGATIVE_RE.search(blob):
+            continue
+        if not is_republic_of_ireland_location(blob):
+            continue
+        item["source"] = source_tag
+        jobs.append(item)
+    print(f"      [{source_tag}] {len(jobs)} verified Republic-of-Ireland vacancies")
+    return jobs
+
+
+def scrape_tenable_greenhouse_direct(session):
+    """Tenable official Greenhouse board (tenableinc)."""
+    return _greenhouse_direct_roi("Tenable", "tenableinc", session, "tenable_greenhouse_direct")
+
+
+def scrape_sentinelone_greenhouse_direct(session):
+    """SentinelOne official Greenhouse board."""
+    return _greenhouse_direct_roi("SentinelOne", "sentinellabs", session, "sentinelone_greenhouse_direct")
+
+
+def scrape_crowdstrike_workday_direct(session):
+    """CrowdStrike official current Workday tenant."""
+    return _workday_override_scrape(
+        "CrowdStrike",
+        "https://crowdstrike.wd5.myworkdayjobs.com/crowdstrikecareers",
+        session,
+    )
+
 def scrape_nokia_oracle(session):
     """Nokia official Oracle Candidate Experience site."""
     jobs = scrape_oracle_candidate_experience(
@@ -11827,6 +11884,7 @@ def scrape_nokia_oracle(session):
     return jobs
 
 def main():
+    print("=== TARGETED_DIRECT_BATCH_12_MANUAL_ATS_BULK ACTIVE: Proofpoint + Etsy + Tenable + SentinelOne + CrowdStrike confirmed ATS routes; live routes/runtime untouched ===")
     print("=== TARGETED_DIRECT_BATCH_11_BULK_FAST ACTIVE: Boehringer + Texas Instruments + Nokia direct routes; repeated dead routes filtered at FINAL queue; BlackRock timeout reduced with stale-positive protection ===")
     print("=== TARGETED_DIRECT_BATCH_10_BULK_STABILITY ACTIVE: stale-positive timeout protection + repeated-dead-route defer + Micron/Slack/Box bulk recovery ===")
     print("=== TARGETED_DIRECT_BATCH_9_BULK ACTIVE: AerCap + Syneos + Revvity + Coloplast + ABP Ireland added together; GSK/Uisce wrappers repaired; same production runtime ===")
@@ -12162,6 +12220,11 @@ def main():
         ("exact", "micron technology", scrape_micron_eightfold_direct, 35, "official Micron Eightfold route"),
         ("exact", "slack", scrape_slack_salesforce_direct, 35, "official Salesforce careers pages explicitly identifying Slack roles"),
         ("exact", "box", scrape_box_official_audit, 30, "official Box current jobs audit"),
+        ("exact", "proofpoint", scrape_proofpoint_workday_direct, 40, "official Proofpoint Workday tenant"),
+        ("exact", "etsy", scrape_etsy_workday_direct, 40, "official Etsy Workday tenant"),
+        ("exact", "tenable", scrape_tenable_greenhouse_direct, 30, "official Tenable Greenhouse board"),
+        ("exact", "sentinelone", scrape_sentinelone_greenhouse_direct, 30, "official SentinelOne Greenhouse board"),
+        ("exact", "crowdstrike", scrape_crowdstrike_workday_direct, 40, "official CrowdStrike Workday tenant"),
         ("exact", "aercap", scrape_aercap_direct_http, 30, "official AerCap current opportunities table"),
         ("exact", "syneos health", scrape_syneos_ireland_direct, 35, "official Syneos Dublin/Ireland career search"),
         ("exact", "revvity (perkinelmer)", scrape_revvity_workday, 40, "official Revvity Workday External tenant"),
