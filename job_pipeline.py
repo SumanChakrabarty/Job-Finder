@@ -2915,14 +2915,27 @@ def scrape_zero_deep_detail_batch21(company_name, url, session=None):
                 continue
             if not href or href.startswith(("mailto:", "tel:", "javascript:")):
                 continue
-            if not _same_org_host(url, href):
-                continue
             low = href.lower()
-            if _strong_job_detail_url(href):
+            _host = urllib.parse.urlparse(href).netloc.lower()
+            _known_ats = any(tok in _host for tok in (
+                "myworkdayjobs.com", "workday.com", "greenhouse.io", "lever.co",
+                "smartrecruiters.com", "ashbyhq.com", "recruitee.com", "personio.com",
+                "pinpointhq.com", "eightfold.ai", "phenompeople.com", "workable.com",
+                "successfactors.com", "oraclecloud.com", "icims.com", "jobs2web.com",
+                "avature.net", "talent-soft.com", "csod.com"
+            ))
+            _same_host_family = _same_org_host(url, href)
+            # Batch22: do NOT discard a real vacancy merely because the corporate
+            # careers page hands off to an external ATS domain.  That restriction
+            # was the main reason the Batch21 deep pass could see a careers page
+            # yet discover zero strong URLs.
+            if _strong_job_detail_url(href) and (_same_host_family or _known_ats):
                 if not re.search(r"/(?:saved-jobs?|job-alert|talent-community|login|signin|privacy|terms)(?:/|$)", low):
                     candidate_urls.add(href)
-                    if len(candidate_urls) >= 180:
+                    if len(candidate_urls) >= 220:
                         break
+                continue
+            if not (_same_host_family or _known_ats):
                 continue
             # Corporate landing pages often link once to the actual ATS search.
             # Follow only obvious job-search/list-all destinations and keep the
@@ -12711,7 +12724,7 @@ def scrape_axa_ireland_friend(session):
 
 
 def main():
-    print("=== TARGETED_DIRECT_BATCH_21_ZERO_DEEP20 ACTIVE: 20 zero-job companies use deep rendered vacancy discovery + strict detail-page ROI verification; manual recovery queue untouched ===")
+    print("=== TARGETED_DIRECT_BATCH_22_ZERO_FORCE20_ATS ACTIVE: all 20 zero-job targets forced from CSV regardless status/dedupe; external ATS job links allowed; fresh cache; manual queue untouched ===\n=== TARGETED_DIRECT_BATCH_21_ZERO_DEEP20 ACTIVE: 20 zero-job companies use deep rendered vacancy discovery + strict detail-page ROI verification; manual recovery queue untouched ===")
     print("=== TARGETED_DIRECT_BATCH_20_ZERO_ONLY_BULK_RECOVERY ACTIVE: zero-company focus only; multi-term Workday detail verification + direct Phenom Haleon/BMS + rendered AXA/DXC; manual queue untouched ===")
     print("=== TARGETED_DIRECT_BATCH_19_SPEED_PROFILE ACTIVE: browser workers 8 + HTTP workers 24 + 6h positive cache + 1h zero cache; Workday workers kept conservative; coverage/ROI rules unchanged ===")
     print("=== TARGETED_DIRECT_BATCH_18_BULK_FIXES ACTIVE: Qualcomm + NXP + Zendesk + Rockwell + Red Hat + Broadcom/VMware detail-verified Workday; Cook iCIMS POST; Syneos rendered; Haleon/Schneider/DXC/BMS sitemap fallbacks ===")
@@ -13800,6 +13813,48 @@ def main():
     if _batch21_deep_queued:
         print("  -> " + ", ".join(_batch21_deep_queued))
 
+
+    # === BATCH22 ZERO FORCE20 QUEUE REPLACEMENT ===
+    # Batch21 accidentally sourced its deep targets from `priority_entries`, which
+    # itself is built only from `manual_check` after earlier scheduling/dedupe.
+    # Result in the real run: only 8/20 targets were actually given the new deep
+    # recovery path.  For zero-job recovery that is the wrong source of truth.
+    # Here we source all 20 directly from the 305-company CSV rows, remove any
+    # older task for those companies, and replace it with exactly one fresh
+    # Batch22 task. Manual status is not read or modified.
+    _batch22_rows_by_name = {
+        str(c.get("company_name") or "").strip().lower(): c
+        for c in companies
+        if str(c.get("company_name") or "").strip().lower() in BATCH21_ZERO_DEEP20
+    }
+    _batch22_target_names = set(_batch22_rows_by_name)
+    if _batch22_target_names:
+        task_list = [
+            t for t in task_list
+            if str(t[1] or "").strip().lower() not in _batch22_target_names
+        ]
+    _batch22_queued = []
+    for _key in sorted(BATCH21_ZERO_DEEP20):
+        _row = _batch22_rows_by_name.get(_key)
+        if not _row:
+            continue
+        _name = str(_row.get("company_name") or "").strip()
+        _url = str(_row.get("career_url") or "").strip()
+        if not _name or not _url:
+            continue
+        def _make_batch22_zero_task(name=_name, u=_url):
+            return lambda: cached_browser_scrape(
+                browser_cache,
+                f"{name}::zero_force20_batch22_v1",
+                lambda: scrape_zero_deep_detail_batch21(name, u, session),
+                0,
+                name,
+            )
+        task_list.append(("batch22_zero_force20", _name, _make_batch22_zero_task(), 90, True))
+        _batch22_queued.append(_name)
+    print(f"=== Batch22 zero-force recovery: {len(_batch22_queued)}/{len(BATCH21_ZERO_DEEP20)} targets FORCED from CSV with fresh cache ===")
+    if _batch22_queued:
+        print("  -> " + ", ".join(_batch22_queued))
 
     _FINAL_DEFERRED_COMPANIES = {
         "aviva ireland",
