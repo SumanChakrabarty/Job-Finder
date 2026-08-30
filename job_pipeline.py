@@ -2827,6 +2827,216 @@ def _final_job_quality_filter(live_jobs):
     return cleaned
 
 
+
+# === TARGETED_DIRECT_BATCH_21_ZERO_DEEP20 ===
+# These are companies that repeatedly reached the generic priority fallback and
+# returned zero in the latest full run.  This is intentionally NOT the manual
+# recovery/deferred list: it is a zero-job coverage pass.  The old generic
+# fallback required an Ireland signal on the listing card BEFORE it would even
+# inspect the detail page.  Many modern boards omit location from the card or
+# virtualize it, creating false zeroes.  Batch21 reverses that order for this
+# bounded group: discover only structurally strong vacancy URLs first, then let
+# the detail page prove Republic of Ireland.
+BATCH21_ZERO_DEEP20 = {
+    "dynatrace",
+    "fti consulting",
+    "factset",
+    "msci",
+    "macquarie group",
+    "moody's",
+    "morningstar",
+    "refinitiv (lseg)",
+    "societe generale",
+    "splunk",
+    "edwards lifesciences",
+    "oliver wyman",
+    "protiviti",
+    "teva pharmaceuticals",
+    "cantor fitzgerald ireland",
+    "ubs",
+    "alvarez & marsal",
+    "slalom",
+    "akamai",
+    "atlassian",
+}
+
+
+def scrape_zero_deep_detail_batch21(company_name, url, session=None):
+    """Deep zero-company recovery.
+
+    Render the official careers page, collect strong individual-vacancy URLs
+    without requiring the listing card itself to expose a location, then fetch
+    those detail pages concurrently and retain only records whose DETAIL page
+    proves Republic of Ireland.  Belfast/Northern Ireland remain rejected by
+    the existing strict ROI helpers.
+
+    A small second-level crawl follows up to four obvious first-party job-search
+    links when the supplied career URL is merely a corporate landing page.  It
+    never crawls arbitrary navigation and never emits a result solely because a
+    listing/search page says Ireland.
+    """
+    if not HAS_PLAYWRIGHT:
+        print(f"      [zero-deep21] {company_name}: Playwright not installed")
+        return []
+
+    candidate_urls = set()
+    listing_urls = []
+    root_host = ""
+
+    def _same_org_host(a, b):
+        try:
+            ha = urllib.parse.urlparse(a).netloc.lower().split(":")[0]
+            hb = urllib.parse.urlparse(b).netloc.lower().split(":")[0]
+            if not ha or not hb:
+                return False
+            # careers.foo.com / jobs.foo.com / apply.foo.com are considered
+            # same organisation when their registrable tail matches.
+            ta = ".".join(ha.split(".")[-2:])
+            tb = ".".join(hb.split(".")[-2:])
+            return ta == tb
+        except Exception:
+            return False
+
+    def _collect(page, base_url):
+        nonlocal root_host
+        try:
+            root_host = urllib.parse.urlparse(base_url).netloc.lower()
+        except Exception:
+            pass
+        anchors = page.locator("a[href]")
+        count = min(anchors.count(), 6000)
+        for i in range(count):
+            a = anchors.nth(i)
+            try:
+                raw = a.get_attribute("href") or ""
+                href = urllib.parse.urljoin(page.url, raw).split("#")[0]
+                txt = (_browser_text(a) or "").strip()
+            except Exception:
+                continue
+            if not href or href.startswith(("mailto:", "tel:", "javascript:")):
+                continue
+            if not _same_org_host(url, href):
+                continue
+            low = href.lower()
+            if _strong_job_detail_url(href):
+                if not re.search(r"/(?:saved-jobs?|job-alert|talent-community|login|signin|privacy|terms)(?:/|$)", low):
+                    candidate_urls.add(href)
+                    if len(candidate_urls) >= 180:
+                        break
+                continue
+            # Corporate landing pages often link once to the actual ATS search.
+            # Follow only obvious job-search/list-all destinations and keep the
+            # fan-out tiny so this remains a production-safe bounded fallback.
+            if len(listing_urls) < 8 and re.search(
+                r"\b(?:search jobs?|view all jobs?|job search|open positions?|current opportunities|vacancies)\b",
+                txt,
+                re.I,
+            ):
+                if re.search(r"(?:job|jobs|career|careers|vacanc|position|opportun)", low, re.I):
+                    listing_urls.append(href)
+
+    try:
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch(headless=True, args=["--disable-http2"])
+            page = browser.new_page(
+                viewport={"width": 1440, "height": 1000},
+                locale="en-IE",
+                timezone_id="Europe/Dublin",
+            )
+            page.goto(url, wait_until="domcontentloaded", timeout=35000)
+            page.wait_for_timeout(1400)
+            for consent_text in ("Accept all", "Accept All", "I agree", "Accept", "Allow all", "Got it", "OK"):
+                try:
+                    btn = page.get_by_role("button", name=consent_text, exact=False)
+                    if btn.count():
+                        btn.first.click(timeout=1200)
+                        page.wait_for_timeout(350)
+                        break
+                except Exception:
+                    pass
+            for _ in range(7):
+                page.mouse.wheel(0, 5000)
+                page.wait_for_timeout(450)
+            _collect(page, page.url)
+
+            # If the supplied URL is a careers landing page rather than the
+            # actual board, inspect a few first-party "Search jobs" links.
+            for next_url in list(dict.fromkeys(listing_urls))[:4]:
+                if len(candidate_urls) >= 120:
+                    break
+                try:
+                    page.goto(next_url, wait_until="domcontentloaded", timeout=30000)
+                    page.wait_for_timeout(1100)
+                    for _ in range(5):
+                        page.mouse.wheel(0, 5000)
+                        page.wait_for_timeout(400)
+                    _collect(page, page.url)
+                except Exception:
+                    continue
+            browser.close()
+    except Exception as e:
+        print(f"      [zero-deep21] {company_name}: rendered discovery failed: {e}")
+        return []
+
+    urls = list(candidate_urls)[:180]
+    print(f"      [zero-deep21] {company_name}: discovered {len(urls)} strong vacancy detail URLs")
+    if not urls:
+        return []
+
+    results = {}
+
+    def _fetch_one(u):
+        try:
+            r = requests.get(
+                u,
+                headers={**HEADERS, "Accept": "text/html,application/xhtml+xml", "Accept-Language": "en-IE,en;q=0.9"},
+                timeout=8,
+                allow_redirects=True,
+            )
+            if r.status_code >= 400:
+                return None
+            meta = _extract_job_detail_metadata_from_html(r.text, r.url, company_name)
+            meta["final_url"] = r.url
+            if not meta.get("verified") or not _strict_roi_job_evidence(meta):
+                return None
+            title = _clean_detail_page_title(meta.get("title"), company_name)
+            if not title or _looks_like_bad_generic_title(title):
+                return None
+            loc = str(meta.get("location") or "")
+            desc = str(meta.get("description") or "")
+            posted_text = str(meta.get("posted_text") or "").strip() or "Unknown"
+            sponsorship, snippet = classify_sponsorship(desc[:12000])
+            return {
+                "company": company_name,
+                "title": title[:300],
+                "location": loc if is_republic_of_ireland_location(loc) else "Republic of Ireland",
+                "posted_text": posted_text,
+                "posted_days_ago": parse_posted_text(posted_text),
+                "employment_type": normalize_employment_type(meta.get("employment_type"), title),
+                "url": r.url,
+                "source": "zero_deep_detail_batch21",
+                "visa_sponsorship": sponsorship,
+                "visa_snippet": snippet,
+            }
+        except Exception:
+            return None
+
+    pool = ThreadPoolExecutor(max_workers=min(16, max(1, len(urls))))
+    try:
+        futs = [pool.submit(_fetch_one, u) for u in urls]
+        for fut in as_completed(futs):
+            try:
+                job = fut.result()
+            except Exception:
+                job = None
+            if job:
+                results[job["url"].rstrip("/").lower()] = job
+    finally:
+        pool.shutdown(wait=False)
+
+    print(f"      [zero-deep21] {company_name}: {len(results)} verified Republic-of-Ireland vacancies")
+    return list(results.values())
+
 def scrape_priority_sheet2_generic(company_name, url, session=None):
     """Generic Ireland-first browser fallback for selected high-priority companies
     from the user's Sheet 2. It does not change the existing company/platform
@@ -12501,6 +12711,7 @@ def scrape_axa_ireland_friend(session):
 
 
 def main():
+    print("=== TARGETED_DIRECT_BATCH_21_ZERO_DEEP20 ACTIVE: 20 zero-job companies use deep rendered vacancy discovery + strict detail-page ROI verification; manual recovery queue untouched ===")
     print("=== TARGETED_DIRECT_BATCH_20_ZERO_ONLY_BULK_RECOVERY ACTIVE: zero-company focus only; multi-term Workday detail verification + direct Phenom Haleon/BMS + rendered AXA/DXC; manual queue untouched ===")
     print("=== TARGETED_DIRECT_BATCH_19_SPEED_PROFILE ACTIVE: browser workers 8 + HTTP workers 24 + 6h positive cache + 1h zero cache; Workday workers kept conservative; coverage/ROI rules unchanged ===")
     print("=== TARGETED_DIRECT_BATCH_18_BULK_FIXES ACTIVE: Qualcomm + NXP + Zendesk + Rockwell + Red Hat + Broadcom/VMware detail-verified Workday; Cook iCIMS POST; Syneos rendered; Haleon/Schneider/DXC/BMS sitemap fallbacks ===")
@@ -13559,6 +13770,14 @@ def main():
         matched_entries[company_name] = entry
 
         def make_priority_task(name=company_name, u=entry["url"]):
+            if name.strip().lower() in BATCH21_ZERO_DEEP20:
+                return lambda: cached_browser_scrape(
+                    browser_cache,
+                    f"{name}::zero_deep_batch21_v1",
+                    lambda: scrape_zero_deep_detail_batch21(name, u, session),
+                    0,
+                    name,
+                )
             return lambda: cached_browser_scrape(
                 browser_cache,
                 name,
@@ -13576,6 +13795,10 @@ def main():
     )
     if priority_entries:
         print("  -> " + ", ".join(e["company"] for e in priority_entries))
+    _batch21_deep_queued = [e["company"] for e in priority_entries if e["company"].strip().lower() in BATCH21_ZERO_DEEP20]
+    print(f"=== Batch21 zero-deep recovery: {len(_batch21_deep_queued)}/{len(BATCH21_ZERO_DEEP20)} zero-job targets queued with fresh cache ===")
+    if _batch21_deep_queued:
+        print("  -> " + ", ".join(_batch21_deep_queued))
 
 
     _FINAL_DEFERRED_COMPANIES = {
