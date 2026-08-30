@@ -12,7 +12,7 @@
         "source": "apple_html",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-30T19:45:51.123232+00:00",
         "posted_age_known": true
       },
@@ -10536,8 +10536,8 @@
   },
   "Bain & Company": {
     "jobs": [],
-    "checked_at": 1788119123.5943434,
-    "consecutive_failures": 142
+    "checked_at": 1788123678.3140626,
+    "consecutive_failures": 143
   },
   "FTI Consulting": {
     "jobs": [],
@@ -11108,8 +11108,8 @@
   },
   "Morgan Stanley": {
     "jobs": [],
-    "checked_at": 1788118919.6748757,
-    "consecutive_failures": 157
+    "checked_at": 1788123637.3410945,
+    "consecutive_failures": 158
   },
   "Moody's": {
     "jobs": [],
@@ -11206,13 +11206,13 @@
   },
   "Alkermes": {
     "jobs": [],
-    "checked_at": 1788119123.8909907,
-    "consecutive_failures": 154
+    "checked_at": 1788123669.3974404,
+    "consecutive_failures": 155
   },
   "Visa": {
     "jobs": [],
-    "checked_at": 1788118919.1405873,
-    "consecutive_failures": 153
+    "checked_at": 1788123636.1221476,
+    "consecutive_failures": 154
   },
   "Boehringer Ingelheim": {
     "jobs": [],
@@ -11231,13 +11231,13 @@
   },
   "Bruker": {
     "jobs": [],
-    "checked_at": 1788119123.7159371,
-    "consecutive_failures": 153
+    "checked_at": 1788123666.3442125,
+    "consecutive_failures": 154
   },
   "Biotronik": {
     "jobs": [],
-    "checked_at": 1788119126.7109764,
-    "consecutive_failures": 153
+    "checked_at": 1788123678.4363546,
+    "consecutive_failures": 154
   },
   "Carbery Group": {
     "jobs": [],
@@ -11854,8 +11854,8 @@
   },
   "Smurfit Westrock": {
     "jobs": [],
-    "checked_at": 1788119131.6718585,
-    "consecutive_failures": 148
+    "checked_at": 1788123689.5652285,
+    "consecutive_failures": 149
   },
   "Stena Line Ireland": {
     "jobs": [],
@@ -14446,8 +14446,8 @@
   },
   "Tesco Ireland::batch_dedicated_v1": {
     "jobs": [],
-    "checked_at": 1788118912.2221978,
-    "consecutive_failures": 110
+    "checked_at": 1788123636.2139435,
+    "consecutive_failures": 111
   },
   "AstraZeneca::batch_dedicated_v1": {
     "jobs": [
@@ -15239,7 +15239,7 @@
         "source": "novartis_first_party",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-30T19:45:51.123232+00:00",
         "posted_age_known": false
       },
@@ -15445,7 +15445,7 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1788099598.9073694,
+    "checked_at": 1788123697.6535947,
     "consecutive_failures": 0
   },
   "Tata Consultancy Services (TCS)::friend_logic_v1": {
@@ -17229,8 +17229,8 @@
   },
   "Coca-Cola HBC Ireland::friend_nonlive_batch10_v1": {
     "jobs": [],
-    "checked_at": 1788119078.895423,
-    "consecutive_failures": 99
+    "checked_at": 1788123673.2325566,
+    "consecutive_failures": 100
   },
   "Agilent Technologies::friend_nonlive_batch10_v1": {
     "jobs": [
@@ -17416,8 +17416,8 @@
   },
   "Heineken Ireland::friend_next4_v1": {
     "jobs": [],
-    "checked_at": 1788118913.6991806,
-    "consecutive_failures": 99
+    "checked_at": 1788123636.9365335,
+    "consecutive_failures": 100
   },
   "VHI Healthcare::friend_next4_v1": {
     "jobs": [
@@ -30782,8 +30782,8 @@
   },
   "Energia Group::targeted_direct_batch5_multi_v1": {
     "jobs": [],
-    "checked_at": 1788118908.6769266,
-    "consecutive_failures": 21
+    "checked_at": 1788123634.5572686,
+    "consecutive_failures": 22
   },
   "WuXi Biologics::targeted_direct_batch5_multi_v1": {
     "jobs": [
@@ -31014,8 +31014,8 @@
   },
   "Medpace::targeted_direct_batch8_bulk_v1": {
     "jobs": [],
-    "checked_at": 1788118907.7002764,
-    "consecutive_failures": 19
+    "checked_at": 1788123634.922414,
+    "consecutive_failures": 20
   },
   "ASML::targeted_direct_batch8_bulk_v1": {
     "jobs": [
@@ -31472,8 +31472,8 @@
   },
   "Uisce Éireann (Irish Water)::targeted_direct_batch9_bulk_v1": {
     "jobs": [],
-    "checked_at": 1788118918.4269342,
-    "consecutive_failures": 19
+    "checked_at": 1788123649.230082,
+    "consecutive_failures": 20
   },
   "GlaxoSmithKline (GSK)::targeted_direct_batch9_bulk_v1": {
     "jobs": [
@@ -31499,18 +31499,18 @@
   },
   "Micron Technology::targeted_direct_batch10_bulk_v1": {
     "jobs": [],
-    "checked_at": 1788118907.6559398,
-    "consecutive_failures": 16
+    "checked_at": 1788123634.620111,
+    "consecutive_failures": 17
   },
   "Slack::targeted_direct_batch10_bulk_v1": {
     "jobs": [],
-    "checked_at": 1788118911.7053885,
-    "consecutive_failures": 16
+    "checked_at": 1788123635.6882496,
+    "consecutive_failures": 17
   },
   "Box::targeted_direct_batch10_bulk_v1": {
     "jobs": [],
-    "checked_at": 1788118908.432845,
-    "consecutive_failures": 16
+    "checked_at": 1788123634.9711986,
+    "consecutive_failures": 17
   },
   "Coloplast::targeted_direct_batch9_bulk_v1": {
     "jobs": [
@@ -34496,23 +34496,23 @@
   },
   "Texas Instruments::targeted_direct_batch11_bulk_v1": {
     "jobs": [],
-    "checked_at": 1788118908.094053,
-    "consecutive_failures": 15
+    "checked_at": 1788123634.783889,
+    "consecutive_failures": 16
   },
   "Nokia::targeted_direct_batch11_bulk_v1": {
     "jobs": [],
-    "checked_at": 1788118909.018512,
-    "consecutive_failures": 15
+    "checked_at": 1788123636.0148015,
+    "consecutive_failures": 16
   },
   "Boehringer Ingelheim::targeted_direct_batch11_bulk_v1": {
     "jobs": [],
-    "checked_at": 1788118909.102155,
-    "consecutive_failures": 15
+    "checked_at": 1788123636.2726958,
+    "consecutive_failures": 16
   },
   "SentinelOne": {
     "jobs": [],
-    "checked_at": 1788118907.040812,
-    "consecutive_failures": 14
+    "checked_at": 1788123633.9468465,
+    "consecutive_failures": 15
   },
   "Tenable": {
     "jobs": [
@@ -37002,9 +37002,25 @@
     "consecutive_failures": 0
   },
   "Syneos Health::targeted_bulk_batch18_v1": {
-    "jobs": [],
-    "checked_at": 1788118915.0119095,
-    "consecutive_failures": 5
+    "jobs": [
+      {
+        "company": "Syneos Health",
+        "title": "Single Sponsor Associate Clinical Project Director (Program Manager) - 3 days in the Dublin office",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://www.syneoshealth.com/careers/jobs/18165349-single-sponsor-associate-clinical-project-director-program-manager-3-days-in-the-dublin-office",
+        "source": "batch26_syneos_verified",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-30T21:01:53.642452+00:00",
+        "posted_age_known": false
+      }
+    ],
+    "checked_at": 1788123639.066562,
+    "consecutive_failures": 0
   },
   "Red Hat::targeted_bulk_batch18_v1": {
     "jobs": [
@@ -38013,7 +38029,7 @@
         "source": "arcadis_ireland_newbatch",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-30T19:45:51.123232+00:00",
         "posted_age_known": false
       },
@@ -38284,8 +38300,8 @@
   },
   "Qualcomm::zero_only_batch20_v1": {
     "jobs": [],
-    "checked_at": 1788118921.1359446,
-    "consecutive_failures": 3
+    "checked_at": 1788123638.0864565,
+    "consecutive_failures": 4
   },
   "Revvity (PerkinElmer)::zero_only_batch20_v1": {
     "jobs": [
@@ -38305,31 +38321,16 @@
         "posted_age_known": true
       }
     ],
-    "checked_at": 1788099559.4662228,
+    "checked_at": 1788123644.874098,
     "consecutive_failures": 0
   },
   "NXP Semiconductors::zero_only_batch20_v1": {
     "jobs": [],
-    "checked_at": 1788118954.245899,
-    "consecutive_failures": 3
+    "checked_at": 1788123664.34787,
+    "consecutive_failures": 4
   },
   "Haleon::zero_only_batch20_v1": {
     "jobs": [
-      {
-        "company": "Haleon",
-        "title": "Packaging Operator (Fixed Term)",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Contract",
-        "url": "https://careers.haleon.com/careers/job/563705892659175",
-        "source": "haleon_batch20_rendered",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-30T14:20:26.622749+00:00",
-        "posted_age_known": false
-      },
       {
         "company": "Haleon",
         "title": "Qualified Person",
@@ -38344,13 +38345,43 @@
         "new_since_last_check": false,
         "first_seen_at": "2026-08-30T14:20:26.622749+00:00",
         "posted_age_known": false
+      },
+      {
+        "company": "Haleon",
+        "title": "Packaging Operator (Fixed Term)",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Contract",
+        "url": "https://careers.haleon.com/careers/job/563705892659175",
+        "source": "haleon_batch20_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-30T14:20:26.622749+00:00",
+        "posted_age_known": false
       }
     ],
-    "checked_at": 1788099589.7924588,
+    "checked_at": 1788123679.1361723,
     "consecutive_failures": 0
   },
   "Bristol Myers Squibb::zero_only_batch20_v1": {
     "jobs": [
+      {
+        "company": "Bristol Myers Squibb",
+        "title": "Manager, PDS BI&T",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jobs.bms.com/careers/job/137482848537",
+        "source": "bms_batch20_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-30T14:20:26.622749+00:00",
+        "posted_age_known": false
+      },
       {
         "company": "Bristol Myers Squibb",
         "title": "Senior Manager, Qualified Person",
@@ -38398,36 +38429,21 @@
       },
       {
         "company": "Bristol Myers Squibb",
-        "title": "Senior Manager, Serialization Data Operations",
+        "title": "Senior Specialist, PDS BI&T",
         "location": "Ireland",
         "posted_text": "Unknown",
         "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
-        "url": "https://jobs.bms.com/careers/job/137482171896",
+        "url": "https://jobs.bms.com/careers/job/137483168948",
         "source": "bms_batch20_rendered",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-30T14:20:26.622749+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Bristol Myers Squibb",
-        "title": "Manager, PDS BI&T",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://jobs.bms.com/careers/job/137482848537",
-        "source": "bms_batch20_rendered",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-30T14:20:26.622749+00:00",
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-30T21:01:53.642452+00:00",
         "posted_age_known": false
       }
     ],
-    "checked_at": 1788099599.5167124,
+    "checked_at": 1788123677.9289007,
     "consecutive_failures": 0
   },
   "Edwards Lifesciences::zero_deep_batch21_v1": {
@@ -38457,8 +38473,8 @@
   },
   "Akamai::zero_force20_batch22_v1": {
     "jobs": [],
-    "checked_at": 1788119129.011928,
-    "consecutive_failures": 3
+    "checked_at": 1788123676.6137233,
+    "consecutive_failures": 4
   },
   "Alvarez & Marsal::zero_force20_batch22_v1": {
     "jobs": [],
@@ -38467,58 +38483,58 @@
   },
   "Edwards Lifesciences::zero_force20_batch22_v1": {
     "jobs": [],
-    "checked_at": 1788119133.4483168,
-    "consecutive_failures": 3
+    "checked_at": 1788123688.8508751,
+    "consecutive_failures": 4
   },
   "Atlassian::zero_force20_batch22_v1": {
     "jobs": [],
-    "checked_at": 1788119133.8827674,
-    "consecutive_failures": 3
+    "checked_at": 1788123684.5603893,
+    "consecutive_failures": 4
   },
   "Dynatrace::zero_force20_batch22_v1": {
     "jobs": [],
-    "checked_at": 1788119131.9853268,
-    "consecutive_failures": 3
+    "checked_at": 1788123690.0759661,
+    "consecutive_failures": 4
   },
   "FactSet::zero_force20_batch22_v1": {
     "jobs": [],
-    "checked_at": 1788119136.9017584,
-    "consecutive_failures": 3
+    "checked_at": 1788123695.180807,
+    "consecutive_failures": 4
   },
   "Morningstar::zero_force20_batch22_v1": {
     "jobs": [],
-    "checked_at": 1788119139.3892806,
-    "consecutive_failures": 3
+    "checked_at": 1788123696.1823924,
+    "consecutive_failures": 4
   },
   "FTI Consulting::zero_force20_batch22_v1": {
     "jobs": [],
-    "checked_at": 1788119138.0617778,
-    "consecutive_failures": 3
+    "checked_at": 1788123701.9817417,
+    "consecutive_failures": 4
   },
   "Moody's::zero_force20_batch22_v1": {
     "jobs": [],
-    "checked_at": 1788119144.188124,
-    "consecutive_failures": 3
+    "checked_at": 1788123704.3824365,
+    "consecutive_failures": 4
   },
   "Oliver Wyman::zero_force20_batch22_v1": {
     "jobs": [],
-    "checked_at": 1788119143.3917341,
-    "consecutive_failures": 3
+    "checked_at": 1788123705.1665149,
+    "consecutive_failures": 4
   },
   "Refinitiv (LSEG)::zero_force20_batch22_v1": {
     "jobs": [],
-    "checked_at": 1788119145.7605033,
-    "consecutive_failures": 3
+    "checked_at": 1788123708.8361003,
+    "consecutive_failures": 4
   },
   "MSCI::zero_force20_batch22_v1": {
     "jobs": [],
-    "checked_at": 1788119148.2333896,
-    "consecutive_failures": 3
+    "checked_at": 1788123708.176818,
+    "consecutive_failures": 4
   },
   "Protiviti::zero_force20_batch22_v1": {
     "jobs": [],
-    "checked_at": 1788119147.4538856,
-    "consecutive_failures": 3
+    "checked_at": 1788123709.7100482,
+    "consecutive_failures": 4
   },
   "Societe Generale::zero_force20_batch22_v1": {
     "jobs": [],
@@ -38527,122 +38543,442 @@
   },
   "Macquarie Group::zero_force20_batch22_v1": {
     "jobs": [],
-    "checked_at": 1788119151.0847764,
-    "consecutive_failures": 3
+    "checked_at": 1788123711.5306032,
+    "consecutive_failures": 4
   },
   "Splunk::zero_force20_batch22_v1": {
     "jobs": [],
-    "checked_at": 1788119147.4302223,
-    "consecutive_failures": 3
+    "checked_at": 1788123711.9624615,
+    "consecutive_failures": 4
   },
   "Teva Pharmaceuticals::zero_force20_batch22_v1": {
     "jobs": [],
-    "checked_at": 1788119150.2821202,
-    "consecutive_failures": 3
+    "checked_at": 1788123713.5732076,
+    "consecutive_failures": 4
   },
   "Kepak Group::targeted_direct_batch7_multi_v1": {
     "jobs": [],
-    "checked_at": 1788118906.976758,
-    "consecutive_failures": 1
-  },
-  "Cook Medical::targeted_bulk_batch18_v1": {
-    "jobs": [],
-    "checked_at": 1788118906.9912515,
+    "checked_at": 1788123633.7736957,
     "consecutive_failures": 1
   },
   "An Post::targeted_direct_batch7_multi_v1": {
     "jobs": [],
-    "checked_at": 1788118907.6821246,
+    "checked_at": 1788123634.328941,
     "consecutive_failures": 1
   },
   "Coillte::targeted_direct_batch1_v1": {
     "jobs": [],
-    "checked_at": 1788118909.971062,
+    "checked_at": 1788123634.8287919,
     "consecutive_failures": 1
   },
+  "Rockwell Automation::zero_only_batch20_v1": {
+    "jobs": [
+      {
+        "company": "Rockwell Automation",
+        "title": "Process Simulation Engineer",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://rockwellautomation.wd1.myworkdayjobs.com/en-US/External_Rockwell_Automation/job/Cork-Ireland/Process-Simulation-Engineer_R26-3156",
+        "source": "batch26_rockwell_verified",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-30T21:01:53.642452+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Rockwell Automation",
+        "title": "ENTERPRISE SOFTWARE SOLUTION CONSULTANT",
+        "location": "Cork, Ireland | Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://rockwellautomation.wd1.myworkdayjobs.com/en-GB/External_Rockwell_Automation/job/ENTERPRISE-SOFTWARE-SOLUTION-CONSULTANT_R26-2738",
+        "source": "batch26_rockwell_verified",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-30T21:01:53.642452+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Rockwell Automation",
+        "title": "Sales Executive, Information Software Solutions",
+        "location": "Cork, Ireland | Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://rockwellautomation.wd1.myworkdayjobs.com/en-GB/External_Rockwell_Automation/job/Sales-Executive--Information-Software-Solutions_R26-637",
+        "source": "batch26_rockwell_verified",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-30T21:01:53.642452+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Rockwell Automation",
+        "title": "Sales Executive, Secure Digital Operations",
+        "location": "Cork, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://rockwellautomation.wd1.myworkdayjobs.com/en-GB/External_Rockwell_Automation/job/Sales-Executive--Secure-Digital-Operations_R26-559",
+        "source": "batch26_rockwell_verified",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-30T21:01:53.642452+00:00",
+        "posted_age_known": false
+      }
+    ],
+    "checked_at": 1788123635.1007407,
+    "consecutive_failures": 0
+  },
+  "Willis Towers Watson (WTW)": {
+    "jobs": [
+      {
+        "company": "Willis Towers Watson (WTW)",
+        "title": "Compensation Survey Consultant",
+        "location": "Dublin, County Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.wtwco.com/jobs/compensation-survey-consultant-dublin-county-dublin-ireland",
+        "source": "batch26_wtw_verified",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-25T17:26:48.221598+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Willis Towers Watson (WTW)",
+        "title": "Operations Leader Life and Pensions",
+        "location": "Dublin, County Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.wtwco.com/jobs/operations-lead-life-and-pensions-dublin-county-dublin-ireland",
+        "source": "batch26_wtw_verified",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-30T21:01:53.642452+00:00",
+        "posted_age_known": false
+      }
+    ],
+    "checked_at": 1788123635.2012594,
+    "consecutive_failures": 0
+  },
   "Broadcom::zero_only_batch20_v1": {
+    "jobs": [
+      {
+        "company": "Broadcom",
+        "title": "Technical Support Engineer",
+        "location": "Cork, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://broadcom.wd1.myworkdayjobs.com/en-US/External_Career/job/Technical-Support-Engineer_R026021-1",
+        "source": "batch26_broadcom_verified",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-30T21:01:53.642452+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Broadcom",
+        "title": "Staff Security Engineer",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://broadcom.wd1.myworkdayjobs.com/External_Career/job/IRL-Cork-Kavanagh-House/Staff-Security-Engineer_R026554",
+        "source": "batch26_broadcom_verified",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-03T16:04:16.091222+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Broadcom",
+        "title": "Account Executive",
+        "location": "Ireland (Remote)",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://broadcom.wd1.myworkdayjobs.com/External_Career/job/IRL-Remote-Location/Account-Executive_R026496",
+        "source": "batch26_broadcom_verified",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-30T21:01:53.642452+00:00",
+        "posted_age_known": false
+      }
+    ],
+    "checked_at": 1788123635.2869632,
+    "consecutive_failures": 0
+  },
+  "Avolon": {
     "jobs": [],
-    "checked_at": 1788118921.9271207,
+    "checked_at": 1788123636.070214,
     "consecutive_failures": 1
   },
   "VMware (Broadcom)::zero_only_batch20_v1": {
     "jobs": [],
-    "checked_at": 1788118922.507383,
+    "checked_at": 1788123637.5886319,
     "consecutive_failures": 1
   },
   "QIAGEN::zero_only_batch20_v1": {
     "jobs": [],
-    "checked_at": 1788118922.7481751,
-    "consecutive_failures": 1
-  },
-  "Avolon": {
-    "jobs": [],
-    "checked_at": 1788118924.1252925,
-    "consecutive_failures": 1
-  },
-  "Rockwell Automation::zero_only_batch20_v1": {
-    "jobs": [],
-    "checked_at": 1788118941.132485,
-    "consecutive_failures": 1
-  },
-  "Goodbody::batch_dedicated_v1": {
-    "jobs": [],
-    "checked_at": 1788118998.5910306,
-    "consecutive_failures": 1
-  },
-  "Aldi Ireland::batch_dedicated_v2": {
-    "jobs": [],
-    "checked_at": 1788119012.9340146,
+    "checked_at": 1788123643.657095,
     "consecutive_failures": 1
   },
   "AXA Ireland::zero_only_batch20_v1": {
-    "jobs": [],
-    "checked_at": 1788119039.7529962,
-    "consecutive_failures": 1
+    "jobs": [
+      {
+        "company": "AXA Ireland",
+        "title": "Senior Compliance Analyst, Compliance & Regulatory Affairs",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.axa.com/careers-home/jobs/26067?lang=en-us",
+        "source": "batch26_axa_verified",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-30T21:01:53.642452+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "AXA Ireland",
+        "title": "Reserving Actuary, AFR",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.axa.com/careers-home/jobs/23604",
+        "source": "batch26_axa_verified",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-30T21:01:53.642452+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "AXA Ireland",
+        "title": "Specialist Capital Actuary",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.axa.com/careers-home/jobs/20957?lang=en-us",
+        "source": "batch26_axa_verified",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-30T21:01:53.642452+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "AXA Ireland",
+        "title": "Head of Technology & AI, APAC, Europe and ESS",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.axa.com/careers-home/jobs/24153",
+        "source": "batch26_axa_verified",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-30T21:01:53.642452+00:00",
+        "posted_age_known": false
+      }
+    ],
+    "checked_at": 1788123643.7188165,
+    "consecutive_failures": 0
   },
   "SMBC Aviation Capital::friend_nonlive_batch10_v1": {
     "jobs": [],
-    "checked_at": 1788119072.2385511,
+    "checked_at": 1788123648.393917,
     "consecutive_failures": 1
   },
-  "HP (Hewlett-Packard)::friend_next4_v1": {
-    "jobs": [],
-    "checked_at": 1788119081.3989966,
-    "consecutive_failures": 1
+  "Cook Medical::targeted_bulk_batch18_v1": {
+    "jobs": [
+      {
+        "company": "Cook Medical",
+        "title": "Director, Manufacturing Operations",
+        "location": "Limerick, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://emea-cookmedical.icims.com/jobs/19140/director%2C-manufacturing-operations/job?in_iframe=1",
+        "source": "batch26_cook_verified",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-30T21:01:53.642452+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Cook Medical",
+        "title": "Senior Research and Development Engineer",
+        "location": "Limerick, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://emea-cookmedical.icims.com/jobs/19125/senior-research-and-development-engineer/job?in_iframe=1",
+        "source": "batch26_cook_verified",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-30T21:01:53.642452+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Cook Medical",
+        "title": "Senior Regulatory Affairs Specialist",
+        "location": "Limerick, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://emea-cookmedical.icims.com/jobs/18959/senior-regulatory-affairs-specialist/job?in_iframe=1",
+        "source": "batch26_cook_verified",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-30T21:01:53.642452+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Cook Medical",
+        "title": "Team Lead, Quality Engineering",
+        "location": "Limerick, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://emea-cookmedical.icims.com/jobs/18964/team-lead%2C-quality-engineering/job?in_iframe=1",
+        "source": "batch26_cook_verified",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-30T21:01:53.642452+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Cook Medical",
+        "title": "Director, Manufacturing Systems",
+        "location": "Limerick, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://emea-cookmedical.icims.com/jobs/18847/director%2C-manufacturing-systems/job?in_iframe=1",
+        "source": "batch26_cook_verified",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-30T21:01:53.642452+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Cook Medical",
+        "title": "Senior Operations Analyst, Business Intelligence",
+        "location": "Limerick, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://emea-cookmedical.icims.com/jobs/18597/senior-operations-analyst%2C-business-intelligence/job?in_iframe=1",
+        "source": "batch26_cook_verified",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-30T21:01:53.642452+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Cook Medical",
+        "title": "Environmental, Health and Safety Administrative Coordinator",
+        "location": "Limerick, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://emea-cookmedical.icims.com/jobs/18558/environmental%2C-health-and-safety-administrative-coordinator/job?in_iframe=1",
+        "source": "batch26_cook_verified",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-30T21:01:53.642452+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Cook Medical",
+        "title": "Environmental, Health and Safety Specialist",
+        "location": "Limerick, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://emea-cookmedical.icims.com/jobs/18355/environmental%2C-health-and-safety-specialist/job?in_iframe=1",
+        "source": "batch26_cook_verified",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-30T21:01:53.642452+00:00",
+        "posted_age_known": false
+      }
+    ],
+    "checked_at": 1788123652.5552433,
+    "consecutive_failures": 0
   },
-  "Willis Towers Watson (WTW)": {
+  "Goodbody::batch_dedicated_v1": {
     "jobs": [],
-    "checked_at": 1788119115.1791434,
-    "consecutive_failures": 1
-  },
-  "Forvis Mazars Ireland::next_manual_batch_v2": {
-    "jobs": [],
-    "checked_at": 1788119115.3926582,
+    "checked_at": 1788123653.8289397,
     "consecutive_failures": 1
   },
   "ESB (Electricity Supply Board)": {
     "jobs": [],
-    "checked_at": 1788119123.1603289,
+    "checked_at": 1788123654.446972,
+    "consecutive_failures": 1
+  },
+  "Aldi Ireland::batch_dedicated_v2": {
+    "jobs": [],
+    "checked_at": 1788123659.6994526,
+    "consecutive_failures": 1
+  },
+  "Forvis Mazars Ireland::next_manual_batch_v2": {
+    "jobs": [],
+    "checked_at": 1788123666.885644,
     "consecutive_failures": 1
   },
   "Boston Consulting Group (BCG)": {
     "jobs": [],
-    "checked_at": 1788119128.7877696,
+    "checked_at": 1788123685.3588555,
     "consecutive_failures": 1
   },
   "Cantor Fitzgerald Ireland::zero_force20_batch22_v1": {
     "jobs": [],
-    "checked_at": 1788119132.863572,
+    "checked_at": 1788123686.2337112,
+    "consecutive_failures": 1
+  },
+  "HP (Hewlett-Packard)::friend_next4_v1": {
+    "jobs": [],
+    "checked_at": 1788123687.7256293,
     "consecutive_failures": 1
   },
   "Slalom::zero_force20_batch22_v1": {
     "jobs": [],
-    "checked_at": 1788119146.1916227,
+    "checked_at": 1788123707.0900362,
     "consecutive_failures": 1
   },
   "UBS::zero_force20_batch22_v1": {
     "jobs": [],
-    "checked_at": 1788119150.8032038,
+    "checked_at": 1788123713.3625236,
     "consecutive_failures": 1
   }
 }
