@@ -248,8 +248,8 @@ MANUAL_RECOVERY_CONFIRMED = {
 }
 MANUAL_RECOVERY_CONFIRMED_VERSION = 1
 
-BROWSER_SCRAPE_MAX_AGE_HOURS = 3  # only actually re-run a real browser scrape this often
-EMPTY_RESULT_MAX_AGE_HOURS = 0.5  # empty results retried much sooner — could be a real "no jobs",
+BROWSER_SCRAPE_MAX_AGE_HOURS = float(os.environ.get("POSITIVE_CACHE_HOURS", "6"))  # Batch19 speed: reuse proven positive routes during same-day iteration
+EMPTY_RESULT_MAX_AGE_HOURS = float(os.environ.get("ZERO_CACHE_HOURS", "1.0"))  # Batch19 speed: avoid hammering the same fresh zero every 30 minutes; still recheck much sooner than positives
 # or could be a one-time failure (crash, resource contention); don't lock in a failure for 3 hours
 PARALLEL_WORKERS = int(os.environ.get("SCRAPE_WORKERS", "10"))  # conservative — GitHub Actions'
 # free-tier runners have limited CPU/memory (~2 cores, 7GB RAM); too many simultaneous real
@@ -265,7 +265,7 @@ PARALLEL_WORKERS = int(os.environ.get("SCRAPE_WORKERS", "10"))  # conservative �
 # instances. Splitting into two separate pools means plain HTTP-only tasks (cheap, no Chrome)
 # get real concurrency, while browser-based tasks are capped lower so they don't collectively
 # exhaust the runner and starve whatever gets scheduled late.
-BROWSER_WORKERS = int(os.environ.get("BROWSER_WORKERS", "7"))   # real Chrome instances — kept
+BROWSER_WORKERS = int(os.environ.get("BROWSER_WORKERS", "8"))   # Batch19 speed: modestly higher browser parallelism
 # low deliberately; this is the resource-heavy pool that was causing the cascading timeouts.
 # Raised from 5 to 7 once the Sheet 2 list grew to 207 browser tasks sharing this pool — 5 was
 # too little throughput for that queue depth even with fair per-task timing (see the NOT REACHED
@@ -273,7 +273,7 @@ BROWSER_WORKERS = int(os.environ.get("BROWSER_WORKERS", "7"))   # real Chrome in
 # Microsoft/JPMorgan incident. Watch the NOT REACHED count in real logs — raise further if it's
 # still high and the runner isn't showing memory/CPU strain, lower if timeouts start clustering
 # again.
-HTTP_WORKERS = int(os.environ.get("HTTP_WORKERS", "15"))  # plain requests — cheap, can run
+HTTP_WORKERS = int(os.environ.get("HTTP_WORKERS", "24"))  # Batch19 speed: cheap HTTP/API work can safely run wider
 # with much higher concurrency than real browser tasks without risking the runner's memory
 OVERALL_BATCH_TIMEOUT_SECONDS = int(os.environ.get("BATCH_CEILING_SECONDS", "720"))  # 12 min —
 # a hard ceiling on the whole dedicated-scraper phase. Needed once per-task deadlines were
@@ -12252,7 +12252,257 @@ def scrape_nxp_ireland_current(session):
         session,
     )
 
+
+
+# === TARGETED_DIRECT_BATCH_20_ZERO_ONLY_BULK_RECOVERY ===
+# Focus only on companies currently returning zero jobs. Manual queue is untouched.
+# Shared Workday repair: search multiple Republic-of-Ireland city terms, then detail-verify ROI.
+
+def _workday_detail_verified_ireland_batch20(company_name, correct_url, session, max_pages_per_term=4):
+    m = WORKDAY_URL_RE.search(correct_url)
+    if not m:
+        return []
+    tenant, wd_shard, site = m.group(1), m.group(2), m.group(3)
+    api_base = f"https://{tenant}.{wd_shard}.myworkdayjobs.com/wday/cxs/{tenant}/{site}/jobs"
+    site_base = f"https://{tenant}.{wd_shard}.myworkdayjobs.com/{site}"
+    headers = workday_headers(tenant, wd_shard, site)
+    local = make_workday_session()
+    try:
+        local.get(f"https://{tenant}.{wd_shard}.myworkdayjobs.com/en-US/{site}", headers=headers, timeout=12)
+    except Exception:
+        pass
+
+    jobs, seen_paths = {}, set()
+    search_terms = ["Ireland", "Dublin", "Cork", "Limerick", "Galway", "Athlone", "Waterford"]
+    for term in search_terms:
+        offset, limit = 0, 20
+        for _ in range(max_pages_per_term):
+            resp, err = post_workday_variants(local, api_base, headers, {}, limit, offset, search_text=term)
+            if resp is None:
+                break
+            try:
+                data = resp.json()
+            except Exception:
+                break
+            postings = data.get("jobPostings") or []
+            if not postings:
+                break
+            for raw in postings:
+                path = raw.get("externalPath") or ""
+                if not path or path in seen_paths:
+                    continue
+                seen_paths.add(path)
+                detail_url = f"https://{tenant}.{wd_shard}.myworkdayjobs.com/wday/cxs/{tenant}/{site}{path}"
+                try:
+                    dr = local.get(detail_url, headers=headers, timeout=12)
+                    if dr.status_code != 200:
+                        continue
+                    dj = dr.json()
+                except Exception:
+                    continue
+                info = dj.get("jobPostingInfo") or {}
+                evidence = json.dumps(info, ensure_ascii=False)
+                if _ROI_NEGATIVE_RE.search(evidence) or not is_republic_of_ireland_location(evidence):
+                    continue
+                title = (info.get("title") or raw.get("title") or "").strip()
+                if not title or _looks_like_non_job_title(title):
+                    continue
+                loc = info.get("location") or info.get("locationsText") or "Ireland"
+                if isinstance(loc, (dict, list)):
+                    loc = "Ireland"
+                desc = info.get("jobDescription") or ""
+                sponsorship, snippet = classify_sponsorship(desc)
+                posted = info.get("postedOn") or raw.get("postedOn") or "Unknown"
+                public_url = site_base.rstrip("/") + path
+                jobs[public_url.lower()] = {
+                    "company": company_name, "title": title[:300], "location": str(loc),
+                    "posted_text": posted, "posted_days_ago": parse_posted_text(posted),
+                    "employment_type": normalize_employment_type(
+                        " ".join(str(x) for x in (raw.get("bulletFields") or [])), title),
+                    "url": public_url, "source": "workday_multi_term_detail_verified_ie",
+                    "visa_sponsorship": sponsorship, "visa_snippet": snippet,
+                }
+            offset += limit
+            total = int(data.get("total") or 0)
+            if offset >= total:
+                break
+    print(f"      [workday-batch20-multi-term] {company_name}: {len(jobs)} verified Republic-of-Ireland vacancies")
+    return list(jobs.values())
+
+def _phenom_known_domain_roi(company_name, domain, exact_path, session):
+    ref_num, rows = try_phenom_domain(domain, session, verbose=True, exact_path=exact_path)
+    if not rows:
+        return []
+    # First call only returns one widget page. Reuse the confirmed refNum and
+    # request a larger page directly so current Ireland roles are not missed.
+    try:
+        payload = {
+            "lang": "en_global", "deviceType": "desktop", "country": "global",
+            "pageName": "search-results", "size": 200, "from": 0,
+            "jobs": True, "counts": True,
+            "all_fields": ["category", "country", "city", "type"],
+            "clearAll": False, "jdsource": "facets", "isSliderEnable": False,
+            "pageId": "page20", "siteType": "external", "keywords": "",
+            "global": True, "selected_fields": {},
+            "sort": {"order": "desc", "field": "postedDate"},
+            "locationData": {}, "refNum": ref_num, "ddoKey": "refineSearch",
+        }
+        r = session.post(f"https://{domain}/widgets", json=payload,
+                         headers={"Content-Type": "application/json"}, timeout=20)
+        if r.status_code == 200:
+            rows = (r.json().get("refineSearch") or {}).get("data", {}).get("jobs", []) or rows
+    except Exception:
+        pass
+    out = []
+    for raw in rows:
+        job = normalize_phenom_job(company_name, domain, raw)
+        if not job:
+            continue
+        evidence = " ".join(str(job.get(k) or "") for k in ("location", "title", "url", "visa_snippet"))
+        if _ROI_NEGATIVE_RE.search(evidence) or not is_republic_of_ireland_location(evidence):
+            continue
+        if _looks_like_non_job_title(job.get("title") or ""):
+            continue
+        out.append(job)
+    print(f"      [phenom-batch20] {company_name}: {len(out)} verified Republic-of-Ireland vacancies")
+    return out
+
+def _rendered_zero_company_recovery(company_name, urls, href_regex, source_name, session, max_links=80):
+    if not HAS_PLAYWRIGHT:
+        return []
+    found = {}
+    try:
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch(headless=True, args=["--no-sandbox", "--disable-dev-shm-usage"])
+            page = browser.new_page(viewport={"width": 1400, "height": 1000}, locale="en-IE")
+            candidates = []
+            for url in urls:
+                try:
+                    page.goto(url, wait_until="domcontentloaded", timeout=30000)
+                    page.wait_for_timeout(2500)
+                    for _ in range(4):
+                        page.mouse.wheel(0, 1600)
+                        page.wait_for_timeout(500)
+                    for a in page.locator("a").all():
+                        try:
+                            href = a.get_attribute("href")
+                        except Exception:
+                            continue
+                        if not href:
+                            continue
+                        full = urllib.parse.urljoin(page.url, href).split("#")[0]
+                        if re.search(href_regex, full, re.I):
+                            candidates.append(full)
+                except Exception:
+                    continue
+            candidates = list(dict.fromkeys(candidates))[:max_links]
+            print(f"      [{source_name}] rendered discovery found {len(candidates)} candidate job links")
+            for full in candidates:
+                html = ""
+                body = ""
+                try:
+                    r = session.get(full, headers=HEADERS, timeout=12)
+                    if r.status_code == 200:
+                        html = r.text
+                        body = re.sub(r"\s+", " ", _html_to_text(html)).strip()
+                except Exception:
+                    pass
+                if not body:
+                    try:
+                        page.goto(full, wait_until="domcontentloaded", timeout=25000)
+                        page.wait_for_timeout(900)
+                        html = page.content()
+                        body = re.sub(r"\s+", " ", page.locator("body").inner_text()).strip()
+                    except Exception:
+                        continue
+                if _ROI_NEGATIVE_RE.search(body) or not is_republic_of_ireland_location(body):
+                    continue
+                title = ""
+                m = re.search(r"<h1[^>]*>(.*?)</h1>", html, re.I | re.S)
+                if m:
+                    title = re.sub(r"\s+", " ", _html_to_text(m.group(1))).strip()
+                if not title:
+                    mt = re.search(r"<title[^>]*>(.*?)</title>", html, re.I | re.S)
+                    if mt:
+                        title = re.sub(r"\s+", " ", _html_to_text(mt.group(1))).strip()
+                        title = re.sub(r"\s+[|–-].*$", "", title).strip()
+                if not title or _looks_like_non_job_title(title):
+                    continue
+                sponsorship, snippet = classify_sponsorship(body[:20000])
+                found[full.rstrip("/").lower()] = {
+                    "company": company_name, "title": title[:300],
+                    "location": "Ireland", "posted_text": "Unknown",
+                    "posted_days_ago": None,
+                    "employment_type": normalize_employment_type("", title),
+                    "url": full, "source": source_name,
+                    "visa_sponsorship": sponsorship, "visa_snippet": snippet,
+                }
+            browser.close()
+    except Exception as exc:
+        print(f"      [{source_name}] failed: {exc}")
+    print(f"      [{source_name}] {len(found)} verified Republic-of-Ireland vacancies")
+    return list(found.values())
+
+# Rebind the zero-company routes to the Batch-20 mechanisms.
+def scrape_qualcomm_ireland_batch18(session):
+    return _workday_detail_verified_ireland_batch20("Qualcomm", "https://qualcomm.wd12.myworkdayjobs.com/External", session)
+
+def scrape_nxp_ireland_batch18(session):
+    return _workday_detail_verified_ireland_batch20("NXP Semiconductors", "https://nxp.wd3.myworkdayjobs.com/careers", session)
+
+def scrape_rockwell_ireland_batch18(session):
+    return _workday_detail_verified_ireland_batch20("Rockwell Automation", "https://rockwellautomation.wd1.myworkdayjobs.com/External_Rockwell_Automation", session)
+
+def scrape_broadcom_ireland_batch18(session):
+    return _workday_detail_verified_ireland_batch20("Broadcom", "https://broadcom.wd1.myworkdayjobs.com/External_Career", session)
+
+def scrape_vmware_ireland_batch18(session):
+    rows = _workday_detail_verified_ireland_batch20("VMware (Broadcom)", "https://broadcom.wd1.myworkdayjobs.com/External_Career", session)
+    return [j for j in rows if re.search(r"\b(?:VMware|VCF|Cloud Foundation)\b",
+        " ".join(str(j.get(k) or "") for k in ("title", "url", "visa_snippet")), re.I)]
+
+def scrape_revvity_workday(session):
+    return _workday_detail_verified_ireland_batch20("Revvity (PerkinElmer)", "https://revvity.wd103.myworkdayjobs.com/External", session)
+
+def scrape_qiagen_ireland_direct(session):
+    return _workday_detail_verified_ireland_batch20("QIAGEN", "https://qiagen.wd502.myworkdayjobs.com/QIAGEN", session)
+
+def scrape_haleon_batch18(session):
+    jobs = _phenom_known_domain_roi("Haleon", "careers.haleon.com", "/careers?location=ireland", session)
+    if jobs:
+        return jobs
+    return _rendered_zero_company_recovery(
+        "Haleon",
+        ["https://careers.haleon.com/careers?query=Dungarvan",
+         "https://careers.haleon.com/careers?location=Ireland"],
+        r"careers\.haleon\.com/careers/job/\d+", "haleon_batch20_rendered", session, 60)
+
+def scrape_bms_batch18(session):
+    jobs = _phenom_known_domain_roi("Bristol Myers Squibb", "jobs.bms.com", "/careers?location=ireland", session)
+    if jobs:
+        return jobs
+    return _rendered_zero_company_recovery(
+        "Bristol Myers Squibb", ["https://jobs.bms.com/careers?location=ireland"],
+        r"jobs\.bms\.com/.+(?:job|careers/job)", "bms_batch20_rendered", session, 80)
+
+def scrape_dxc_batch18(session):
+    return _rendered_zero_company_recovery(
+        "DXC Technology",
+        ["https://careers.dxc.com/job-search-results/?location=Dublin%2C%20Ireland",
+         "https://careers.dxc.com/job-search-results/?location=Ireland"],
+        r"careers\.dxc\.com/job/\d+/", "dxc_batch20_rendered", session, 60)
+
+def scrape_axa_ireland_friend(session):
+    return _rendered_zero_company_recovery(
+        "AXA Ireland",
+        ["https://careers.axa.com/careers-home/jobs?location=Ireland",
+         "https://careers.axa.com/careers-home/jobs/locations"],
+        r"careers\.axa\.com/careers-home/jobs/\d+", "axa_batch20_rendered", session, 80)
+
+
 def main():
+    print("=== TARGETED_DIRECT_BATCH_20_ZERO_ONLY_BULK_RECOVERY ACTIVE: zero-company focus only; multi-term Workday detail verification + direct Phenom Haleon/BMS + rendered AXA/DXC; manual queue untouched ===")
+    print("=== TARGETED_DIRECT_BATCH_19_SPEED_PROFILE ACTIVE: browser workers 8 + HTTP workers 24 + 6h positive cache + 1h zero cache; Workday workers kept conservative; coverage/ROI rules unchanged ===")
     print("=== TARGETED_DIRECT_BATCH_18_BULK_FIXES ACTIVE: Qualcomm + NXP + Zendesk + Rockwell + Red Hat + Broadcom/VMware detail-verified Workday; Cook iCIMS POST; Syneos rendered; Haleon/Schneider/DXC/BMS sitemap fallbacks ===")
     print("=== TARGETED_DIRECT_BATCH_17_LARGE_ZERO_RECOVERY ACTIVE: Qualcomm + Roche + ResMed + Zendesk + Rockwell + Fiserv + BNY + Thermo Fisher + Broadcom/VMware + NXP current ATS routes; manual queue untouched ===")
     print("=== TARGETED_DIRECT_BATCH_16_BULK_FALSE_ZERO ACTIVE: Red Hat Workday + Goldman Oracle + Cook iCIMS hashed route + Schneider rendered + Haleon rendered + Syneos re-enabled; manual queue untouched ===")
@@ -12905,10 +13155,14 @@ def main():
             # dedicated result cannot be shadowed by a stale generic verdict.
             _key = name.strip().lower()
             if _key in {
-                "qualcomm", "nxp semiconductors", "zendesk", "rockwell automation",
-                "red hat", "broadcom", "vmware (broadcom)", "cook medical",
-                "syneos health", "haleon", "schneider electric", "dxc technology",
-                "bristol myers squibb"
+                "qualcomm", "nxp semiconductors", "rockwell automation",
+                "broadcom", "vmware (broadcom)", "revvity (perkinelmer)", "qiagen",
+                "haleon", "bristol myers squibb", "dxc technology", "axa ireland"
+            }:
+                cache_key = f"{name}::zero_only_batch20_v1"
+            elif _key in {
+                "zendesk", "red hat", "cook medical", "syneos health",
+                "schneider electric"
             }:
                 cache_key = f"{name}::targeted_bulk_batch18_v1"
             elif _key in {
