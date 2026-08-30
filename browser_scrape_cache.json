@@ -10285,8 +10285,8 @@
   },
   "Alvarez & Marsal": {
     "jobs": [],
-    "checked_at": 1788093325.5171497,
-    "consecutive_failures": 139
+    "checked_at": 1788099608.9507527,
+    "consecutive_failures": 140
   },
   "Coca-Cola HBC Ireland": {
     "jobs": [],
@@ -10521,8 +10521,8 @@
   },
   "Bain & Company": {
     "jobs": [],
-    "checked_at": 1788093337.727034,
-    "consecutive_failures": 139
+    "checked_at": 1788099618.382379,
+    "consecutive_failures": 140
   },
   "FTI Consulting": {
     "jobs": [],
@@ -11093,8 +11093,8 @@
   },
   "Morgan Stanley": {
     "jobs": [],
-    "checked_at": 1788093252.3947632,
-    "consecutive_failures": 154
+    "checked_at": 1788099554.4776132,
+    "consecutive_failures": 155
   },
   "Moody's": {
     "jobs": [],
@@ -11186,18 +11186,18 @@
   },
   "Akamai": {
     "jobs": [],
-    "checked_at": 1788093328.981104,
-    "consecutive_failures": 126
+    "checked_at": 1788099611.0402052,
+    "consecutive_failures": 127
   },
   "Alkermes": {
     "jobs": [],
-    "checked_at": 1788093335.337639,
-    "consecutive_failures": 151
+    "checked_at": 1788099617.677536,
+    "consecutive_failures": 152
   },
   "Visa": {
     "jobs": [],
-    "checked_at": 1788093250.8405461,
-    "consecutive_failures": 150
+    "checked_at": 1788099553.7574346,
+    "consecutive_failures": 151
   },
   "Boehringer Ingelheim": {
     "jobs": [],
@@ -11211,18 +11211,18 @@
   },
   "Atlassian": {
     "jobs": [],
-    "checked_at": 1788093339.210158,
-    "consecutive_failures": 149
+    "checked_at": 1788099626.5584342,
+    "consecutive_failures": 150
   },
   "Bruker": {
     "jobs": [],
-    "checked_at": 1788093335.116629,
-    "consecutive_failures": 150
+    "checked_at": 1788099614.7136703,
+    "consecutive_failures": 151
   },
   "Biotronik": {
     "jobs": [],
-    "checked_at": 1788093339.206821,
-    "consecutive_failures": 150
+    "checked_at": 1788099618.152514,
+    "consecutive_failures": 151
   },
   "Carbery Group": {
     "jobs": [],
@@ -11321,8 +11321,8 @@
   },
   "Edwards Lifesciences": {
     "jobs": [],
-    "checked_at": 1788093317.6231015,
-    "consecutive_failures": 149
+    "checked_at": 1788099603.8655722,
+    "consecutive_failures": 150
   },
   "Dairygold": {
     "jobs": [],
@@ -11839,8 +11839,8 @@
   },
   "Smurfit Westrock": {
     "jobs": [],
-    "checked_at": 1788093341.6055508,
-    "consecutive_failures": 145
+    "checked_at": 1788099620.7213495,
+    "consecutive_failures": 146
   },
   "Stena Line Ireland": {
     "jobs": [],
@@ -11859,8 +11859,8 @@
   },
   "Teva Pharmaceuticals": {
     "jobs": [],
-    "checked_at": 1788093322.2230077,
-    "consecutive_failures": 145
+    "checked_at": 1788099606.1678345,
+    "consecutive_failures": 146
   },
   "Texas Instruments": {
     "jobs": [],
@@ -14431,8 +14431,8 @@
   },
   "Tesco Ireland::batch_dedicated_v1": {
     "jobs": [],
-    "checked_at": 1788093250.1272933,
-    "consecutive_failures": 107
+    "checked_at": 1788099553.9573839,
+    "consecutive_failures": 108
   },
   "AstraZeneca::batch_dedicated_v1": {
     "jobs": [
@@ -15263,9 +15263,160 @@
     "consecutive_failures": 0
   },
   "DXC Technology::friend_logic_v1": {
-    "jobs": [],
-    "checked_at": 1788093254.4191563,
-    "consecutive_failures": 107
+    "jobs": [
+      {
+        "company": "DXC Technology",
+        "title": "Delivery Manager",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.dxc.com/job/23721672/delivery-manager-shanghai-cn/",
+        "source": "dxc_batch20_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-30T14:20:26.622749+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "DXC Technology",
+        "title": "招采专员",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.dxc.com/job/23775925/-shanghai-cn/",
+        "source": "dxc_batch20_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-30T14:20:26.622749+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "DXC Technology",
+        "title": "delivery manager",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.dxc.com/job/23492517/delivery-manager-shanghai-cn/",
+        "source": "dxc_batch20_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-30T14:20:26.622749+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "DXC Technology",
+        "title": "性能测试",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.dxc.com/job/23775926/-shanghai-cn/",
+        "source": "dxc_batch20_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-30T14:20:26.622749+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "DXC Technology",
+        "title": "Client Partner",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.dxc.com/job/23776150/client-partner-tokyo-jp/",
+        "source": "dxc_batch20_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-30T14:20:26.622749+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "DXC Technology",
+        "title": "CIS Healthcare/Science/Retail Client Success Manager- Cincinnati-OH",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.dxc.com/job/23775568/cis-healthcare-science-retail-client-success-manager-cincinnati-oh/",
+        "source": "dxc_batch20_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-30T14:20:26.622749+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "DXC Technology",
+        "title": "CIS Finance Client Success Manager- El Segundo, CA",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.dxc.com/job/23775567/cis-finance-client-success-manager-el-segundo-ca/",
+        "source": "dxc_batch20_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-30T14:20:26.622749+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "DXC Technology",
+        "title": "CIS Healthcare/Science/Retail Client Success Manager – Bay Area, CA",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.dxc.com/job/23775569/cis-healthcare-science-retail-client-success-manager-bay-area-ca/",
+        "source": "dxc_batch20_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-30T14:20:26.622749+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "DXC Technology",
+        "title": "CIS HI- Tech Client Success Manager in California",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.dxc.com/job/23775570/cis-hi-tech-client-success-manager-in-california/",
+        "source": "dxc_batch20_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-30T14:20:26.622749+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "DXC Technology",
+        "title": "Healthcare Client Success Manager in California",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.dxc.com/job/23775571/healthcare-client-success-manager-in-california/",
+        "source": "dxc_batch20_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-30T14:20:26.622749+00:00",
+        "posted_age_known": false
+      }
+    ],
+    "checked_at": 1788099598.9073694,
+    "consecutive_failures": 0
   },
   "Tata Consultancy Services (TCS)::friend_logic_v1": {
     "jobs": [
@@ -17048,8 +17199,8 @@
   },
   "Coca-Cola HBC Ireland::friend_nonlive_batch10_v1": {
     "jobs": [],
-    "checked_at": 1788093282.569294,
-    "consecutive_failures": 96
+    "checked_at": 1788099584.1698143,
+    "consecutive_failures": 97
   },
   "Agilent Technologies::friend_nonlive_batch10_v1": {
     "jobs": [
@@ -17235,8 +17386,8 @@
   },
   "Heineken Ireland::friend_next4_v1": {
     "jobs": [],
-    "checked_at": 1788093252.6135163,
-    "consecutive_failures": 96
+    "checked_at": 1788099555.019945,
+    "consecutive_failures": 97
   },
   "VHI Healthcare::friend_next4_v1": {
     "jobs": [
@@ -27188,53 +27339,53 @@
   },
   "Dynatrace::next_manual_batch_v2": {
     "jobs": [],
-    "checked_at": 1788093279.3086605,
-    "consecutive_failures": 61
+    "checked_at": 1788099588.1719546,
+    "consecutive_failures": 62
   },
   "FTI Consulting::next_manual_batch_v2": {
     "jobs": [],
-    "checked_at": 1788093304.728151,
-    "consecutive_failures": 61
+    "checked_at": 1788099598.2728815,
+    "consecutive_failures": 62
   },
   "FactSet::next_manual_batch_v2": {
     "jobs": [],
-    "checked_at": 1788093303.014321,
-    "consecutive_failures": 61
+    "checked_at": 1788099588.0256689,
+    "consecutive_failures": 62
   },
   "Moody's::next_manual_batch_v2": {
     "jobs": [],
-    "checked_at": 1788093309.420057,
-    "consecutive_failures": 61
+    "checked_at": 1788099594.1214008,
+    "consecutive_failures": 62
   },
   "Morningstar::next_manual_batch_v2": {
     "jobs": [],
-    "checked_at": 1788093308.4302838,
-    "consecutive_failures": 61
+    "checked_at": 1788099590.0480072,
+    "consecutive_failures": 62
   },
   "Macquarie Group::next_manual_batch_v2": {
     "jobs": [],
-    "checked_at": 1788093304.1945677,
-    "consecutive_failures": 61
+    "checked_at": 1788099595.7672348,
+    "consecutive_failures": 62
   },
   "MSCI::next_manual_batch_v2": {
     "jobs": [],
-    "checked_at": 1788093302.411375,
-    "consecutive_failures": 61
+    "checked_at": 1788099590.3905528,
+    "consecutive_failures": 62
   },
   "Refinitiv (LSEG)::next_manual_batch_v2": {
     "jobs": [],
-    "checked_at": 1788093318.830867,
-    "consecutive_failures": 61
+    "checked_at": 1788099599.8660326,
+    "consecutive_failures": 62
   },
   "Societe Generale::next_manual_batch_v2": {
     "jobs": [],
-    "checked_at": 1788093314.61455,
-    "consecutive_failures": 61
+    "checked_at": 1788099597.408668,
+    "consecutive_failures": 62
   },
   "Splunk::next_manual_batch_v2": {
     "jobs": [],
-    "checked_at": 1788093317.581559,
-    "consecutive_failures": 61
+    "checked_at": 1788099602.6315382,
+    "consecutive_failures": 62
   },
   "Greencore::next_manual_batch_v2": {
     "jobs": [],
@@ -27243,8 +27394,8 @@
   },
   "Protiviti::next_manual_batch_v2": {
     "jobs": [],
-    "checked_at": 1788093321.3274968,
-    "consecutive_failures": 61
+    "checked_at": 1788099606.0026808,
+    "consecutive_failures": 62
   },
   "Bayer::next_manual_batch_v2": {
     "jobs": [],
@@ -27253,8 +27404,8 @@
   },
   "Oliver Wyman::next_manual_batch_v2": {
     "jobs": [],
-    "checked_at": 1788093321.0391262,
-    "consecutive_failures": 61
+    "checked_at": 1788099604.1448746,
+    "consecutive_failures": 62
   },
   "BDO Ireland::next_recovery_batch7_v1": {
     "jobs": [
@@ -30556,8 +30707,8 @@
   },
   "Energia Group::targeted_direct_batch5_multi_v1": {
     "jobs": [],
-    "checked_at": 1788093248.4613512,
-    "consecutive_failures": 18
+    "checked_at": 1788099553.1013298,
+    "consecutive_failures": 19
   },
   "WuXi Biologics::targeted_direct_batch5_multi_v1": {
     "jobs": [
@@ -30788,8 +30939,8 @@
   },
   "Medpace::targeted_direct_batch8_bulk_v1": {
     "jobs": [],
-    "checked_at": 1788093248.6442285,
-    "consecutive_failures": 16
+    "checked_at": 1788099553.04522,
+    "consecutive_failures": 17
   },
   "ASML::targeted_direct_batch8_bulk_v1": {
     "jobs": [
@@ -31246,8 +31397,8 @@
   },
   "Uisce Éireann (Irish Water)::targeted_direct_batch9_bulk_v1": {
     "jobs": [],
-    "checked_at": 1788093262.422437,
-    "consecutive_failures": 16
+    "checked_at": 1788099566.2780707,
+    "consecutive_failures": 17
   },
   "GlaxoSmithKline (GSK)::targeted_direct_batch9_bulk_v1": {
     "jobs": [
@@ -31273,18 +31424,18 @@
   },
   "Micron Technology::targeted_direct_batch10_bulk_v1": {
     "jobs": [],
-    "checked_at": 1788093248.222504,
-    "consecutive_failures": 13
+    "checked_at": 1788099554.4065592,
+    "consecutive_failures": 14
   },
   "Slack::targeted_direct_batch10_bulk_v1": {
     "jobs": [],
-    "checked_at": 1788093248.6749845,
-    "consecutive_failures": 13
+    "checked_at": 1788099555.2016056,
+    "consecutive_failures": 14
   },
   "Box::targeted_direct_batch10_bulk_v1": {
     "jobs": [],
-    "checked_at": 1788093249.3218577,
-    "consecutive_failures": 13
+    "checked_at": 1788099553.6157918,
+    "consecutive_failures": 14
   },
   "Coloplast::targeted_direct_batch9_bulk_v1": {
     "jobs": [
@@ -34270,23 +34421,23 @@
   },
   "Texas Instruments::targeted_direct_batch11_bulk_v1": {
     "jobs": [],
-    "checked_at": 1788093248.2999825,
-    "consecutive_failures": 12
+    "checked_at": 1788099553.5801852,
+    "consecutive_failures": 13
   },
   "Nokia::targeted_direct_batch11_bulk_v1": {
     "jobs": [],
-    "checked_at": 1788093249.8991718,
-    "consecutive_failures": 12
+    "checked_at": 1788099553.7444017,
+    "consecutive_failures": 13
   },
   "Boehringer Ingelheim::targeted_direct_batch11_bulk_v1": {
     "jobs": [],
-    "checked_at": 1788093250.1732612,
-    "consecutive_failures": 12
+    "checked_at": 1788099554.142795,
+    "consecutive_failures": 13
   },
   "SentinelOne": {
     "jobs": [],
-    "checked_at": 1788093247.9224267,
-    "consecutive_failures": 11
+    "checked_at": 1788099552.7089574,
+    "consecutive_failures": 12
   },
   "Tenable": {
     "jobs": [
@@ -36717,8 +36868,8 @@
   },
   "Syneos Health::targeted_bulk_batch18_v1": {
     "jobs": [],
-    "checked_at": 1788093255.5530527,
-    "consecutive_failures": 2
+    "checked_at": 1788099560.926646,
+    "consecutive_failures": 3
   },
   "Red Hat::targeted_bulk_batch18_v1": {
     "jobs": [
@@ -37684,96 +37835,6 @@
     "checked_at": 1788090915.4932122,
     "consecutive_failures": 0
   },
-  "Cook Medical::targeted_bulk_batch18_v1": {
-    "jobs": [],
-    "checked_at": 1788093247.6435463,
-    "consecutive_failures": 1
-  },
-  "Kepak Group::targeted_direct_batch7_multi_v1": {
-    "jobs": [],
-    "checked_at": 1788093247.7946603,
-    "consecutive_failures": 1
-  },
-  "An Post::targeted_direct_batch7_multi_v1": {
-    "jobs": [],
-    "checked_at": 1788093248.7504144,
-    "consecutive_failures": 1
-  },
-  "Coillte::targeted_direct_batch1_v1": {
-    "jobs": [],
-    "checked_at": 1788093249.144482,
-    "consecutive_failures": 1
-  },
-  "Broadcom::targeted_bulk_batch18_v1": {
-    "jobs": [],
-    "checked_at": 1788093250.1942801,
-    "consecutive_failures": 1
-  },
-  "Rockwell Automation::targeted_bulk_batch18_v1": {
-    "jobs": [],
-    "checked_at": 1788093250.2112534,
-    "consecutive_failures": 1
-  },
-  "VMware (Broadcom)::targeted_bulk_batch18_v1": {
-    "jobs": [],
-    "checked_at": 1788093250.4478567,
-    "consecutive_failures": 1
-  },
-  "Avolon": {
-    "jobs": [],
-    "checked_at": 1788093251.5164971,
-    "consecutive_failures": 1
-  },
-  "SMBC Aviation Capital::friend_nonlive_batch10_v1": {
-    "jobs": [],
-    "checked_at": 1788093257.8926733,
-    "consecutive_failures": 1
-  },
-  "AXA Ireland::friend_nonlive_batch10_v1": {
-    "jobs": [],
-    "checked_at": 1788093261.9192972,
-    "consecutive_failures": 1
-  },
-  "Goodbody::batch_dedicated_v1": {
-    "jobs": [],
-    "checked_at": 1788093263.6021953,
-    "consecutive_failures": 1
-  },
-  "Aldi Ireland::batch_dedicated_v2": {
-    "jobs": [],
-    "checked_at": 1788093267.169446,
-    "consecutive_failures": 1
-  },
-  "Revvity (PerkinElmer)::targeted_direct_batch9_bulk_v1": {
-    "jobs": [],
-    "checked_at": 1788093270.6112704,
-    "consecutive_failures": 1
-  },
-  "Haleon::targeted_bulk_batch18_v1": {
-    "jobs": [],
-    "checked_at": 1788093280.8391845,
-    "consecutive_failures": 1
-  },
-  "Forvis Mazars Ireland::next_manual_batch_v2": {
-    "jobs": [],
-    "checked_at": 1788093286.054722,
-    "consecutive_failures": 1
-  },
-  "Willis Towers Watson (WTW)": {
-    "jobs": [],
-    "checked_at": 1788093288.8651268,
-    "consecutive_failures": 1
-  },
-  "QIAGEN": {
-    "jobs": [],
-    "checked_at": 1788093290.8956742,
-    "consecutive_failures": 1
-  },
-  "HP (Hewlett-Packard)::friend_next4_v1": {
-    "jobs": [],
-    "checked_at": 1788093296.8863163,
-    "consecutive_failures": 1
-  },
   "Arcadis::large_nonlive_batch8_v2": {
     "jobs": [
       {
@@ -37809,11 +37870,6 @@
     ],
     "checked_at": 1788093309.489751,
     "consecutive_failures": 0
-  },
-  "Bristol Myers Squibb::targeted_bulk_batch18_v1": {
-    "jobs": [],
-    "checked_at": 1788093309.4929218,
-    "consecutive_failures": 1
   },
   "Dexcom::large_nonlive_batch8_v2": {
     "jobs": [
@@ -38046,29 +38102,257 @@
     "checked_at": 1788093314.9739447,
     "consecutive_failures": 0
   },
+  "Kepak Group::targeted_direct_batch7_multi_v1": {
+    "jobs": [],
+    "checked_at": 1788099552.282047,
+    "consecutive_failures": 1
+  },
+  "Cook Medical::targeted_bulk_batch18_v1": {
+    "jobs": [],
+    "checked_at": 1788099553.056054,
+    "consecutive_failures": 1
+  },
+  "An Post::targeted_direct_batch7_multi_v1": {
+    "jobs": [],
+    "checked_at": 1788099553.1229455,
+    "consecutive_failures": 1
+  },
+  "Coillte::targeted_direct_batch1_v1": {
+    "jobs": [],
+    "checked_at": 1788099553.336672,
+    "consecutive_failures": 1
+  },
+  "Avolon": {
+    "jobs": [],
+    "checked_at": 1788099554.0639117,
+    "consecutive_failures": 1
+  },
+  "VMware (Broadcom)::zero_only_batch20_v1": {
+    "jobs": [],
+    "checked_at": 1788099554.7824795,
+    "consecutive_failures": 1
+  },
+  "Broadcom::zero_only_batch20_v1": {
+    "jobs": [],
+    "checked_at": 1788099554.796738,
+    "consecutive_failures": 1
+  },
+  "Qualcomm::zero_only_batch20_v1": {
+    "jobs": [],
+    "checked_at": 1788099555.9669206,
+    "consecutive_failures": 1
+  },
+  "QIAGEN::zero_only_batch20_v1": {
+    "jobs": [],
+    "checked_at": 1788099557.7242148,
+    "consecutive_failures": 1
+  },
+  "Revvity (PerkinElmer)::zero_only_batch20_v1": {
+    "jobs": [
+      {
+        "company": "Revvity (PerkinElmer)",
+        "title": "Sr HR Manager - HR Transformation & Strategic Initiatives - Fluent German",
+        "location": "United Kingdom - Remote",
+        "posted_text": "Posted 30+ Days Ago",
+        "posted_days_ago": 30.0,
+        "employment_type": "Unspecified",
+        "url": "https://revvity.wd103.myworkdayjobs.com/External/job/United-Kingdom---Remote/Sr-HR-Manager---HR-Transformation---Strategic-Initiatives---Fluent-German_JR-044974",
+        "source": "workday_multi_term_detail_verified_ie",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-30T14:20:26.622749+00:00",
+        "posted_age_known": true
+      }
+    ],
+    "checked_at": 1788099559.4662228,
+    "consecutive_failures": 0
+  },
+  "SMBC Aviation Capital::friend_nonlive_batch10_v1": {
+    "jobs": [],
+    "checked_at": 1788099561.1924174,
+    "consecutive_failures": 1
+  },
+  "AXA Ireland::zero_only_batch20_v1": {
+    "jobs": [],
+    "checked_at": 1788099565.604359,
+    "consecutive_failures": 1
+  },
+  "Goodbody::batch_dedicated_v1": {
+    "jobs": [],
+    "checked_at": 1788099567.9310102,
+    "consecutive_failures": 1
+  },
+  "Rockwell Automation::zero_only_batch20_v1": {
+    "jobs": [],
+    "checked_at": 1788099568.1726453,
+    "consecutive_failures": 1
+  },
+  "Aldi Ireland::batch_dedicated_v2": {
+    "jobs": [],
+    "checked_at": 1788099570.7700527,
+    "consecutive_failures": 1
+  },
+  "NXP Semiconductors::zero_only_batch20_v1": {
+    "jobs": [],
+    "checked_at": 1788099575.9543023,
+    "consecutive_failures": 1
+  },
+  "Forvis Mazars Ireland::next_manual_batch_v2": {
+    "jobs": [],
+    "checked_at": 1788099579.687872,
+    "consecutive_failures": 1
+  },
+  "Willis Towers Watson (WTW)": {
+    "jobs": [],
+    "checked_at": 1788099583.5130556,
+    "consecutive_failures": 1
+  },
+  "Haleon::zero_only_batch20_v1": {
+    "jobs": [
+      {
+        "company": "Haleon",
+        "title": "Packaging Operator (Fixed Term)",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Contract",
+        "url": "https://careers.haleon.com/careers/job/563705892659175",
+        "source": "haleon_batch20_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-30T14:20:26.622749+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Haleon",
+        "title": "Qualified Person",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.haleon.com/careers/job/563705892671443",
+        "source": "haleon_batch20_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-30T14:20:26.622749+00:00",
+        "posted_age_known": false
+      }
+    ],
+    "checked_at": 1788099589.7924588,
+    "consecutive_failures": 0
+  },
+  "Bristol Myers Squibb::zero_only_batch20_v1": {
+    "jobs": [
+      {
+        "company": "Bristol Myers Squibb",
+        "title": "Senior Manager, Qualified Person",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jobs.bms.com/careers/job/137483077226",
+        "source": "bms_batch20_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-30T14:20:26.622749+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Bristol Myers Squibb",
+        "title": "Sr Manager, Analytics Operations",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jobs.bms.com/careers/job/137483138228",
+        "source": "bms_batch20_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-30T14:20:26.622749+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Bristol Myers Squibb",
+        "title": "Manager QA, Clinical Supply Chain Quality",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jobs.bms.com/careers/job/137483169848",
+        "source": "bms_batch20_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-30T14:20:26.622749+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Bristol Myers Squibb",
+        "title": "Senior Manager, Serialization Data Operations",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jobs.bms.com/careers/job/137482171896",
+        "source": "bms_batch20_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-30T14:20:26.622749+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Bristol Myers Squibb",
+        "title": "Manager, PDS BI&T",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://jobs.bms.com/careers/job/137482848537",
+        "source": "bms_batch20_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-08-30T14:20:26.622749+00:00",
+        "posted_age_known": false
+      }
+    ],
+    "checked_at": 1788099599.5167124,
+    "consecutive_failures": 0
+  },
+  "HP (Hewlett-Packard)::friend_next4_v1": {
+    "jobs": [],
+    "checked_at": 1788099602.6952474,
+    "consecutive_failures": 1
+  },
   "Cantor Fitzgerald Ireland": {
     "jobs": [],
-    "checked_at": 1788093323.8799543,
+    "checked_at": 1788099608.2182825,
     "consecutive_failures": 1
   },
   "UBS": {
     "jobs": [],
-    "checked_at": 1788093324.6293159,
+    "checked_at": 1788099608.7765408,
     "consecutive_failures": 1
   },
   "Slalom": {
     "jobs": [],
-    "checked_at": 1788093328.117276,
+    "checked_at": 1788099608.9922652,
     "consecutive_failures": 1
   },
   "ESB (Electricity Supply Board)": {
     "jobs": [],
-    "checked_at": 1788093331.930086,
+    "checked_at": 1788099613.7190077,
     "consecutive_failures": 1
   },
   "Boston Consulting Group (BCG)": {
     "jobs": [],
-    "checked_at": 1788093340.3340135,
+    "checked_at": 1788099625.0627422,
     "consecutive_failures": 1
   }
 }
