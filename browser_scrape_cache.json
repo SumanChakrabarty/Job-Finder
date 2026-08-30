@@ -15275,7 +15275,7 @@
         "source": "dxc_batch20_rendered",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-30T14:20:26.622749+00:00",
         "posted_age_known": false
       },
@@ -15290,7 +15290,7 @@
         "source": "dxc_batch20_rendered",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-30T14:20:26.622749+00:00",
         "posted_age_known": false
       },
@@ -15305,7 +15305,7 @@
         "source": "dxc_batch20_rendered",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-30T14:20:26.622749+00:00",
         "posted_age_known": false
       },
@@ -15320,7 +15320,7 @@
         "source": "dxc_batch20_rendered",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-30T14:20:26.622749+00:00",
         "posted_age_known": false
       },
@@ -15335,7 +15335,7 @@
         "source": "dxc_batch20_rendered",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-30T14:20:26.622749+00:00",
         "posted_age_known": false
       },
@@ -15350,7 +15350,7 @@
         "source": "dxc_batch20_rendered",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-30T14:20:26.622749+00:00",
         "posted_age_known": false
       },
@@ -15365,7 +15365,7 @@
         "source": "dxc_batch20_rendered",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-30T14:20:26.622749+00:00",
         "posted_age_known": false
       },
@@ -15380,7 +15380,7 @@
         "source": "dxc_batch20_rendered",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-30T14:20:26.622749+00:00",
         "posted_age_known": false
       },
@@ -15395,7 +15395,7 @@
         "source": "dxc_batch20_rendered",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-30T14:20:26.622749+00:00",
         "posted_age_known": false
       },
@@ -15410,7 +15410,7 @@
         "source": "dxc_batch20_rendered",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-30T14:20:26.622749+00:00",
         "posted_age_known": false
       }
@@ -38102,49 +38102,9 @@
     "checked_at": 1788093314.9739447,
     "consecutive_failures": 0
   },
-  "Kepak Group::targeted_direct_batch7_multi_v1": {
-    "jobs": [],
-    "checked_at": 1788099552.282047,
-    "consecutive_failures": 1
-  },
-  "Cook Medical::targeted_bulk_batch18_v1": {
-    "jobs": [],
-    "checked_at": 1788099553.056054,
-    "consecutive_failures": 1
-  },
-  "An Post::targeted_direct_batch7_multi_v1": {
-    "jobs": [],
-    "checked_at": 1788099553.1229455,
-    "consecutive_failures": 1
-  },
-  "Coillte::targeted_direct_batch1_v1": {
-    "jobs": [],
-    "checked_at": 1788099553.336672,
-    "consecutive_failures": 1
-  },
-  "Avolon": {
-    "jobs": [],
-    "checked_at": 1788099554.0639117,
-    "consecutive_failures": 1
-  },
-  "VMware (Broadcom)::zero_only_batch20_v1": {
-    "jobs": [],
-    "checked_at": 1788099554.7824795,
-    "consecutive_failures": 1
-  },
-  "Broadcom::zero_only_batch20_v1": {
-    "jobs": [],
-    "checked_at": 1788099554.796738,
-    "consecutive_failures": 1
-  },
   "Qualcomm::zero_only_batch20_v1": {
     "jobs": [],
     "checked_at": 1788099555.9669206,
-    "consecutive_failures": 1
-  },
-  "QIAGEN::zero_only_batch20_v1": {
-    "jobs": [],
-    "checked_at": 1788099557.7242148,
     "consecutive_failures": 1
   },
   "Revvity (PerkinElmer)::zero_only_batch20_v1": {
@@ -38160,7 +38120,7 @@
         "source": "workday_multi_term_detail_verified_ie",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-30T14:20:26.622749+00:00",
         "posted_age_known": true
       }
@@ -38168,44 +38128,9 @@
     "checked_at": 1788099559.4662228,
     "consecutive_failures": 0
   },
-  "SMBC Aviation Capital::friend_nonlive_batch10_v1": {
-    "jobs": [],
-    "checked_at": 1788099561.1924174,
-    "consecutive_failures": 1
-  },
-  "AXA Ireland::zero_only_batch20_v1": {
-    "jobs": [],
-    "checked_at": 1788099565.604359,
-    "consecutive_failures": 1
-  },
-  "Goodbody::batch_dedicated_v1": {
-    "jobs": [],
-    "checked_at": 1788099567.9310102,
-    "consecutive_failures": 1
-  },
-  "Rockwell Automation::zero_only_batch20_v1": {
-    "jobs": [],
-    "checked_at": 1788099568.1726453,
-    "consecutive_failures": 1
-  },
-  "Aldi Ireland::batch_dedicated_v2": {
-    "jobs": [],
-    "checked_at": 1788099570.7700527,
-    "consecutive_failures": 1
-  },
   "NXP Semiconductors::zero_only_batch20_v1": {
     "jobs": [],
     "checked_at": 1788099575.9543023,
-    "consecutive_failures": 1
-  },
-  "Forvis Mazars Ireland::next_manual_batch_v2": {
-    "jobs": [],
-    "checked_at": 1788099579.687872,
-    "consecutive_failures": 1
-  },
-  "Willis Towers Watson (WTW)": {
-    "jobs": [],
-    "checked_at": 1788099583.5130556,
     "consecutive_failures": 1
   },
   "Haleon::zero_only_batch20_v1": {
@@ -38221,7 +38146,7 @@
         "source": "haleon_batch20_rendered",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-30T14:20:26.622749+00:00",
         "posted_age_known": false
       },
@@ -38236,7 +38161,7 @@
         "source": "haleon_batch20_rendered",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-30T14:20:26.622749+00:00",
         "posted_age_known": false
       }
@@ -38257,7 +38182,7 @@
         "source": "bms_batch20_rendered",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-30T14:20:26.622749+00:00",
         "posted_age_known": false
       },
@@ -38272,7 +38197,7 @@
         "source": "bms_batch20_rendered",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-30T14:20:26.622749+00:00",
         "posted_age_known": false
       },
@@ -38287,7 +38212,7 @@
         "source": "bms_batch20_rendered",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-30T14:20:26.622749+00:00",
         "posted_age_known": false
       },
@@ -38302,7 +38227,7 @@
         "source": "bms_batch20_rendered",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-30T14:20:26.622749+00:00",
         "posted_age_known": false
       },
@@ -38317,7 +38242,7 @@
         "source": "bms_batch20_rendered",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-30T14:20:26.622749+00:00",
         "posted_age_known": false
       }
@@ -38325,34 +38250,134 @@
     "checked_at": 1788099599.5167124,
     "consecutive_failures": 0
   },
+  "Kepak Group::targeted_direct_batch7_multi_v1": {
+    "jobs": [],
+    "checked_at": 1788100697.4665112,
+    "consecutive_failures": 1
+  },
+  "An Post::targeted_direct_batch7_multi_v1": {
+    "jobs": [],
+    "checked_at": 1788100697.7087677,
+    "consecutive_failures": 1
+  },
+  "Cook Medical::targeted_bulk_batch18_v1": {
+    "jobs": [],
+    "checked_at": 1788100697.7274559,
+    "consecutive_failures": 1
+  },
+  "Avolon": {
+    "jobs": [],
+    "checked_at": 1788100698.234185,
+    "consecutive_failures": 1
+  },
+  "Coillte::targeted_direct_batch1_v1": {
+    "jobs": [],
+    "checked_at": 1788100698.4288695,
+    "consecutive_failures": 1
+  },
+  "VMware (Broadcom)::zero_only_batch20_v1": {
+    "jobs": [],
+    "checked_at": 1788100698.962285,
+    "consecutive_failures": 1
+  },
+  "Broadcom::zero_only_batch20_v1": {
+    "jobs": [],
+    "checked_at": 1788100698.999026,
+    "consecutive_failures": 1
+  },
+  "QIAGEN::zero_only_batch20_v1": {
+    "jobs": [],
+    "checked_at": 1788100702.8018863,
+    "consecutive_failures": 1
+  },
+  "SMBC Aviation Capital::friend_nonlive_batch10_v1": {
+    "jobs": [],
+    "checked_at": 1788100705.1362376,
+    "consecutive_failures": 1
+  },
+  "Edwards Lifesciences::zero_deep_batch21_v1": {
+    "jobs": [],
+    "checked_at": 1788100706.0716877,
+    "consecutive_failures": 1
+  },
+  "AXA Ireland::zero_only_batch20_v1": {
+    "jobs": [],
+    "checked_at": 1788100708.3372722,
+    "consecutive_failures": 1
+  },
+  "Goodbody::batch_dedicated_v1": {
+    "jobs": [],
+    "checked_at": 1788100709.6424675,
+    "consecutive_failures": 1
+  },
+  "Aldi Ireland::batch_dedicated_v2": {
+    "jobs": [],
+    "checked_at": 1788100710.491723,
+    "consecutive_failures": 1
+  },
+  "Forvis Mazars Ireland::next_manual_batch_v2": {
+    "jobs": [],
+    "checked_at": 1788100710.9832053,
+    "consecutive_failures": 1
+  },
+  "Teva Pharmaceuticals::zero_deep_batch21_v1": {
+    "jobs": [],
+    "checked_at": 1788100712.8806555,
+    "consecutive_failures": 1
+  },
   "HP (Hewlett-Packard)::friend_next4_v1": {
     "jobs": [],
-    "checked_at": 1788099602.6952474,
+    "checked_at": 1788100715.2531025,
     "consecutive_failures": 1
   },
-  "Cantor Fitzgerald Ireland": {
+  "Rockwell Automation::zero_only_batch20_v1": {
     "jobs": [],
-    "checked_at": 1788099608.2182825,
+    "checked_at": 1788100715.7498674,
     "consecutive_failures": 1
   },
-  "UBS": {
+  "Willis Towers Watson (WTW)": {
     "jobs": [],
-    "checked_at": 1788099608.7765408,
+    "checked_at": 1788100717.047394,
     "consecutive_failures": 1
   },
-  "Slalom": {
+  "Alvarez & Marsal::zero_deep_batch21_v1": {
     "jobs": [],
-    "checked_at": 1788099608.9922652,
+    "checked_at": 1788100717.4503288,
+    "consecutive_failures": 1
+  },
+  "UBS::zero_deep_batch21_v1": {
+    "jobs": [],
+    "checked_at": 1788100717.9023166,
+    "consecutive_failures": 1
+  },
+  "Cantor Fitzgerald Ireland::zero_deep_batch21_v1": {
+    "jobs": [],
+    "checked_at": 1788100718.0886579,
+    "consecutive_failures": 1
+  },
+  "Slalom::zero_deep_batch21_v1": {
+    "jobs": [],
+    "checked_at": 1788100718.1749413,
     "consecutive_failures": 1
   },
   "ESB (Electricity Supply Board)": {
     "jobs": [],
-    "checked_at": 1788099613.7190077,
+    "checked_at": 1788100719.8847227,
+    "consecutive_failures": 1
+  },
+  "Akamai::zero_deep_batch21_v1": {
+    "jobs": [],
+    "checked_at": 1788100722.090906,
     "consecutive_failures": 1
   },
   "Boston Consulting Group (BCG)": {
     "jobs": [],
-    "checked_at": 1788099625.0627422,
+    "checked_at": 1788100724.645261,
+    "consecutive_failures": 1
+  },
+  "Atlassian::zero_deep_batch21_v1": {
+    "jobs": [],
+    "checked_at": 1788100724.6616843,
     "consecutive_failures": 1
   }
 }
