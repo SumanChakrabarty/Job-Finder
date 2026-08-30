@@ -2828,6 +2828,181 @@ def _final_job_quality_filter(live_jobs):
 
 
 
+
+# === TARGETED_DIRECT_BATCH_23_PROVEN_ZERO_RECOVERY ===
+# Stop spending full runs on speculative generic zero-company crawls.  These
+# routes are added only where the current official careers site itself proves
+# live Republic-of-Ireland vacancies.  They are plain HTTP and validate the
+# detail page before emitting a job.
+def _batch23_job_record(company_name, title, location, posted_text, url, description="", source="batch23_proven_zero"):
+    title = re.sub(r"\s+", " ", str(title or "")).strip()
+    location = re.sub(r"\s+", " ", str(location or "")).strip()
+    posted_text = re.sub(r"\s+", " ", str(posted_text or "")).strip() or "Unknown"
+    if not title or _looks_like_bad_generic_title(title):
+        return None
+    if not is_republic_of_ireland_location(location):
+        return None
+    sponsorship, snippet = classify_sponsorship(str(description or "")[:12000])
+    return {
+        "company": company_name,
+        "title": title[:300],
+        "location": location,
+        "posted_text": posted_text,
+        "posted_days_ago": parse_posted_text(posted_text),
+        "employment_type": normalize_employment_type(None, title),
+        "url": url,
+        "source": source,
+        "visa_sponsorship": sponsorship,
+        "visa_snippet": snippet,
+    }
+
+
+def scrape_alvarez_marsal_batch23(session=None):
+    """Official A&M Dublin search page; current page is server-rendered."""
+    company_name = "Alvarez & Marsal"
+    listing = "https://careers.alvarezandmarsal.com/search/jobs/in/dublin-2"
+    sess = session or requests.Session()
+    try:
+        r = sess.get(listing, headers=HEADERS, timeout=15)
+        if r.status_code >= 400:
+            print(f"      [batch23-am] listing HTTP {r.status_code}")
+            return []
+    except Exception as e:
+        print(f"      [batch23-am] listing failed: {e}")
+        return []
+
+    soup = BeautifulSoup(r.text, "html.parser")
+    candidates = {}
+    for a in soup.select("a[href]"):
+        href = urllib.parse.urljoin(r.url, a.get("href") or "").split("#")[0]
+        text = " ".join(a.stripped_strings).strip()
+        if not href or not text:
+            continue
+        low = href.lower()
+        if not re.search(r"/(?:job|jobs)/", low):
+            continue
+        # Radancy search cards expose title/location/date in a nearby container.
+        parent = a
+        block = ""
+        for _ in range(5):
+            parent = getattr(parent, "parent", None)
+            if parent is None:
+                break
+            block = " ".join(parent.stripped_strings)
+            if "Dublin" in block and "Ireland" in block:
+                break
+        if "Dublin" not in block or "Ireland" not in block:
+            continue
+        candidates[href] = text
+
+    results = {}
+    for href, listing_title in list(candidates.items())[:30]:
+        try:
+            d = sess.get(href, headers=HEADERS, timeout=10, allow_redirects=True)
+            if d.status_code >= 400:
+                continue
+            meta = _extract_job_detail_metadata_from_html(d.text, d.url, company_name)
+            page_text = BeautifulSoup(d.text, "html.parser").get_text(" ", strip=True)
+            evidence = " ".join([str(meta.get("location") or ""), page_text[:20000]])
+            if not is_republic_of_ireland_location(evidence) or _ROI_NEGATIVE_RE.search(evidence):
+                continue
+            title = _clean_detail_page_title(meta.get("title") or listing_title, company_name)
+            loc = str(meta.get("location") or "Dublin, Ireland")
+            if not is_republic_of_ireland_location(loc):
+                loc = "Dublin, Ireland"
+            posted = str(meta.get("posted_text") or "Unknown")
+            desc = str(meta.get("description") or page_text)
+            job = _batch23_job_record(company_name, title, loc, posted, d.url, desc, "batch23_am_dublin")
+            if job:
+                results[job["url"].rstrip("/").lower()] = job
+        except Exception:
+            continue
+    print(f"      [batch23-am] {len(results)} verified Republic-of-Ireland vacancies")
+    return list(results.values())
+
+
+def scrape_societe_generale_batch23(session=None):
+    """Official SG all-jobs index + detail verification; no generic browser crawl."""
+    company_name = "Societe Generale"
+    listing = "https://careers.societegenerale.com/en/Technical/all-job-offers"
+    sess = session or requests.Session()
+    try:
+        r = sess.get(listing, headers=HEADERS, timeout=15)
+        if r.status_code >= 400:
+            print(f"      [batch23-sg] listing HTTP {r.status_code}")
+            return []
+    except Exception as e:
+        print(f"      [batch23-sg] listing failed: {e}")
+        return []
+
+    soup = BeautifulSoup(r.text, "html.parser")
+    candidates = {}
+    for a in soup.select("a[href]"):
+        href = urllib.parse.urljoin(r.url, a.get("href") or "").split("#")[0]
+        if "/en/job-offers/" not in href.lower():
+            continue
+        title = " ".join(a.stripped_strings).strip()
+        parent = a
+        block = ""
+        for _ in range(6):
+            parent = getattr(parent, "parent", None)
+            if parent is None:
+                break
+            block = " ".join(parent.stripped_strings)
+            if "Dublin" in block and "Ireland" in block:
+                break
+        if "Dublin" in block and "Ireland" in block:
+            candidates[href] = title
+
+    # The SG index can lazy-render only part of the cards in raw HTML.  Detail
+    # URLs are still cheap to verify, so also accept any job-offer links present
+    # in the page and let the detail page decide the location.
+    if len(candidates) < 3:
+        for a in soup.select('a[href*="/en/job-offers/"]'):
+            href = urllib.parse.urljoin(r.url, a.get("href") or "").split("#")[0]
+            if href:
+                candidates.setdefault(href, " ".join(a.stripped_strings).strip())
+
+    results = {}
+    def _fetch(href, listing_title):
+        try:
+            d = sess.get(href, headers=HEADERS, timeout=10, allow_redirects=True)
+            if d.status_code >= 400:
+                return None
+            meta = _extract_job_detail_metadata_from_html(d.text, d.url, company_name)
+            soup2 = BeautifulSoup(d.text, "html.parser")
+            page_text = soup2.get_text(" ", strip=True)
+            if _ROI_NEGATIVE_RE.search(page_text):
+                return None
+            if not is_republic_of_ireland_location(page_text):
+                return None
+            title = _clean_detail_page_title(meta.get("title") or listing_title, company_name)
+            loc = str(meta.get("location") or "")
+            if not is_republic_of_ireland_location(loc):
+                m = re.search(r"\bDublin(?:\s*\d+)?\s*,\s*Ireland\b", page_text, re.I)
+                loc = m.group(0) if m else "Dublin, Ireland"
+            posted = str(meta.get("posted_text") or "Unknown")
+            desc = str(meta.get("description") or page_text)
+            return _batch23_job_record(company_name, title, loc, posted, d.url, desc, "batch23_socgen_dublin")
+        except Exception:
+            return None
+
+    pool = ThreadPoolExecutor(max_workers=min(12, max(1, len(candidates))))
+    try:
+        futs = [pool.submit(_fetch, u, t) for u, t in list(candidates.items())[:120]]
+        for fut in as_completed(futs):
+            job = None
+            try:
+                job = fut.result()
+            except Exception:
+                pass
+            if job:
+                results[job["url"].rstrip("/").lower()] = job
+    finally:
+        pool.shutdown(wait=False)
+    print(f"      [batch23-sg] {len(results)} verified Republic-of-Ireland vacancies")
+    return list(results.values())
+
 # === TARGETED_DIRECT_BATCH_21_ZERO_DEEP20 ===
 # These are companies that repeatedly reached the generic priority fallback and
 # returned zero in the latest full run.  This is intentionally NOT the manual
@@ -12724,7 +12899,7 @@ def scrape_axa_ireland_friend(session):
 
 
 def main():
-    print("=== TARGETED_DIRECT_BATCH_22_ZERO_FORCE20_ATS ACTIVE: all 20 zero-job targets forced from CSV regardless status/dedupe; external ATS job links allowed; fresh cache; manual queue untouched ===\n=== TARGETED_DIRECT_BATCH_21_ZERO_DEEP20 ACTIVE: 20 zero-job companies use deep rendered vacancy discovery + strict detail-page ROI verification; manual recovery queue untouched ===")
+    print("=== TARGETED_DIRECT_BATCH_23_PROVEN_ZERO_RECOVERY ACTIVE: only officially-proven current ROI zero companies get direct HTTP routes; A&M Dublin + Societe Generale Dublin; speculative deep20 no longer trusted for progress ===\n=== TARGETED_DIRECT_BATCH_22_ZERO_FORCE20_ATS ACTIVE: all 20 zero-job targets forced from CSV regardless status/dedupe; external ATS job links allowed; fresh cache; manual queue untouched ===\n=== TARGETED_DIRECT_BATCH_21_ZERO_DEEP20 ACTIVE: 20 zero-job companies use deep rendered vacancy discovery + strict detail-page ROI verification; manual recovery queue untouched ===")
     print("=== TARGETED_DIRECT_BATCH_20_ZERO_ONLY_BULK_RECOVERY ACTIVE: zero-company focus only; multi-term Workday detail verification + direct Phenom Haleon/BMS + rendered AXA/DXC; manual queue untouched ===")
     print("=== TARGETED_DIRECT_BATCH_19_SPEED_PROFILE ACTIVE: browser workers 8 + HTTP workers 24 + 6h positive cache + 1h zero cache; Workday workers kept conservative; coverage/ROI rules unchanged ===")
     print("=== TARGETED_DIRECT_BATCH_18_BULK_FIXES ACTIVE: Qualcomm + NXP + Zendesk + Rockwell + Red Hat + Broadcom/VMware detail-verified Workday; Cook iCIMS POST; Syneos rendered; Haleon/Schneider/DXC/BMS sitemap fallbacks ===")
@@ -13855,6 +14030,15 @@ def main():
     print(f"=== Batch22 zero-force recovery: {len(_batch22_queued)}/{len(BATCH21_ZERO_DEEP20)} targets FORCED from CSV with fresh cache ===")
     if _batch22_queued:
         print("  -> " + ", ".join(_batch22_queued))
+
+    # Batch23: replace speculative browser crawls for two companies where the
+    # official sites currently prove live Dublin vacancies.  These are plain
+    # HTTP tasks and therefore cheaper and deterministic.
+    _batch23_proven = {"alvarez & marsal", "societe generale"}
+    task_list = [t for t in task_list if str(t[1] or "").strip().lower() not in _batch23_proven]
+    task_list.append(("batch23_proven_http", "Alvarez & Marsal", lambda: scrape_alvarez_marsal_batch23(session), 60, False))
+    task_list.append(("batch23_proven_http", "Societe Generale", lambda: scrape_societe_generale_batch23(session), 60, False))
+    print("=== Batch23 proven-zero recovery: 2 direct HTTP routes queued (Alvarez & Marsal + Societe Generale) ===")
 
     _FINAL_DEFERRED_COMPANIES = {
         "aviva ireland",
