@@ -11314,11 +11314,6 @@
     "checked_at": 1787666171.699216,
     "consecutive_failures": 91
   },
-  "Refinitiv (LSEG)": {
-    "jobs": [],
-    "checked_at": 1787666173.1633465,
-    "consecutive_failures": 91
-  },
   "Splunk": {
     "jobs": [],
     "checked_at": 1787666178.0169122,
@@ -21274,7 +21269,7 @@
         "source": "docusign_rendered_attempt2",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-31T13:38:16.858486+00:00",
         "posted_age_known": false
       }
@@ -21310,7 +21305,7 @@
         "source": "atkinsrealis_ireland_newbatch",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-31T13:38:16.858486+00:00",
         "posted_age_known": false
       },
@@ -27034,11 +27029,6 @@
     "checked_at": 1788180843.8176937,
     "consecutive_failures": 63
   },
-  "Refinitiv (LSEG)::next_manual_batch_v2": {
-    "jobs": [],
-    "checked_at": 1788180848.2998493,
-    "consecutive_failures": 63
-  },
   "Splunk::next_manual_batch_v2": {
     "jobs": [],
     "checked_at": 1788180846.14074,
@@ -30409,8 +30399,8 @@
   },
   "Energia Group::targeted_direct_batch5_multi_v1": {
     "jobs": [],
-    "checked_at": 1788180550.0795124,
-    "consecutive_failures": 26
+    "checked_at": 1788184152.1499853,
+    "consecutive_failures": 27
   },
   "WuXi Biologics::targeted_direct_batch5_multi_v1": {
     "jobs": [
@@ -30641,8 +30631,8 @@
   },
   "Medpace::targeted_direct_batch8_bulk_v1": {
     "jobs": [],
-    "checked_at": 1788180549.0301425,
-    "consecutive_failures": 24
+    "checked_at": 1788184152.652644,
+    "consecutive_failures": 25
   },
   "Hollister Incorporated::targeted_direct_batch8_bulk_v1": {
     "jobs": [
@@ -31100,18 +31090,18 @@
   },
   "Micron Technology::targeted_direct_batch10_bulk_v1": {
     "jobs": [],
-    "checked_at": 1788180550.32703,
-    "consecutive_failures": 21
+    "checked_at": 1788184152.1243987,
+    "consecutive_failures": 22
   },
   "Slack::targeted_direct_batch10_bulk_v1": {
     "jobs": [],
-    "checked_at": 1788180550.4287865,
-    "consecutive_failures": 21
+    "checked_at": 1788184152.1535425,
+    "consecutive_failures": 22
   },
   "Box::targeted_direct_batch10_bulk_v1": {
     "jobs": [],
-    "checked_at": 1788180549.3387866,
-    "consecutive_failures": 21
+    "checked_at": 1788184152.5054712,
+    "consecutive_failures": 22
   },
   "Coloplast::targeted_direct_batch9_bulk_v1": {
     "jobs": [
@@ -34187,13 +34177,13 @@
   },
   "Texas Instruments::targeted_direct_batch11_bulk_v1": {
     "jobs": [],
-    "checked_at": 1788180549.32416,
-    "consecutive_failures": 20
+    "checked_at": 1788184151.7865312,
+    "consecutive_failures": 21
   },
   "Nokia::targeted_direct_batch11_bulk_v1": {
     "jobs": [],
-    "checked_at": 1788180549.8203235,
-    "consecutive_failures": 20
+    "checked_at": 1788184153.181845,
+    "consecutive_failures": 21
   },
   "Boehringer Ingelheim::targeted_direct_batch11_bulk_v1": {
     "jobs": [],
@@ -34202,8 +34192,8 @@
   },
   "SentinelOne": {
     "jobs": [],
-    "checked_at": 1788180548.569018,
-    "consecutive_failures": 19
+    "checked_at": 1788184151.4150164,
+    "consecutive_failures": 20
   },
   "Tenable": {
     "jobs": [
@@ -36303,7 +36293,7 @@
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-31T13:38:16.858486+00:00",
         "posted_age_known": true
       },
@@ -38079,7 +38069,7 @@
         "source": "bms_batch20_rendered",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-31T13:38:16.858486+00:00",
         "posted_age_known": false
       },
@@ -38094,7 +38084,7 @@
         "source": "bms_batch20_rendered",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-31T13:38:16.858486+00:00",
         "posted_age_known": false
       },
@@ -38124,7 +38114,7 @@
         "source": "bms_batch20_rendered",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-31T13:38:16.858486+00:00",
         "posted_age_known": false
       },
@@ -38210,11 +38200,6 @@
   "Oliver Wyman::zero_force20_batch22_v1": {
     "jobs": [],
     "checked_at": 1788157335.0873072,
-    "consecutive_failures": 7
-  },
-  "Refinitiv (LSEG)::zero_force20_batch22_v1": {
-    "jobs": [],
-    "checked_at": 1788157337.6779447,
     "consecutive_failures": 7
   },
   "MSCI::zero_force20_batch22_v1": {
@@ -39160,54 +39145,9 @@
     "checked_at": 1788180742.2474473,
     "consecutive_failures": 0
   },
-  "Kepak Group::targeted_direct_batch7_multi_v1": {
-    "jobs": [],
-    "checked_at": 1788183457.8519013,
-    "consecutive_failures": 1
-  },
   "Morgan Stanley::targeted_direct_batch35_v1": {
     "jobs": [],
     "checked_at": 1788183458.020648,
-    "consecutive_failures": 1
-  },
-  "An Post::targeted_direct_batch7_multi_v1": {
-    "jobs": [],
-    "checked_at": 1788183458.2440639,
-    "consecutive_failures": 1
-  },
-  "Coillte::targeted_direct_batch1_v1": {
-    "jobs": [],
-    "checked_at": 1788183458.6358,
-    "consecutive_failures": 1
-  },
-  "Avolon": {
-    "jobs": [],
-    "checked_at": 1788183458.638126,
-    "consecutive_failures": 1
-  },
-  "ASML::targeted_direct_batch8_bulk_v1": {
-    "jobs": [],
-    "checked_at": 1788183459.5027242,
-    "consecutive_failures": 1
-  },
-  "VMware (Broadcom)::zero_only_batch20_v1": {
-    "jobs": [],
-    "checked_at": 1788183459.7760024,
-    "consecutive_failures": 1
-  },
-  "Aldi Ireland::targeted_direct_batch35_v1": {
-    "jobs": [],
-    "checked_at": 1788183464.1102815,
-    "consecutive_failures": 1
-  },
-  "QIAGEN::zero_only_batch20_v1": {
-    "jobs": [],
-    "checked_at": 1788183464.2670045,
-    "consecutive_failures": 1
-  },
-  "SMBC Aviation Capital::friend_nonlive_batch10_v1": {
-    "jobs": [],
-    "checked_at": 1788183465.329527,
     "consecutive_failures": 1
   },
   "Refinitiv (LSEG)::targeted_direct_batch35_v1": {
@@ -39223,28 +39163,13 @@
         "source": "batch35-lseg-workday",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-08-31T13:38:16.858486+00:00",
         "posted_age_known": true
       }
     ],
     "checked_at": 1788183465.349663,
     "consecutive_failures": 0
-  },
-  "Goodbody::batch_dedicated_v1": {
-    "jobs": [],
-    "checked_at": 1788183469.540809,
-    "consecutive_failures": 1
-  },
-  "HP (Hewlett-Packard)::friend_next4_v1": {
-    "jobs": [],
-    "checked_at": 1788183469.8581357,
-    "consecutive_failures": 1
-  },
-  "Boston Consulting Group (BCG)": {
-    "jobs": [],
-    "checked_at": 1788183472.150391,
-    "consecutive_failures": 1
   },
   "Morningstar::targeted_direct_batch35_v1": {
     "jobs": [],
@@ -39406,5 +39331,65 @@
     ],
     "checked_at": 1788183496.807817,
     "consecutive_failures": 0
+  },
+  "Kepak Group::targeted_direct_batch7_multi_v1": {
+    "jobs": [],
+    "checked_at": 1788184151.4319513,
+    "consecutive_failures": 1
+  },
+  "Avolon": {
+    "jobs": [],
+    "checked_at": 1788184152.2354002,
+    "consecutive_failures": 1
+  },
+  "An Post::targeted_direct_batch7_multi_v1": {
+    "jobs": [],
+    "checked_at": 1788184152.329528,
+    "consecutive_failures": 1
+  },
+  "Coillte::targeted_direct_batch1_v1": {
+    "jobs": [],
+    "checked_at": 1788184152.6921988,
+    "consecutive_failures": 1
+  },
+  "ASML::targeted_direct_batch8_bulk_v1": {
+    "jobs": [],
+    "checked_at": 1788184153.2425401,
+    "consecutive_failures": 1
+  },
+  "VMware (Broadcom)::zero_only_batch20_v1": {
+    "jobs": [],
+    "checked_at": 1788184153.7565901,
+    "consecutive_failures": 1
+  },
+  "QIAGEN::zero_only_batch20_v1": {
+    "jobs": [],
+    "checked_at": 1788184157.8942246,
+    "consecutive_failures": 1
+  },
+  "Aldi Ireland::targeted_direct_batch35_v1": {
+    "jobs": [],
+    "checked_at": 1788184158.2537973,
+    "consecutive_failures": 1
+  },
+  "SMBC Aviation Capital::friend_nonlive_batch10_v1": {
+    "jobs": [],
+    "checked_at": 1788184159.8042743,
+    "consecutive_failures": 1
+  },
+  "Goodbody::batch_dedicated_v1": {
+    "jobs": [],
+    "checked_at": 1788184164.145054,
+    "consecutive_failures": 1
+  },
+  "HP (Hewlett-Packard)::friend_next4_v1": {
+    "jobs": [],
+    "checked_at": 1788184165.9417467,
+    "consecutive_failures": 1
+  },
+  "Boston Consulting Group (BCG)": {
+    "jobs": [],
+    "checked_at": 1788184170.1890674,
+    "consecutive_failures": 1
   }
 }
