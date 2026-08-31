@@ -3017,12 +3017,9 @@ def scrape_alvarez_marsal_batch23(session=None):
 
 
 def scrape_societe_generale_batch23(session=None):
-    """Batch25: identify Dublin cards locally on SG's server-rendered index, then detail-verify."""
+    """Batch28: dependency-free Dublin extraction from SG listing, then detail-verify."""
     company_name = "Societe Generale"
     listing = "https://careers.societegenerale.com/en/Technical/all-job-offers"
-    if BeautifulSoup is None:
-        print("      [batch25-sg] bs4 not installed")
-        return []
     sess = make_workday_session() if HAS_CURL_CFFI else (session or requests.Session())
     try:
         r = sess.get(listing, headers=HEADERS, timeout=18)
@@ -3034,43 +3031,29 @@ def scrape_societe_generale_batch23(session=None):
         return []
 
     html = r.text or ""
-    soup = BeautifulSoup(html, "html.parser")
     candidates = {}
-    # Tight local-card parsing: the previous version climbed too high in the DOM,
-    # causing Dublin text elsewhere on the 700+ job page to contaminate candidates.
-    for a in soup.select('a[href*="/en/job-offers/"]'):
-        href = urllib.parse.urljoin(r.url, a.get("href") or "").split("#")[0]
-        title = " ".join(a.stripped_strings).strip()
-        if not href or not title:
+    # Dependency-free parser: inspect only a tight local window around each
+    # first-party job-offer href. This avoids both the old page-wide Dublin
+    # contamination bug and the Batch27 hard dependency on BeautifulSoup.
+    for m in re.finditer(r'href=["\']([^"\']*/en/job-offers/[^"\']+)["\']', html, re.I):
+        href = urllib.parse.urljoin(r.url, m.group(1)).split("#")[0]
+        window = html[max(0, m.start()-900):min(len(html), m.end()+2200)]
+        text = re.sub(r"\s+", " ", _html_to_text(window)).strip()
+        if not re.search(r"\bDublin\s*,\s*Ireland\b", text, re.I):
             continue
-        block = ""
-        node = a
-        for _ in range(5):
-            node = getattr(node, "parent", None)
-            if node is None:
-                break
-            txt = " ".join(node.stripped_strings)
-            # Prefer the smallest plausible card, never the huge page container.
-            if 20 <= len(txt) <= 900:
-                block = txt
-                if re.search(r"\bDublin\s*,\s*Ireland\b", txt, re.I):
-                    break
-        if re.search(r"\bDublin\s*,\s*Ireland\b", block, re.I):
+        # Prefer the anchor text nearest this exact href.
+        anchor_re = re.compile(
+            r'<a[^>]+href=["\'][^"\']*/en/job-offers/[^"\']+["\'][^>]*>(.*?)</a>',
+            re.I | re.S,
+        )
+        am = anchor_re.search(window)
+        title = re.sub(r"\s+", " ", _html_to_text(am.group(1))).strip() if am else ""
+        if not title or _looks_like_non_job_title(title):
+            # Fallback to a nearby heading, still inside the local card window.
+            hm = re.search(r'<h[1-4][^>]*>(.*?)</h[1-4]>', window, re.I | re.S)
+            title = re.sub(r"\s+", " ", _html_to_text(hm.group(1))).strip() if hm else ""
+        if title and not _looks_like_non_job_title(title):
             candidates[href] = (title, "Dublin, Ireland")
-
-    # Robust raw-HTML fallback for markup changes: only inspect a narrow window
-    # around each job href, never the whole listing page.
-    if len(candidates) < 2:
-        for m in re.finditer(r'href=["\']([^"\']*/en/job-offers/[^"\']+)["\']', html, re.I):
-            href = urllib.parse.urljoin(r.url, m.group(1)).split("#")[0]
-            window = html[max(0, m.start()-500):min(len(html), m.end()+1400)]
-            text = re.sub(r"\s+", " ", _html_to_text(window)).strip()
-            if not re.search(r"\bDublin\s*,\s*Ireland\b", text, re.I):
-                continue
-            am = re.search(r'<a[^>]+href=["\'][^"\']*/en/job-offers/[^"\']+["\'][^>]*>(.*?)</a>', window, re.I | re.S)
-            title = re.sub(r"\s+", " ", _html_to_text(am.group(1))).strip() if am else ""
-            if title:
-                candidates[href] = (title, "Dublin, Ireland")
 
     print(f"      [batch25-sg] {len(candidates)} Dublin candidates on official listing")
     results = {}
@@ -3080,7 +3063,9 @@ def scrape_societe_generale_batch23(session=None):
             if d.status_code >= 400:
                 continue
             meta = _extract_job_detail_metadata_from_html(d.text, d.url, company_name)
-            page_text = BeautifulSoup(d.text, "html.parser").get_text(" ", strip=True)
+            page_text = (BeautifulSoup(d.text, "html.parser").get_text(" ", strip=True)
+                         if BeautifulSoup is not None else
+                         re.sub(r"\s+", " ", _html_to_text(d.text)).strip())
             detail_loc = str(meta.get("location") or "")
             # Listing card is first-party ROI proof; detail must also contain Dublin/Ireland
             # near its own metadata/header, not merely somewhere in global navigation.
@@ -3132,6 +3117,12 @@ BATCH21_ZERO_DEEP20 = {
     "akamai",
     "atlassian",
 }
+
+# Batch28: repeated full runs proved this generic browser strategy produces no
+# recoveries for this group (Macquarie discovers links but verifies zero ROI).
+# Leave the historical set intact for diagnostics, but do not schedule it. New
+# attempts require a genuinely new backend-specific mechanism.
+BATCH28_DISABLE_GENERIC_ZERO_DEEP = set(BATCH21_ZERO_DEEP20)
 
 
 def scrape_zero_deep_detail_batch21(company_name, url, session=None):
@@ -8945,6 +8936,119 @@ def scrape_aldi_ireland(session):
     )
 
 
+
+def scrape_aldi_ireland_batch34(session=None):
+    """Aldi Ireland: HTTP discovery from the current official vacancy board."""
+    session = session or requests.Session()
+    start = "https://careers.aldirecruitment.ie/vacancies/vacancy-search-results.aspx?view=list"
+    queue = [start]
+    seen_pages = set()
+    detail_urls = set()
+    while queue and len(seen_pages) < 8:
+        url = queue.pop(0)
+        key = url.split("#")[0]
+        if key in seen_pages:
+            continue
+        seen_pages.add(key)
+        try:
+            r = session.get(url, headers=HEADERS, timeout=20)
+            if r.status_code != 200:
+                continue
+            raw = r.text
+        except Exception:
+            continue
+        for href in re.findall(r'href\s*=\s*["\']([^"\']+)["\']', raw, re.I):
+            href = html.unescape(href).replace("\\/", "/")
+            full = urllib.parse.urljoin(url, href).split("#")[0]
+            low = full.lower()
+            if "careers.aldirecruitment.ie" not in low:
+                continue
+            if "vacancy-search-results.aspx" in low:
+                if full not in seen_pages and full not in queue:
+                    queue.append(full)
+                continue
+            if "vacancy" in low and ("detail" in low or "vacancyid" in low or "vacancy-id" in low):
+                detail_urls.add(full)
+    results = {}
+    for url in sorted(detail_urls)[:120]:
+        try:
+            r = session.get(url, headers=HEADERS, timeout=18)
+            if r.status_code != 200:
+                continue
+            raw = r.text
+            body = re.sub(r"\s+", " ", _html_to_text(raw)).strip()
+        except Exception:
+            continue
+        if not is_republic_of_ireland_location(body) or _ROI_NEGATIVE_RE.search(body):
+            continue
+        title = ""
+        m = re.search(r"<h1[^>]*>(.*?)</h1>", raw, re.I | re.S)
+        if m:
+            title = re.sub(r"\s+", " ", _html_to_text(m.group(1))).strip()
+        if not title:
+            m = re.search(r"<title[^>]*>(.*?)</title>", raw, re.I | re.S)
+            if m:
+                title = re.sub(r"\s+", " ", _html_to_text(m.group(1))).strip()
+                title = re.sub(r"\s*[-|]\s*Aldi.*$", "", title, flags=re.I).strip()
+        if not title or _looks_like_non_job_title(title):
+            continue
+        loc = "Republic of Ireland"
+        places = ("Dublin", "Cork", "Galway", "Limerick", "Waterford", "Kanturk", "Clonee", "Leixlip", "Mallow", "Moate", "Glanmire", "Donabate", "Tralee", "Mitchelstown", "Sligo", "Kildare", "Wexford", "Athlone", "Naas", "Bray", "Drogheda", "Dundalk", "Letterkenny", "Kilkenny")
+        for place in places:
+            if re.search(rf"\b{re.escape(place)}\b", body, re.I):
+                loc = f"{place}, Ireland"
+                break
+        sponsorship, snippet = classify_sponsorship(body[:18000])
+        results[url.lower()] = {"company": "Aldi Ireland", "title": title[:300], "location": loc, "posted_text": "Unknown", "posted_days_ago": None, "employment_type": normalize_employment_type("", title), "url": url, "source": "batch34-aldi-http", "visa_sponsorship": sponsorship, "visa_snippet": snippet}
+    jobs = list(results.values())
+    print(f"      [batch34-aldi-http] {len(detail_urls)} detail candidates; {len(jobs)} verified Republic-of-Ireland vacancies")
+    return jobs
+
+
+def scrape_forvis_mazars_ireland_batch34(session=None):
+    """Forvis Mazars Ireland: current official Recruitee public API."""
+    session = session or requests.Session()
+    offers = try_recruitee("forvismazars", session) or []
+    results, seen = [], set()
+    for offer in offers:
+        country = str(offer.get("country_code") or "").strip().upper()
+        city = str(offer.get("city") or "").strip()
+        raw_loc = " ".join(str(offer.get(k) or "") for k in ("city", "state", "country", "country_code"))
+        if country != "IE" or _ROI_NEGATIVE_RE.search(raw_loc):
+            continue
+        norm = normalize_recruitee_job("Forvis Mazars Ireland", offer)
+        if not norm:
+            title = str(offer.get("title") or "").strip()
+            if not title or _looks_like_non_job_title(title):
+                continue
+            desc = str(offer.get("description") or offer.get("requirements") or "")
+            sponsorship, snippet = classify_sponsorship(desc)
+            norm = {"company": "Forvis Mazars Ireland", "title": title[:300], "location": f"{city}, Ireland" if city else "Republic of Ireland", "posted_text": "Unknown", "posted_days_ago": None, "employment_type": normalize_employment_type(offer.get("employment_type_code"), title), "url": offer.get("careers_url", ""), "source": "batch34-mazars-recruitee", "visa_sponsorship": sponsorship, "visa_snippet": snippet}
+        norm["source"] = "batch34-mazars-recruitee"
+        key = (norm.get("url") or norm.get("title") or "").strip().lower()
+        if key and key not in seen:
+            seen.add(key); results.append(norm)
+    print(f"      [batch34-mazars-recruitee] {len(offers)} current offers; {len(results)} Republic-of-Ireland vacancies")
+    return results
+
+
+def scrape_esb_alias_batch34(session=None):
+    jobs = scrape_esb_ireland(session)
+    out = []
+    for job in jobs:
+        item = dict(job); item["company"] = "ESB (Electricity Supply Board)"; item["source"] = "batch34-esb-alias"; out.append(item)
+    print(f"      [batch34-esb-alias] {len(out)} verified jobs reused from the live ESB first-party route")
+    return out
+
+
+def scrape_supervalu_musgrave_alias_batch34(session=None):
+    jobs = scrape_musgrave_ireland_friend(session)
+    out = []
+    for job in jobs:
+        item = dict(job); item["company"] = "SuperValu / Musgrave"; item["source"] = "batch34-musgrave-alias"; out.append(item)
+    print(f"      [batch34-musgrave-alias] {len(out)} verified jobs reused from the live Musgrave first-party route")
+    return out
+
 def scrape_fbd_ireland(session):
     return _batch_first_party_roi_scrape(
         "FBD Insurance",
@@ -10167,7 +10271,10 @@ def test_single_company(name):
         "hewlett packard enterprise (hpe)": lambda: scrape_hpe_ireland(session),
         "dell technologies": lambda: scrape_dell_ireland(session),
         "tesco ireland": lambda: scrape_tesco_ireland(session),
-        "aldi ireland": lambda: scrape_aldi_ireland(session),
+        "aldi ireland": lambda: scrape_aldi_ireland_batch34(session),
+        "forvis mazars ireland": lambda: scrape_forvis_mazars_ireland_batch34(session),
+        "esb (electricity supply board)": lambda: scrape_esb_alias_batch34(session),
+        "supervalu / musgrave": lambda: scrape_supervalu_musgrave_alias_batch34(session),
         "fbd insurance": lambda: scrape_fbd_ireland(session),
         "capgemini": lambda: scrape_capgemini_ireland(session),
         "vodafone ireland": lambda: scrape_vodafone_ireland(session),
@@ -10238,7 +10345,9 @@ def test_single_company(name):
         "mckinsey & company": lambda: scrape_mckinsey_ireland_attempt2(session),
         "honeywell": lambda: scrape_honeywell_attempt2(session),
         "schneider electric": lambda: scrape_schneider_attempt2(session),
-        "qualcomm": lambda: scrape_qualcomm_ireland_batch18(session),
+        "qualcomm": lambda: scrape_qualcomm_ireland_batch29(session),
+        "macquarie group": lambda: scrape_macquarie_ireland_batch29(session),
+        "oliver wyman": lambda: scrape_oliver_wyman_ireland_batch29(session),
         "rockwell automation": lambda: scrape_rockwell_ireland_batch26(session),
         "broadcom": lambda: scrape_broadcom_ireland_batch26(session),
         "syneos health": lambda: scrape_syneos_ireland_batch26(session),
@@ -13004,6 +13113,287 @@ def scrape_axa_ireland_friend(session):
 
 
 
+# === TARGETED_DIRECT_BATCH_28_QUALCOMM_EIGHTFOLD ===
+def scrape_qualcomm_ireland_batch28(session=None):
+    """Qualcomm moved its public careers experience to Eightfold.
+
+    The public careers hostname resolves to Qualcomm's Eightfold tenant. Query
+    the same public apply endpoint used by the current site, then retain only
+    positions whose structured location proves Republic of Ireland. Workday is
+    kept out of this route because the old locationCountry query repeatedly
+    returned a false zero in production.
+    """
+    company_name = "Qualcomm"
+    sess = session or requests.Session()
+    raw_by_id = {}
+    endpoints = [
+        "https://careers.qualcomm.com/api/apply/v2/jobs",
+        "https://qualcomm.eightfold.ai/api/apply/v2/jobs",
+    ]
+    # Query both broad and Ireland-specific terms because Eightfold tenants can
+    # cap broad feeds. Deduplication is by stable job id / canonical URL.
+    for base in endpoints:
+        for query in ("Ireland", "Cork", ""):
+            for start_at in (0, 100, 200, 300, 400):
+                try:
+                    resp = sess.get(
+                        base,
+                        params={"domain": "qualcomm.com", "hl": "en", "start": start_at,
+                                "num": 100, "query": query},
+                        headers=HEADERS, timeout=15,
+                    )
+                    if resp.status_code != 200:
+                        break
+                    data = resp.json()
+                    rows = data.get("positions") or data.get("results") or []
+                    if not rows:
+                        break
+                    for raw in rows:
+                        rid = str(raw.get("id") or raw.get("positionId") or
+                                  raw.get("canonicalPositionUrl") or raw.get("apply_url") or "").strip()
+                        if rid:
+                            raw_by_id[rid] = raw
+                    if len(rows) < 100:
+                        break
+                except Exception:
+                    break
+        if raw_by_id:
+            break
+
+    # Tenant helper is a safe fallback if the branded hostname changes shape.
+    if not raw_by_id:
+        for raw in (try_eightfold("qualcomm", sess) or []):
+            rid = str(raw.get("id") or raw.get("canonicalPositionUrl") or raw.get("apply_url") or "").strip()
+            if rid:
+                raw_by_id[rid] = raw
+
+    jobs = {}
+    for raw in raw_by_id.values():
+        job = normalize_eightfold_job(company_name, "qualcomm", raw)
+        if not job:
+            continue
+        evidence = " ".join(str(job.get(k) or "") for k in ("location", "title", "url", "visa_snippet"))
+        if _ROI_NEGATIVE_RE.search(evidence) or not is_republic_of_ireland_location(evidence):
+            continue
+        title = str(job.get("title") or "").strip()
+        if not title or _looks_like_non_job_title(title):
+            continue
+        # Keep the branded first-party careers URL when Eightfold exposes only
+        # the tenant hostname.
+        url = str(job.get("url") or "")
+        if "qualcomm.eightfold.ai" in url:
+            url = url.replace("https://qualcomm.eightfold.ai", "https://careers.qualcomm.com")
+            job["url"] = url
+        job["source"] = "qualcomm_eightfold_batch28"
+        jobs[url.rstrip("/").lower()] = job
+    print(f"      [batch28-qualcomm-eightfold] {len(jobs)} verified Republic-of-Ireland vacancies")
+    return list(jobs.values())
+
+
+
+# === TARGETED_DIRECT_BATCH_29_BULK_ZERO_RECOVERY ===
+def _batch29_verified_detail_seeds(company_name, seeds, source_name, session=None):
+    """Fetch proven first-party detail URLs and require live ROI evidence.
+
+    Batch29 originally mixed two seed shapes: a dict keyed by URL and a list of
+    seed dictionaries.  Batch26's verifier expects the former.  Normalize both
+    shapes here so dedicated recovery routes cannot crash on payload shape.
+    """
+    if isinstance(seeds, list):
+        normalized = {}
+        for seed in seeds:
+            if not isinstance(seed, dict):
+                continue
+            url = str(seed.get("url") or "").strip()
+            if url:
+                normalized[url] = seed
+        seeds = normalized
+    elif not isinstance(seeds, dict):
+        seeds = {}
+    return _batch26_verified_official_details(company_name, seeds, source_name, session)
+
+def scrape_qualcomm_ireland_batch29(session=None):
+    """Dynamically discover Qualcomm Ireland jobs from its official Workday API.
+
+    Batch33 replaces the three-record seed-only implementation.  Workday searchText
+    is deliberately used only for discovery; every candidate is fetched from the
+    official detail JSON and must independently prove Republic-of-Ireland location.
+    The three previously verified Cork detail pages remain a stale-safe fallback if
+    Workday search is temporarily blocked.
+    """
+    tenant, wd_shard, site = "qualcomm", "wd12", "External"
+    api_base = f"https://{tenant}.{wd_shard}.myworkdayjobs.com/wday/cxs/{tenant}/{site}/jobs"
+    site_base = f"https://{tenant}.{wd_shard}.myworkdayjobs.com/{site}"
+    headers = workday_headers(tenant, wd_shard, site)
+    local = make_workday_session()
+    try:
+        local.get(f"https://{tenant}.{wd_shard}.myworkdayjobs.com/en-US/{site}", headers=headers, timeout=15)
+    except Exception:
+        pass
+
+    candidates = {}
+    # Cork is Qualcomm's principal Republic-of-Ireland hiring location. Ireland and
+    # IRL catch records whose searchable text is country-coded rather than city-coded.
+    for term in ("Cork", "Ireland"):
+        offset, limit = 0, 20
+        for _ in range(12):
+            resp, err = post_workday_variants(local, api_base, headers, {}, limit, offset, search_text=term)
+            if resp is None:
+                print(f"      [batch33-qualcomm-dynamic] search {term!r} stopped: {err}")
+                break
+            try:
+                data = resp.json()
+            except Exception:
+                break
+            postings = data.get("jobPostings") or []
+            if not postings:
+                break
+            for raw in postings:
+                path = str(raw.get("externalPath") or "").strip()
+                if path:
+                    candidates[path] = raw
+            total = int(data.get("total") or 0)
+            offset += len(postings)
+            if len(postings) < limit or (total and offset >= total):
+                break
+
+    jobs = {}
+    for path, raw in candidates.items():
+        detail_url = f"https://{tenant}.{wd_shard}.myworkdayjobs.com/wday/cxs/{tenant}/{site}{path}"
+        try:
+            dr = local.get(detail_url, headers=headers, timeout=14)
+            if dr.status_code != 200:
+                continue
+            dj = dr.json()
+        except Exception:
+            continue
+        info = dj.get("jobPostingInfo") or {}
+        evidence = json.dumps(info, ensure_ascii=False)
+        if _ROI_NEGATIVE_RE.search(evidence) or not is_republic_of_ireland_location(evidence):
+            continue
+        title = str(info.get("title") or raw.get("title") or "").strip()
+        if not title or _looks_like_non_job_title(title):
+            continue
+        loc = info.get("location") or info.get("locationsText") or "Ireland"
+        if isinstance(loc, (dict, list)):
+            loc = "Ireland"
+        desc = str(info.get("jobDescription") or "")
+        sponsorship, snippet = classify_sponsorship(desc)
+        posted = info.get("postedOn") or raw.get("postedOn") or "Unknown"
+        public_url = site_base.rstrip("/") + path
+        jobs[public_url.rstrip("/").lower()] = {
+            "company": "Qualcomm", "title": title[:300], "location": str(loc),
+            "posted_text": posted, "posted_days_ago": parse_posted_text(str(posted)),
+            "employment_type": normalize_employment_type(
+                " ".join(str(x) for x in (raw.get("bulletFields") or [])), title),
+            "url": public_url, "source": "batch33-qualcomm-dynamic-workday",
+            "visa_sponsorship": sponsorship, "visa_snippet": snippet,
+        }
+
+    # If Workday search is blocked or unexpectedly sparse, preserve the three official
+    # vacancies already proven current; each fallback detail page is fetched and must
+    # still pass the same live/ROI verifier before it is merged.
+    seeds = [
+        {"url": "https://qualcomm.wd12.myworkdayjobs.com/en-US/External/job/FY27-Intern---CPU-Engineering-Internship-2027---6-months--Cork_3093026", "title": "FY27 Intern - CPU Engineering Internship 2027 - 6 months, Cork", "location": "Cork, Ireland"},
+        {"url": "https://qualcomm.wd12.myworkdayjobs.com/en-US/External/job/FY27-Intern---Software-Engineering-Internship-2027---6-months--Cork_3091774", "title": "FY27 Intern - Software Engineering Internship 2027 - 6 months, Cork", "location": "Cork, Ireland"},
+        {"url": "https://qualcomm.wd12.myworkdayjobs.com/External/job/Cork-IRL/Software-Engineer--Senior--Core-Platform-Services----Cork--Ireland_3081581", "title": "Embedded Real Time Operating System Software Engineer, Senior - Cork, Ireland", "location": "Cork, Ireland"},
+    ]
+    if len(jobs) < 3:
+        for job in _batch29_verified_detail_seeds("Qualcomm", seeds, "batch33-qualcomm-seed-fallback", session):
+            jobs[str(job.get("url") or "").rstrip("/").lower()] = job
+
+    print(f"      [batch33-qualcomm-dynamic] {len(candidates)} Workday candidates; {len(jobs)} verified Republic-of-Ireland vacancies")
+    return list(jobs.values())
+
+def scrape_oliver_wyman_ireland_batch29(session=None):
+    """Use Marsh's current first-party Phenom search, then verify only Oliver Wyman ROI details."""
+    sess = session or requests.Session()
+    search_urls = [
+        "https://careers.marshmclennan.com/eu/en/search-results?keywords=Oliver%20Wyman&location=Dublin%2C%20Ireland",
+        "https://careers.marshmclennan.com/global/en/search-results?keywords=Oliver%20Wyman&location=Dublin%2C%20Ireland",
+        "https://careers.marshmclennan.com/eu/en/search-results?keywords=Oliver%20Wyman&location=Ireland",
+    ]
+    links = {}
+    for u in search_urls:
+        try:
+            r=sess.get(u,headers=HEADERS,timeout=18)
+            if r.status_code>=400: continue
+            for href in re.findall(r'href=[\"\']([^\"\']+)', r.text, re.I):
+                if '/job/' not in href: continue
+                full=urljoin(r.url, href)
+                if 'careers.marshmclennan.com' in full:
+                    links[full.split('#')[0]]=None
+        except Exception:
+            pass
+    jobs={}
+    for url in list(links)[:60]:
+        try:
+            r=sess.get(url,headers=HEADERS,timeout=15)
+            if r.status_code>=400: continue
+            text=re.sub(r'\s+',' ',_html_to_text(r.text)).strip()
+            if not re.search(r'\bOliver Wyman\b', text, re.I): continue
+            if _ROI_NEGATIVE_RE.search(text) or not is_republic_of_ireland_location(text): continue
+            title=''
+            m=re.search(r'<h1[^>]*>(.*?)</h1>',r.text,re.I|re.S)
+            if m: title=re.sub(r'\s+',' ',_html_to_text(m.group(1))).strip()
+            if not title:
+                m=re.search(r'<title[^>]*>(.*?)</title>',r.text,re.I|re.S)
+                if m: title=re.sub(r'\s+',' ',_html_to_text(m.group(1))).strip()
+            title=re.sub(r'\s+(?:job in|\|).*$', '', title, flags=re.I).strip()
+            if not title or _looks_like_non_job_title(title): continue
+            sponsorship,snippet=classify_sponsorship(text[:20000])
+            jobs[url.rstrip('/').lower()]={
+                'company':'Oliver Wyman','title':title[:300],'location':'Dublin, Ireland',
+                'posted_text':'Unknown','posted_days_ago':None,
+                'employment_type':normalize_employment_type('',title),'url':url,
+                'source':'batch29-oliver-wyman-marsh','visa_sponsorship':sponsorship,'visa_snippet':snippet
+            }
+        except Exception:
+            continue
+    print(f"      [batch29-oliver-wyman-marsh] {len(jobs)} verified Republic-of-Ireland vacancies")
+    return list(jobs.values())
+
+def scrape_macquarie_ireland_batch29(session=None):
+    """Fresh first-party Macquarie Dublin search; no third-party vacancies are emitted."""
+    sess=session or requests.Session()
+    search_urls=[
+        "https://recruitment.macquarie.com/en_US/careers/SearchJobs?search=Dublin",
+        "https://recruitment.macquarie.com/en_US/careers/SearchJobs?search=Ireland",
+    ]
+    links={}
+    for u in search_urls:
+        try:
+            r=sess.get(u,headers=HEADERS,timeout=18)
+            if r.status_code>=400: continue
+            for href in re.findall(r'href=[\"\']([^\"\']+)',r.text,re.I):
+                if not re.search(r'(?:job|career|position)',href,re.I): continue
+                full=urljoin(r.url,href)
+                if 'macquarie' in full.lower(): links[full.split('#')[0]]=None
+        except Exception:
+            pass
+    jobs={}
+    for url in list(links)[:80]:
+        try:
+            r=sess.get(url,headers=HEADERS,timeout=15)
+            if r.status_code>=400: continue
+            text=re.sub(r'\s+',' ',_html_to_text(r.text)).strip()
+            if _ROI_NEGATIVE_RE.search(text) or not is_republic_of_ireland_location(text): continue
+            title=''
+            m=re.search(r'<h1[^>]*>(.*?)</h1>',r.text,re.I|re.S)
+            if m: title=re.sub(r'\s+',' ',_html_to_text(m.group(1))).strip()
+            if not title or _looks_like_non_job_title(title): continue
+            sponsorship,snippet=classify_sponsorship(text[:20000])
+            jobs[url.rstrip('/').lower()]={
+                'company':'Macquarie Group','title':title[:300],'location':'Dublin, Ireland',
+                'posted_text':'Unknown','posted_days_ago':None,
+                'employment_type':normalize_employment_type('',title),'url':url,
+                'source':'batch29-macquarie-first-party','visa_sponsorship':sponsorship,'visa_snippet':snippet
+            }
+        except Exception:
+            continue
+    print(f"      [batch29-macquarie-first-party] {len(jobs)} verified Republic-of-Ireland vacancies")
+    return list(jobs.values())
+
 # === TARGETED_DIRECT_BATCH_26_BACKEND_SPECIFIC_BULK ===
 # Do not send proven false-zero companies back through the generic Sheet-2
 # browser discovery.  These bounded first-party detail seeds were confirmed
@@ -13184,7 +13574,15 @@ def scrape_wtw_ireland_batch26(session):
     return _batch26_verified_official_details("Willis Towers Watson (WTW)", seeds, "batch26_wtw_verified", session)
 
 
+print("=== TARGETED_DIRECT_BATCH_34_BULK_ZERO_RECOVERY ACTIVE: Aldi direct HTTP vacancy discovery + Forvis Mazars Recruitee API + ESB/Musgrave duplicate-label aliases; 20-company zero audit performed, only officially-proven recoveries integrated ===")
+print("=== TARGETED_DIRECT_BATCH_33_QUALCOMM_DYNAMIC_WORKDAY ACTIVE: Qualcomm now discovers current Cork/Ireland vacancies dynamically from official Workday search + strict detail verification; 3 proven seeds retained only as blocked-search fallback ===")
+print("=== TARGETED_DIRECT_BATCH_32_SEED_NORMALIZER_FIX ACTIVE: Batch29 detail-seed wrapper now accepts list or dict payloads; Qualcomm no longer crashes on seed shape; prior working routes preserved ===")
+print("=== TARGETED_DIRECT_BATCH_31_QUALCOMM_SEED_FIX ACTIVE: Batch29 Qualcomm direct Workday seed payload fixed to structured seed dictionaries; Batch30 routing + SG fix preserved; Macquarie/Oliver zero routes not retried ===")
+
 def main():
+    print("=== TARGETED_DIRECT_BATCH_30_ONLY_ROUTING_FIX ACTIVE: --only now reaches Batch29 Qualcomm + Macquarie + Oliver Wyman dedicated routes instead of Batch28/generic fallbacks; production specs unchanged ===")
+    print("=== TARGETED_DIRECT_BATCH_29_BULK_ZERO_RECOVERY ACTIVE: Qualcomm direct current Workday details + Oliver Wyman via Marsh first-party + Macquarie Dublin first-party search; Societe Generale fix preserved ===")
+    print("=== TARGETED_DIRECT_BATCH_28_QUALCOMM_SG_RUNTIME ACTIVE: Qualcomm uses current public Eightfold backend; Societe Generale no longer requires bs4; repeated zero-deep20 browser force queue retired ===")
     print("=== TARGETED_DIRECT_BATCH_27_QUALITY_FIX ACTIVE: inactive A&M seed removed; Cook/Syneos challenge/domain pseudo-titles replaced by verified vacancy seed titles; Batch26 recovery routes preserved ===")
     print("=== TARGETED_DIRECT_BATCH_26_BACKEND_SPECIFIC_BULK ACTIVE: AXA + Rockwell + Broadcom + Syneos + Cook + WTW use current first-party detail verification; A&M title quality fixed; generic Sheet2 bypassed for these routes ===")
     print("=== TARGETED_DIRECT_BATCH_25_VALIDATED_BACKENDS ACTIVE: SG card contamination fixed; A&M TTC JSON + current official detail verification; use --only before full run ===")
@@ -13611,7 +14009,10 @@ def main():
         ("exact", "hewlett packard enterprise (hpe)", scrape_hpe_ireland, 60, "official HPE careers"),
         ("exact", "dell technologies", scrape_dell_ireland, 60, "official Dell careers"),
         ("exact", "tesco ireland", scrape_tesco_ireland, 60, "official Tesco Ireland careers"),
-        ("exact", "aldi ireland", scrape_aldi_ireland, 60, "official Aldi Ireland careers"),
+        ("exact", "aldi ireland", scrape_aldi_ireland_batch34, 60, "Batch34 official Aldi Ireland HTTP vacancy board"),
+        ("exact", "forvis mazars ireland", scrape_forvis_mazars_ireland_batch34, 45, "Batch34 official Forvis Mazars Recruitee API"),
+        ("exact", "esb (electricity supply board)", scrape_esb_alias_batch34, 60, "Batch34 alias to live ESB first-party board"),
+        ("exact", "supervalu / musgrave", scrape_supervalu_musgrave_alias_batch34, 60, "Batch34 alias to live Musgrave first-party board"),
         ("exact", "fbd insurance", scrape_fbd_ireland, 60, "official FBD careers"),
         ("exact", "capgemini", scrape_capgemini_ireland, 60, "official Capgemini careers"),
         ("exact", "vodafone ireland", scrape_vodafone_ireland, 60, "official Vodafone Ireland careers"),
@@ -13681,7 +14082,9 @@ def main():
         ("exact", "databricks", scrape_databricks_ireland_recovery, 75, "first-party sitemap recovery"),
         ("exact", "visa", scrape_visa_ireland_recovery, 75, "first-party sitemap recovery"),
         ("exact", "aer lingus", scrape_aer_lingus_talentsoft_current, 40, "Aer Lingus Talentsoft Republic-of-Ireland facet"),
-        ("exact", "qualcomm", scrape_qualcomm_ireland_batch18, 55, "Batch18 Workday detail-verified Ireland search"),
+        ("exact", "qualcomm", scrape_qualcomm_ireland_batch29, 90, "Batch33 dynamic Qualcomm Cork/Ireland Workday discovery + strict detail verification"),
+        ("exact", "oliver wyman", scrape_oliver_wyman_ireland_batch29, 55, "Batch29 Marsh first-party Oliver Wyman Dublin search"),
+        ("exact", "macquarie group", scrape_macquarie_ireland_batch29, 55, "Batch29 Macquarie first-party Dublin search"),
         ("exact", "roche", scrape_roche_ireland_current, 45, "current Roche Workday Dublin route"),
         ("exact", "resmed", scrape_resmed_ireland_current, 45, "current ResMed Workday Dublin route"),
         ("exact", "zendesk", scrape_zendesk_ireland_batch18, 55, "Batch18 Workday detail-verified Ireland search"),
@@ -14201,6 +14604,7 @@ def main():
     priority_entries = [
         entry for entry in manual_check
         if entry["company"].strip().lower() in PRIORITY_SHEET2_COMPANIES
+        and entry["company"].strip().lower() not in BATCH28_DISABLE_GENERIC_ZERO_DEEP
         and entry["company"].strip().lower() not in _already_scheduled_company_names
         and entry["company"].strip().lower() not in {
             "wipro",
@@ -14287,11 +14691,7 @@ def main():
     # Here we source all 20 directly from the 305-company CSV rows, remove any
     # older task for those companies, and replace it with exactly one fresh
     # Batch22 task. Manual status is not read or modified.
-    _batch22_rows_by_name = {
-        str(c.get("company_name") or "").strip().lower(): c
-        for c in companies
-        if str(c.get("company_name") or "").strip().lower() in BATCH21_ZERO_DEEP20
-    }
+    _batch22_rows_by_name = {}  # Batch28: generic zero-deep force20 retired after repeated 0-recovery runs.
     _batch22_target_names = set(_batch22_rows_by_name)
     if _batch22_target_names:
         task_list = [
