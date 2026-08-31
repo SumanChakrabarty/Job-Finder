@@ -10232,6 +10232,186 @@ def scrape_schneider_attempt2(session):
     return list(results.values())
 
 
+
+# === TARGETED_DIRECT_BATCH_35_BULK_ZERO_BACKENDS ===
+# New mechanisms only: rendered Aldi discovery, direct Workday tenants for
+# Morningstar and LSEG/Refinitiv, official Morgan Stanley Eightfold API, and
+# a current-detail safety net for Societe Generale. Manual/error queues are
+# intentionally not expanded here.
+
+def scrape_aldi_ireland_batch35(session=None):
+    """Rendered Aldi board discovery, then strict first-party detail verification.
+
+    Batch34 proved the plain HTTP page does not expose its vacancy links in the
+    raw response seen by the pipeline. This is a genuinely different mechanism:
+    render the official board, collect DOM-generated vacancy URLs, then verify
+    each detail page over HTTP.
+    """
+    if not HAS_PLAYWRIGHT:
+        return []
+    session = session or requests.Session()
+    board = "https://careers.aldirecruitment.ie/vacancies/vacancy-search-results.aspx?view=smalllist"
+    detail_urls = set()
+    try:
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch(headless=True, args=["--disable-http2"])
+            page = browser.new_page(viewport={"width": 1440, "height": 1100}, locale="en-IE")
+            page.goto(board, wait_until="domcontentloaded", timeout=60000)
+            page.wait_for_timeout(2500)
+            for txt in ("Accept all", "Accept All", "Accept", "I agree", "Allow all"):
+                try:
+                    b = page.get_by_role("button", name=txt, exact=False)
+                    if b.count():
+                        b.first.click(timeout=1500); page.wait_for_timeout(700); break
+                except Exception:
+                    pass
+            # Trigger lazy/rendered vacancy components.
+            try:
+                page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
+                page.wait_for_timeout(1200)
+            except Exception:
+                pass
+            for a in page.locator("a").all():
+                try:
+                    href = a.get_attribute("href") or ""
+                except Exception:
+                    continue
+                if not href:
+                    continue
+                full = urllib.parse.urljoin(board, href).split("#")[0]
+                low = full.lower()
+                if "careers.aldirecruitment.ie" not in low:
+                    continue
+                if "vacancy-search-results" in low:
+                    continue
+                if "vacanc" in low and ("detail" in low or "vacancyid" in low or "vacancy-id" in low or "/vacancies/" in low):
+                    detail_urls.add(full)
+            # Some implementations keep targets in data-* / onclick attributes.
+            rendered = page.content()
+            for raw in re.findall(r'(?:data-(?:url|href)|href|onclick)\s*=\s*["\']([^"\']+)["\']', rendered, re.I):
+                for candidate in re.findall(r'https?://[^\s"\']+|/[^\s"\']*vacanc[^\s"\']*', html.unescape(raw), re.I):
+                    full = urllib.parse.urljoin(board, candidate).split("#")[0]
+                    low = full.lower()
+                    if "careers.aldirecruitment.ie" in low and "vacancy-search-results" not in low:
+                        detail_urls.add(full)
+            browser.close()
+    except Exception as exc:
+        print(f"      [batch35-aldi-rendered] rendered discovery failed: {exc}")
+        return []
+
+    jobs = {}
+    for url in sorted(detail_urls)[:100]:
+        try:
+            r = session.get(url, headers=HEADERS, timeout=15, allow_redirects=True)
+            if r.status_code != 200:
+                continue
+            raw = r.text or ""
+            body = re.sub(r"\s+", " ", _html_to_text(raw)).strip()
+        except Exception:
+            continue
+        if not is_republic_of_ireland_location(body) or _ROI_NEGATIVE_RE.search(body):
+            continue
+        title = ""
+        for pat in (r'<h1[^>]*>(.*?)</h1>', r'<title[^>]*>(.*?)</title>'):
+            m = re.search(pat, raw, re.I | re.S)
+            if m:
+                title = re.sub(r"\s+", " ", _html_to_text(m.group(1))).strip()
+                title = re.sub(r"\s*[-|]\s*Aldi.*$", "", title, flags=re.I).strip()
+                if title:
+                    break
+        if not title or _looks_like_non_job_title(title):
+            continue
+        loc = "Republic of Ireland"
+        for place in ("Dublin","Cork","Galway","Limerick","Waterford","Kanturk","Clonee","Leixlip","Mallow","Moate","Glanmire","Donabate","Tralee","Mitchelstown","Sligo","Kildare","Wexford","Athlone","Naas","Bray","Drogheda","Dundalk","Letterkenny","Kilkenny"):
+            if re.search(rf"\b{re.escape(place)}\b", body, re.I):
+                loc = f"{place}, Ireland"; break
+        sponsorship, snippet = classify_sponsorship(body[:18000])
+        canonical = r.url.split("#")[0]
+        jobs[canonical.lower()] = {"company":"Aldi Ireland","title":title[:300],"location":loc,"posted_text":"Unknown","posted_days_ago":None,"employment_type":normalize_employment_type("",title),"url":canonical,"source":"batch35-aldi-rendered","visa_sponsorship":sponsorship,"visa_snippet":snippet}
+    print(f"      [batch35-aldi-rendered] {len(detail_urls)} rendered detail candidates; {len(jobs)} verified Republic-of-Ireland vacancies")
+    return list(jobs.values())
+
+
+def scrape_morningstar_ireland_batch35(session=None):
+    rows = _workday_detail_verified_ireland_batch20("Morningstar", "https://morningstar.wd5.myworkdayjobs.com/morningstar", session or requests.Session(), 6)
+    for j in rows: j["source"] = "batch35-morningstar-workday"
+    print(f"      [batch35-morningstar-workday] {len(rows)} verified Republic-of-Ireland vacancies")
+    return rows
+
+
+def scrape_lseg_ireland_batch35(session=None):
+    rows = _workday_detail_verified_ireland_batch20("Refinitiv (LSEG)", "https://lseg.wd3.myworkdayjobs.com/Careers", session or requests.Session(), 8)
+    for j in rows: j["source"] = "batch35-lseg-workday"
+    print(f"      [batch35-lseg-workday] {len(rows)} verified Republic-of-Ireland vacancies")
+    return rows
+
+
+def scrape_morgan_stanley_ireland_batch35(session=None):
+    """Official Morgan Stanley Eightfold API; keep only explicit ROI positions."""
+    session = session or requests.Session()
+    endpoint = "https://morganstanley.eightfold.ai/api/apply/v2/jobs"
+    jobs, seen = {}, set()
+    for query in ("Ireland", "Dublin"):
+        start = 0
+        for _ in range(5):
+            try:
+                r = session.get(endpoint, params={"domain":"morganstanley.com","hl":"en","start":start,"num":100,"query":query}, headers=HEADERS, timeout=15)
+                if r.status_code != 200:
+                    break
+                data = r.json()
+            except Exception:
+                break
+            positions = data.get("positions") or data.get("results") or []
+            if not positions:
+                break
+            for p in positions:
+                evidence = json.dumps(p, ensure_ascii=False)
+                if _ROI_NEGATIVE_RE.search(evidence) or not is_republic_of_ireland_location(evidence):
+                    continue
+                title = str(p.get("name") or p.get("title") or p.get("position_name") or "").strip()
+                if not title or _looks_like_non_job_title(title):
+                    continue
+                pid = str(p.get("id") or p.get("position_id") or p.get("pid") or "").strip()
+                url = str(p.get("position_url") or p.get("url") or "").strip()
+                if not url and pid:
+                    url = f"https://morganstanley.eightfold.ai/careers/job?domain=morganstanley.com&pid={pid}"
+                if not url:
+                    continue
+                key = (pid or url).lower()
+                if key in seen:
+                    continue
+                seen.add(key)
+                loc = p.get("location") or p.get("locations") or "Ireland"
+                if isinstance(loc, (list,dict)):
+                    loc = json.dumps(loc, ensure_ascii=False)
+                desc = str(p.get("description") or p.get("job_description") or "")
+                sponsorship, snippet = classify_sponsorship(desc)
+                jobs[key] = {"company":"Morgan Stanley","title":title[:300],"location":str(loc),"posted_text":str(p.get("posted_date") or p.get("posted_ts") or "Unknown"),"posted_days_ago":None,"employment_type":normalize_employment_type(str(p.get("employment_type") or ""),title),"url":url,"source":"batch35-morganstanley-eightfold","visa_sponsorship":sponsorship,"visa_snippet":snippet}
+            if len(positions) < 100:
+                break
+            start += len(positions)
+    print(f"      [batch35-morganstanley-eightfold] {len(jobs)} verified Republic-of-Ireland vacancies")
+    return list(jobs.values())
+
+
+def scrape_societe_generale_batch35(session=None):
+    """Listing discovery plus four current official Dublin details, all live-verified each run."""
+    rows = scrape_societe_generale_batch23(session)
+    seeds = [
+        {"url":"https://careers.societegenerale.com/en/job-offers/transfer-agency-administrator-14-month-ftc-26000E77-en","title":"Transfer Agency Administrator (14 Month FTC)","location":"Dublin, Ireland"},
+        {"url":"https://careers.societegenerale.com/en/job-offers/kyc-aml-officer-14-month-ftc-26000E7A-en","title":"KYC / AML Officer (14 Month FTC)","location":"Dublin, Ireland"},
+        {"url":"https://careers.societegenerale.com/en/job-offers/custody-administrator-14-month-ftc-26000DGS-en","title":"Custody Administrator (14 month FTC)","location":"Dublin, Ireland"},
+        {"url":"https://careers.societegenerale.com/en/job-offers/vie-hr-generalist-26000I60-en","title":"V.I.E. HR Generalist","location":"Dublin, Ireland"},
+        {"url":"https://careers.societegenerale.com/en/job-offers/vie-custody-administrator-26000FCR-en","title":"V.I.E. Custody Administrator","location":"Dublin, Ireland"},
+    ]
+    verified = _batch29_verified_detail_seeds("Societe Generale", seeds, "batch35-sg-current-details", session or requests.Session())
+    merged = {}
+    for j in (rows or []) + (verified or []):
+        key = (j.get("url") or j.get("title") or "").rstrip("/").lower()
+        if key: merged[key] = j
+    print(f"      [batch35-sg-current] {len(merged)} live verified Dublin vacancies")
+    return list(merged.values())
+
 def test_single_company(name):
     """Fast test mode for one company — skips the full ~30 min pipeline
     entirely. Checks known dedicated scrapers by name directly (including Batch24 recovery routes, Apple,
@@ -10244,7 +10424,7 @@ def test_single_company(name):
 
     dedicated = {
         "alvarez & marsal": lambda: scrape_alvarez_marsal_batch23(session),
-        "societe generale": lambda: scrape_societe_generale_batch23(session),
+        "societe generale": lambda: scrape_societe_generale_batch35(session),
         "apple": lambda: scrape_apple_ireland(session),
         "google": lambda: scrape_google_ireland(session),
         "amazon": lambda: scrape_amazon_ireland(session),
@@ -10271,8 +10451,11 @@ def test_single_company(name):
         "hewlett packard enterprise (hpe)": lambda: scrape_hpe_ireland(session),
         "dell technologies": lambda: scrape_dell_ireland(session),
         "tesco ireland": lambda: scrape_tesco_ireland(session),
-        "aldi ireland": lambda: scrape_aldi_ireland_batch34(session),
+        "aldi ireland": lambda: scrape_aldi_ireland_batch35(session),
         "forvis mazars ireland": lambda: scrape_forvis_mazars_ireland_batch34(session),
+        "morningstar": lambda: scrape_morningstar_ireland_batch35(session),
+        "refinitiv (lseg)": lambda: scrape_lseg_ireland_batch35(session),
+        "morgan stanley": lambda: scrape_morgan_stanley_ireland_batch35(session),
         "esb (electricity supply board)": lambda: scrape_esb_alias_batch34(session),
         "supervalu / musgrave": lambda: scrape_supervalu_musgrave_alias_batch34(session),
         "fbd insurance": lambda: scrape_fbd_ireland(session),
@@ -13574,6 +13757,7 @@ def scrape_wtw_ireland_batch26(session):
     return _batch26_verified_official_details("Willis Towers Watson (WTW)", seeds, "batch26_wtw_verified", session)
 
 
+print("=== TARGETED_DIRECT_BATCH_35_BULK_ZERO_BACKENDS ACTIVE: Aldi rendered DOM vacancy discovery + Morningstar Workday + LSEG Workday + Morgan Stanley Eightfold + SG current-detail recovery; Manual queue untouched ===")
 print("=== TARGETED_DIRECT_BATCH_34_BULK_ZERO_RECOVERY ACTIVE: Aldi direct HTTP vacancy discovery + Forvis Mazars Recruitee API + ESB/Musgrave duplicate-label aliases; 20-company zero audit performed, only officially-proven recoveries integrated ===")
 print("=== TARGETED_DIRECT_BATCH_33_QUALCOMM_DYNAMIC_WORKDAY ACTIVE: Qualcomm now discovers current Cork/Ireland vacancies dynamically from official Workday search + strict detail verification; 3 proven seeds retained only as blocked-search fallback ===")
 print("=== TARGETED_DIRECT_BATCH_32_SEED_NORMALIZER_FIX ACTIVE: Batch29 detail-seed wrapper now accepts list or dict payloads; Qualcomm no longer crashes on seed shape; prior working routes preserved ===")
@@ -14009,8 +14193,11 @@ def main():
         ("exact", "hewlett packard enterprise (hpe)", scrape_hpe_ireland, 60, "official HPE careers"),
         ("exact", "dell technologies", scrape_dell_ireland, 60, "official Dell careers"),
         ("exact", "tesco ireland", scrape_tesco_ireland, 60, "official Tesco Ireland careers"),
-        ("exact", "aldi ireland", scrape_aldi_ireland_batch34, 60, "Batch34 official Aldi Ireland HTTP vacancy board"),
+        ("exact", "aldi ireland", scrape_aldi_ireland_batch35, 90, "Batch35 rendered official Aldi board + strict detail verification"),
         ("exact", "forvis mazars ireland", scrape_forvis_mazars_ireland_batch34, 45, "Batch34 official Forvis Mazars Recruitee API"),
+        ("exact", "morningstar", scrape_morningstar_ireland_batch35, 55, "Batch35 direct Morningstar Workday Ireland verification"),
+        ("exact", "refinitiv (lseg)", scrape_lseg_ireland_batch35, 65, "Batch35 direct LSEG Workday Ireland verification"),
+        ("exact", "morgan stanley", scrape_morgan_stanley_ireland_batch35, 45, "Batch35 official Morgan Stanley Eightfold Ireland API"),
         ("exact", "esb (electricity supply board)", scrape_esb_alias_batch34, 60, "Batch34 alias to live ESB first-party board"),
         ("exact", "supervalu / musgrave", scrape_supervalu_musgrave_alias_batch34, 60, "Batch34 alias to live Musgrave first-party board"),
         ("exact", "fbd insurance", scrape_fbd_ireland, 60, "official FBD careers"),
@@ -14167,7 +14354,7 @@ def main():
         "scrape_iqvia_ireland",
         "scrape_goodbody_ireland", "scrape_bms_ireland", "scrape_sse_ireland",
         "scrape_hpe_ireland", "scrape_dell_ireland",
-        "scrape_aldi_ireland", "scrape_fbd_ireland",
+        "scrape_aldi_ireland", "scrape_aldi_ireland_batch35", "scrape_fbd_ireland",
         "scrape_capgemini_ireland", "scrape_vodafone_ireland",
         "scrape_abbott_ireland", "scrape_astrazeneca_ireland", "scrape_amgen_ireland",
         "scrape_alexion_ireland", "scrape_stryker_ireland", "scrape_novartis_ireland",
@@ -14246,7 +14433,9 @@ def main():
             # from the old generic Sheet-2 zero-result cache so the proven
             # dedicated result cannot be shadowed by a stale generic verdict.
             _key = name.strip().lower()
-            if _key in {
+            if _key in {"aldi ireland", "morningstar", "refinitiv (lseg)", "morgan stanley", "societe generale"}:
+                cache_key = f"{name}::targeted_direct_batch35_v1"
+            elif _key in {
                 "qualcomm", "nxp semiconductors", "rockwell automation",
                 "broadcom", "vmware (broadcom)", "revvity (perkinelmer)", "qiagen",
                 "haleon", "bristol myers squibb", "dxc technology", "axa ireland"
@@ -14727,7 +14916,7 @@ def main():
     _batch23_proven = {"alvarez & marsal", "societe generale"}
     task_list = [t for t in task_list if str(t[1] or "").strip().lower() not in _batch23_proven]
     task_list.append(("batch23_proven_http", "Alvarez & Marsal", lambda: scrape_alvarez_marsal_batch23(session), 60, False))
-    task_list.append(("batch23_proven_http", "Societe Generale", lambda: scrape_societe_generale_batch23(session), 60, False))
+    task_list.append(("batch23_proven_http", "Societe Generale", lambda: scrape_societe_generale_batch35(session), 60, False))
     print("=== Batch23 proven-zero recovery: 2 direct HTTP routes queued (Alvarez & Marsal + Societe Generale) ===")
 
     _FINAL_DEFERRED_COMPANIES = {
