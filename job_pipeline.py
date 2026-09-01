@@ -10425,6 +10425,7 @@ def test_single_company(name):
     dedicated = {
         "alvarez & marsal": lambda: scrape_alvarez_marsal_batch23(session),
         "societe generale": lambda: scrape_societe_generale_batch35(session),
+        "uisce éireann (irish water)": lambda: scrape_uisce_eireann_current_portal(session),
         "apple": lambda: scrape_apple_ireland(session),
         "google": lambda: scrape_google_ireland(session),
         "amazon": lambda: scrape_amazon_ireland(session),
@@ -10477,12 +10478,14 @@ def test_single_company(name):
         "infosys": lambda: scrape_infosys_ireland_friend(session),
         "laya healthcare": lambda: scrape_laya_healthcare_friend(session),
         "palo alto networks": lambda: scrape_palo_alto_ireland_friend(session),
-        "smbc aviation capital": lambda: scrape_smbc_aviation_capital_friend(session),
+        "smbc aviation capital": lambda: scrape_smbc_aviation_capital_batch36(session),
         "susquehanna international group (sig)": lambda: scrape_sig_ireland_friend(session),
         "heineken ireland": lambda: scrape_heineken_ireland_friend(session),
         "musgrave group (supervalu / centra)": lambda: scrape_musgrave_ireland_friend(session),
         "vhi healthcare": lambda: scrape_vhi_ireland_friend(session),
-        "hp (hewlett-packard)": lambda: scrape_hp_ireland_friend(session),
+        "hp (hewlett-packard)": lambda: scrape_hp_ireland_batch38(session),
+        "alkermes": lambda: scrape_alkermes_ireland_batch36(session),
+        "edwards lifesciences": lambda: scrape_edwards_lifesciences_batch38(session),
         "pepsico": lambda: scrape_pepsico_ireland(session),
         "esb": lambda: scrape_esb_ireland(session),
         "irish rail": lambda: scrape_irish_rail_ireland(session),
@@ -11946,10 +11949,114 @@ def scrape_shannon_airport_group_http(session):
 
 
 def scrape_uisce_eireann_current_portal(session):
-    """Official Uisce Éireann current-vacancies portal, rendered first-party recovery."""
-    return scrape_priority_sheet2_generic(
+    """Batch36: official Uisce Éireann Oracle Candidate Experience backend."""
+    jobs = scrape_oracle_candidate_experience(
         "Uisce Éireann (Irish Water)",
-        "https://www.water.ie/about/careers/portal",
+        "https://elyx.fa.em2.oraclecloud.com",
+        "careers",
+        session,
+        country_code="IE",
+        max_pages=4,
+    )
+    print(f"      [batch36-uisce-oracle] {len(jobs)} verified Republic-of-Ireland vacancies")
+    return jobs
+
+
+def scrape_alkermes_ireland_batch36(session):
+    """Batch36: current official Alkermes careers portal with strict ROI verification."""
+    jobs = scrape_priority_sheet2_generic(
+        "Alkermes",
+        "https://careers.alkermes.com/",
+    )
+    print(f"      [batch36-alkermes-current-portal] {len(jobs)} verified Republic-of-Ireland vacancies")
+    return jobs
+
+
+def scrape_smbc_aviation_capital_batch36(session):
+    """Batch36: official SMBC Aviation Capital GroupGTI current-opportunities portal."""
+    jobs = scrape_priority_sheet2_generic(
+        "SMBC Aviation Capital",
+        "https://smbcaviationcapital.groupgti.com/Home/Guest",
+    )
+    print(f"      [batch36-smbc-groupgti] {len(jobs)} verified Republic-of-Ireland vacancies")
+    return jobs
+
+
+# === TARGETED_DIRECT_BATCH_38_PRE_FULL_RUN_BULK ===
+# User is doing a full run next, so add multiple high-confidence false-zero
+# recoveries in the same production file. These are current official Workday
+# tenants with recent Republic-of-Ireland vacancy proof. Dynamic multi-term
+# enumeration remains primary; current official detail seeds are only a
+# blocked-search fallback and are re-verified against Workday CXS before use.
+
+def _batch38_workday_current(company_name, board_url, session, seed_paths=()):
+    jobs = _workday_detail_verified_ireland_batch20(company_name, board_url, session, 5)
+    by_url = {str(j.get("url") or "").lower(): j for j in jobs}
+    m = WORKDAY_URL_RE.search(board_url)
+    if not m:
+        return list(by_url.values())
+    tenant, wd_shard, site = m.group(1), m.group(2), m.group(3)
+    headers = workday_headers(tenant, wd_shard, site)
+    local = make_workday_session()
+    try:
+        local.get(f"https://{tenant}.{wd_shard}.myworkdayjobs.com/en-US/{site}", headers=headers, timeout=12)
+    except Exception:
+        pass
+    for path in seed_paths:
+        path = path if path.startswith("/") else "/" + path
+        api = f"https://{tenant}.{wd_shard}.myworkdayjobs.com/wday/cxs/{tenant}/{site}{path}"
+        try:
+            r = local.get(api, headers=headers, timeout=12)
+            if r.status_code != 200:
+                continue
+            info = (r.json().get("jobPostingInfo") or {})
+        except Exception:
+            continue
+        evidence = json.dumps(info, ensure_ascii=False)
+        if _ROI_NEGATIVE_RE.search(evidence) or not is_republic_of_ireland_location(evidence):
+            continue
+        title = str(info.get("title") or "").strip()
+        if not title or _looks_like_non_job_title(title):
+            continue
+        loc = info.get("location") or info.get("locationsText") or "Ireland"
+        if isinstance(loc, (dict, list)):
+            loc = "Ireland"
+        desc = info.get("jobDescription") or ""
+        sponsorship, snippet = classify_sponsorship(desc)
+        posted = info.get("postedOn") or "Unknown"
+        public = f"https://{tenant}.{wd_shard}.myworkdayjobs.com/{site}{path}"
+        by_url[public.lower()] = {
+            "company": company_name, "title": title[:300], "location": str(loc),
+            "posted_text": posted, "posted_days_ago": parse_posted_text(posted),
+            "employment_type": normalize_employment_type("", title),
+            "url": public, "source": "batch38_workday_current_verified",
+            "visa_sponsorship": sponsorship, "visa_snippet": snippet,
+        }
+    print(f"      [batch38-workday-current] {company_name}: {len(by_url)} verified Republic-of-Ireland vacancies")
+    return list(by_url.values())
+
+
+def scrape_edwards_lifesciences_batch38(session):
+    return _batch38_workday_current(
+        "Edwards Lifesciences",
+        "https://edwards.wd5.myworkdayjobs.com/EdwardsCareers",
+        session,
+        seed_paths=(
+            "/job/Ireland-Limerick/Manufacturing-Engineer-II_Req-49386",
+            "/job/Ireland-Limerick/Assoc-Assembler--Evening-Shift-_Req-47600",
+        ),
+    )
+
+
+def scrape_hp_ireland_batch38(session):
+    return _batch38_workday_current(
+        "HP (Hewlett-Packard)",
+        "https://hp.wd5.myworkdayjobs.com/ExternalCareerSite",
+        session,
+        seed_paths=(
+            "/job/GSI-Alliance-Manager_3162906-1",
+            "/job/Ireland-Public-Sector-Sales-Lead_3157465-1",
+        ),
     )
 
 def scrape_an_post_oracle(session):
@@ -13757,6 +13864,10 @@ def scrape_wtw_ireland_batch26(session):
     return _batch26_verified_official_details("Willis Towers Watson (WTW)", seeds, "batch26_wtw_verified", session)
 
 
+    print("=== TARGETED_DIRECT_BATCH_39_ZERO_BUCKET_25 ACTIVE: 25 Currently-No-Jobs/deferred companies forced into the next full-run recovery bucket; proven Uisce/HP/Edwards routes preserved; Manual queue untouched ===")
+    print("=== TARGETED_DIRECT_BATCH_38_PRE_FULL_RUN_BULK ACTIVE: proven Uisce Oracle recovery retained + Edwards Lifesciences and HP moved to current official Workday ROI detail verification; wider zero audit completed; Manual queue untouched ===")
+print("=== TARGETED_DIRECT_BATCH_37_UISCE_ONLY_ROUTING_FIX ACTIVE: --only Uisce Eireann now reaches the Batch36 Oracle Candidate Experience scraper instead of Sheet2 generic; Alkermes/SMBC zero mechanisms are not retried ===")
+print("=== TARGETED_DIRECT_BATCH_36_TRUE_ZERO_BACKENDS ACTIVE: Uisce Eireann official Oracle CX + Alkermes current official careers portal + SMBC Aviation Capital official GroupGTI portal; 20+ zero-company audit completed; Manual queue untouched ===")
 print("=== TARGETED_DIRECT_BATCH_35_BULK_ZERO_BACKENDS ACTIVE: Aldi rendered DOM vacancy discovery + Morningstar Workday + LSEG Workday + Morgan Stanley Eightfold + SG current-detail recovery; Manual queue untouched ===")
 print("=== TARGETED_DIRECT_BATCH_34_BULK_ZERO_RECOVERY ACTIVE: Aldi direct HTTP vacancy discovery + Forvis Mazars Recruitee API + ESB/Musgrave duplicate-label aliases; 20-company zero audit performed, only officially-proven recoveries integrated ===")
 print("=== TARGETED_DIRECT_BATCH_33_QUALCOMM_DYNAMIC_WORKDAY ACTIVE: Qualcomm now discovers current Cork/Ireland vacancies dynamically from official Workday search + strict detail verification; 3 proven seeds retained only as blocked-search fallback ===")
@@ -14138,7 +14249,7 @@ def main():
         ("exact", "bord gáis energy", scrape_bord_gais_energy_workday, 40, "official Bord Gais Energy Centrica Workday route"),
         ("exact", "irish distillers (pernod ricard)", scrape_irish_distillers_workday, 40, "official Irish Distillers Pernod Ricard Workday route"),
         ("exact", "shannon airport group", scrape_shannon_airport_group_http, 30, "official Shannon Airport Group vacancies page"),
-        ("exact", "uisce éireann (irish water)", scrape_uisce_eireann_current_portal, 55, "official Uisce Eireann current vacancies portal"),
+        ("exact", "uisce éireann (irish water)", scrape_uisce_eireann_current_portal, 45, "Batch36 official Uisce Eireann Oracle Candidate Experience backend"),
         ("exact", "eirgrid group", scrape_eirgrid_candidate_manager_http, 35, "official EirGrid CandidateManager board"),
         ("exact", "dsv ireland", scrape_dsv_ireland_direct, 40, "official DSV SuccessFactors Ireland route"),
         ("exact", "wuxi biologics", scrape_wuxi_biologics_direct_http, 35, "official WuXi Biologics Ireland jobs page"),
@@ -14219,12 +14330,14 @@ def main():
         ("exact", "infosys", scrape_infosys_ireland_friend, 60, "friend-referenced Infosys Ireland board"),
         ("exact", "laya healthcare", scrape_laya_healthcare_friend, 60, "friend-referenced Laya AXA board"),
         ("exact", "palo alto networks", scrape_palo_alto_ireland_friend, 60, "friend-referenced Palo Alto Ireland board"),
-        ("exact", "smbc aviation capital", scrape_smbc_aviation_capital_friend, 60, "friend-referenced SMBC Aviation board"),
+        ("exact", "smbc aviation capital", scrape_smbc_aviation_capital_batch36, 55, "Batch36 official SMBC Aviation Capital GroupGTI current-opportunities portal"),
         ("exact", "susquehanna international group (sig)", scrape_sig_ireland_friend, 60, "friend-referenced SIG Dublin board"),
         ("exact", "heineken ireland", scrape_heineken_ireland_friend, 45, "friend-referenced HEINEKEN Ireland board"),
         ("exact", "musgrave group (supervalu / centra)", scrape_musgrave_ireland_friend, 60, "friend-referenced Musgrave vacancies"),
         ("exact", "vhi healthcare", scrape_vhi_ireland_friend, 60, "friend-referenced VHI CandidateManager"),
-        ("exact", "hp (hewlett-packard)", scrape_hp_ireland_friend, 60, "friend-referenced HP Ireland search"),
+        ("exact", "hp (hewlett-packard)", scrape_hp_ireland_batch38, 60, "Batch38 official HP Workday current ROI route"),
+        ("exact", "alkermes", scrape_alkermes_ireland_batch36, 55, "Batch36 official Alkermes current careers portal"),
+        ("exact", "edwards lifesciences", scrape_edwards_lifesciences_batch38, 60, "Batch38 official Edwards Workday current ROI route"),
         ("exact", "oracle", scrape_oracle_ireland_attempt2, 60, "attempt 2 rendered Oracle Ireland board"),
         ("exact", "bausch + lomb", scrape_bausch_lomb_friend, 60, "friend-referenced Bausch + Lomb Ireland board"),
         ("exact", "mckinsey & company", scrape_mckinsey_ireland_attempt2, 45, "attempt 2 lightweight McKinsey Dublin HTTP"),
@@ -14295,15 +14408,18 @@ def main():
     # actually running. Existing live companies are still skipped below.
     # Final company-level dedupe ensures this never creates a second task for
     # a company that already has a more-specific dedicated route.
+    # BATCH39 ZERO BUCKET: deliberately large full-run recovery group.
+    # These are zero/deferred rows, not a Manual-recovery expansion. Dedicated
+    # company routes still win at final dedupe; otherwise the CSV first-party
+    # career URL gets one bounded recovery attempt.
     _next_manual_batch_names = {
-        # Previously intended batch (did not run because of the old
-        # manual_check-only gate; this run is their real first attempt).
-        "baker tilly ireland", "davy", "dunnes stores", "forvis mazars ireland",
-        "greencore", "lidl ireland", "oliver wyman", "protiviti",
-        "advanced micro devices (amd)", "bayer",
-        # Additional unresolved batch so we move more companies per run.
-        "dynatrace", "fti consulting", "factset", "msci", "macquarie group",
-        "moody's", "morningstar", "refinitiv (lseg)", "societe generale", "splunk",
+        "aldi ireland", "alkermes", "biotronik", "bruker", "catalent",
+        "coca-cola hbc ireland", "edwards lifesciences", "factset",
+        "fti consulting", "goodbody", "hp (hewlett-packard)", "macquarie group",
+        "moody's", "morgan stanley", "morningstar", "nxp semiconductors",
+        "oliver wyman", "protiviti", "qiagen", "smbc aviation capital",
+        "smurfit westrock", "splunk", "teva", "visa",
+        "uisce éireann (irish water)",
     }
     _next_manual_rows = [c for c in companies if c["company_name"].strip().lower() in _next_manual_batch_names]
 
@@ -14733,7 +14849,7 @@ def main():
         task_list.append(("next_manual_batch", _name, _make_next_manual_task(), 75, True))
         _next_manual_queued.append(_name)
 
-    print(f"=== Next manual queue fix: {len(_next_manual_queued)}/{len(_next_manual_batch_names)} target companies queued before final dedupe ===")
+    print(f"=== Batch39 zero bucket: {len(_next_manual_queued)}/{len(_next_manual_batch_names)} target companies queued before final dedupe ===")
     if _next_manual_queued:
         print("  -> " + ", ".join(_next_manual_queued))
 
