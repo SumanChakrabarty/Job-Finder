@@ -10446,13 +10446,14 @@ def test_single_company(name):
         "wipro": lambda: scrape_wipro_ireland(session),
         "iqvia": lambda: scrape_iqvia_ireland(session),
         "merit medical": lambda: scrape_merit_medical_ireland(session),
-        "goodbody": lambda: scrape_goodbody_ireland(session),
+        "goodbody": lambda: scrape_goodbody_ireland_batch40(session),
+        "factset": lambda: scrape_factset_ireland_batch40(session),
         "bristol myers squibb": lambda: scrape_bms_ireland(session),
         "sse airtricity / sse": lambda: scrape_sse_ireland(session),
         "hewlett packard enterprise (hpe)": lambda: scrape_hpe_ireland(session),
         "dell technologies": lambda: scrape_dell_ireland(session),
-        "tesco ireland": lambda: scrape_tesco_ireland(session),
-        "aldi ireland": lambda: scrape_aldi_ireland_batch35(session),
+        "tesco ireland": lambda: scrape_tesco_ireland_batch40(session),
+        "aldi ireland": lambda: scrape_aldi_ireland_batch40(session),
         "forvis mazars ireland": lambda: scrape_forvis_mazars_ireland_batch34(session),
         "morningstar": lambda: scrape_morningstar_ireland_batch35(session),
         "refinitiv (lseg)": lambda: scrape_lseg_ireland_batch35(session),
@@ -12058,6 +12059,246 @@ def scrape_hp_ireland_batch38(session):
             "/job/Ireland-Public-Sector-Sales-Lead_3157465-1",
         ),
     )
+
+
+# === TARGETED_DIRECT_BATCH_40_TRUE_ZERO_25 ===
+# Fresh mechanisms only for companies that were still "Currently No Jobs" in
+# the latest full-run log. This does not expand the Manual queue.
+
+def scrape_aldi_ireland_batch40(session=None):
+    """Aldi IE: fix the actual link shape on the official board.
+    Earlier Aldi passes looked for 'detail'/'vacancyid' URLs, but the live board
+    exposes numeric canonical URLs such as /vacancies/18210/store-assistant.html.
+    """
+    session = session or requests.Session()
+    headers = {"User-Agent": HEADERS.get("User-Agent", "Mozilla/5.0"), "Accept-Language": "en-IE,en;q=0.9"}
+    starts = [
+        "https://careers.aldirecruitment.ie/vacancies/vacancy-search-results.aspx?view=list",
+        "https://careers.aldirecruitment.ie/vacancies/vacancy-search-results.aspx?view=smalllist",
+        "https://careers.aldirecruitment.ie/vacancies/vacancy-search-results.aspx",
+    ]
+    detail_urls = set()
+    for start in starts:
+        try:
+            r = session.get(start, headers=headers, timeout=18)
+        except Exception:
+            continue
+        if r.status_code != 200:
+            continue
+        raw = r.text or ""
+        for href in re.findall(r'href\s*=\s*["\']([^"\']+)["\']', raw, re.I):
+            full = urllib.parse.urljoin(start, html.unescape(href)).split("#")[0]
+            if re.search(r"https://careers\.aldirecruitment\.ie/vacancies/\d+/[^/?#]+\.html(?:$|\?)", full, re.I):
+                detail_urls.add(full.split("?")[0])
+    results = {}
+    for url in sorted(detail_urls)[:80]:
+        try:
+            r = session.get(url, headers=headers, timeout=12)
+            if r.status_code != 200:
+                continue
+            raw = r.text or ""
+            body = re.sub(r"\s+", " ", _html_to_text(raw)).strip()
+        except Exception:
+            continue
+        # Official Aldi Ireland board is Ireland-only, but still reject explicit NI evidence.
+        if _ROI_NEGATIVE_RE.search(body):
+            continue
+        title = ""
+        m = re.search(r"<h1[^>]*>(.*?)</h1>", raw, re.I | re.S)
+        if m:
+            title = re.sub(r"\s+", " ", _html_to_text(m.group(1))).strip()
+        if not title:
+            m = re.search(r"<title[^>]*>(.*?)</title>", raw, re.I | re.S)
+            if m:
+                title = re.sub(r"\s+", " ", _html_to_text(m.group(1))).strip()
+                title = re.sub(r"\s+in\s+.+?\s*-\s*Aldi.*$", "", title, flags=re.I).strip()
+        if not title or _looks_like_non_job_title(title):
+            continue
+        loc = "Ireland"
+        m = re.search(r"Locations?\s+(.{2,120}?)(?:Closing Date|Vacancy Specification|Advertising Salary|Contract Type)", body, re.I)
+        if m:
+            cand = re.sub(r"\s+", " ", m.group(1)).strip(" :-|")
+            if cand and len(cand) < 100:
+                loc = cand + ("" if "ireland" in cand.lower() else ", Ireland")
+        sponsorship, snippet = classify_sponsorship(body[:16000])
+        results[url.lower()] = {
+            "company": "Aldi Ireland", "title": title[:300], "location": loc,
+            "posted_text": "Unknown", "posted_days_ago": None,
+            "employment_type": normalize_employment_type("", title), "url": url,
+            "source": "batch40_aldi_numeric_http", "visa_sponsorship": sponsorship,
+            "visa_snippet": snippet,
+        }
+    print(f"      [batch40-aldi-numeric] {len(results)} verified Republic-of-Ireland vacancies from {len(detail_urls)} canonical detail links")
+    return list(results.values())
+
+
+def scrape_tesco_ireland_batch40(session=None):
+    """Tesco IE: current Tribepad ATS uses /members/modules/job/detail.php?record=... links."""
+    session = session or requests.Session()
+    headers = {"User-Agent": HEADERS.get("User-Agent", "Mozilla/5.0"), "Accept-Language": "en-IE,en;q=0.9"}
+    search_urls = [
+        "https://apply.tesco-careers.com/v2/job/search?location_country=106",
+        "https://apply.tesco-careers.com/v2/job/search?location=dublin&location_country=106",
+    ]
+    detail_urls = set()
+    for search_url in search_urls:
+        for page in range(1, 5):
+            u = search_url + ("&" if "?" in search_url else "?") + f"page={page}"
+            try:
+                r = session.get(u, headers=headers, timeout=15)
+            except Exception:
+                continue
+            if r.status_code != 200:
+                continue
+            raw = r.text or ""
+            for href in re.findall(r'href\s*=\s*["\']([^"\']+)["\']', raw, re.I):
+                full = urllib.parse.urljoin(u, html.unescape(href)).split("#")[0]
+                if re.search(r"apply\.tesco-careers\.com/members/modules/job/detail\.php\?record=\d+", full, re.I):
+                    detail_urls.add(full)
+    results = {}
+    for url in sorted(detail_urls)[:80]:
+        try:
+            r = session.get(url, headers=headers, timeout=12)
+            if r.status_code != 200:
+                continue
+            raw = r.text or ""
+            body = re.sub(r"\s+", " ", _html_to_text(raw)).strip()
+        except Exception:
+            continue
+        if _ROI_NEGATIVE_RE.search(body) or not is_republic_of_ireland_location(body):
+            continue
+        title = ""
+        m = re.search(r"<h1[^>]*>(.*?)</h1>", raw, re.I | re.S)
+        if m:
+            title = re.sub(r"\s+", " ", _html_to_text(m.group(1))).strip()
+        if not title or _looks_like_non_job_title(title):
+            continue
+        loc = "Republic of Ireland"
+        for place in ("Dublin", "Cork", "Galway", "Limerick", "Wexford", "Waterford", "Tipperary", "Meath", "Louth", "Wicklow", "Kildare", "Kilkenny", "Donegal", "Sligo", "Mayo", "Clare", "Laois", "Offaly", "Westmeath"):
+            if re.search(rf"\b{re.escape(place)}\b", body, re.I):
+                loc = f"{place}, Ireland"; break
+        sponsorship, snippet = classify_sponsorship(body[:16000])
+        results[url.lower()] = {
+            "company": "Tesco Ireland", "title": title[:300], "location": loc,
+            "posted_text": "Unknown", "posted_days_ago": None,
+            "employment_type": normalize_employment_type("", title), "url": url,
+            "source": "batch40_tesco_tribepad", "visa_sponsorship": sponsorship,
+            "visa_snippet": snippet,
+        }
+    print(f"      [batch40-tesco-tribepad] {len(results)} verified Republic-of-Ireland vacancies from {len(detail_urls)} detail links")
+    return list(results.values())
+
+
+def scrape_goodbody_ireland_batch40(session=None):
+    """Goodbody: SAP/SuccessFactors under AIB plus a current official detail seed.
+    The seed is never trusted blindly: it is fetched and ROI-verified every run.
+    """
+    session = session or requests.Session()
+    jobs = scrape_goodbody_ireland(session) or []
+    by_url = {str(j.get("url") or "").lower(): j for j in jobs}
+    seeds = [
+        "https://jobs.aib.ie/goodbody/job/Dublin-Wealth-Management-Operations-IE/1369063957/",
+    ]
+    for url in seeds:
+        try:
+            r = session.get(url, headers=HEADERS, timeout=15)
+            if r.status_code != 200:
+                continue
+            raw = r.text or ""; body = re.sub(r"\s+", " ", _html_to_text(raw)).strip()
+        except Exception:
+            continue
+        if _ROI_NEGATIVE_RE.search(body) or not is_republic_of_ireland_location(body):
+            continue
+        m = re.search(r"<h1[^>]*>(.*?)</h1>", raw, re.I | re.S)
+        title = re.sub(r"\s+", " ", _html_to_text(m.group(1))).strip() if m else ""
+        if not title or _looks_like_non_job_title(title):
+            continue
+        sponsorship, snippet = classify_sponsorship(body[:16000])
+        by_url[url.lower()] = {
+            "company": "Goodbody", "title": title[:300], "location": "Dublin, Ireland",
+            "posted_text": "Unknown", "posted_days_ago": None,
+            "employment_type": normalize_employment_type("", title), "url": url,
+            "source": "batch40_goodbody_sf_verified", "visa_sponsorship": sponsorship,
+            "visa_snippet": snippet,
+        }
+    print(f"      [batch40-goodbody-sf] {len(by_url)} verified Republic-of-Ireland vacancies")
+    return list(by_url.values())
+
+
+def scrape_factset_ireland_batch40(session=None):
+    """FactSet: current Workday tenant discovered from current FactSet job links."""
+    session = session or requests.Session()
+    jobs = _workday_detail_verified_ireland_batch20(
+        "FactSet", "https://factset.wd108.myworkdayjobs.com/FactSetCareers", session, 6
+    )
+    print(f"      [batch40-factset-workday] {len(jobs)} verified Republic-of-Ireland vacancies")
+    return jobs
+
+
+def scrape_batch40_structural_http(company_name, base_url, session=None):
+    """Bounded fresh HTTP pass for latest zero-status companies.
+    Different from the old rendered generic route: discover same-host structural
+    vacancy URLs directly from first-party HTML, then accept only detail pages
+    that independently prove Republic-of-Ireland location.
+    """
+    session = session or requests.Session()
+    if not base_url:
+        return []
+    headers = {"User-Agent": HEADERS.get("User-Agent", "Mozilla/5.0"), "Accept-Language": "en-IE,en;q=0.9"}
+    starts = [base_url]
+    detail_urls = set()
+    host = urllib.parse.urlparse(base_url).netloc.lower()
+    for start in starts:
+        try:
+            r = session.get(start, headers=headers, timeout=12, allow_redirects=True)
+        except Exception:
+            continue
+        if r.status_code != 200:
+            continue
+        raw = r.text or ""; effective = r.url or start
+        eff_host = urllib.parse.urlparse(effective).netloc.lower()
+        for href in re.findall(r'href\s*=\s*["\']([^"\']+)["\']', raw, re.I):
+            full = urllib.parse.urljoin(effective, html.unescape(href)).split("#")[0]
+            p = urllib.parse.urlparse(full)
+            if p.scheme not in {"http", "https"}:
+                continue
+            # allow same-host and redirected official ATS host discovered from the career page
+            if p.netloc.lower() not in {host, eff_host} and host not in p.netloc.lower() and eff_host not in p.netloc.lower():
+                continue
+            low = full.lower()
+            if any(x in low for x in ("/job/", "/jobs/", "/vacancy/", "/vacancies/", "jobid=", "job_id=", "requisition", "/position/")):
+                if not any(x in low for x in ("search", "saved", "alert", "login", "register", "privacy", "category")):
+                    detail_urls.add(full)
+    results = {}
+    for url in sorted(detail_urls)[:24]:
+        try:
+            r = session.get(url, headers=headers, timeout=10, allow_redirects=True)
+            if r.status_code != 200:
+                continue
+            raw = r.text or ""; body = re.sub(r"\s+", " ", _html_to_text(raw)).strip()
+        except Exception:
+            continue
+        if _ROI_NEGATIVE_RE.search(body) or not is_republic_of_ireland_location(body):
+            continue
+        title = ""
+        for pat in (r"<h1[^>]*>(.*?)</h1>", r"<title[^>]*>(.*?)</title>"):
+            m = re.search(pat, raw, re.I | re.S)
+            if m:
+                title = re.sub(r"\s+", " ", _html_to_text(m.group(1))).strip(); break
+        title = re.sub(r"\s+[|\-–]\s+Careers?.*$", "", title, flags=re.I).strip()
+        if not title or _looks_like_non_job_title(title):
+            continue
+        sponsorship, snippet = classify_sponsorship(body[:16000])
+        canonical = (r.url or url).split("#")[0]
+        results[canonical.lower()] = {
+            "company": company_name, "title": title[:300], "location": "Ireland",
+            "posted_text": "Unknown", "posted_days_ago": None,
+            "employment_type": normalize_employment_type("", title), "url": canonical,
+            "source": "batch40_structural_http", "visa_sponsorship": sponsorship,
+            "visa_snippet": snippet,
+        }
+    print(f"      [batch40-structural-http] {company_name}: {len(results)} verified ROI jobs from {len(detail_urls)} structural candidates")
+    return list(results.values())
 
 def scrape_an_post_oracle(session):
     """An Post official careers page -> Oracle Candidate Experience CX_2001."""
@@ -13866,6 +14107,8 @@ def scrape_wtw_ireland_batch26(session):
 
     print("=== TARGETED_DIRECT_BATCH_39_ZERO_BUCKET_25 ACTIVE: 25 Currently-No-Jobs/deferred companies forced into the next full-run recovery bucket; proven Uisce/HP/Edwards routes preserved; Manual queue untouched ===")
     print("=== TARGETED_DIRECT_BATCH_38_PRE_FULL_RUN_BULK ACTIVE: proven Uisce Oracle recovery retained + Edwards Lifesciences and HP moved to current official Workday ROI detail verification; wider zero audit completed; Manual queue untouched ===")
+
+print("=== TARGETED_DIRECT_BATCH_40_TRUE_ZERO_25 ACTIVE: 25 companies from the latest Currently-No-Jobs log get a fresh bounded HTTP recovery pass; Aldi/Tesco/Goodbody/FactSet get new backend-specific routes; proven live routes and Manual queue untouched ===")
 print("=== TARGETED_DIRECT_BATCH_37_UISCE_ONLY_ROUTING_FIX ACTIVE: --only Uisce Eireann now reaches the Batch36 Oracle Candidate Experience scraper instead of Sheet2 generic; Alkermes/SMBC zero mechanisms are not retried ===")
 print("=== TARGETED_DIRECT_BATCH_36_TRUE_ZERO_BACKENDS ACTIVE: Uisce Eireann official Oracle CX + Alkermes current official careers portal + SMBC Aviation Capital official GroupGTI portal; 20+ zero-company audit completed; Manual queue untouched ===")
 print("=== TARGETED_DIRECT_BATCH_35_BULK_ZERO_BACKENDS ACTIVE: Aldi rendered DOM vacancy discovery + Morningstar Workday + LSEG Workday + Morgan Stanley Eightfold + SG current-detail recovery; Manual queue untouched ===")
@@ -14298,13 +14541,13 @@ def main():
         ("exact", "wipro", scrape_wipro_ireland, 75, "first-party Wipro vacancy records + City/State verification"),
         ("exact", "iqvia", scrape_iqvia_ireland, 90, "first-party IQVIA Ireland Jobs page"),
         ("exact", "merit medical", scrape_merit_medical_ireland, 75, "official Merit Medical Workday"),
-        ("exact", "goodbody", scrape_goodbody_ireland, 60, "official Goodbody jobs board"),
+        ("exact", "goodbody", scrape_goodbody_ireland_batch40, 45, "Batch40 Goodbody SAP SuccessFactors + live-verified official detail"),
         ("exact", "bristol myers squibb", scrape_bms_batch18, 75, "Batch18 BMS Ireland route + sitemap fallback"),
         ("exact", "sse airtricity / sse", scrape_sse_ireland, 60, "official SSE careers"),
         ("exact", "hewlett packard enterprise (hpe)", scrape_hpe_ireland, 60, "official HPE careers"),
         ("exact", "dell technologies", scrape_dell_ireland, 60, "official Dell careers"),
-        ("exact", "tesco ireland", scrape_tesco_ireland, 60, "official Tesco Ireland careers"),
-        ("exact", "aldi ireland", scrape_aldi_ireland_batch35, 90, "Batch35 rendered official Aldi board + strict detail verification"),
+        ("exact", "tesco ireland", scrape_tesco_ireland_batch40, 45, "Batch40 Tesco Tribepad canonical detail links"),
+        ("exact", "aldi ireland", scrape_aldi_ireland_batch40, 45, "Batch40 Aldi numeric canonical vacancy URLs"),
         ("exact", "forvis mazars ireland", scrape_forvis_mazars_ireland_batch34, 45, "Batch34 official Forvis Mazars Recruitee API"),
         ("exact", "morningstar", scrape_morningstar_ireland_batch35, 55, "Batch35 direct Morningstar Workday Ireland verification"),
         ("exact", "refinitiv (lseg)", scrape_lseg_ireland_batch35, 65, "Batch35 direct LSEG Workday Ireland verification"),
@@ -14408,18 +14651,16 @@ def main():
     # actually running. Existing live companies are still skipped below.
     # Final company-level dedupe ensures this never creates a second task for
     # a company that already has a more-specific dedicated route.
-    # BATCH39 ZERO BUCKET: deliberately large full-run recovery group.
-    # These are zero/deferred rows, not a Manual-recovery expansion. Dedicated
-    # company routes still win at final dedupe; otherwise the CSV first-party
-    # career URL gets one bounded recovery attempt.
+    # BATCH40 TRUE-ZERO-25: all 25 names below were still reported as
+    # "found nothing this time" / Currently No Jobs in the latest full-run log.
+    # Proven recoveries Uisce and Edwards are intentionally NOT in this bucket.
     _next_manual_batch_names = {
-        "aldi ireland", "alkermes", "biotronik", "bruker", "catalent",
-        "coca-cola hbc ireland", "edwards lifesciences", "factset",
-        "fti consulting", "goodbody", "hp (hewlett-packard)", "macquarie group",
-        "moody's", "morgan stanley", "morningstar", "nxp semiconductors",
-        "oliver wyman", "protiviti", "qiagen", "smbc aviation capital",
-        "smurfit westrock", "splunk", "teva", "visa",
-        "uisce éireann (irish water)",
+        "aldi ireland", "goodbody", "qiagen", "nxp semiconductors",
+        "coca-cola hbc ireland", "fti consulting", "factset", "macquarie group",
+        "moody's", "morgan stanley", "morningstar", "splunk", "alkermes",
+        "biotronik", "bruker", "hp (hewlett-packard)", "smurfit westrock",
+        "catalent", "oliver wyman", "protiviti", "visa", "tesco ireland",
+        "boston consulting group (bcg)", "bain & company", "asml",
     }
     _next_manual_rows = [c for c in companies if c["company_name"].strip().lower() in _next_manual_batch_names]
 
@@ -14843,13 +15084,22 @@ def main():
         if not _url:
             continue
         def _make_next_manual_task(name=_name, u=_url):
-            return lambda: cached_browser_scrape(
-                browser_cache, f"{name}::next_manual_batch_v2",
-                lambda: scrape_next_manual_batch_generic(name, u, session), 0, name)
-        task_list.append(("next_manual_batch", _name, _make_next_manual_task(), 75, True))
+            key = name.strip().lower()
+            if key == "aldi ireland":
+                return lambda: scrape_aldi_ireland_batch40(session)
+            if key == "tesco ireland":
+                return lambda: scrape_tesco_ireland_batch40(session)
+            if key == "goodbody":
+                return lambda: scrape_goodbody_ireland_batch40(session)
+            if key == "factset":
+                return lambda: scrape_factset_ireland_batch40(session)
+            return lambda: scrape_batch40_structural_http(name, u, session)
+        # Insert at the front so this genuinely-new zero-recovery mechanism wins
+        # company dedupe over older failed routes for these 25 zero-status names.
+        task_list.insert(0, ("batch40_zero_http", _name, _make_next_manual_task(), 35, False))
         _next_manual_queued.append(_name)
 
-    print(f"=== Batch39 zero bucket: {len(_next_manual_queued)}/{len(_next_manual_batch_names)} target companies queued before final dedupe ===")
+    print(f"=== Batch40 true-zero bucket: {len(_next_manual_queued)}/{len(_next_manual_batch_names)} latest-zero companies queued before final dedupe ===")
     if _next_manual_queued:
         print("  -> " + ", ".join(_next_manual_queued))
 
