@@ -10568,6 +10568,133 @@ def run_batch43_fresh_ats_50(companies):
         pool.shutdown(wait=False)
     return recovered, cache_updates
 
+
+# === TARGETED_DIRECT_BATCH_44_FALSE_ZERO_DIRECT_50_AUDIT ===
+# Batch43 proved that guessing ATS slugs at 50 companies does not reduce the
+# zero bucket. Batch44 keeps the 50-company research scope but only installs
+# company-specific recoveries where the current official board itself proves
+# Republic-of-Ireland vacancies. Misses from the retired Batch43 sweep no
+# longer consume production runtime.
+
+def _batch44_clean_title(raw):
+    t = re.sub(r"\s+", " ", _html_to_text(str(raw or ""))).strip()
+    return html.unescape(t)
+
+def _batch44_job_record(company, title, location, url, body, source, posted="Unknown"):
+    title = _batch44_clean_title(title)
+    if not title or _looks_like_non_job_title(title):
+        return None
+    if not is_republic_of_ireland_location(location):
+        return None
+    sponsorship, snippet = classify_sponsorship((body or "")[:20000])
+    return {
+        "company": company, "title": title[:300], "location": location,
+        "posted_text": posted or "Unknown",
+        "posted_days_ago": parse_posted_text(posted or "Unknown"),
+        "employment_type": normalize_employment_type(body or "", title),
+        "url": url, "source": source,
+        "visa_sponsorship": sponsorship, "visa_snippet": snippet,
+    }
+
+def scrape_sse_ireland_batch44(session=None):
+    # Direct current official listing parser. The old whole-page verifier
+    # rejected legitimate Dublin roles whenever the same vacancy also offered
+    # Belfast or UK locations. Only the individual listing row can prove ROI.
+    session = session or requests.Session()
+    headers = {"User-Agent": HEADERS.get("User-Agent", "Mozilla/5.0"), "Accept-Language": "en-IE,en;q=0.9"}
+    found = {}
+    for page_no in range(1, 5):
+        url = f"https://careers.sse.com/jobs/search?page={page_no}&query="
+        try:
+            r = session.get(url, headers=headers, timeout=15)
+            if r.status_code != 200:
+                continue
+            raw = r.text or ""
+        except Exception:
+            continue
+        rx = re.compile(r"<a\b[^>]*href=[\"']([^\"']*/jobs/(?!search\b)[^\"'#?]+)[\"'][^>]*>(.*?)</a>", re.I | re.S)
+        matches = list(rx.finditer(raw))
+        for i, m in enumerate(matches):
+            start = m.start()
+            end = matches[i+1].start() if i+1 < len(matches) else min(len(raw), m.end()+5000)
+            text = re.sub(r"\s+", " ", _html_to_text(raw[start:end])).strip()
+            if not re.search(r"\b(?:Dublin|Cork|Galway|Limerick|Waterford|Wexford|Shannon|Athlone|Leixlip|Naas|Kildare)\s*,?\s*Ireland\b|\bRepublic of Ireland\b", text, re.I):
+                continue
+            href = urllib.parse.urljoin(r.url or url, html.unescape(m.group(1))).split("#")[0]
+            title = _batch44_clean_title(m.group(2))
+            if not title or _looks_like_non_job_title(title):
+                continue
+            loc_m = re.search(r"\b(Dublin|Cork|Galway|Limerick|Waterford|Wexford|Shannon|Athlone|Leixlip|Naas|Kildare)\s*,?\s*Ireland\b", text, re.I)
+            location = (loc_m.group(1).title() + ", Ireland") if loc_m else "Republic of Ireland"
+            rec = _batch44_job_record("SSE Airtricity / SSE", title, location, href, text, "batch44_sse_official_listing")
+            if rec:
+                found[href.rstrip('/').lower()] = rec
+    print(f"      [batch44-sse-official] {len(found)} Republic-of-Ireland vacancies from official listing rows")
+    return list(found.values())
+
+def scrape_aviva_ireland_batch44(session=None):
+    # Current official talent-community details. Whole-page NI/UK navigation
+    # used to poison the ROI negative check, so verify only the record fields.
+    session = session or requests.Session()
+    headers = {"User-Agent": HEADERS.get("User-Agent", "Mozilla/5.0"), "Accept-Language": "en-IE,en;q=0.9"}
+    detail_urls = set()
+    for listing in (
+        "https://aviva.talent-community.com/projects/in/dublin",
+        "https://aviva.talent-community.com/projects/in/dublin-18",
+        "https://aviva.talent-community.com/projects/in/cork",
+        "https://aviva.talent-community.com/projects/in/galway",
+        "https://aviva.talent-community.com/projects/in/ireland",
+    ):
+        try:
+            r = session.get(listing, headers=headers, timeout=15)
+            if r.status_code != 200:
+                continue
+            for href in re.findall(r"href=[\"']([^\"']*/projects/[a-z0-9%_\-]+/\d+)[\"']", r.text or "", re.I):
+                detail_urls.add(urllib.parse.urljoin(r.url or listing, html.unescape(href)).split("#")[0])
+        except Exception:
+            continue
+    found = {}
+    for url in sorted(detail_urls)[:80]:
+        try:
+            r = session.get(url, headers=headers, timeout=15)
+            if r.status_code != 200:
+                continue
+            raw = r.text or ""
+            body = re.sub(r"\s+", " ", _html_to_text(raw)).strip()
+        except Exception:
+            continue
+        if re.search(r"\bOpportunity is closed\b", body, re.I) or not re.search(r"\bApply now\b", body, re.I):
+            continue
+        loc_m = re.search(r"\bLocation\s+(Dublin(?:\s*18)?|Cork|Galway|Ireland)\b", body, re.I)
+        if not loc_m:
+            continue
+        city = loc_m.group(1)
+        location = "Republic of Ireland" if city.lower() == "ireland" else f"{city}, Ireland"
+        m = re.search(r"<h1[^>]*>(.*?)</h1>", raw, re.I | re.S)
+        title = _batch44_clean_title(m.group(1)) if m else ""
+        if not title:
+            tm = re.search(r"<title[^>]*>(.*?)</title>", raw, re.I | re.S)
+            title = _batch44_clean_title(tm.group(1)).split(" at Aviva")[0] if tm else ""
+        rec = _batch44_job_record("Aviva Ireland", title, location, r.url or url, body, "batch44_aviva_official_detail")
+        if rec:
+            found[(r.url or url).rstrip('/').lower()] = rec
+    print(f"      [batch44-aviva-official] {len(found)} open Republic-of-Ireland opportunities")
+    return list(found.values())
+
+def scrape_zimmer_biomet_batch44(session=None):
+    # Current official Zimmer Biomet Phenom domain; current Ireland roles are
+    # visible on the first-party careers site in Galway/Shannon.
+    session = session or requests.Session()
+    jobs = _phenom_known_domain_roi("Zimmer Biomet", "careers.zimmerbiomet.com", "/us/en/search-results?keywords=Ireland", session)
+    for j in jobs:
+        j["source"] = "batch44_zimmer_official_phenom"
+    print(f"      [batch44-zimmer-phenom] {len(jobs)} verified Republic-of-Ireland vacancies")
+    return jobs
+
+# Rebind existing production routes to the direct false-zero repairs.
+scrape_sse_ireland = scrape_sse_ireland_batch44
+scrape_aviva_ireland_current = scrape_aviva_ireland_batch44
+
 # === TARGETED_DIRECT_BATCH_42_REAL_ATS_RECOVERY ===
 # Batch40 structural-page and Batch41 sitemap sweeps are retired.  Batch42 only
 # adds company-specific routes where the current official hiring system was
@@ -10778,6 +10905,7 @@ def test_single_company(name):
         "esb": lambda: scrape_esb_ireland(session),
         "irish rail": lambda: scrape_irish_rail_ireland(session),
         "avolon": lambda: scrape_avolon_ireland(session),
+        "zimmer biomet": lambda: scrape_zimmer_biomet_batch44(session),
         "bloomberg": lambda: scrape_bloomberg_ireland(session),
         "amcs": lambda: scrape_amcs_ireland(session),
         "dawn meats": lambda: scrape_dawn_meats_ireland(session),
@@ -14514,6 +14642,7 @@ def scrape_wtw_ireland_batch26(session):
     print("=== TARGETED_DIRECT_BATCH_39_ZERO_BUCKET_25 ACTIVE: 25 Currently-No-Jobs/deferred companies forced into the next full-run recovery bucket; proven Uisce/HP/Edwards routes preserved; Manual queue untouched ===")
     print("=== TARGETED_DIRECT_BATCH_38_PRE_FULL_RUN_BULK ACTIVE: proven Uisce Oracle recovery retained + Edwards Lifesciences and HP moved to current official Workday ROI detail verification; wider zero audit completed; Manual queue untouched ===")
 
+print("=== TARGETED_DIRECT_BATCH_44_FALSE_ZERO_DIRECT_50_AUDIT ACTIVE: Batch43 guessed ATS sweep retired; current official false-zero repairs for SSE + Aviva + Zimmer Biomet; 50-company audit principle retained; Manual queue untouched ===")
 print("=== TARGETED_DIRECT_BATCH_43_FRESH_ATS_50 ACTIVE: 50 repeated-zero/deferred companies are checked together via current careers redirects + existing ATS APIs; no generic vacancy scraping; Manual queue untouched ===")
 print("=== TARGETED_DIRECT_BATCH_42_REAL_ATS_RECOVERY ACTIVE: Batch40/41 generic zero sweeps retired; ASML uses current SmartRecruiters API; Tesco uses current official ROI careers cards plus Tribepad detail verification; wider 20+ zero audit remains deferred without proven new backends ===")
 print("=== TARGETED_DIRECT_BATCH_41_SITEMAP_ZERO_24 ACTIVE: today's repeated-zero companies use a new bounded robots.txt + XML sitemap vacancy discovery pass; Goodbody is removed after its proven 1-job recovery; ASML gets a live-verified Leixlip detail seed; Batch40 structural retries retired ===")
@@ -14842,26 +14971,7 @@ def main():
         manual_check.append({"company": name, "url": url, "platform": kind})
 
 
-    # Batch43 supplemental fresh ATS migration/recovery pass. Runs across all 50
-    # selected zero/deferred companies regardless of their CSV URL classification.
-    # Misses are status-neutral; only real ROI jobs are merged.
-    _batch43_jobs, _batch43_cache_updates = run_batch43_fresh_ats_50(companies)
-    if _batch43_jobs:
-        live_jobs.extend(_batch43_jobs)
-    if _batch43_cache_updates:
-        try:
-            _p = "ats_platform_cache.json"
-            _c = {}
-            if os.path.exists(_p):
-                with open(_p, encoding="utf-8") as _f:
-                    _c = json.load(_f)
-            _c.update(_batch43_cache_updates)
-            _c["__probe_version__"] = PROBE_VERSION
-            with open(_p, "w", encoding="utf-8") as _f:
-                json.dump(_c, _f, indent=2, ensure_ascii=False)
-            print(f"=== Batch43 ATS cache: saved {len(_batch43_cache_updates)} newly detected current platform routes ===")
-        except Exception as _e:
-            print(f"=== Batch43 ATS cache update skipped: {_e} ===")
+    print("=== Batch44: retired Batch43 guessed-ATS 50-company sweep after 49/50 produced zero; only proven direct false-zero routes run now ===")
 
     print(f"\nProbing remaining {len(manual_check)} companies for Greenhouse/Lever/SmartRecruiters/"
           f"Ashby/Recruitee/Personio/Pinpoint/Eightfold boards "
@@ -15068,6 +15178,7 @@ def main():
         ("exact", "broadcom", scrape_broadcom_ireland_batch26, 55, "Batch26 current first-party Broadcom ROI detail verification"),
         ("exact", "vmware (broadcom)", scrape_vmware_ireland_batch18, 55, "Batch18 Workday detail-verified VMware/VCF Ireland search"),
         ("exact", "nxp semiconductors", scrape_nxp_ireland_batch18, 55, "Batch18 Workday detail-verified Ireland search"),
+        ("exact", "zimmer biomet", scrape_zimmer_biomet_batch44, 45, "Batch44 official Zimmer Biomet Phenom ROI route"),
         ("exact", "pepsico", scrape_pepsico_ireland, 180, "official careers search"),
     ]
 
