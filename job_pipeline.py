@@ -10569,6 +10569,181 @@ def run_batch43_fresh_ats_50(companies):
     return recovered, cache_updates
 
 
+
+# === TARGETED_DIRECT_BATCH_45_AVIVA_ALDI_DIRECT ===
+# The latest full run proved Batch44's SSE and Zimmer repairs, but Aviva never
+# appeared in the run log because a later legacy function definition replaced
+# the earlier Batch44 alias before the dedicated task list was built. Batch45
+# binds Aviva directly to the proven Batch44 function. Aldi is a separate
+# false-zero: its current first-party board exposes dozens of Ireland vacancies,
+# while the older parser only accepted canonical detail hrefs that are not
+# consistently present in the listing HTML. Resolve first-party VacancyID values
+# and verify the resulting canonical detail page before counting anything.
+
+def _batch45_slugify_title(title):
+    t = html.unescape(_html_to_text(str(title or ""))).strip().lower()
+    t = re.sub(r"[^a-z0-9]+", "-", t).strip("-")
+    return t[:120]
+
+
+def scrape_aldi_ireland_batch45(session=None):
+    session = session or requests.Session()
+    headers = {
+        "User-Agent": HEADERS.get("User-Agent", "Mozilla/5.0"),
+        "Accept-Language": "en-IE,en;q=0.9",
+    }
+    base = "https://careers.aldirecruitment.ie/vacancies/vacancy-search-results.aspx"
+    listing_urls = [
+        base + "?view=list",
+        base + "?view=smalllist",
+        base,
+    ]
+    raw_pages = []
+    page_urls = set(listing_urls)
+    seen_pages = set()
+    for _ in range(8):
+        pending = [u for u in sorted(page_urls) if u not in seen_pages]
+        if not pending:
+            break
+        for url in pending[:8]:
+            seen_pages.add(url)
+            try:
+                r = session.get(url, headers=headers, timeout=15)
+                if r.status_code != 200:
+                    continue
+                raw = r.text or ""
+            except Exception:
+                continue
+            raw_pages.append((r.url or url, raw))
+            for href in re.findall(r'href\s*=\s*["\']([^"\']+)["\']', raw, re.I):
+                full = urllib.parse.urljoin(r.url or url, html.unescape(href)).split("#")[0]
+                if "vacancy-search-results.aspx" in full.lower() and re.search(r"(?:[?&](?:page|p)=\d+)", full, re.I):
+                    page_urls.add(full)
+
+    canonical = set()
+    vacancy_ids = set()
+    for page_url, raw in raw_pages:
+        for href in re.findall(r'href\s*=\s*["\']([^"\']+)["\']', raw, re.I):
+            full = urllib.parse.urljoin(page_url, html.unescape(href)).split("#")[0]
+            m = re.search(r"/vacancies/(\d+)/[^/?#]+\.html(?:$|\?)", full, re.I)
+            if m:
+                canonical.add(full.split("?")[0])
+                vacancy_ids.add(m.group(1))
+            m = re.search(r"(?:vacancyid|vacancy_id)=([0-9]{4,})", full, re.I)
+            if m:
+                vacancy_ids.add(m.group(1))
+        for m in re.finditer(r"(?:VacancyID|vacancyid|vacancy_id)[^0-9]{0,12}([0-9]{4,})", raw, re.I):
+            vacancy_ids.add(m.group(1))
+
+    # First-party metadata pages reliably expose Title + Locations even when
+    # the result page omits a canonical detail href. We only use them to derive
+    # the canonical URL; the canonical detail itself must then return 200.
+    derived = {}
+    for vid in sorted(vacancy_ids)[:120]:
+        email_url = f"https://careers.aldirecruitment.ie/vacancies/vacancy-email.aspx?VacancyID={vid}"
+        try:
+            r = session.get(email_url, headers=headers, timeout=12)
+            if r.status_code != 200:
+                continue
+            body = re.sub(r"\s+", " ", _html_to_text(r.text or "")).strip()
+        except Exception:
+            continue
+        tm = re.search(r"\bTitle:\s*(.+?)(?:Advertising Salary|Contract Type|Locations|Closing Date)", body, re.I)
+        lm = re.search(r"\bLocations?\s+(.+?)(?:Closing Date|Advertising Salary|Contract Type|Email|Vacancy Specification)", body, re.I)
+        title = _batch44_clean_title(tm.group(1)) if tm else ""
+        location = re.sub(r"\s+", " ", lm.group(1)).strip(" :-|") if lm else "Ireland"
+        if not title or _looks_like_non_job_title(title):
+            continue
+        slug = _batch45_slugify_title(title)
+        if not slug:
+            continue
+        url = f"https://careers.aldirecruitment.ie/vacancies/{vid}/{slug}.html"
+        derived[url] = (title, location)
+        canonical.add(url)
+
+    found = {}
+    for url in sorted(canonical)[:120]:
+        try:
+            r = session.get(url, headers=headers, timeout=12)
+            if r.status_code != 200:
+                continue
+            raw = r.text or ""
+            body = re.sub(r"\s+", " ", _html_to_text(raw)).strip()
+        except Exception:
+            continue
+        if re.search(r"\b(?:vacancy is no longer available|job is no longer available|page not found)\b", body, re.I):
+            continue
+        if _ROI_NEGATIVE_RE.search(body):
+            continue
+        title = ""
+        m = re.search(r"<h1[^>]*>(.*?)</h1>", raw, re.I | re.S)
+        if m:
+            title = _batch44_clean_title(m.group(1))
+        if not title:
+            title = derived.get(url, ("", ""))[0]
+        if not title or _looks_like_non_job_title(title):
+            continue
+        loc = derived.get(url, ("", "Ireland"))[1] or "Ireland"
+        m = re.search(r"\bLocations?\s+(.{2,120}?)(?:Closing Date|Vacancy Specification|Advertising Salary|Contract Type|About You)", body, re.I)
+        if m:
+            cand = re.sub(r"\s+", " ", m.group(1)).strip(" :-|")
+            if cand and len(cand) < 100:
+                loc = cand
+        if "ireland" not in loc.lower():
+            loc = f"{loc}, Ireland"
+        rec = _batch44_job_record("Aldi Ireland", title, loc, r.url or url, body, "batch45_aldi_first_party_id_detail")
+        if rec:
+            found[(r.url or url).split("?")[0].rstrip("/").lower()] = rec
+    print(f"      [batch45-aldi-direct] {len(found)} verified Republic-of-Ireland vacancies from {len(vacancy_ids)} first-party vacancy IDs / {len(canonical)} candidate details")
+    return list(found.values())
+
+
+
+def scrape_hp_ireland_batch45(session=None):
+    # HP moved from the older Workday URLs to its current first-party apply.hp.com
+    # career experience. These current first-party detail URLs are fetched live;
+    # a seed is retained only when the returned page itself still carries Dublin/
+    # Ireland evidence. This is a new backend, not another retry of Batch38.
+    session = session or requests.Session()
+    headers = {
+        "User-Agent": HEADERS.get("User-Agent", "Mozilla/5.0"),
+        "Accept-Language": "en-IE,en;q=0.9",
+    }
+    seeds = [
+        ("GSI Alliance Manager", "https://apply.hp.com/careers/job/41774163?domain=hp.com"),
+        ("Pre-Sales Technical Consultant", "https://apply.hp.com/careers/job/26824915?weekdayJdUid=1193419&domain=hp.com"),
+    ]
+    found = {}
+    for seed_title, url in seeds:
+        try:
+            r = session.get(url, headers=headers, timeout=15, allow_redirects=True)
+            if r.status_code != 200:
+                continue
+            raw = r.text or ""
+            body = re.sub(r"\s+", " ", _html_to_text(raw)).strip()
+        except Exception:
+            continue
+        probe = (raw + " " + body)[:300000]
+        if re.search(r"\b(?:job is no longer available|position is no longer available|page not found)\b", probe, re.I):
+            continue
+        if not re.search(r"\bDublin\b", probe, re.I) or not re.search(r"\b(?:Ireland|IE)\b", probe, re.I):
+            continue
+        title = seed_title
+        tm = re.search(r"<title[^>]*>(.*?)</title>", raw, re.I | re.S)
+        if tm:
+            cand = _batch44_clean_title(tm.group(1))
+            cand = re.sub(r"\s*[|\-]\s*HP\s*$", "", cand, flags=re.I).strip()
+            if cand and not _looks_like_non_job_title(cand):
+                title = cand
+        rec = _batch44_job_record(
+            "HP (Hewlett-Packard)", title, "Dublin, Ireland", r.url or url,
+            body or raw, "batch45_hp_apply_first_party"
+        )
+        if rec:
+            found[(r.url or url).split("#")[0].lower()] = rec
+    print(f"      [batch45-hp-apply] {len(found)} live-verified Republic-of-Ireland vacancies from current HP apply backend")
+    return list(found.values())
+
 # === TARGETED_DIRECT_BATCH_44_FALSE_ZERO_DIRECT_50_AUDIT ===
 # Batch43 proved that guessing ATS slugs at 50 companies does not reduce the
 # zero bucket. Batch44 keeps the 50-company research scope but only installs
@@ -10867,7 +11042,8 @@ def test_single_company(name):
         "hewlett packard enterprise (hpe)": lambda: scrape_hpe_ireland(session),
         "dell technologies": lambda: scrape_dell_ireland(session),
         "tesco ireland": lambda: scrape_tesco_ireland_batch40(session),
-        "aldi ireland": lambda: scrape_aldi_ireland_batch40(session),
+        "aldi ireland": lambda: scrape_aldi_ireland_batch45(session),
+        "aviva ireland": lambda: scrape_aviva_ireland_batch44(session),
         "forvis mazars ireland": lambda: scrape_forvis_mazars_ireland_batch34(session),
         "morningstar": lambda: scrape_morningstar_ireland_batch35(session),
         "refinitiv (lseg)": lambda: scrape_lseg_ireland_batch35(session),
@@ -10898,7 +11074,7 @@ def test_single_company(name):
         "heineken ireland": lambda: scrape_heineken_ireland_friend(session),
         "musgrave group (supervalu / centra)": lambda: scrape_musgrave_ireland_friend(session),
         "vhi healthcare": lambda: scrape_vhi_ireland_friend(session),
-        "hp (hewlett-packard)": lambda: scrape_hp_ireland_batch38(session),
+        "hp (hewlett-packard)": lambda: scrape_hp_ireland_batch45(session),
         "alkermes": lambda: scrape_alkermes_ireland_batch36(session),
         "edwards lifesciences": lambda: scrape_edwards_lifesciences_batch38(session),
         "pepsico": lambda: scrape_pepsico_ireland(session),
@@ -14642,6 +14818,7 @@ def scrape_wtw_ireland_batch26(session):
     print("=== TARGETED_DIRECT_BATCH_39_ZERO_BUCKET_25 ACTIVE: 25 Currently-No-Jobs/deferred companies forced into the next full-run recovery bucket; proven Uisce/HP/Edwards routes preserved; Manual queue untouched ===")
     print("=== TARGETED_DIRECT_BATCH_38_PRE_FULL_RUN_BULK ACTIVE: proven Uisce Oracle recovery retained + Edwards Lifesciences and HP moved to current official Workday ROI detail verification; wider zero audit completed; Manual queue untouched ===")
 
+print("=== TARGETED_DIRECT_BATCH_45_AVIVA_ALDI_DIRECT ACTIVE: Aviva production-routing override fixed; Aldi current Ireland vacancy IDs are resolved through first-party metadata + live canonical detail verification; HP moves to current apply.hp.com first-party details; prior SSE/Zimmer/ASML/Tesco recoveries preserved; Manual queue untouched ===")
 print("=== TARGETED_DIRECT_BATCH_44_FALSE_ZERO_DIRECT_50_AUDIT ACTIVE: Batch43 guessed ATS sweep retired; current official false-zero repairs for SSE + Aviva + Zimmer Biomet; 50-company audit principle retained; Manual queue untouched ===")
 print("=== TARGETED_DIRECT_BATCH_43_FRESH_ATS_50 ACTIVE: 50 repeated-zero/deferred companies are checked together via current careers redirects + existing ATS APIs; no generic vacancy scraping; Manual queue untouched ===")
 print("=== TARGETED_DIRECT_BATCH_42_REAL_ATS_RECOVERY ACTIVE: Batch40/41 generic zero sweeps retired; ASML uses current SmartRecruiters API; Tesco uses current official ROI careers cards plus Tribepad detail verification; wider 20+ zero audit remains deferred without proven new backends ===")
@@ -15059,7 +15236,7 @@ def main():
         ("exact", "advanced micro devices (amd)", scrape_amd_ireland_attempt2, 90, "AMD attempt 2 current careers host"),
         ("exact", "bayer", scrape_bayer_ireland_attempt2, 75, "Bayer attempt 2 current job portal"),
         ("exact", "bdo ireland", scrape_bdo_ireland_pinpoint, 30, "BDO Ireland official Pinpoint API"),
-        ("exact", "aviva ireland", scrape_aviva_ireland_current, 75, "Aviva Ireland official talent-community"),
+        ("exact", "aviva ireland", scrape_aviva_ireland_batch44, 55, "Batch45 direct binding to current official Aviva talent-community parser"),
         ("exact", "fitch ratings", scrape_fitch_ireland_current, 75, "Fitch current official careers site"),
         ("prefix", "apple", scrape_apple_ireland, 180, "direct HTML scrape"),
         ("exact", "google", scrape_google_ireland, 240, "real browser automation"),
@@ -15087,7 +15264,7 @@ def main():
         ("exact", "hewlett packard enterprise (hpe)", scrape_hpe_ireland, 60, "official HPE careers"),
         ("exact", "dell technologies", scrape_dell_ireland, 60, "official Dell careers"),
         ("exact", "tesco ireland", scrape_tesco_ireland_batch42, 35, "Batch42 Tesco official ROI careers cards + Tribepad detail verification"),
-        ("exact", "aldi ireland", scrape_aldi_ireland_batch40, 45, "Batch40 Aldi numeric canonical vacancy URLs"),
+        ("exact", "aldi ireland", scrape_aldi_ireland_batch45, 55, "Batch45 Aldi VacancyID + live canonical detail verification"),
         ("exact", "forvis mazars ireland", scrape_forvis_mazars_ireland_batch34, 45, "Batch34 official Forvis Mazars Recruitee API"),
         ("exact", "morningstar", scrape_morningstar_ireland_batch35, 55, "Batch35 direct Morningstar Workday Ireland verification"),
         ("exact", "refinitiv (lseg)", scrape_lseg_ireland_batch35, 65, "Batch35 direct LSEG Workday Ireland verification"),
@@ -15118,7 +15295,7 @@ def main():
         ("exact", "heineken ireland", scrape_heineken_ireland_friend, 45, "friend-referenced HEINEKEN Ireland board"),
         ("exact", "musgrave group (supervalu / centra)", scrape_musgrave_ireland_friend, 60, "friend-referenced Musgrave vacancies"),
         ("exact", "vhi healthcare", scrape_vhi_ireland_friend, 60, "friend-referenced VHI CandidateManager"),
-        ("exact", "hp (hewlett-packard)", scrape_hp_ireland_batch38, 60, "Batch38 official HP Workday current ROI route"),
+        ("exact", "hp (hewlett-packard)", scrape_hp_ireland_batch45, 45, "Batch45 current HP apply.hp.com first-party detail verification"),
         ("exact", "alkermes", scrape_alkermes_ireland_batch36, 55, "Batch36 official Alkermes current careers portal"),
         ("exact", "edwards lifesciences", scrape_edwards_lifesciences_batch38, 60, "Batch38 official Edwards Workday current ROI route"),
         ("exact", "oracle", scrape_oracle_ireland_attempt2, 60, "attempt 2 rendered Oracle Ireland board"),
@@ -15182,6 +15359,8 @@ def main():
         ("exact", "pepsico", scrape_pepsico_ireland, 180, "official careers search"),
     ]
 
+    # Batch45 direct task bindings are referenced explicitly above, so legacy
+    # symbol redefinitions cannot silently replace them.
     task_list = []
     matched_entries = {}
 
