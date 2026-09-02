@@ -10750,8 +10750,8 @@
   },
   "Bain & Company": {
     "jobs": [],
-    "checked_at": 1788356083.4854198,
-    "consecutive_failures": 154
+    "checked_at": 1788361120.2757778,
+    "consecutive_failures": 155
   },
   "FTI Consulting": {
     "jobs": [],
@@ -11577,8 +11577,8 @@
   },
   "Macquarie Group": {
     "jobs": [],
-    "checked_at": 1788356070.2941747,
-    "consecutive_failures": 99
+    "checked_at": 1788361112.208776,
+    "consecutive_failures": 100
   },
   "Lidl Ireland": {
     "jobs": [],
@@ -11622,8 +11622,8 @@
   },
   "Oliver Wyman": {
     "jobs": [],
-    "checked_at": 1788356071.102713,
-    "consecutive_failures": 44
+    "checked_at": 1788361111.9636376,
+    "consecutive_failures": 45
   },
   "McKinsey & Company": {
     "jobs": [],
@@ -11637,13 +11637,13 @@
   },
   "Alkermes": {
     "jobs": [],
-    "checked_at": 1788356081.6398447,
-    "consecutive_failures": 166
+    "checked_at": 1788361114.2449312,
+    "consecutive_failures": 167
   },
   "Visa": {
     "jobs": [],
-    "checked_at": 1788356068.424413,
-    "consecutive_failures": 165
+    "checked_at": 1788361111.2729087,
+    "consecutive_failures": 166
   },
   "Boehringer Ingelheim": {
     "jobs": [],
@@ -11662,13 +11662,13 @@
   },
   "Bruker": {
     "jobs": [],
-    "checked_at": 1788356073.3281944,
-    "consecutive_failures": 164
+    "checked_at": 1788361114.1206453,
+    "consecutive_failures": 165
   },
   "Biotronik": {
     "jobs": [],
-    "checked_at": 1788356079.9118302,
-    "consecutive_failures": 164
+    "checked_at": 1788361118.8551533,
+    "consecutive_failures": 165
   },
   "Carbery Group": {
     "jobs": [],
@@ -12371,8 +12371,8 @@
   },
   "Smurfit Westrock": {
     "jobs": [],
-    "checked_at": 1788356084.772148,
-    "consecutive_failures": 159
+    "checked_at": 1788361120.223934,
+    "consecutive_failures": 160
   },
   "Stena Line Ireland": {
     "jobs": [],
@@ -17694,8 +17694,8 @@
   },
   "Coca-Cola HBC Ireland::friend_nonlive_batch10_v1": {
     "jobs": [],
-    "checked_at": 1788356080.8282428,
-    "consecutive_failures": 111
+    "checked_at": 1788361121.4027705,
+    "consecutive_failures": 112
   },
   "Agilent Technologies::friend_nonlive_batch10_v1": {
     "jobs": [
@@ -39357,8 +39357,8 @@
   },
   "NXP Semiconductors::zero_only_batch20_v1": {
     "jobs": [],
-    "checked_at": 1788356093.8186722,
-    "consecutive_failures": 15
+    "checked_at": 1788361132.2464056,
+    "consecutive_failures": 16
   },
   "Haleon::zero_only_batch20_v1": {
     "jobs": [
@@ -40351,8 +40351,8 @@
   },
   "Morgan Stanley::targeted_direct_batch35_v1": {
     "jobs": [],
-    "checked_at": 1788356067.9711592,
-    "consecutive_failures": 8
+    "checked_at": 1788361109.9610934,
+    "consecutive_failures": 9
   },
   "Refinitiv (LSEG)::targeted_direct_batch35_v1": {
     "jobs": [
@@ -41065,59 +41065,231 @@
     "checked_at": 1788356085.4138424,
     "consecutive_failures": 0
   },
-  "Coillte::targeted_direct_batch1_v1": {
+  "Kepak Group::targeted_direct_batch7_multi_v1": {
     "jobs": [],
-    "checked_at": 1788358891.6620557,
+    "checked_at": 1788361109.4323833,
     "consecutive_failures": 1
   },
   "An Post::targeted_direct_batch7_multi_v1": {
     "jobs": [],
-    "checked_at": 1788358891.893448,
+    "checked_at": 1788361109.7125354,
+    "consecutive_failures": 1
+  },
+  "Coillte::targeted_direct_batch1_v1": {
+    "jobs": [],
+    "checked_at": 1788361110.5237024,
     "consecutive_failures": 1
   },
   "Aldi Ireland::targeted_direct_batch35_v1": {
     "jobs": [],
-    "checked_at": 1788358892.2056384,
+    "checked_at": 1788361110.6923041,
     "consecutive_failures": 1
   },
   "VMware (Broadcom)::zero_only_batch20_v1": {
     "jobs": [],
-    "checked_at": 1788358892.8318117,
+    "checked_at": 1788361111.1628542,
     "consecutive_failures": 1
   },
-  "Kepak Group::targeted_direct_batch7_multi_v1": {
+  "Zimmer Biomet": {
+    "jobs": [
+      {
+        "company": "Zimmer Biomet",
+        "title": "Maint Technician",
+        "location": "Shannon, Munster, Ireland",
+        "posted_text": "Posted 5 days ago",
+        "posted_days_ago": 5.0,
+        "employment_type": "Unspecified",
+        "url": "https://career8.successfactors.com/careers?company=zimmerin01&loginFlowRequired=true&career_os=job_listing&career_ns=job_application&career_job_req_id=11922&_s.crb=25fvCmbM9Lad2rza%252fxJs%252fNp1mhY1RYUVrVIMdAiM2RI%253d",
+        "source": "batch44_zimmer_official_phenom",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-28T12:53:25.839070+00:00",
+        "posted_age_known": true
+      },
+      {
+        "company": "Zimmer Biomet",
+        "title": "Executive Assistant f/m",
+        "location": "Shannon, Munster, Ireland",
+        "posted_text": "Posted 7 days ago",
+        "posted_days_ago": 7.0,
+        "employment_type": "Unspecified",
+        "url": "https://career8.successfactors.com/careers?company=zimmerin01&loginFlowRequired=true&career_os=job_listing&career_ns=job_application&career_job_req_id=11702&_s.crb=25fvCmbM9Lad2rza%252fxJs%252fNp1mhY1RYUVrVIMdAiM2RI%253d",
+        "source": "batch44_zimmer_official_phenom",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-26T14:37:48.649366+00:00",
+        "posted_age_known": true
+      },
+      {
+        "company": "Zimmer Biomet",
+        "title": "Continuous Improvement Technical Operator (6-Month Contract, Extension Possible)",
+        "location": "Galway, Connacht, Ireland",
+        "posted_text": "Posted 14 days ago",
+        "posted_days_ago": 14.0,
+        "employment_type": "Contract",
+        "url": "https://career8.successfactors.com/careers?company=zimmerin01&loginFlowRequired=true&career_os=job_listing&career_ns=job_application&career_job_req_id=11744&_s.crb=25fvCmbM9Lad2rza%252fxJs%252fNp1mhY1RYUVrVIMdAiM2RI%253d",
+        "source": "batch44_zimmer_official_phenom",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-19T14:01:51.801445+00:00",
+        "posted_age_known": true
+      },
+      {
+        "company": "Zimmer Biomet",
+        "title": "Operation Excellence Lead",
+        "location": "Shannon, Munster, Ireland",
+        "posted_text": "Posted 19 days ago",
+        "posted_days_ago": 19.0,
+        "employment_type": "Unspecified",
+        "url": "https://career8.successfactors.com/careers?company=zimmerin01&loginFlowRequired=true&career_os=job_listing&career_ns=job_application&career_job_req_id=11846&_s.crb=25fvCmbM9Lad2rza%252fxJs%252fNp1mhY1RYUVrVIMdAiM2RI%253d",
+        "source": "batch44_zimmer_official_phenom",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-14T21:52:59.255463+00:00",
+        "posted_age_known": true
+      }
+    ],
+    "checked_at": 1788361111.4128249,
+    "consecutive_failures": 0
+  },
+  "SSE Airtricity / SSE::batch_dedicated_v1": {
+    "jobs": [
+      {
+        "company": "SSE Airtricity / SSE",
+        "title": "Programme Administrator - Warmer Homes",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Full-time",
+        "url": "https://careers.sse.com/jobs/programme-administrator-warmer-homes-dublin-ireland-ireland",
+        "source": "batch44_sse_official_listing",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-09-02T14:58:59.423611+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "SSE Airtricity / SSE",
+        "title": "Power Modeller / Senior Power Modeller (Energy Markets)",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Full-time",
+        "url": "https://careers.sse.com/jobs/power-modeller-senior-power-modeller-energy-markets-dublin-ireland-ireland-belfast-county-antrim-northern-ireland-united-kingdom-glasgow-aurora-renfrewshire-edinburgh-the-lothians-scotland-pe",
+        "source": "batch44_sse_official_listing",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-09-02T14:58:59.423611+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "SSE Airtricity / SSE",
+        "title": "Land Manager",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Full-time",
+        "url": "https://careers.sse.com/jobs/land-manager-dublin-ireland-ireland-belfast-county-antrim-northern-ireland-united-kingdom-aberdeen-aberdeenshire-aberdeenshire-glasgow-renfrewshire-renfrewshire-inverness-highland-scotland-pe",
+        "source": "batch44_sse_official_listing",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-09-02T14:58:59.423611+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "SSE Airtricity / SSE",
+        "title": "Joint Venture Manager",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Full-time",
+        "url": "https://careers.sse.com/jobs/joint-venture-manager-london-london-england-united-kingdom-dublin-ireland-ireland-glasgow-renfrewshire-renfrewshire-perth-perthshire-scotland",
+        "source": "batch44_sse_official_listing",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-31T19:56:31.491324+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "SSE Airtricity / SSE",
+        "title": "Senior Electrical Engineer",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Full-time",
+        "url": "https://careers.sse.com/jobs/senior-electrical-engineer-reading-berkshire-berkshire-united-kingdom-leeds-west-yorkshire-west-yorkshire-dublin-ireland-ireland-glasgow-renfrewshire-renfrewshire-perth-perthshire-scotland",
+        "source": "batch44_sse_official_listing",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-09-02T14:58:59.423611+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "SSE Airtricity / SSE",
+        "title": "R2R Senior Finance Manager",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Full-time",
+        "url": "https://careers.sse.com/jobs/r2r-senior-finance-manager-dublin-ireland-ireland-glasgow-renfrewshire-renfrewshire-united-kingdom-perth-perthshire-scotland",
+        "source": "batch44_sse_official_listing",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T04:32:09.012483+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "SSE Airtricity / SSE",
+        "title": "Lead FPA Manager - Customer Asset",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Full-time",
+        "url": "https://careers.sse.com/jobs/lead-fpa-manager-customer-asset-reading-berkshire-berkshire-united-kingdom-dublin-ireland-ireland-belfast-county-antrim-northern-ireland-glasgow-renfrewshire-renfrewshire-perth-perthshire-sco",
+        "source": "batch44_sse_official_listing",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-09-02T14:58:59.423611+00:00",
+        "posted_age_known": false
+      }
+    ],
+    "checked_at": 1788361111.9928217,
+    "consecutive_failures": 0
+  },
+  "QIAGEN::zero_only_batch20_v1": {
     "jobs": [],
-    "checked_at": 1788358893.9415884,
+    "checked_at": 1788361115.5775537,
     "consecutive_failures": 1
   },
   "HP (Hewlett-Packard)::friend_next4_v1": {
     "jobs": [],
-    "checked_at": 1788358896.979964,
-    "consecutive_failures": 1
-  },
-  "QIAGEN::zero_only_batch20_v1": {
-    "jobs": [],
-    "checked_at": 1788358897.2408128,
+    "checked_at": 1788361116.074945,
     "consecutive_failures": 1
   },
   "SMBC Aviation Capital::friend_nonlive_batch10_v1": {
     "jobs": [],
-    "checked_at": 1788358898.6232064,
+    "checked_at": 1788361117.644227,
     "consecutive_failures": 1
   },
   "Boston Consulting Group (BCG)": {
     "jobs": [],
-    "checked_at": 1788358906.8526924,
+    "checked_at": 1788361126.8831103,
     "consecutive_failures": 1
   },
   "Deutsche Bank::friend_logic_v1": {
     "jobs": [],
-    "checked_at": 1788358917.2069585,
-    "consecutive_failures": 1
-  },
-  "SSE Airtricity / SSE::batch_dedicated_v1": {
-    "jobs": [],
-    "checked_at": 1788358923.762604,
+    "checked_at": 1788361135.184313,
     "consecutive_failures": 1
   }
 }
