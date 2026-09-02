@@ -10414,6 +10414,160 @@ def scrape_societe_generale_batch35(session=None):
 
 
 
+
+# === TARGETED_DIRECT_BATCH_43_FRESH_ATS_50 ===
+# Faster zero-reduction pass: 50 repeated-zero/deferred companies are checked
+# together, over HTTP, against their CURRENT career URL plus the existing ATS
+# APIs. This is not another generic HTML/sitemap vacancy scraper. It follows the
+# company's current careers redirect/link graph only far enough to identify a
+# supported ATS tenant, then uses the existing platform API + strict ROI filters.
+# It is supplemental: a miss does NOT change a company to Manual and does not
+# overwrite any proven live route. Successful detections are written back to the
+# normal ATS cache so later full runs get cheaper rather than slower.
+
+BATCH43_FRESH_ATS_50 = {
+    'energia group','micron technology','heineken ireland','slack','texas instruments',
+    'box','boehringer ingelheim','medpace','nokia','sentinelone','kepak group','an post',
+    'morgan stanley','coillte','aldi ireland','visa','vmware (broadcom)','macquarie group',
+    'oliver wyman','qiagen','bruker','hp (hewlett-packard)','smbc aviation capital',
+    'biotronik','coca-cola hbc ireland','alkermes','bain & company','smurfit westrock',
+    'boston consulting group (bcg)','deutsche bank','nxp semiconductors','morningstar',
+    'sse airtricity / sse','paypal','illumina','teva pharmaceuticals','zimmer biomet',
+    'catalent','fti consulting','factset',"moody's",'splunk','protiviti','insulet corporation',
+    'marvell technology','infosys','hcl technologies','waters corporation','bayer','aviva ireland',
+}
+
+_BATCH43_ATS_PATTERNS = (
+    ('greenhouse', re.compile(r"https?://(?:job-boards|boards)\\.greenhouse\\.io/([^/?#\"']+)", re.I)),
+    ('lever', re.compile(r"https?://jobs\\.lever\\.co/([^/?#\"']+)", re.I)),
+    ('smartrecruiters', re.compile(r"https?://(?:careers|jobs)\\.smartrecruiters\\.com/([^/?#\"']+)", re.I)),
+    ('ashby', re.compile(r"https?://jobs\\.ashbyhq\\.com/([^/?#\"']+)", re.I)),
+    ('recruitee', re.compile(r'https?://([a-z0-9-]+)\\.recruitee\\.com(?:/|$)', re.I)),
+    ('personio', re.compile(r'https?://([a-z0-9-]+)\\.jobs\\.personio\\.(?:com|de)(?:/|$)', re.I)),
+    ('pinpoint', re.compile(r'https?://([a-z0-9-]+)\\.pinpointhq\\.com(?:/|$)', re.I)),
+    ('eightfold', re.compile(r'https?://([a-z0-9-]+)\\.eightfold\\.ai(?:/|$)', re.I)),
+    ('workable', re.compile(r"https?://(?:apply|jobs)\\.workable\\.com/([^/?#\"']+)", re.I)),
+)
+
+def _batch43_platform_from_text(raw):
+    found=[]
+    raw=html.unescape(str(raw or '')).replace('\\/','/')
+    for platform, rx in _BATCH43_ATS_PATTERNS:
+        for m in rx.finditer(raw):
+            slug=(m.group(1) or '').strip().strip('/')
+            if slug and (platform,slug) not in found:
+                found.append((platform,slug))
+    return found
+
+def _batch43_fetch_platform_jobs(company, platform, slug, session):
+    raw=[]
+    if platform == 'greenhouse':
+        raw = try_greenhouse(slug, session) or []
+        jobs=[normalize_greenhouse_job(company,j) for j in raw]
+    elif platform == 'lever':
+        raw = try_lever(slug, session) or []
+        jobs=[normalize_lever_job(company,j) for j in raw]
+    elif platform == 'smartrecruiters':
+        raw = try_smartrecruiters(slug, session) or []
+        jobs=[normalize_smartrecruiters_job(company,j,slug,session,False) for j in raw]
+    elif platform == 'ashby':
+        raw = try_ashby(slug, session) or []
+        jobs=[normalize_ashby_job(company,j) for j in raw]
+    elif platform == 'recruitee':
+        raw = try_recruitee(slug, session) or []
+        jobs=[normalize_recruitee_job(company,j) for j in raw]
+    elif platform == 'personio':
+        raw = try_personio(slug, session) or []
+        jobs=[normalize_personio_job(company,slug,j) for j in raw]
+    elif platform == 'pinpoint':
+        raw = try_pinpoint(slug, session) or []
+        jobs=[normalize_pinpoint_job(company,slug,j) for j in raw]
+    elif platform == 'eightfold':
+        raw = try_eightfold(slug, session) or []
+        jobs=[normalize_eightfold_job(company,slug,j) for j in raw]
+    elif platform == 'workable':
+        raw = try_workable(slug, session) or []
+        jobs=[normalize_workable_job(company,j) for j in raw]
+    else:
+        return []
+    out=[]
+    seen=set()
+    for j in jobs:
+        if not j:
+            continue
+        loc=str(j.get('location') or '')
+        if _ROI_NEGATIVE_RE.search(loc) or not is_republic_of_ireland_location(loc):
+            continue
+        title=str(j.get('title') or '').strip()
+        if not title or _looks_like_non_job_title(title):
+            continue
+        key=(j.get('url') or title).rstrip('/').lower()
+        if key in seen:
+            continue
+        seen.add(key)
+        j['source']='batch43_fresh_ats_50'
+        out.append(j)
+    return out
+
+def _batch43_discover_one(company, career_url):
+    s=requests.Session()
+    headers={'User-Agent':HEADERS.get('User-Agent','Mozilla/5.0'),'Accept-Language':'en-IE,en;q=0.9'}
+    candidates=[]
+    # First inspect the company's CURRENT careers destination and outbound ATS links.
+    try:
+        r=s.get(career_url,headers=headers,timeout=10,allow_redirects=True)
+        candidates.extend(_batch43_platform_from_text(r.url))
+        candidates.extend(_batch43_platform_from_text(r.text[:150000]))
+    except Exception:
+        pass
+    # Then use the existing slug generator as a bounded fallback. This is useful
+    # when the public careers page hides the ATS behind JS but the tenant itself is live.
+    for slug in candidate_slugs(company)[:5]:
+        for platform in ('greenhouse','lever','smartrecruiters','ashby','recruitee','personio','pinpoint','eightfold','workable'):
+            if (platform,slug) not in candidates:
+                candidates.append((platform,slug))
+    checked=[]
+    for platform,slug in candidates[:50]:
+        try:
+            jobs=_batch43_fetch_platform_jobs(company,platform,slug,s)
+        except Exception:
+            jobs=[]
+        checked.append(f'{platform}:{slug}')
+        if jobs:
+            return company, jobs, platform, slug, checked
+    return company, [], None, None, checked
+
+def run_batch43_fresh_ats_50(companies):
+    rows=[]
+    for row in companies:
+        name=str(row.get('company_name') or '').strip()
+        if name.lower() in BATCH43_FRESH_ATS_50:
+            rows.append((name,str(row.get('career_url') or '').strip()))
+    print(f"\\n=== Batch43 fresh-ATS bulk pass: {len(rows)}/50 repeated-zero/deferred companies checked together over HTTP ===")
+    if not rows:
+        return [], {}
+    recovered=[]
+    cache_updates={}
+    pool=ThreadPoolExecutor(max_workers=min(HTTP_WORKERS,len(rows)))
+    try:
+        futs={pool.submit(_batch43_discover_one,n,u):(n,u) for n,u in rows}
+        for fut in as_completed(futs):
+            n,u=futs[fut]
+            try:
+                company,jobs,platform,slug,checked=fut.result(timeout=75)
+            except Exception as exc:
+                print(f"      [batch43-fresh-ats] {n}: no recovery ({exc})")
+                continue
+            if jobs:
+                recovered.extend(jobs)
+                cache_updates[company]={'platform':platform,'slug':slug}
+                print(f"      [batch43-fresh-ats] {company}: {len(jobs)} ROI jobs via {platform}:{slug}")
+            else:
+                print(f"      [batch43-fresh-ats] {company}: 0 ROI jobs after {len(checked)} ATS checks")
+    finally:
+        pool.shutdown(wait=False)
+    return recovered, cache_updates
+
 # === TARGETED_DIRECT_BATCH_42_REAL_ATS_RECOVERY ===
 # Batch40 structural-page and Batch41 sitemap sweeps are retired.  Batch42 only
 # adds company-specific routes where the current official hiring system was
@@ -14360,6 +14514,7 @@ def scrape_wtw_ireland_batch26(session):
     print("=== TARGETED_DIRECT_BATCH_39_ZERO_BUCKET_25 ACTIVE: 25 Currently-No-Jobs/deferred companies forced into the next full-run recovery bucket; proven Uisce/HP/Edwards routes preserved; Manual queue untouched ===")
     print("=== TARGETED_DIRECT_BATCH_38_PRE_FULL_RUN_BULK ACTIVE: proven Uisce Oracle recovery retained + Edwards Lifesciences and HP moved to current official Workday ROI detail verification; wider zero audit completed; Manual queue untouched ===")
 
+print("=== TARGETED_DIRECT_BATCH_43_FRESH_ATS_50 ACTIVE: 50 repeated-zero/deferred companies are checked together via current careers redirects + existing ATS APIs; no generic vacancy scraping; Manual queue untouched ===")
 print("=== TARGETED_DIRECT_BATCH_42_REAL_ATS_RECOVERY ACTIVE: Batch40/41 generic zero sweeps retired; ASML uses current SmartRecruiters API; Tesco uses current official ROI careers cards plus Tribepad detail verification; wider 20+ zero audit remains deferred without proven new backends ===")
 print("=== TARGETED_DIRECT_BATCH_41_SITEMAP_ZERO_24 ACTIVE: today's repeated-zero companies use a new bounded robots.txt + XML sitemap vacancy discovery pass; Goodbody is removed after its proven 1-job recovery; ASML gets a live-verified Leixlip detail seed; Batch40 structural retries retired ===")
 print("=== TARGETED_DIRECT_BATCH_40_TRUE_ZERO_25 ACTIVE: 25 companies from the latest Currently-No-Jobs log get a fresh bounded HTTP recovery pass; Aldi/Tesco/Goodbody/FactSet get new backend-specific routes; proven live routes and Manual queue untouched ===")
@@ -14686,6 +14841,27 @@ def main():
         kind = classify_url(url)
         manual_check.append({"company": name, "url": url, "platform": kind})
 
+
+    # Batch43 supplemental fresh ATS migration/recovery pass. Runs across all 50
+    # selected zero/deferred companies regardless of their CSV URL classification.
+    # Misses are status-neutral; only real ROI jobs are merged.
+    _batch43_jobs, _batch43_cache_updates = run_batch43_fresh_ats_50(companies)
+    if _batch43_jobs:
+        live_jobs.extend(_batch43_jobs)
+    if _batch43_cache_updates:
+        try:
+            _p = "ats_platform_cache.json"
+            _c = {}
+            if os.path.exists(_p):
+                with open(_p, encoding="utf-8") as _f:
+                    _c = json.load(_f)
+            _c.update(_batch43_cache_updates)
+            _c["__probe_version__"] = PROBE_VERSION
+            with open(_p, "w", encoding="utf-8") as _f:
+                json.dump(_c, _f, indent=2, ensure_ascii=False)
+            print(f"=== Batch43 ATS cache: saved {len(_batch43_cache_updates)} newly detected current platform routes ===")
+        except Exception as _e:
+            print(f"=== Batch43 ATS cache update skipped: {_e} ===")
 
     print(f"\nProbing remaining {len(manual_check)} companies for Greenhouse/Lever/SmartRecruiters/"
           f"Ashby/Recruitee/Personio/Pinpoint/Eightfold boards "
