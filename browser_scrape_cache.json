@@ -11537,11 +11537,6 @@
     "checked_at": 1788292421.5218182,
     "consecutive_failures": 0
   },
-  "Tesco Ireland": {
-    "jobs": [],
-    "checked_at": 1787666189.0446866,
-    "consecutive_failures": 45
-  },
   "Akamai": {
     "jobs": [],
     "checked_at": 1788099611.0402052,
@@ -14832,11 +14827,6 @@
     "checked_at": 1788292322.394172,
     "consecutive_failures": 0
   },
-  "Tesco Ireland::batch_dedicated_v1": {
-    "jobs": [],
-    "checked_at": 1788270480.694164,
-    "consecutive_failures": 121
-  },
   "AstraZeneca::batch_dedicated_v1": {
     "jobs": [
       {
@@ -15768,7 +15758,7 @@
         "source": "dxc_batch20_rendered",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-01T22:09:59.558446+00:00",
         "posted_age_known": false
       },
@@ -15798,7 +15788,7 @@
         "source": "dxc_batch20_rendered",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-01T22:09:59.558446+00:00",
         "posted_age_known": false
       }
@@ -17657,8 +17647,8 @@
   },
   "Heineken Ireland::friend_next4_v1": {
     "jobs": [],
-    "checked_at": 1788300571.6889243,
-    "consecutive_failures": 114
+    "checked_at": 1788308289.6776345,
+    "consecutive_failures": 115
   },
   "VHI Healthcare::friend_next4_v1": {
     "jobs": [
@@ -30893,8 +30883,8 @@
   },
   "Energia Group::targeted_direct_batch5_multi_v1": {
     "jobs": [],
-    "checked_at": 1788300568.834581,
-    "consecutive_failures": 37
+    "checked_at": 1788308287.2487984,
+    "consecutive_failures": 38
   },
   "WuXi Biologics::targeted_direct_batch5_multi_v1": {
     "jobs": [
@@ -31150,8 +31140,8 @@
   },
   "Medpace::targeted_direct_batch8_bulk_v1": {
     "jobs": [],
-    "checked_at": 1788300568.737151,
-    "consecutive_failures": 35
+    "checked_at": 1788308286.9632604,
+    "consecutive_failures": 36
   },
   "Hollister Incorporated::targeted_direct_batch8_bulk_v1": {
     "jobs": [
@@ -32930,18 +32920,18 @@
   },
   "Micron Technology::targeted_direct_batch10_bulk_v1": {
     "jobs": [],
-    "checked_at": 1788300568.7870724,
-    "consecutive_failures": 32
+    "checked_at": 1788308287.0135653,
+    "consecutive_failures": 33
   },
   "Slack::targeted_direct_batch10_bulk_v1": {
     "jobs": [],
-    "checked_at": 1788300568.991846,
-    "consecutive_failures": 32
+    "checked_at": 1788308287.5286083,
+    "consecutive_failures": 33
   },
   "Box::targeted_direct_batch10_bulk_v1": {
     "jobs": [],
-    "checked_at": 1788300569.390835,
-    "consecutive_failures": 32
+    "checked_at": 1788308287.4867833,
+    "consecutive_failures": 33
   },
   "Coloplast::targeted_direct_batch9_bulk_v1": {
     "jobs": [
@@ -35956,23 +35946,23 @@
   },
   "Texas Instruments::targeted_direct_batch11_bulk_v1": {
     "jobs": [],
-    "checked_at": 1788300568.5305116,
-    "consecutive_failures": 31
+    "checked_at": 1788308286.6126387,
+    "consecutive_failures": 32
   },
   "Nokia::targeted_direct_batch11_bulk_v1": {
     "jobs": [],
-    "checked_at": 1788300569.5112622,
-    "consecutive_failures": 31
+    "checked_at": 1788308287.9480476,
+    "consecutive_failures": 32
   },
   "Boehringer Ingelheim::targeted_direct_batch11_bulk_v1": {
     "jobs": [],
-    "checked_at": 1788300570.120032,
-    "consecutive_failures": 30
+    "checked_at": 1788308289.8348572,
+    "consecutive_failures": 31
   },
   "SentinelOne": {
     "jobs": [],
-    "checked_at": 1788300568.123096,
-    "consecutive_failures": 30
+    "checked_at": 1788308286.480829,
+    "consecutive_failures": 31
   },
   "Tenable": {
     "jobs": [
@@ -41124,36 +41114,6 @@
     "checked_at": 1788270507.7038105,
     "consecutive_failures": 1
   },
-  "Kepak Group::targeted_direct_batch7_multi_v1": {
-    "jobs": [],
-    "checked_at": 1788300568.2722569,
-    "consecutive_failures": 1
-  },
-  "An Post::targeted_direct_batch7_multi_v1": {
-    "jobs": [],
-    "checked_at": 1788300568.6929514,
-    "consecutive_failures": 1
-  },
-  "Coillte::targeted_direct_batch1_v1": {
-    "jobs": [],
-    "checked_at": 1788300569.2405913,
-    "consecutive_failures": 1
-  },
-  "Avolon": {
-    "jobs": [],
-    "checked_at": 1788300569.352808,
-    "consecutive_failures": 1
-  },
-  "VMware (Broadcom)::zero_only_batch20_v1": {
-    "jobs": [],
-    "checked_at": 1788300570.2509058,
-    "consecutive_failures": 1
-  },
-  "SMBC Aviation Capital::friend_nonlive_batch10_v1": {
-    "jobs": [],
-    "checked_at": 1788300575.1325839,
-    "consecutive_failures": 1
-  },
   "Hewlett Packard Enterprise (HPE)::batch_dedicated_v1": {
     "jobs": [
       {
@@ -41197,7 +41157,7 @@
         "source": "hpe_first_party",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-01T22:09:59.558446+00:00",
         "posted_age_known": false
       },
@@ -41250,9 +41210,39 @@
     "checked_at": 1788300591.3987253,
     "consecutive_failures": 0
   },
+  "Kepak Group::targeted_direct_batch7_multi_v1": {
+    "jobs": [],
+    "checked_at": 1788308286.7178264,
+    "consecutive_failures": 1
+  },
+  "An Post::targeted_direct_batch7_multi_v1": {
+    "jobs": [],
+    "checked_at": 1788308287.0328717,
+    "consecutive_failures": 1
+  },
+  "Coillte::targeted_direct_batch1_v1": {
+    "jobs": [],
+    "checked_at": 1788308287.597081,
+    "consecutive_failures": 1
+  },
+  "Avolon": {
+    "jobs": [],
+    "checked_at": 1788308287.6477127,
+    "consecutive_failures": 1
+  },
+  "VMware (Broadcom)::zero_only_batch20_v1": {
+    "jobs": [],
+    "checked_at": 1788308288.4580023,
+    "consecutive_failures": 1
+  },
+  "SMBC Aviation Capital::friend_nonlive_batch10_v1": {
+    "jobs": [],
+    "checked_at": 1788308293.435683,
+    "consecutive_failures": 1
+  },
   "Deutsche Bank::friend_logic_v1": {
     "jobs": [],
-    "checked_at": 1788300594.0415452,
+    "checked_at": 1788308312.1116824,
     "consecutive_failures": 1
   }
 }
