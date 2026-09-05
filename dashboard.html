@@ -5,510 +5,59 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Job Radar — Ireland</title>
 <style>
-  :root{
-    --bg:#0c121c;
-    --panel:#131b28;
-    --panel-2:#182233;
-    --line:#263349;
-    --ink:#eef2f8;
-    --muted:#8996ab;
-    --amber:#e0a63c;
-    --amber-dim:#e0a63c22;
-    --teal:#3fcf9a;
-    --teal-dim:#3fcf9a22;
-    --rose:#e2643b;
-    --rose-dim:#e2643b22;
-    --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
-    --mono:'SFMono-Regular',Consolas,'Liberation Mono',Menlo,monospace;
-  }
-  *{box-sizing:border-box;}
-  body{
-    margin:0;
-    background:
-      radial-gradient(1200px 600px at 10% -10%, #16223580 0%, transparent 60%),
-      var(--bg);
-    color:var(--ink);
-    font-family:var(--sans);
-    -webkit-font-smoothing:antialiased;
-  }
-  .board{
-    position:sticky; top:0; z-index:20;
-    background:var(--panel);
-    border-bottom:1px solid var(--line);
-    padding:20px 28px 16px;
-  }
-  .board-top{
-    display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:12px;
-    margin-bottom:16px;
-  }
-  .eyebrow{
-    font-family:var(--mono); font-size:11px; letter-spacing:.16em; text-transform:uppercase;
-    color:var(--teal); margin:0 0 6px;
-  }
-  h1{ margin:0; font-size:24px; font-weight:800; letter-spacing:-0.01em; }
-  .readout{
-    display:flex; gap:20px; font-family:var(--mono); font-size:12px; color:var(--muted);
-  }
-  .readout b{ color:var(--ink); font-size:18px; display:block; font-weight:700; font-family:var(--sans); }
-
-  .filter-row{
-    display:flex; gap:10px; flex-wrap:wrap; align-items:center;
-  }
-  .search-wrap{ flex:1 1 240px; min-width:200px; position:relative; }
-  input[type=text]{
-    width:100%;
-    background:var(--panel-2);
-    border:1px solid var(--line);
-    color:var(--ink);
-    padding:10px 12px;
-    border-radius:6px;
-    font-size:13.5px;
-    font-family:var(--sans);
-  }
-  input[type=text]::placeholder{ color:var(--muted); }
-  select{
-    background:var(--panel-2);
-    border:1px solid var(--line);
-    color:var(--ink);
-    padding:10px 10px;
-    border-radius:6px;
-    font-size:13px;
-    font-family:var(--sans);
-    min-width:150px;
-  }
-  .loadctrl{
-    display:flex; align-items:center; gap:8px; margin-left:auto;
-  }
-  .loadctrl button{
-    background:var(--amber); color:#1a1305; border:none;
-    padding:9px 14px; border-radius:6px; font-weight:700; font-size:12.5px; cursor:pointer;
-  }
-  .live-dot{
-    font-family:var(--mono); font-size:11px; color:var(--teal);
-  }
-  .live-dot.stale{ color:var(--rose); }
-  #manualLoadLink{
-    font-family:var(--mono); font-size:11px; color:var(--muted); text-decoration:underline; cursor:pointer;
-  }
-  #genTime{ font-family:var(--mono); font-size:11px; color:var(--muted); }
-
-  main{ padding:22px 28px 60px; }
-  .subhead{
-    display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;
-  }
-  .tabs{ display:flex; gap:4px; }
-  .tab{
-    padding:7px 14px; border-radius:6px 6px 0 0; font-family:var(--mono); font-size:12.5px;
-    background:transparent; color:var(--muted); cursor:pointer; border:1px solid transparent;
-  }
-  .tab.active{ background:var(--panel); color:var(--ink); border-color:var(--line); border-bottom-color:var(--panel); font-weight:700; }
-  #resultCount{ font-family:var(--mono); font-size:12.5px; color:var(--muted); }
-
-  .grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
-    gap:14px;
-  }
-  .card{
-    background:var(--panel);
-    border:1px solid var(--line);
-    border-left:3px solid var(--line);
-    border-radius:8px;
-    padding:16px;
-    cursor:pointer;
-    transition:border-color .12s, transform .12s;
-    display:flex; flex-direction:column; gap:10px;
-    position:relative;
-  }
-  .card:hover{ border-color:var(--amber); transform:translateY(-1px); }
-  .card.fresh{ border-left-color:var(--teal); }
-  .card.stale{ border-left-color:var(--line); }
-  .new-ribbon{
-    position:absolute; top:-1px; right:12px;
-    background:var(--amber); color:#1a1305;
-    font-family:var(--mono); font-size:10px; font-weight:700;
-    letter-spacing:.06em; padding:3px 8px; border-radius:0 0 5px 5px;
-  }
-  .company{
-    font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase;
-    color:var(--teal); font-weight:700;
-  }
-  .title{ font-size:15px; font-weight:700; line-height:1.35; }
-  .meta{ display:flex; gap:6px; flex-wrap:wrap; }
-  .chip{
-    font-size:11px; padding:3px 8px; border-radius:4px;
-    background:var(--panel-2); color:var(--muted); border:1px solid var(--line);
-    font-family:var(--mono);
-  }
-  .chip.postedToday{ background:var(--teal-dim); color:var(--teal); border-color:#3fcf9a44; }
-  .card-foot{
-    display:flex; justify-content:space-between; align-items:center; margin-top:auto; padding-top:6px;
-    border-top:1px solid var(--line);
-  }
-  .visa-badge{
-    font-size:10.5px; font-family:var(--mono); padding:3px 8px; border-radius:20px;
-    border:1px solid var(--line); color:var(--muted);
-  }
-  .visa-badge.sponsors{ background:var(--teal-dim); color:var(--teal); border-color:#3fcf9a44; }
-  .visa-badge.no{ background:var(--rose-dim); color:var(--rose); border-color:#e2643b44; }
-  .visa-badge.rare{ background:var(--amber-dim); color:var(--amber); border-color:#e0a63c44; }
-  .visa-badge.neutral{ background:var(--panel-2); color:var(--muted); border-color:var(--line); }
-  .apply-hint{ font-size:11px; color:var(--amber); font-weight:700; }
-
-  .empty{
-    padding:70px 20px; text-align:center; color:var(--muted); font-family:var(--mono); font-size:13px;
-    border:1px dashed var(--line); border-radius:8px;
-  }
-
-  #directoryPane{ display:none; }
-  .dir-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:10px; }
-  .dir-card{
-    background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:12px 14px;
-    display:flex; justify-content:space-between; align-items:center; cursor:pointer;
-  }
-  .dir-card:hover{ border-color:var(--amber); }
-  .dir-name{ font-weight:600; font-size:13.5px; }
-  .dir-plat{ font-family:var(--mono); font-size:10.5px; color:var(--muted); }
-
-  ::-webkit-scrollbar{ width:10px; height:10px; }
-  ::-webkit-scrollbar-thumb{ background:var(--line); border-radius:6px; }
+:root{--bg:#0b1119;--panel:#121a25;--panel2:#182231;--line:#263548;--ink:#f3f6fa;--muted:#91a0b4;--green:#48d09b;--amber:#edb24d;--red:#e97365;--blue:#7aafff;--sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;--mono:'SFMono-Regular',Consolas,monospace}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans)}button,input,select{font:inherit}.shell{max-width:1500px;margin:auto;padding:0 20px}.top{position:sticky;top:0;z-index:20;background:#0b1119f5;border-bottom:1px solid var(--line);backdrop-filter:blur(10px)}.head{display:flex;justify-content:space-between;gap:18px;align-items:center;padding:16px 0 12px}.eyebrow{font:700 10px var(--mono);letter-spacing:.13em;text-transform:uppercase;color:var(--green);margin:0 0 4px}h1{font-size:22px;margin:0}.sub{font-size:12px;color:var(--muted);margin:3px 0 0}.stats{display:flex;gap:18px;align-items:flex-end}.stat b{display:block;font-size:18px}.stat span{font:10px var(--mono);color:var(--muted)}
+.toolbar{display:grid;grid-template-columns:minmax(250px,1.4fr) repeat(3,minmax(140px,.65fr)) auto;gap:8px;padding-bottom:12px}.control{background:var(--panel2);border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:9px 10px;font-size:12px;min-width:0}.more-btn{background:transparent;border:1px solid var(--line);color:var(--muted);border-radius:8px;padding:9px 12px;cursor:pointer}.more-btn:hover{color:var(--ink)}.advanced{display:none;grid-template-columns:repeat(4,minmax(150px,1fr));gap:8px;padding:0 0 12px}.advanced.open{display:grid}.profile-line{display:flex;align-items:center;gap:8px;padding:0 0 12px;font-size:11px;color:var(--muted)}.profile-line button{border:0;background:transparent;color:var(--blue);cursor:pointer;padding:0;font-size:11px}.status{margin-left:auto;font:10px var(--mono);color:var(--green)}.status.bad{color:var(--red)}
+main{padding:16px 0 64px}.views{display:flex;gap:6px;align-items:center;overflow:auto;padding-bottom:12px}.view{border:1px solid var(--line);background:var(--panel);color:var(--muted);border-radius:18px;padding:7px 11px;font:11px var(--mono);white-space:nowrap;cursor:pointer}.view.active{background:#1b2a3c;color:var(--ink);border-color:#45627f}.result{margin-left:auto;color:var(--muted);font:11px var(--mono);white-space:nowrap}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:10px}.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px;cursor:pointer;transition:.12s;display:flex;flex-direction:column;gap:10px;min-height:185px}.card:hover{border-color:#4d6785;transform:translateY(-1px)}.card.priority{border-left:3px solid var(--green)}.company{font:700 10.5px var(--mono);letter-spacing:.07em;text-transform:uppercase;color:var(--green)}.title{font-size:15px;font-weight:750;line-height:1.35}.meta{display:flex;gap:5px;flex-wrap:wrap}.chip{font:10px var(--mono);padding:3px 7px;border:1px solid var(--line);border-radius:5px;color:var(--muted);background:var(--panel2)}.chip.fresh{color:var(--green);border-color:#48d09b55;background:#48d09b12}.chip.warn{color:var(--amber);border-color:#edb24d44;background:#edb24d12}.signal{display:flex;gap:7px;align-items:center;flex-wrap:wrap;font-size:11px;color:var(--muted)}.fit{font-weight:700}.fit.high{color:var(--green)}.fit.mid{color:var(--blue)}.visa.good{color:#8ee5c3}.visa.bad{color:#f29a8d}.foot{display:flex;justify-content:space-between;align-items:center;margin-top:auto;padding-top:8px;border-top:1px solid var(--line)}.posted{font-size:11px;color:var(--muted)}.open{font-weight:700;color:var(--amber);font-size:11px}.empty{padding:60px 20px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:10px;font:12px var(--mono)}
+.profile{display:none;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px;margin-bottom:12px}.profile.open{display:block}.profile h2{font-size:14px;margin:0 0 4px}.profile p{font-size:11px;color:var(--muted);margin:0 0 10px}.profile-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}.profile label{font:10px var(--mono);color:var(--muted)}.profile input{width:100%;margin-top:5px}.profile-actions{display:flex;gap:7px;margin-top:10px}.profile-actions button{border:1px solid var(--line);border-radius:7px;padding:7px 10px;background:var(--panel2);color:var(--ink);cursor:pointer}.profile-actions .save{background:var(--green);border-color:var(--green);color:#082116;font-weight:800}.directory{display:none}.dir-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:8px}.dir-card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:12px;cursor:pointer}.dir-name{font-size:13px;font-weight:700}.dir-sub{font:10px var(--mono);color:var(--muted);margin-top:4px}
+@media(max-width:980px){.toolbar{grid-template-columns:1fr 1fr}.toolbar .search{grid-column:1/-1}.advanced.open{grid-template-columns:1fr 1fr}.stats{display:none}.profile-grid{grid-template-columns:1fr}}@media(max-width:600px){.shell{padding:0 11px}.toolbar{grid-template-columns:1fr}.toolbar .search{grid-column:auto}.advanced.open{grid-template-columns:1fr}.grid{grid-template-columns:1fr}.result{display:none}}
 </style>
 </head>
 <body>
-
-<div class="board">
-  <div class="board-top">
-    <div>
-      <p class="eyebrow">Personal pipeline &middot; Ireland only</p>
-      <h1>Job Radar</h1>
-    </div>
-    <div class="readout">
-      <div><b id="stCompanies">0</b>companies checked</div>
-      <div><b id="stLive">0</b>live matches</div>
-      <div><b id="stZero">0</b>currently no jobs</div>
-      <div><b id="stManual">0</b>fetching/manual</div>
-      <div id="genTime">Connecting to live data...</div>
-    </div>
+<div class="top"><div class="shell">
+  <div class="head"><div><p class="eyebrow">Ireland job search</p><h1>Job Radar</h1><p class="sub">Fresh, relevant roles first. Open only what is worth your time.</p></div><div class="stats"><div class="stat"><b id="sLive">0</b><span>LIVE</span></div><div class="stat"><b id="sToday">0</b><span>TODAY</span></div><div class="stat"><b id="sWeek">0</b><span>≤ 7 DAYS</span></div></div></div>
+  <div class="toolbar">
+    <input id="fSearch" class="control search" placeholder="Search role, company or skill…">
+    <select id="fPosted" class="control"><option value="any">Any posting date</option><option value="today">Today</option><option value="yesterday">Yesterday</option><option value="3d">Last 3 days</option><option value="7d">Last 7 days</option><option value="14d">Last 14 days</option><option value="30d">Last 30 days</option><option value="older">Older than 30 days</option><option value="unknown">Date unknown</option></select>
+    <select id="fLocation" class="control"><option value="">Anywhere in Ireland</option><option value="dublin">Dublin</option><option value="cork">Cork</option><option value="galway">Galway</option><option value="limerick">Limerick</option><option value="waterford">Waterford</option><option value="remote">Remote / Hybrid</option></select>
+    <select id="fVisa" class="control"><option value="">Any visa signal</option><option value="positive">Sponsorship evidence</option><option value="posting">Posting mentions sponsorship</option><option value="permits">Company has permit history</option><option value="negative">No sponsorship stated</option></select>
+    <button id="moreBtn" class="more-btn">More filters</button>
   </div>
-  <div class="filter-row">
-    <div class="search-wrap">
-      <input type="text" id="fSearch" placeholder="Search title, company, location...">
-    </div>
-    <select id="fLocation">
-      <option value="">All Ireland</option>
-      <option value="dublin">Dublin</option>
-      <option value="cork">Cork</option>
-      <option value="galway">Galway</option>
-      <option value="limerick">Limerick</option>
-      <option value="waterford">Waterford</option>
-      <option value="kildare">Kildare</option>
-      <option value="remote">Remote / Hybrid</option>
-    </select>
-    <select id="fPosted">
-      <option value="9999">Any time posted</option>
-      <option value="1">Last 24 hours</option>
-      <option value="7">Last 7 days</option>
-      <option value="28">Last 28 days</option>
-    </select>
-    <select id="fType">
-      <option value="">All employment types</option>
-      <option>Full-time</option>
-      <option>Part-time</option>
-      <option>Contract</option>
-      <option>Internship</option>
-      <option>Temporary</option>
-      <option>Unspecified</option>
-    </select>
-    <select id="fVisa">
-      <option value="">Any visa status</option>
-      <option value="sponsors">Mentions sponsorship</option>
-      <option value="no_sponsorship">Says no sponsorship</option>
-      <option value="not_mentioned">Not mentioned</option>
-    </select>
-    <select id="fSort">
-      <option value="newest">Newest first</option>
-      <option value="company">Company A–Z</option>
-      <option value="title">Title A–Z</option>
-    </select>
-    <select id="fNew">
-      <option value="">All matches</option>
-      <option value="new">New since last check</option>
-    </select>
-    <div class="loadctrl">
-      <span id="liveStatus" class="live-dot">● live</span>
-      <input type="file" id="fileInput" accept="application/json" style="display:none;">
-      <a href="#" id="manualLoadLink" onclick="document.getElementById('fileInput').click(); return false;">load file manually</a>
-    </div>
+  <div id="advanced" class="advanced">
+    <select id="fSeniority" class="control"><option value="">Any seniority</option><option value="entry">Graduate / Entry</option><option value="junior">Junior / Associate</option><option value="mid">Mid-level</option><option value="senior">Senior</option><option value="lead">Lead / Manager</option><option value="director">Director / Head / VP</option></select>
+    <select id="fFamily" class="control"><option value="">Any role type</option><option value="data">Data / Analytics</option><option value="software">Software / Engineering</option><option value="product">Product</option><option value="business">Business / Strategy</option><option value="ops">Operations / Project</option><option value="finance">Finance / Risk</option><option value="sales">Sales / Customer</option><option value="people">HR / People</option><option value="science">Science / Pharma</option><option value="other">Other</option></select>
+    <select id="fType" class="control"><option value="">Any employment type</option><option>Full-time</option><option>Part-time</option><option>Contract</option><option>Internship</option><option>Temporary</option><option>Unspecified</option></select>
+    <select id="fCompany" class="control"><option value="">Any company</option></select>
   </div>
-</div>
+  <div class="profile-line">Relevance uses your target roles and skills. <button id="profileToggle">Edit my profile</button><span id="liveStatus" class="status">● connecting</span></div>
+</div></div>
 
-<main>
-  <div class="subhead">
-    <div class="tabs">
-      <div class="tab active" id="tabLive" onclick="showTab('live')">Live matches — click opens the exact job</div>
-      <div class="tab" id="tabZero" onclick="showTab('zero')">Currently No Jobs</div>
-      <div class="tab" id="tabDir" onclick="showTab('dir')">Fetching Error / Check Manually</div>
-    </div>
-    <div id="resultCount">0 results</div>
-  </div>
-
-  <div id="livePane">
-    <div class="grid" id="cardGrid"></div>
-    <div class="empty" id="emptyState">No jobs loaded yet — click "Load jobs.json" above.</div>
-  </div>
-
-  <div id="zeroPane" style="display:none;">
-    <div class="dir-grid" id="zeroGrid"></div>
-  </div>
-
-  <div id="directoryPane">
-    <div class="dir-grid" id="dirGrid"></div>
-  </div>
-</main>
-
+<div class="shell"><main>
+  <section id="profile" class="profile"><h2>My target profile</h2><p>Keep this short. It is only used to surface likely matches — not to pretend we know the full ATS score.</p><div class="profile-grid"><label>Target roles<input id="pRoles" class="control" placeholder="e.g. Business Analyst, Data Analyst"></label><label>Core skills<input id="pSkills" class="control" placeholder="e.g. SQL, Excel, Python, Power BI"></label><label>Preferred locations<input id="pLocations" class="control" placeholder="e.g. Dublin, Cork, Remote"></label></div><div class="profile-actions"><button id="saveProfile" class="save">Save profile</button><button id="closeProfile">Close</button></div></section>
+  <div class="views"><button class="view active" data-view="best">Best opportunities</button><button class="view" data-view="fresh">Fresh ≤ 3 days</button><button class="view" data-view="visa">Visa-friendly</button><button class="view" data-view="all">All jobs</button><button class="view" data-view="zero">No current jobs</button><button class="view" data-view="manual">Fetch / Manual</button><div id="resultCount" class="result">0 jobs</div></div>
+  <section id="jobs"><div id="grid" class="grid"></div><div id="empty" class="empty" style="display:none">No jobs match these filters.</div></section>
+  <section id="zero" class="directory"><div id="zeroGrid" class="dir-grid"></div></section>
+  <section id="manual" class="directory"><div id="manualGrid" class="dir-grid"></div></section>
+</main></div>
 <script>
-let ALL_JOBS = [];
-let ALL_MANUAL = [];
-let ALL_ZERO = [];
-let SPONSOR_STATS = {};
-let OFFICIAL_STATS = {};
-
-const JOBS_URL = './jobs.json';          // served from the same GitHub Pages site
-const REFRESH_INTERVAL_MS = 5 * 60 * 1000; // re-check every 5 minutes while the tab is open
-
-function loadData(data){
-  ALL_JOBS = data.live_jobs || [];
-  const rawManual = data.manual_check_companies || [];
-  const explicitZero = data.automated_zero_companies || data.currently_no_jobs_companies || data.zero_job_companies || [];
-  // Backward compatible: older jobs.json files stored successful zero-job checks
-  // inside manual_check_companies with a descriptive platform string.
-  const isZero = c => /no ireland postings found|no current ireland jobs|currently no jobs|0 ireland/i.test(String(c.platform || c.status || c.reason || ''));
-  ALL_ZERO = explicitZero.length ? explicitZero : rawManual.filter(isZero);
-  const zeroNames = new Set(ALL_ZERO.map(c => String(c.company || c.company_name || '').toLowerCase()));
-  ALL_MANUAL = rawManual.filter(c => !zeroNames.has(String(c.company || c.company_name || '').toLowerCase()) && !isZero(c));
-  SPONSOR_STATS = data.company_sponsorship_stats || {};
-  OFFICIAL_STATS = data.official_permit_stats || {};
-  document.getElementById('genTime').textContent = data.generated_at
-    ? ('Updated ' + new Date(data.generated_at).toLocaleString()) : '';
-  document.getElementById('stLive').textContent = data.stats?.live_jobs_found ?? ALL_JOBS.length;
-  document.getElementById('stCompanies').textContent = data.stats?.total_companies ?? '—';
-  document.getElementById('stZero').textContent = data.stats?.zero_job_companies ?? data.stats?.currently_no_jobs ?? ALL_ZERO.length;
-  document.getElementById('stManual').textContent = data.stats?.fetch_error_companies ?? ALL_MANUAL.length;
-  applyFilters();
-}
-
-async function autoFetchJobs(){
-  try{
-    const resp = await fetch(JOBS_URL + '?t=' + Date.now(), {cache: 'no-store'});
-    if(!resp.ok) throw new Error('HTTP ' + resp.status);
-    const data = await resp.json();
-    loadData(data);
-    document.getElementById('liveStatus').textContent = '● live';
-    document.getElementById('liveStatus').classList.remove('stale');
-  }catch(err){
-    // No jobs.json reachable yet (e.g. you're opening this file locally,
-    // or GitHub Pages / the first Action run hasn't happened yet).
-    document.getElementById('liveStatus').textContent = '○ not connected — use "load file manually"';
-    document.getElementById('liveStatus').classList.add('stale');
-  }
-}
-
-document.getElementById('fileInput').addEventListener('change', function(e){
-  const file = e.target.files[0];
-  if(!file) return;
-  const reader = new FileReader();
-  reader.onload = function(evt){
-    try{
-      loadData(JSON.parse(evt.target.result));
-    }catch(err){
-      alert('Could not parse that file — is it the jobs.json produced by job_pipeline.py?');
-    }
-  };
-  reader.readAsText(file);
-});
-
-autoFetchJobs();
-setInterval(autoFetchJobs, REFRESH_INTERVAL_MS);
-
-['fSearch','fLocation','fPosted','fType','fVisa','fSort','fNew'].forEach(id=>{
-  document.getElementById(id).addEventListener('input', applyFilters);
-  document.getElementById(id).addEventListener('change', applyFilters);
-});
-
-
-function visaBadge(job){
-  // This posting's own text is the strongest, most specific signal.
-  if(job.visa_sponsorship === 'sponsors'){
-    return {cls:'sponsors', text:'This posting mentions sponsorship'};
-  }
-  if(job.visa_sponsorship === 'no_sponsorship'){
-    return {cls:'no', text:'This posting rules out sponsorship'};
-  }
-
-  // Next best: official DETE government permit record for the company.
-  const official = OFFICIAL_STATS[job.company];
-  if(official && official.total_permits){
-    const years = Object.keys(official.permits_by_year || {}).sort().join('–');
-    return {cls:'sponsors', text:`DETE record: ${official.total_permits} permits (${years})`};
-  }
-
-  // Fallback: our own text-scan estimate across postings we've seen.
-  // IMPORTANT: silence (no postings mentioning it either way) is the most
-  // common, totally normal case — it must read as neutral, not as bad news.
-  const stat = SPONSOR_STATS[job.company];
-  if(stat && stat.label){
-    const CATEGORY_STYLE = {
-      no_data: {cls: 'neutral'},
-      explicit_negative: {cls: 'no'},
-      rare_positive: {cls: 'rare'},
-      occasional_positive: {cls: 'rare'},
-      frequent_positive: {cls: 'sponsors'},
-    };
-    const style = CATEGORY_STYLE[stat.category] || {cls: 'neutral'};
-    return {cls: style.cls, text: stat.label};
-  }
-  return {cls:'neutral', text:'No sponsorship info found'};
-}
-
-function applyFilters(){
-  const search = document.getElementById('fSearch').value.trim().toLowerCase();
-  const location = document.getElementById('fLocation').value;
-  const posted = parseInt(document.getElementById('fPosted').value, 10);
-  const type = document.getElementById('fType').value;
-  const visa = document.getElementById('fVisa').value;
-  const sort = document.getElementById('fSort').value;
-  const onlyNew = document.getElementById('fNew').value === 'new';
-
-  let filtered = ALL_JOBS.filter(j=>{
-    if(search){
-      const hay = ((j.title||'') + ' ' + (j.company||'') + ' ' + (j.location||'')).toLowerCase();
-      if(!hay.includes(search)) return false;
-    }
-    if(location && !(j.location||'').toLowerCase().includes(location)) return false;
-    if(type && j.employment_type !== type) return false;
-    if(visa && j.visa_sponsorship !== visa) return false;
-    if(onlyNew && !j.new_since_last_check) return false;
-    if(posted !== 9999){
-      const d = j.posted_days_ago;
-      if(d === null || d === undefined || d > posted) return false;
-    }
-    return true;
-  });
-
-  if(sort === 'newest') filtered.sort((a,b)=> (a.posted_days_ago ?? 999) - (b.posted_days_ago ?? 999));
-  if(sort === 'company') filtered.sort((a,b)=> a.company.localeCompare(b.company));
-  if(sort === 'title') filtered.sort((a,b)=> a.title.localeCompare(b.title));
-
-  document.getElementById('resultCount').textContent =
-    filtered.length + ' of ' + ALL_JOBS.length + ' matches';
-
-  const grid = document.getElementById('cardGrid');
-  grid.innerHTML = '';
-  document.getElementById('emptyState').style.display = filtered.length ? 'none' : 'block';
-
-  filtered.forEach(j=>{
-    const fresh = j.posted_days_ago !== null && j.posted_days_ago !== undefined && j.posted_days_ago <= 1;
-    const badge = visaBadge(j);
-    const card = document.createElement('div');
-    card.className = 'card ' + (fresh ? 'fresh' : 'stale');
-    card.onclick = () => window.open(j.url, '_blank', 'noopener');
-    card.innerHTML = `
-      ${j.new_since_last_check ? '<div class="new-ribbon">NEW</div>' : ''}
-      <div class="company">${escapeHtml(j.company)}</div>
-      <div class="title">${escapeHtml(j.title||'Untitled role')}</div>
-      <div class="meta">
-        <span class="chip">${escapeHtml(j.location||'—')}</span>
-        <span class="chip">${escapeHtml(j.employment_type||'Unspecified')}</span>
-        <span class="chip ${fresh?'postedToday':''}">${escapeHtml(j.posted_text||'—')}</span>
-      </div>
-      <div class="card-foot">
-        <span class="visa-badge ${badge.cls}" title="${escapeHtml(badge.text)}">${escapeHtml(badge.text)}</span>
-        <span class="apply-hint">Open →</span>
-      </div>
-    `;
-    grid.appendChild(card);
-  });
-
-  const zeroMatches = renderZeroDirectory(search);
-  const dirMatches = renderDirectory(search);
-  document.getElementById('tabLive').textContent = `Live matches — click opens the exact job (${filtered.length})`;
-  document.getElementById('tabZero').textContent = `Currently No Jobs (${zeroMatches})`;
-  document.getElementById('tabDir').textContent = `Fetching Error / Check Manually (${dirMatches})`;
-
-  // If someone searches a company that only exists in the directory (no
-  // live job data for it), don't leave them staring at an empty Live tab —
-  // point them at where it actually is.
-  if(search && filtered.length === 0 && (zeroMatches > 0 || dirMatches > 0) && document.getElementById('tabLive').classList.contains('active')){
-    document.getElementById('emptyState').innerHTML =
-      `No live job data for "${escapeHtml(search)}" — but it's listed in the ` +
-      `<a href="#" onclick="showTab('${zeroMatches > 0 ? 'zero' : 'dir'}'); return false;" style="color:var(--amber);">${zeroMatches > 0 ? 'Currently No Jobs' : 'Fetching Error / Check Manually'} tab</a> ` +
-      `with a direct link to the company careers page.`;
-  } else {
-    document.getElementById('emptyState').textContent = 'No jobs loaded yet — connecting to live data...';
-  }
-}
-
-
-function renderZeroDirectory(search){
-  search = search || '';
-  const grid = document.getElementById('zeroGrid');
-  grid.innerHTML = '';
-  const matches = ALL_ZERO
-    .filter(c => !search || String(c.company || c.company_name || '').toLowerCase().includes(search))
-    .sort((a,b)=>String(a.company || a.company_name || '').localeCompare(String(b.company || b.company_name || '')));
-  matches.forEach(c=>{
-    const name = c.company || c.company_name || 'Unknown company';
-    const url = c.url || c.career_url || '#';
-    const card = document.createElement('div');
-    card.className = 'dir-card';
-    card.onclick = () => { if(url && url !== '#') window.open(url, '_blank', 'noopener'); };
-    card.innerHTML = `
-      <div>
-        <div class="dir-name">${escapeHtml(name)}</div>
-        <div class="dir-plat">Checked successfully — no current Ireland jobs</div>
-      </div>
-      <span class="apply-hint">Open →</span>
-    `;
-    grid.appendChild(card);
-  });
-  return matches.length;
-}
-
-function renderDirectory(search){
-  search = search || '';
-  const grid = document.getElementById('dirGrid');
-  grid.innerHTML = '';
-  const matches = ALL_MANUAL
-    .filter(c => !search || c.company.toLowerCase().includes(search))
-    .sort((a,b)=>a.company.localeCompare(b.company));
-  matches.forEach(c=>{
-    const card = document.createElement('div');
-    card.className = 'dir-card';
-    card.onclick = () => window.open(c.url, '_blank', 'noopener');
-    card.innerHTML = `
-      <div>
-        <div class="dir-name">${escapeHtml(c.company)}</div>
-        <div class="dir-plat">${escapeHtml(/timeout/i.test(String(c.platform||c.reason||'')) ? 'Timeout' : /error|failed|blocked/i.test(String(c.platform||c.reason||'')) ? 'Fetching error' : 'Check manually')}</div>
-      </div>
-      <span class="apply-hint">Open →</span>
-    `;
-    grid.appendChild(card);
-  });
-  return matches.length;
-}
-
-function showTab(which){
-  document.getElementById('livePane').style.display = which==='live' ? 'block':'none';
-  document.getElementById('zeroPane').style.display = which==='zero' ? 'block':'none';
-  document.getElementById('directoryPane').style.display = which==='dir' ? 'block':'none';
-  document.getElementById('tabLive').classList.toggle('active', which==='live');
-  document.getElementById('tabZero').classList.toggle('active', which==='zero');
-  document.getElementById('tabDir').classList.toggle('active', which==='dir');
-}
-
-function escapeHtml(str){
-  return String(str).replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-}
+let JOBS=[],ZERO=[],MANUAL=[],SPONSOR={},OFFICIAL={},VIEW='best';
+const $=id=>document.getElementById(id), norm=s=>String(s||'').toLowerCase().trim(), esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+let PROFILE=JSON.parse(localStorage.getItem('jobRadarSimpleProfile')||'{"roles":"","skills":"","locations":""}');
+function tokens(s){return norm(s).split(/[,;|\n]+/).map(x=>x.trim()).filter(Boolean)}
+function seniority(j){const t=norm(j.title);if(/intern|graduate|entry level|trainee|apprentice/.test(t))return'entry';if(/junior|associate|analyst i\b|engineer i\b/.test(t))return'junior';if(/director|head of|vice president|\bvp\b/.test(t))return'director';if(/manager|lead|principal|staff/.test(t))return'lead';if(/senior|sr\.?\b/.test(t))return'senior';return'mid'}
+function family(j){const t=norm(j.title);if(/data|analytics|business intelligence|bi analyst|insight/.test(t))return'data';if(/software|developer|engineer|devops|cloud|security|architect|sre/.test(t))return'software';if(/product manager|product owner|product analyst/.test(t))return'product';if(/business analyst|strategy|consultant|transformation/.test(t))return'business';if(/operations|project|programme|program manager|supply chain|procurement/.test(t))return'ops';if(/finance|financial|account|audit|risk|treasury|tax|actuar/.test(t))return'finance';if(/sales|account executive|customer success|business development|commercial/.test(t))return'sales';if(/human resources|\bhr\b|people|talent|recruit/.test(t))return'people';if(/scientist|clinical|medical|pharma|quality|laboratory|lab |regulatory/.test(t))return'science';return'other'}
+function visa(j){if(j.visa_sponsorship==='sponsors')return{kind:'posting',label:'Posting mentions sponsorship',score:3};if(j.visa_sponsorship==='no_sponsorship')return{kind:'negative',label:'No sponsorship stated',score:-5};const o=OFFICIAL[j.company];if(o&&o.total_permits)return{kind:'permits',label:`Permit history: ${o.total_permits}`,score:2};const s=SPONSOR[j.company];if(s&&['frequent_positive','occasional_positive','rare_positive'].includes(s.category))return{kind:'history',label:s.label||'Past sponsorship evidence',score:1};return{kind:'neutral',label:'No sponsorship signal',score:0}}
+function ageText(j){const d=j.posted_days_ago;if(d==null)return'Posting date unknown';if(d<=0)return'Posted today';if(d===1)return'Posted yesterday';return`Posted ${d} days ago`}
+function fit(j){const hay=norm(`${j.title} ${j.company} ${j.location} ${j.description||''} ${j.summary||''}`);const roles=tokens(PROFILE.roles),skills=tokens(PROFILE.skills),locs=tokens(PROFILE.locations);let n=0;roles.forEach(x=>{if(hay.includes(x))n+=3});skills.forEach(x=>{if(hay.includes(x))n+=1});locs.forEach(x=>{if(norm(j.location).includes(x))n+=1});if(n>=6)return{level:'high',label:'Strong profile match',score:3};if(n>=2)return{level:'mid',label:'Possible profile match',score:1};return{level:'low',label:roles.length||skills.length?'Low profile overlap':'Add profile for relevance',score:0}}
+function priority(j){const d=j.posted_days_ago,rec=d==null?0:d<=1?5:d<=3?4:d<=7?3:d<=14?2:d<=30?1:-1;return rec+fit(j).score+visa(j).score+(j.new_since_last_check?1:0)}
+function passesDate(j,v){const d=j.posted_days_ago;if(v==='any')return true;if(v==='unknown')return d==null;if(d==null)return false;if(v==='today')return d<=0;if(v==='yesterday')return d===1;if(v==='3d')return d<=3;if(v==='7d')return d<=7;if(v==='14d')return d<=14;if(v==='30d')return d<=30;if(v==='older')return d>30;return true}
+function loadData(data){JOBS=data.live_jobs||[];const raw=data.manual_check_companies||[],explicit=data.automated_zero_companies||data.currently_no_jobs_companies||data.zero_job_companies||[];const isZero=c=>/no ireland postings found|no current ireland jobs|currently no jobs|0 ireland/i.test(String(c.platform||c.status||c.reason||''));ZERO=explicit.length?explicit:raw.filter(isZero);const names=new Set(ZERO.map(c=>norm(c.company||c.company_name)));MANUAL=raw.filter(c=>!names.has(norm(c.company||c.company_name))&&!isZero(c));SPONSOR=data.company_sponsorship_stats||{};OFFICIAL=data.official_permit_stats||{};$('sLive').textContent=JOBS.length;$('sToday').textContent=JOBS.filter(j=>j.posted_days_ago!=null&&j.posted_days_ago<=0).length;$('sWeek').textContent=JOBS.filter(j=>j.posted_days_ago!=null&&j.posted_days_ago<=7).length;populateCompanies();render()}
+function populateCompanies(){const current=$('fCompany').value,names=[...new Set(JOBS.map(j=>j.company).filter(Boolean))].sort();$('fCompany').innerHTML='<option value="">Any company</option>'+names.map(n=>`<option value="${esc(n)}">${esc(n)}</option>`).join('');$('fCompany').value=current}
+function render(){if(VIEW==='zero'||VIEW==='manual'){renderDirectory();return}$('jobs').style.display='block';$('zero').style.display='none';$('manual').style.display='none';const search=norm($('fSearch').value),posted=$('fPosted').value,loc=norm($('fLocation').value),visaF=$('fVisa').value,sen=$('fSeniority').value,fam=$('fFamily').value,type=$('fType').value,company=$('fCompany').value;let rows=JOBS.filter(j=>{const hay=norm(`${j.title} ${j.company} ${j.location} ${j.description||''} ${j.summary||''}`),v=visa(j);if(search&&!hay.includes(search))return false;if(!passesDate(j,posted))return false;if(loc&&!norm(j.location).includes(loc))return false;if(visaF==='positive'&&!['posting','permits','history'].includes(v.kind))return false;if(visaF&&visaF!=='positive'&&v.kind!==visaF)return false;if(sen&&seniority(j)!==sen)return false;if(fam&&family(j)!==fam)return false;if(type&&j.employment_type!==type)return false;if(company&&j.company!==company)return false;if(VIEW==='fresh'&&!(j.posted_days_ago!=null&&j.posted_days_ago<=3))return false;if(VIEW==='visa'&&!['posting','permits','history'].includes(v.kind))return false;return true});if(VIEW==='best')rows.sort((a,b)=>priority(b)-priority(a)||(a.posted_days_ago??999)-(b.posted_days_ago??999));else rows.sort((a,b)=>(a.posted_days_ago??999)-(b.posted_days_ago??999));$('resultCount').textContent=`${rows.length} jobs`;$('grid').innerHTML='';$('empty').style.display=rows.length?'none':'block';rows.forEach(j=>$('grid').appendChild(card(j)))}
+function card(j){const d=j.posted_days_ago,v=visa(j),f=fit(j),p=priority(j),c=document.createElement('article');c.className='card '+(VIEW==='best'&&p>=7?'priority':'');const ageCls=d!=null&&d<=3?'fresh':d!=null&&d>30?'warn':'';c.innerHTML=`<div class="company">${esc(j.company)}</div><div class="title">${esc(j.title||'Untitled role')}</div><div class="meta"><span class="chip ${ageCls}">${esc(ageText(j))}</span><span class="chip">${esc(j.location||'—')}</span>${j.employment_type?`<span class="chip">${esc(j.employment_type)}</span>`:''}</div><div class="signal"><span class="fit ${f.level}">${esc(f.label)}</span><span>·</span><span class="visa ${v.kind==='negative'?'bad':['posting','permits','history'].includes(v.kind)?'good':''}">${esc(v.label)}</span></div><div class="foot"><span class="posted">${j.new_since_last_check?'New since last scan':''}</span><span class="open">Open exact job →</span></div>`;c.onclick=()=>window.open(j.url,'_blank','noopener');return c}
+function renderDirectory(){$('jobs').style.display='none';$('zero').style.display=VIEW==='zero'?'block':'none';$('manual').style.display=VIEW==='manual'?'block':'none';const list=VIEW==='zero'?ZERO:MANUAL,grid=VIEW==='zero'?$('zeroGrid'):$('manualGrid'),search=norm($('fSearch').value);const rows=list.filter(c=>!search||norm(c.company||c.company_name).includes(search)).sort((a,b)=>String(a.company||a.company_name).localeCompare(String(b.company||b.company_name)));$('resultCount').textContent=`${rows.length} companies`;grid.innerHTML='';rows.forEach(c=>{const name=c.company||c.company_name||'Unknown company',url=c.url||c.career_url||'#',d=document.createElement('div');d.className='dir-card';d.innerHTML=`<div class="dir-name">${esc(name)}</div><div class="dir-sub">${VIEW==='zero'?'Checked successfully — no current Ireland jobs':'Fetching issue / check manually'}</div>`;d.onclick=()=>{if(url&&url!=='#')window.open(url,'_blank','noopener')};grid.appendChild(d)})}
+function setView(v){VIEW=v;document.querySelectorAll('.view').forEach(b=>b.classList.toggle('active',b.dataset.view===v));render()}
+async function fetchJobs(){try{const r=await fetch('./jobs.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);loadData(await r.json());$('liveStatus').textContent='● live data connected';$('liveStatus').classList.remove('bad')}catch(e){$('liveStatus').textContent='○ jobs.json not connected';$('liveStatus').classList.add('bad')}}
+['fSearch','fPosted','fLocation','fVisa','fSeniority','fFamily','fType','fCompany'].forEach(id=>{$(id).addEventListener('input',render);$(id).addEventListener('change',render)});document.querySelectorAll('.view').forEach(b=>b.onclick=()=>setView(b.dataset.view));$('moreBtn').onclick=()=>{$('advanced').classList.toggle('open');$('moreBtn').textContent=$('advanced').classList.contains('open')?'Fewer filters':'More filters'};$('profileToggle').onclick=()=>{$('profile').classList.toggle('open')};$('closeProfile').onclick=()=>$('profile').classList.remove('open');$('pRoles').value=PROFILE.roles||'';$('pSkills').value=PROFILE.skills||'';$('pLocations').value=PROFILE.locations||'';$('saveProfile').onclick=()=>{PROFILE={roles:$('pRoles').value,skills:$('pSkills').value,locations:$('pLocations').value};localStorage.setItem('jobRadarSimpleProfile',JSON.stringify(PROFILE));$('profile').classList.remove('open');render()};fetchJobs();setInterval(fetchJobs,5*60*1000);
 </script>
-</body>
-</html>
+</body></html>
