@@ -9122,7 +9122,7 @@
         "source": "microsoft_browser",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-06T12:08:08.086091+00:00",
         "posted_age_known": true
       },
@@ -9137,7 +9137,7 @@
         "source": "microsoft_browser",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-06T12:08:08.086091+00:00",
         "posted_age_known": true
       },
@@ -10885,8 +10885,8 @@
   },
   "Bain & Company": {
     "jobs": [],
-    "checked_at": 1788693699.7624137,
-    "consecutive_failures": 187
+    "checked_at": 1788698651.068544,
+    "consecutive_failures": 188
   },
   "FTI Consulting": {
     "jobs": [],
@@ -11747,8 +11747,8 @@
   },
   "Oliver Wyman": {
     "jobs": [],
-    "checked_at": 1788693687.481019,
-    "consecutive_failures": 77
+    "checked_at": 1788698642.0710707,
+    "consecutive_failures": 78
   },
   "McKinsey & Company": {
     "jobs": [],
@@ -11762,13 +11762,13 @@
   },
   "Alkermes": {
     "jobs": [],
-    "checked_at": 1788693694.0365727,
-    "consecutive_failures": 199
+    "checked_at": 1788698642.5123818,
+    "consecutive_failures": 200
   },
   "Visa": {
     "jobs": [],
-    "checked_at": 1788693680.7764282,
-    "consecutive_failures": 198
+    "checked_at": 1788698637.944934,
+    "consecutive_failures": 199
   },
   "Boehringer Ingelheim": {
     "jobs": [],
@@ -11787,13 +11787,13 @@
   },
   "Bruker": {
     "jobs": [],
-    "checked_at": 1788693687.5733676,
-    "consecutive_failures": 197
+    "checked_at": 1788698642.4637473,
+    "consecutive_failures": 198
   },
   "Biotronik": {
     "jobs": [],
-    "checked_at": 1788693695.830984,
-    "consecutive_failures": 197
+    "checked_at": 1788698648.623481,
+    "consecutive_failures": 198
   },
   "Carbery Group": {
     "jobs": [],
@@ -12507,8 +12507,8 @@
   },
   "Smurfit Westrock": {
     "jobs": [],
-    "checked_at": 1788693701.8097148,
-    "consecutive_failures": 192
+    "checked_at": 1788698650.8097627,
+    "consecutive_failures": 193
   },
   "Stena Line Ireland": {
     "jobs": [],
@@ -14043,7 +14043,7 @@
         "source": "siemens_direct_http",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-06T12:08:08.086091+00:00",
         "posted_age_known": false
       },
@@ -14058,7 +14058,7 @@
         "source": "siemens_direct_http",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-06T12:08:08.086091+00:00",
         "posted_age_known": false
       },
@@ -14073,7 +14073,7 @@
         "source": "siemens_direct_http",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-06T12:08:08.086091+00:00",
         "posted_age_known": false
       },
@@ -14088,7 +14088,7 @@
         "source": "siemens_direct_http",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-06T12:08:08.086091+00:00",
         "posted_age_known": false
       },
@@ -14103,7 +14103,7 @@
         "source": "siemens_direct_http",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-06T12:08:08.086091+00:00",
         "posted_age_known": false
       },
@@ -14118,7 +14118,7 @@
         "source": "siemens_direct_http",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-06T12:08:08.086091+00:00",
         "posted_age_known": false
       }
@@ -17683,8 +17683,8 @@
   },
   "Coca-Cola HBC Ireland::friend_nonlive_batch10_v1": {
     "jobs": [],
-    "checked_at": 1788693698.474342,
-    "consecutive_failures": 144
+    "checked_at": 1788698652.3881462,
+    "consecutive_failures": 145
   },
   "Agilent Technologies::friend_nonlive_batch10_v1": {
     "jobs": [
@@ -17709,8 +17709,8 @@
   },
   "Heineken Ireland::friend_next4_v1": {
     "jobs": [],
-    "checked_at": 1788693681.1178336,
-    "consecutive_failures": 151
+    "checked_at": 1788698638.0375388,
+    "consecutive_failures": 152
   },
   "VHI Healthcare::friend_next4_v1": {
     "jobs": [
@@ -21659,120 +21659,150 @@
         "title": "Machine Learning Engineer",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.docusign.com/careers-home/jobs/28784?lang=en-us&previousLocale=en-US",
         "source": "docusign_rendered_attempt2",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-25T12:38:48.567655+00:00",
+        "posted_age_known": false
       },
       {
         "company": "DocuSign",
         "title": "Machine Learning Engineer",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.docusign.com/careers-home/jobs/28785?lang=en-us&previousLocale=en-US",
         "source": "docusign_rendered_attempt2",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-25T12:38:48.567655+00:00",
+        "posted_age_known": false
       },
       {
         "company": "DocuSign",
         "title": "Senior Machine Learning Engineer",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.docusign.com/careers-home/jobs/28806?lang=en-us&previousLocale=en-US",
         "source": "docusign_rendered_attempt2",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-25T12:38:48.567655+00:00",
+        "posted_age_known": false
       },
       {
         "company": "DocuSign",
         "title": "Account Executive, SMB - Dutch Speaking (Future Opportunities)",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.docusign.com/careers-home/jobs/29062?lang=en-us&previousLocale=en-US",
         "source": "docusign_rendered_attempt2",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-25T12:38:48.567655+00:00",
+        "posted_age_known": false
       },
       {
         "company": "DocuSign",
         "title": "Lead Machine Learning Engineer",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.docusign.com/careers-home/jobs/29798?lang=en-us&previousLocale=en-US",
         "source": "docusign_rendered_attempt2",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-26T16:13:43.716592+00:00",
+        "posted_age_known": false
       },
       {
         "company": "DocuSign",
         "title": "Senior Product Marketing Manager",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.docusign.com/careers-home/jobs/29845?lang=en-us&previousLocale=en-US",
         "source": "docusign_rendered_attempt2",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-01T13:48:37.788688+00:00",
+        "posted_age_known": false
       },
       {
         "company": "DocuSign",
         "title": "Machine Learning Engineer",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.docusign.com/careers-home/jobs/29916?lang=en-us&previousLocale=en-US",
         "source": "docusign_rendered_attempt2",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-25T12:38:48.567655+00:00",
+        "posted_age_known": false
       },
       {
         "company": "DocuSign",
         "title": "Account Executive, SMB - Benelux Market",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.docusign.com/careers-home/jobs/30058?lang=en-us&previousLocale=en-US",
         "source": "docusign_rendered_attempt2",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-25T12:38:48.567655+00:00",
+        "posted_age_known": false
       },
       {
         "company": "DocuSign",
         "title": "Lead AI Solutions Delivery Engineer",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.docusign.com/careers-home/jobs/30190?lang=en-us&previousLocale=en-US",
         "source": "docusign_rendered_attempt2",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-31T13:38:16.858486+00:00",
+        "posted_age_known": false
       },
       {
         "company": "DocuSign",
         "title": "Market Development Representative (MDR) - DACH (German and English Speaking)",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.docusign.com/careers-home/jobs/30217?lang=en-us&previousLocale=en-US",
         "source": "docusign_rendered_attempt2",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-03T23:57:53.288654+00:00",
+        "posted_age_known": false
       }
     ],
     "checked_at": 1788696340.3229945,
@@ -30347,8 +30377,8 @@
   },
   "Energia Group::targeted_direct_batch5_multi_v1": {
     "jobs": [],
-    "checked_at": 1788693678.5124025,
-    "consecutive_failures": 74
+    "checked_at": 1788698635.775195,
+    "consecutive_failures": 75
   },
   "WuXi Biologics::targeted_direct_batch5_multi_v1": {
     "jobs": [
@@ -30511,8 +30541,8 @@
   },
   "Medpace::targeted_direct_batch8_bulk_v1": {
     "jobs": [],
-    "checked_at": 1788693678.4615037,
-    "consecutive_failures": 72
+    "checked_at": 1788698635.7744308,
+    "consecutive_failures": 73
   },
   "Hollister Incorporated::targeted_direct_batch8_bulk_v1": {
     "jobs": [
@@ -32345,18 +32375,18 @@
   },
   "Micron Technology::targeted_direct_batch10_bulk_v1": {
     "jobs": [],
-    "checked_at": 1788693678.7963765,
-    "consecutive_failures": 69
+    "checked_at": 1788698636.54289,
+    "consecutive_failures": 70
   },
   "Slack::targeted_direct_batch10_bulk_v1": {
     "jobs": [],
-    "checked_at": 1788693681.3317974,
-    "consecutive_failures": 69
+    "checked_at": 1788698637.2716715,
+    "consecutive_failures": 70
   },
   "Box::targeted_direct_batch10_bulk_v1": {
     "jobs": [],
-    "checked_at": 1788693680.349131,
-    "consecutive_failures": 69
+    "checked_at": 1788698637.434347,
+    "consecutive_failures": 70
   },
   "Coloplast::targeted_direct_batch9_bulk_v1": {
     "jobs": [
@@ -35504,23 +35534,23 @@
   },
   "Texas Instruments::targeted_direct_batch11_bulk_v1": {
     "jobs": [],
-    "checked_at": 1788693678.6325064,
-    "consecutive_failures": 68
+    "checked_at": 1788698635.8580775,
+    "consecutive_failures": 69
   },
   "Nokia::targeted_direct_batch11_bulk_v1": {
     "jobs": [],
-    "checked_at": 1788693679.9794238,
-    "consecutive_failures": 68
+    "checked_at": 1788698636.687045,
+    "consecutive_failures": 69
   },
   "Boehringer Ingelheim::targeted_direct_batch11_bulk_v1": {
     "jobs": [],
-    "checked_at": 1788693680.1949415,
-    "consecutive_failures": 67
+    "checked_at": 1788698637.9084764,
+    "consecutive_failures": 68
   },
   "SentinelOne": {
     "jobs": [],
-    "checked_at": 1788693678.0112474,
-    "consecutive_failures": 67
+    "checked_at": 1788698635.1212084,
+    "consecutive_failures": 68
   },
   "Tenable": {
     "jobs": [
@@ -38620,7 +38650,7 @@
         "source": "dexcom_rendered_attempt2",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-06T12:08:08.086091+00:00",
         "posted_age_known": false
       },
@@ -38650,7 +38680,7 @@
         "source": "dexcom_rendered_attempt2",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-06T12:08:08.086091+00:00",
         "posted_age_known": false
       },
@@ -38680,7 +38710,7 @@
         "source": "dexcom_rendered_attempt2",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-06T12:08:08.086091+00:00",
         "posted_age_known": false
       },
@@ -38740,7 +38770,7 @@
         "source": "dexcom_rendered_attempt2",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-06T12:08:08.086091+00:00",
         "posted_age_known": false
       },
@@ -39002,8 +39032,8 @@
   },
   "NXP Semiconductors::zero_only_batch20_v1": {
     "jobs": [],
-    "checked_at": 1788693706.3664427,
-    "consecutive_failures": 45
+    "checked_at": 1788698666.5748482,
+    "consecutive_failures": 46
   },
   "Haleon::zero_only_batch20_v1": {
     "jobs": [
@@ -39730,8 +39760,8 @@
   },
   "Morgan Stanley::targeted_direct_batch35_v1": {
     "jobs": [],
-    "checked_at": 1788693681.0173163,
-    "consecutive_failures": 41
+    "checked_at": 1788698635.2337065,
+    "consecutive_failures": 42
   },
   "Refinitiv (LSEG)::targeted_direct_batch35_v1": {
     "jobs": [
@@ -39756,8 +39786,8 @@
   },
   "Morningstar::targeted_direct_batch35_v1": {
     "jobs": [],
-    "checked_at": 1788693707.3459244,
-    "consecutive_failures": 38
+    "checked_at": 1788698658.6934624,
+    "consecutive_failures": 39
   },
   "Susquehanna International Group (SIG)::friend_nonlive_batch10_v1": {
     "jobs": [
@@ -40730,8 +40760,8 @@
   },
   "McKinsey & Company::targeted_direct_batch50_v1": {
     "jobs": [],
-    "checked_at": 1788693698.756307,
-    "consecutive_failures": 11
+    "checked_at": 1788698655.6910706,
+    "consecutive_failures": 12
   },
   "DXC Technology::friend_logic_v1": {
     "jobs": [
@@ -40740,120 +40770,150 @@
         "title": "SAP SuccessFactors Consultant",
         "location": "Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.dxc.com/job/23545151/sap-successfactors-consultant-kr/",
         "source": "dxc_batch20_rendered",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-04T18:39:50.535241+00:00",
+        "posted_age_known": false
       },
       {
         "company": "DXC Technology",
         "title": "Técnico Databricks Hadoop",
         "location": "Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.dxc.com/job/23630831/t-cnico-databricks-hadoop-s-o-bernardo-do-campo-br/",
         "source": "dxc_batch20_rendered",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-05T01:03:30.047604+00:00",
+        "posted_age_known": false
       },
       {
         "company": "DXC Technology",
         "title": "Senior SAP HCM Full-Stack Developer",
         "location": "Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.dxc.com/job/23545134/senior-sap-hcm-full-stack-developer-kr/",
         "source": "dxc_batch20_rendered",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-31T12:55:29.106089+00:00",
+        "posted_age_known": false
       },
       {
         "company": "DXC Technology",
         "title": "Actuario/a Funcional – Seguros de Vida y Colectivos",
         "location": "Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.dxc.com/job/23602800/actuario-a-funcional-seguros-de-vida-y-colectivos-sant-cugat-del-vall-s-es/",
         "source": "dxc_batch20_rendered",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-04T12:01:57.859661+00:00",
+        "posted_age_known": false
       },
       {
         "company": "DXC Technology",
         "title": "SOC Tier 3 Analyst",
         "location": "Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.dxc.com/job/23818967/soc-tier-3-analyst-santiago-cl/",
         "source": "dxc_batch20_rendered",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-05T01:03:30.047604+00:00",
+        "posted_age_known": false
       },
       {
         "company": "DXC Technology",
         "title": "Sr Analyst II Business Operations",
         "location": "Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.dxc.com/job/23794867/sr-analyst-ii-business-operations-melbourne-au/",
         "source": "dxc_batch20_rendered",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-05T01:03:30.047604+00:00",
+        "posted_age_known": false
       },
       {
         "company": "DXC Technology",
         "title": "App Dev/AI Enterprise Solutioning Executive- US",
         "location": "Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.dxc.com/job/23781513/app-dev-ai-enterprise-solutioning-executive-us/",
         "source": "dxc_batch20_rendered",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-05T12:02:40.763909+00:00",
+        "posted_age_known": false
       },
       {
         "company": "DXC Technology",
         "title": "ServiceNow Solutions Architect",
         "location": "Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.dxc.com/job/23802738/servicenow-solutions-architect-singapore-sg/",
         "source": "dxc_batch20_rendered",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-03T17:20:24.574453+00:00",
+        "posted_age_known": false
       },
       {
         "company": "DXC Technology",
         "title": "Platform Product Manager",
         "location": "Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.dxc.com/job/23811729/platform-product-manager-shanghai-cn/",
         "source": "dxc_batch20_rendered",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-04T18:39:50.535241+00:00",
+        "posted_age_known": false
       },
       {
         "company": "DXC Technology",
         "title": "Desktop Support Engineer – Yeovil",
         "location": "Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.dxc.com/job/23811997/desktop-support-engineer-yeovil/",
         "source": "dxc_batch20_rendered",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-04T18:39:50.535241+00:00",
+        "posted_age_known": false
       }
     ],
     "checked_at": 1788696308.1102462,
@@ -41515,8 +41575,8 @@
   },
   "Waters Corporation::targeted_direct_batch52_v1": {
     "jobs": [],
-    "checked_at": 1788693680.2719555,
-    "consecutive_failures": 1
+    "checked_at": 1788698635.8439946,
+    "consecutive_failures": 2
   },
   "Eli Lilly::targeted_direct_batch54_multi_v1": {
     "jobs": [
@@ -43501,21 +43561,6 @@
     "checked_at": 1788693701.9803343,
     "consecutive_failures": 0
   },
-  "Kepak Group::targeted_direct_batch7_multi_v1": {
-    "jobs": [],
-    "checked_at": 1788696227.3156195,
-    "consecutive_failures": 1
-  },
-  "AerCap::targeted_direct_batch51_v1": {
-    "jobs": [],
-    "checked_at": 1788696227.5187044,
-    "consecutive_failures": 1
-  },
-  "An Post::targeted_direct_batch7_multi_v1": {
-    "jobs": [],
-    "checked_at": 1788696227.6004574,
-    "consecutive_failures": 1
-  },
   "daa (Dublin Airport Authority)::targeted_direct_batch54_multi_v1": {
     "jobs": [
       {
@@ -43529,7 +43574,7 @@
         "source": "batch54_daa_official_oracle_cx1",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-06T12:08:08.086091+00:00",
         "posted_age_known": false
       },
@@ -43544,7 +43589,7 @@
         "source": "batch54_daa_official_oracle_cx1",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-06T12:08:08.086091+00:00",
         "posted_age_known": false
       },
@@ -43559,7 +43604,7 @@
         "source": "batch54_daa_official_oracle_cx1",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-06T12:08:08.086091+00:00",
         "posted_age_known": false
       },
@@ -43574,7 +43619,7 @@
         "source": "batch54_daa_official_oracle_cx1",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-06T12:08:08.086091+00:00",
         "posted_age_known": false
       },
@@ -43589,7 +43634,7 @@
         "source": "batch54_daa_official_oracle_cx1",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-06T12:08:08.086091+00:00",
         "posted_age_known": false
       },
@@ -43604,7 +43649,7 @@
         "source": "batch54_daa_official_oracle_cx1",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-06T12:08:08.086091+00:00",
         "posted_age_known": false
       },
@@ -43619,7 +43664,7 @@
         "source": "batch54_daa_official_oracle_cx1",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-06T12:08:08.086091+00:00",
         "posted_age_known": false
       },
@@ -43634,7 +43679,7 @@
         "source": "batch54_daa_official_oracle_cx1",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-06T12:08:08.086091+00:00",
         "posted_age_known": false
       },
@@ -43649,7 +43694,7 @@
         "source": "batch54_daa_official_oracle_cx1",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-06T12:08:08.086091+00:00",
         "posted_age_known": false
       },
@@ -43664,7 +43709,7 @@
         "source": "batch54_daa_official_oracle_cx1",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-06T12:08:08.086091+00:00",
         "posted_age_known": false
       },
@@ -43679,7 +43724,7 @@
         "source": "batch54_daa_official_oracle_cx1",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-06T12:08:08.086091+00:00",
         "posted_age_known": false
       },
@@ -43694,7 +43739,7 @@
         "source": "batch54_daa_official_oracle_cx1",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-06T12:08:08.086091+00:00",
         "posted_age_known": false
       },
@@ -43709,7 +43754,7 @@
         "source": "batch54_daa_official_oracle_cx1",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-06T12:08:08.086091+00:00",
         "posted_age_known": false
       },
@@ -43724,7 +43769,7 @@
         "source": "batch54_daa_official_oracle_cx1",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-06T12:08:08.086091+00:00",
         "posted_age_known": false
       },
@@ -43739,7 +43784,7 @@
         "source": "batch54_daa_official_oracle_cx1",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-06T12:08:08.086091+00:00",
         "posted_age_known": false
       },
@@ -43754,7 +43799,7 @@
         "source": "batch54_daa_official_oracle_cx1",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-06T12:08:08.086091+00:00",
         "posted_age_known": false
       },
@@ -43769,7 +43814,7 @@
         "source": "batch54_daa_official_oracle_cx1",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-06T12:08:08.086091+00:00",
         "posted_age_known": false
       },
@@ -43784,7 +43829,7 @@
         "source": "batch54_daa_official_oracle_cx1",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-06T12:08:08.086091+00:00",
         "posted_age_known": false
       },
@@ -43799,7 +43844,7 @@
         "source": "batch54_daa_official_oracle_cx1",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-06T12:08:08.086091+00:00",
         "posted_age_known": false
       },
@@ -43814,68 +43859,13 @@
         "source": "batch54_daa_official_oracle_cx1",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-06T12:08:08.086091+00:00",
         "posted_age_known": false
       }
     ],
     "checked_at": 1788696228.2311165,
     "consecutive_failures": 0
-  },
-  "PayPal::targeted_direct_batch54_multi_v1": {
-    "jobs": [],
-    "checked_at": 1788696228.413717,
-    "consecutive_failures": 1
-  },
-  "ICON plc::targeted_direct_batch50_v1": {
-    "jobs": [],
-    "checked_at": 1788696230.5915556,
-    "consecutive_failures": 1
-  },
-  "DHL Ireland::targeted_direct_batch54_multi_v1": {
-    "jobs": [],
-    "checked_at": 1788696232.2948024,
-    "consecutive_failures": 1
-  },
-  "HP (Hewlett-Packard)::friend_next4_v1": {
-    "jobs": [],
-    "checked_at": 1788696244.5464768,
-    "consecutive_failures": 1
-  },
-  "Aldi Ireland::targeted_direct_batch50_v1": {
-    "jobs": [],
-    "checked_at": 1788696244.892642,
-    "consecutive_failures": 1
-  },
-  "HCLTech::targeted_direct_batch50_v1": {
-    "jobs": [],
-    "checked_at": 1788696249.492414,
-    "consecutive_failures": 1
-  },
-  "Infosys::targeted_direct_batch47_v1": {
-    "jobs": [],
-    "checked_at": 1788696253.4624515,
-    "consecutive_failures": 1
-  },
-  "SMBC Aviation Capital::friend_nonlive_batch10_v1": {
-    "jobs": [],
-    "checked_at": 1788696256.2316277,
-    "consecutive_failures": 1
-  },
-  "VMware (Broadcom)::zero_only_batch20_v1": {
-    "jobs": [],
-    "checked_at": 1788696262.1187842,
-    "consecutive_failures": 1
-  },
-  "QIAGEN::zero_only_batch20_v1": {
-    "jobs": [],
-    "checked_at": 1788696266.9176898,
-    "consecutive_failures": 1
-  },
-  "EXL": {
-    "jobs": [],
-    "checked_at": 1788696272.1616952,
-    "consecutive_failures": 1
   },
   "ABP Food Group::targeted_direct_batch9_bulk_v1": {
     "jobs": [
@@ -43884,330 +43874,473 @@
         "title": "Accounts Assistant (Accounts Receivable)",
         "location": "Republic of Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://api.occupop.com/shared/job/accounts-assistant-accounts-receivable-e373e",
         "source": "abp_ireland_rendered",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-04T18:39:50.535241+00:00",
+        "posted_age_known": false
       },
       {
         "company": "ABP Food Group",
         "title": "Maintenance Technician",
         "location": "Republic of Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://api.occupop.com/shared/job/maintenance-technician-87d87",
         "source": "abp_ireland_rendered",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-03T23:57:53.288654+00:00",
+        "posted_age_known": false
       },
       {
         "company": "ABP Food Group",
         "title": "Maintenance Welder",
         "location": "Republic of Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://api.occupop.com/shared/job/maintenance-welder-01db3",
         "source": "abp_ireland_rendered",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-03T23:57:53.288654+00:00",
+        "posted_age_known": false
       },
       {
         "company": "ABP Food Group",
         "title": "Abattoir Production Operative",
         "location": "Republic of Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://api.occupop.com/shared/job/abattoir-production-operative-3cf39",
         "source": "abp_ireland_rendered",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-03T17:20:24.574453+00:00",
+        "posted_age_known": false
       },
       {
         "company": "ABP Food Group",
         "title": "Forklift Operator - Cold Store",
         "location": "Republic of Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://api.occupop.com/shared/job/forklift-operator-cold-store-31a04",
         "source": "abp_ireland_rendered",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-01T13:48:37.788688+00:00",
+        "posted_age_known": false
       },
       {
         "company": "ABP Food Group",
         "title": "Human Resources Officer",
         "location": "Republic of Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://api.occupop.com/shared/job/human-resources-officer-305ef",
         "source": "abp_ireland_rendered",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-28T15:36:59.415406+00:00",
+        "posted_age_known": false
       },
       {
         "company": "ABP Food Group",
         "title": "Data Engineer",
         "location": "Republic of Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://api.occupop.com/shared/job/data-engineer-0068e",
         "source": "abp_ireland_rendered",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-28T15:36:59.415406+00:00",
+        "posted_age_known": false
       },
       {
         "company": "ABP Food Group",
         "title": "Maintenance Technician",
         "location": "Republic of Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://api.occupop.com/shared/job/maintenance-technician-04dd3",
         "source": "abp_ireland_rendered",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-28T15:36:59.415406+00:00",
+        "posted_age_known": false
       },
       {
         "company": "ABP Food Group",
         "title": "NPD Technologist",
         "location": "Republic of Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://api.occupop.com/shared/job/npd-technologist-f1a6b",
         "source": "abp_ireland_rendered",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-28T15:36:59.415406+00:00",
+        "posted_age_known": false
       },
       {
         "company": "ABP Food Group",
         "title": "Compliance Coordinator",
         "location": "Republic of Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://api.occupop.com/shared/job/compliance-coordinator-96fb2",
         "source": "abp_ireland_rendered",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-28T15:36:59.415406+00:00",
+        "posted_age_known": false
       },
       {
         "company": "ABP Food Group",
         "title": "IT Technician",
         "location": "Republic of Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://api.occupop.com/shared/job/it-technician-532db",
         "source": "abp_ireland_rendered",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-02T22:16:17.158465+00:00",
+        "posted_age_known": false
       },
       {
         "company": "ABP Food Group",
         "title": "Trainee Health & Safety Officer",
         "location": "Republic of Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://api.occupop.com/shared/job/trainee-health-safety-officer-a1f6b",
         "source": "abp_ireland_rendered",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-28T15:36:59.415406+00:00",
+        "posted_age_known": false
       },
       {
         "company": "ABP Food Group",
         "title": "Warehouse Operative/Forklift Driver",
         "location": "Republic of Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://api.occupop.com/shared/job/warehouse-operativeforklift-driver-b22b1",
         "source": "abp_ireland_rendered",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-28T15:36:59.415406+00:00",
+        "posted_age_known": false
       },
       {
         "company": "ABP Food Group",
         "title": "Meat Processor Operative",
         "location": "Republic of Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://api.occupop.com/shared/job/meat-processor-operative-8cc72",
         "source": "abp_ireland_rendered",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-28T15:36:59.415406+00:00",
+        "posted_age_known": false
       },
       {
         "company": "ABP Food Group",
         "title": "Accounts Administrator",
         "location": "Republic of Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://api.occupop.com/shared/job/accounts-administrator-29515",
         "source": "abp_ireland_rendered",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-28T15:36:59.415406+00:00",
+        "posted_age_known": false
       },
       {
         "company": "ABP Food Group",
         "title": "Quality Supervisor",
         "location": "Republic of Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://api.occupop.com/shared/job/quality-supervisor-24df6",
         "source": "abp_ireland_rendered",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-28T15:36:59.415406+00:00",
+        "posted_age_known": false
       },
       {
         "company": "ABP Food Group",
         "title": "Assistant Engineering Manager",
         "location": "Republic of Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://api.occupop.com/shared/job/assistant-engineering-manager-d292c",
         "source": "abp_ireland_rendered",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-28T15:36:59.415406+00:00",
+        "posted_age_known": false
       },
       {
         "company": "ABP Food Group",
         "title": "Assistant Engineering Manager",
         "location": "Republic of Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://api.occupop.com/shared/job/assistant-engineering-manager-78f52",
         "source": "abp_ireland_rendered",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-28T15:36:59.415406+00:00",
+        "posted_age_known": false
       },
       {
         "company": "ABP Food Group",
         "title": "Loading Bay/ Carcase Despatch Operator",
         "location": "Republic of Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://api.occupop.com/shared/job/loading-bay-carcase-despatch-operator-8403d",
         "source": "abp_ireland_rendered",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-28T15:36:59.415406+00:00",
+        "posted_age_known": false
       },
       {
         "company": "ABP Food Group",
         "title": "Maintenance Electrician",
         "location": "Republic of Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://api.occupop.com/shared/job/maintenance-electrician-87fd9b",
         "source": "abp_ireland_rendered",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-28T15:36:59.415406+00:00",
+        "posted_age_known": false
       },
       {
         "company": "ABP Food Group",
         "title": "Maintenance Technician",
         "location": "Republic of Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://api.occupop.com/shared/job/maintenance-technician-4faba",
         "source": "abp_ireland_rendered",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-28T15:36:59.415406+00:00",
+        "posted_age_known": false
       },
       {
         "company": "ABP Food Group",
         "title": "Maintenance Technician",
         "location": "Republic of Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://api.occupop.com/shared/job/maintenance-technician-f3ecc6",
         "source": "abp_ireland_rendered",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-28T15:36:59.415406+00:00",
+        "posted_age_known": false
       },
       {
         "company": "ABP Food Group",
         "title": "Mechanical/Electrical Engineer",
         "location": "Republic of Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://api.occupop.com/shared/job/mechanicalelectrical-engineer-30782",
         "source": "abp_ireland_rendered",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-28T15:36:59.415406+00:00",
+        "posted_age_known": false
       },
       {
         "company": "ABP Food Group",
         "title": "General Operatives Various Business Areas",
         "location": "Republic of Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://api.occupop.com/shared/job/general-operatives-various-business-area-4a88de",
         "source": "abp_ireland_rendered",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-28T15:36:59.415406+00:00",
+        "posted_age_known": false
       },
       {
         "company": "ABP Food Group",
         "title": "Abattoir Operative",
         "location": "Republic of Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://api.occupop.com/shared/job/abattoir-operative-778be",
         "source": "abp_ireland_rendered",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-28T15:36:59.415406+00:00",
+        "posted_age_known": false
       },
       {
         "company": "ABP Food Group",
         "title": "General Operative",
         "location": "Republic of Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://api.occupop.com/shared/job/general-operative-ee181",
         "source": "abp_ireland_rendered",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-28T15:36:59.415406+00:00",
+        "posted_age_known": false
       }
     ],
     "checked_at": 1788696308.6213784,
     "consecutive_failures": 0
   },
-  "Aviva Ireland::targeted_direct_batch53_preserve_v1": {
+  "Kepak Group::targeted_direct_batch7_multi_v1": {
     "jobs": [],
-    "checked_at": 1788696352.0266051,
+    "checked_at": 1788698635.0870872,
     "consecutive_failures": 1
   },
-  "Deutsche Bank::friend_logic_v1": {
+  "AerCap::targeted_direct_batch51_v1": {
     "jobs": [],
-    "checked_at": 1788696446.7399702,
+    "checked_at": 1788698635.2896655,
+    "consecutive_failures": 1
+  },
+  "ICON plc::targeted_direct_batch50_v1": {
+    "jobs": [],
+    "checked_at": 1788698635.832555,
+    "consecutive_failures": 1
+  },
+  "An Post::targeted_direct_batch7_multi_v1": {
+    "jobs": [],
+    "checked_at": 1788698635.8971155,
+    "consecutive_failures": 1
+  },
+  "Infosys::targeted_direct_batch47_v1": {
+    "jobs": [],
+    "checked_at": 1788698636.3602452,
+    "consecutive_failures": 1
+  },
+  "PayPal::targeted_direct_batch54_multi_v1": {
+    "jobs": [],
+    "checked_at": 1788698636.3666513,
+    "consecutive_failures": 1
+  },
+  "HP (Hewlett-Packard)::friend_next4_v1": {
+    "jobs": [],
+    "checked_at": 1788698637.4610581,
+    "consecutive_failures": 1
+  },
+  "VMware (Broadcom)::zero_only_batch20_v1": {
+    "jobs": [],
+    "checked_at": 1788698638.4489021,
+    "consecutive_failures": 1
+  },
+  "DHL Ireland::targeted_direct_batch54_multi_v1": {
+    "jobs": [],
+    "checked_at": 1788698640.0220256,
+    "consecutive_failures": 1
+  },
+  "Aldi Ireland::targeted_direct_batch50_v1": {
+    "jobs": [],
+    "checked_at": 1788698640.2790062,
+    "consecutive_failures": 1
+  },
+  "HCLTech::targeted_direct_batch50_v1": {
+    "jobs": [],
+    "checked_at": 1788698644.0200331,
+    "consecutive_failures": 1
+  },
+  "QIAGEN::zero_only_batch20_v1": {
+    "jobs": [],
+    "checked_at": 1788698645.0432215,
+    "consecutive_failures": 1
+  },
+  "SMBC Aviation Capital::friend_nonlive_batch10_v1": {
+    "jobs": [],
+    "checked_at": 1788698645.7207756,
     "consecutive_failures": 1
   },
   "Boston Consulting Group (BCG)": {
     "jobs": [],
-    "checked_at": 1788696463.3707457,
+    "checked_at": 1788698656.3367589,
+    "consecutive_failures": 1
+  },
+  "EXL": {
+    "jobs": [],
+    "checked_at": 1788698656.747716,
+    "consecutive_failures": 1
+  },
+  "Deutsche Bank::friend_logic_v1": {
+    "jobs": [],
+    "checked_at": 1788698661.0757275,
     "consecutive_failures": 1
   }
 }
