@@ -10789,7 +10789,7 @@ def scrape_daa_batch54(session=None):
         loc=str(j.get("location") or "")
         if re.search(r"\bBelfast\b|\bNorthern Ireland\b",loc,re.I): continue
         # daa Group has overseas businesses; production feed is ROI only.
-        if not _is_republic_of_ireland_location(loc):
+        if not is_republic_of_ireland_location(loc):
             continue
         j["source"]="batch54_daa_official_oracle_cx1"
         out.append(j)
@@ -10924,26 +10924,30 @@ def scrape_aviva_ireland_batch53(session=None):
     session=session or requests.Session()
     merged={}
 
-    # New/current board enumerator.
+    # Proven/older route first. If it still returns jobs, keep them and avoid
+    # spending the company's entire task budget on the 50-detail dynamic crawl.
+    try:
+        legacy=scrape_aviva_ireland_batch47(session) or []
+        for j in legacy:
+            u=(j.get("url") or "").split("#")[0].rstrip("/").lower()
+            if u: merged[u]=j
+    except Exception as exc:
+        print(f"      [batch55-aviva] legacy Batch47 route failed: {exc}")
+
+    if merged:
+        print(f"      [batch55-aviva] {len(merged)} live ROI vacancies from proven legacy route; expensive dynamic crawl skipped this run")
+        return list(merged.values())
+
+    # Only when the proven route is empty do we spend time on the newer board.
     try:
         for j in scrape_aviva_ireland_batch52(session) or []:
             u=(j.get("url") or "").split("#")[0].rstrip("/").lower()
             if u: merged[u]=j
     except Exception as exc:
-        print(f"      [batch53-aviva] dynamic route failed: {exc}")
+        print(f"      [batch55-aviva] dynamic route failed: {exc}")
 
-    # Preserve the previously working Batch47 mechanism as an additive fallback.
-    try:
-        for j in scrape_aviva_ireland_batch47(session) or []:
-            u=(j.get("url") or "").split("#")[0].rstrip("/").lower()
-            if u and u not in merged:
-                merged[u]=j
-    except Exception as exc:
-        print(f"      [batch53-aviva] legacy Batch47 fallback failed: {exc}")
-
-    print(f"      [batch53-aviva] {len(merged)} live ROI vacancies after dynamic + legacy union")
+    print(f"      [batch55-aviva] {len(merged)} live ROI vacancies after bounded fallback")
     return list(merged.values())
-
 
 def _carry_recent_positive_cache(cache, company_name, new_key):
     """Carry a still-fresh positive result across a scraper namespace upgrade.
@@ -16066,6 +16070,7 @@ def scrape_wtw_ireland_batch26(session):
     print("=== TARGETED_DIRECT_BATCH_38_PRE_FULL_RUN_BULK ACTIVE: proven Uisce Oracle recovery retained + Edwards Lifesciences and HP moved to current official Workday ROI detail verification; wider zero audit completed; Manual queue untouched ===")
 
 print("=== TARGETED_DIRECT_BATCH_46_AVIVA_HIGH_YIELD_FIX ACTIVE: Aviva is removed from final defer and uses eight current official Dublin detail seeds plus live detail verification; failed Aldi/HP mechanisms are not expanded; proven positive routes preserved ===")
+print("=== TARGETED_DIRECT_BATCH_55_LOG_DRIVEN_STABILITY_FIX ACTIVE: daa NameError fixed; Aviva proven-route-first bounded fallback; Batch54 HSE/LinkedIn/Lilly wins preserved ===")
 print("=== TARGETED_DIRECT_BATCH_54_MULTI_COMPANY_FALSE_ZERO_CLUSTER ACTIVE: daa + Eli Lilly + DHL Ireland + PayPal + LinkedIn; current first-party backends, recent-positive cache carry, ROI only ===")
 print("=== TARGETED_DIRECT_BATCH_53_REGRESSION_SAFE_AVIVA_RECOVERY ACTIVE: Aviva dynamic + Batch47 union, recent-positive cache migration, no route replacement regression ===")
 print("=== TARGETED_DIRECT_BATCH_52_AVIVA_WATERS_DYNAMIC_RECOVERY ACTIVE: current first-party Aviva pagination + Waters iCIMS enumeration; old Batch47 static zero mechanisms bypassed ===")
@@ -16500,7 +16505,7 @@ def main():
         ("exact", "davy", scrape_davy_ireland_batch48, 35, "Batch48 Davy official current-opportunities index"),
         ("exact", "barclays", scrape_barclays_ireland_batch48, 35, "Batch48 Barclays official Ireland-filtered jobs search"),
         ("exact", "icon plc", scrape_icon_ireland_batch50, 55, "Batch50 ICON first-party Ireland page + detail verification"),
-        ("exact", "aviva ireland", scrape_aviva_ireland_batch53, 70, "Batch53 regression-safe Aviva dynamic + prior-route union"),
+        ("exact", "aviva ireland", scrape_aviva_ireland_batch53, 45, "Batch55 Aviva proven-route-first bounded fallback"),
         ("exact", "fitch ratings", scrape_fitch_ireland_current, 75, "Fitch current official careers site"),
         ("prefix", "apple", scrape_apple_ireland, 180, "direct HTML scrape"),
         ("exact", "google", scrape_google_ireland, 240, "real browser automation"),
