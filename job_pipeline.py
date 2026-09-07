@@ -435,6 +435,7 @@ def run_company_tasks_in_parallel(tasks, browser_workers=None, http_workers=None
         batch_start = time.time()
         overall_deadline = batch_start + OVERALL_BATCH_TIMEOUT_SECONDS
         pending = set(future_map)
+        late_positive_futures = []
         # Report in TRUE completion order, not submission order — a task
         # near the front of the list that happens to be slow (DXC, in a
         # real run) was blocking the reported results of faster companies
@@ -495,11 +496,14 @@ def run_company_tasks_in_parallel(tasks, browser_workers=None, http_workers=None
                     print(f"  -> {company}: HARD TIMEOUT after {timeout_s}s; preserving "
                           f"{len(fallback_jobs)} last-known positive cached jobs")
                     results.append((label, company, fallback_jobs))
+                    # The worker thread cannot be force-killed. Keep a reference
+                    # and harvest it later if it finishes before the batch ends.
+                    late_positive_futures.append((fut, label, company, len(fallback_jobs)))
                 else:
                     print(f"  -> {company}: HARD TIMEOUT after {timeout_s}s "
                           f"(pipeline continues normally with whatever else it already found)")
                     failed_companies.add(company)
-                errors.append(f"{label}/{company}: timed out after {timeout_s}s")
+                    errors.append(f"{label}/{company}: timed out after {timeout_s}s")
             for fut in not_reached_now:
                 pending.discard(fut)
                 label, company, timeout_s, task_id = future_map[fut]
@@ -515,7 +519,27 @@ def run_company_tasks_in_parallel(tasks, browser_workers=None, http_workers=None
                           f"companies when the {OVERALL_BATCH_TIMEOUT_SECONDS}s batch ceiling hit; "
                           f"never actually started this run, will be retried next run")
                     failed_companies.add(company)
-                errors.append(f"{label}/{company}: not reached before batch ceiling")
+                    errors.append(f"{label}/{company}: not reached before batch ceiling")
+        # Batch57 late-positive harvest: several productive scrapers in the
+        # latest log completed shortly AFTER their timeout (DSV 18 after a
+        # 16-job fallback, Arcadis 13 after a 12-job fallback, DXC 12 after 10).
+        # Take those completed results without waiting for unfinished workers.
+        _late_recovered = 0
+        for _fut, _label, _company, _fallback_count in late_positive_futures:
+            if not _fut.done():
+                continue
+            try:
+                _jobs = _fut.result() or []
+            except Exception:
+                _jobs = []
+            if _jobs:
+                results.append((_label, _company, _jobs))
+                _late_recovered += max(0, len(_jobs) - _fallback_count)
+                print(f"  -> {_company}: late completion harvested {len(_jobs)} current jobs "
+                      f"after timeout (fallback had {_fallback_count})")
+        if late_positive_futures:
+            print(f"=== Batch57 late-positive harvest: {_late_recovered} net additional current jobs "
+                  f"recovered from workers that finished after their timeout ===")
     finally:
         browser_pool.shutdown(wait=False)
         http_pool.shutdown(wait=False)
@@ -16100,6 +16124,7 @@ def scrape_wtw_ireland_batch26(session):
     print("=== TARGETED_DIRECT_BATCH_38_PRE_FULL_RUN_BULK ACTIVE: proven Uisce Oracle recovery retained + Edwards Lifesciences and HP moved to current official Workday ROI detail verification; wider zero audit completed; Manual queue untouched ===")
 
 print("=== TARGETED_DIRECT_BATCH_46_AVIVA_HIGH_YIELD_FIX ACTIVE: Aviva is removed from final defer and uses eight current official Dublin detail seeds plus live detail verification; failed Aldi/HP mechanisms are not expanded; proven positive routes preserved ===")
+print("=== TARGETED_DIRECT_BATCH_57_MULTI_COMPANY_LATE_RESULT_RECOVERY ACTIVE: productive timed-out workers are harvested if they finish later; positive fallbacks are soft not hard errors; Red Hat Batch56 repeat deferred after confirmed zero ===")
 print("=== TARGETED_DIRECT_BATCH_56_MULTI_COMPANY_REGRESSION_AND_REDHAT ACTIVE: previous live_jobs guard fixed globally; one-cycle preservation only; Red Hat current+prior Workday union ===")
 print("=== TARGETED_DIRECT_BATCH_55_LOG_DRIVEN_STABILITY_FIX ACTIVE: daa NameError fixed; Aviva proven-route-first bounded fallback; Batch54 HSE/LinkedIn/Lilly wins preserved ===")
 print("=== TARGETED_DIRECT_BATCH_54_MULTI_COMPANY_FALSE_ZERO_CLUSTER ACTIVE: daa + Eli Lilly + DHL Ireland + PayPal + LinkedIn; current first-party backends, recent-positive cache carry, ROI only ===")
@@ -16618,7 +16643,6 @@ def main():
         ("exact", "central bank of ireland", scrape_central_bank_ireland_direct, 240, "Candidate Manager board"),
         ("exact", "microsoft", scrape_microsoft_ireland, 240, "Dublin/Ireland rendered search"),
         ("exact", "citi", scrape_citi_ireland, 240, "Dublin paginated search"),
-        ("exact", "red hat", scrape_redhat_ireland_batch56, 55, "Batch56 current + prior Red Hat Workday union"),
         ("exact", "netflix", scrape_netflix_ireland, 120, "Eightfold, custom-branded domain"),
         ("exact", "irish life", scrape_irish_life_ireland, 180, "real careers board"),
         ("exact", "ups ireland", scrape_ups_ireland, 180, "real jobs board"),
