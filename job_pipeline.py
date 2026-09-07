@@ -10752,6 +10752,36 @@ def scrape_hp_ireland_batch45(session=None):
 
 
 
+
+# === TARGETED_DIRECT_BATCH_56_MULTI_COMPANY_REGRESSION_AND_REDHAT ===
+# Latest log moved from 86 -> 88 zero companies while the regression guard
+# was silently reading the wrong jobs.json key. Batch56 fixes that globally.
+# Red Hat also gets an additive two-mechanism first-party Workday union.
+
+def scrape_redhat_ireland_batch56(session=None):
+    session = session or requests.Session()
+    merged = {}
+
+    try:
+        for j in scrape_red_hat_ireland(session) or []:
+            u = (j.get("url") or "").split("#")[0].rstrip("/").lower()
+            if u:
+                merged[u] = j
+    except Exception as exc:
+        print(f"      [batch56-redhat] current Workday override failed: {exc}")
+
+    try:
+        for j in scrape_redhat_ireland_batch18(session) or []:
+            u = (j.get("url") or "").split("#")[0].rstrip("/").lower()
+            if u and u not in merged:
+                merged[u] = j
+    except Exception as exc:
+        print(f"      [batch56-redhat] prior detail route failed: {exc}")
+
+    print(f"      [batch56-redhat] {len(merged)} verified ROI vacancies after current + prior Workday union")
+    return list(merged.values())
+
+
 # === TARGETED_DIRECT_BATCH_54_MULTI_COMPANY_FALSE_ZERO_CLUSTER ===
 # Evidence-first multi-company recovery cluster:
 #   daa               -> current official Oracle Candidate Experience CX_1
@@ -16070,6 +16100,7 @@ def scrape_wtw_ireland_batch26(session):
     print("=== TARGETED_DIRECT_BATCH_38_PRE_FULL_RUN_BULK ACTIVE: proven Uisce Oracle recovery retained + Edwards Lifesciences and HP moved to current official Workday ROI detail verification; wider zero audit completed; Manual queue untouched ===")
 
 print("=== TARGETED_DIRECT_BATCH_46_AVIVA_HIGH_YIELD_FIX ACTIVE: Aviva is removed from final defer and uses eight current official Dublin detail seeds plus live detail verification; failed Aldi/HP mechanisms are not expanded; proven positive routes preserved ===")
+print("=== TARGETED_DIRECT_BATCH_56_MULTI_COMPANY_REGRESSION_AND_REDHAT ACTIVE: previous live_jobs guard fixed globally; one-cycle preservation only; Red Hat current+prior Workday union ===")
 print("=== TARGETED_DIRECT_BATCH_55_LOG_DRIVEN_STABILITY_FIX ACTIVE: daa NameError fixed; Aviva proven-route-first bounded fallback; Batch54 HSE/LinkedIn/Lilly wins preserved ===")
 print("=== TARGETED_DIRECT_BATCH_54_MULTI_COMPANY_FALSE_ZERO_CLUSTER ACTIVE: daa + Eli Lilly + DHL Ireland + PayPal + LinkedIn; current first-party backends, recent-positive cache carry, ROI only ===")
 print("=== TARGETED_DIRECT_BATCH_53_REGRESSION_SAFE_AVIVA_RECOVERY ACTIVE: Aviva dynamic + Batch47 union, recent-positive cache migration, no route replacement regression ===")
@@ -16307,7 +16338,11 @@ def main():
             with open(args.output, encoding="utf-8") as _pf:
                 _previous_payload = json.load(_pf)
             if isinstance(_previous_payload, dict):
-                _previous_live_jobs = list(_previous_payload.get("jobs") or [])
+                _previous_live_jobs = list(
+                    _previous_payload.get("live_jobs")
+                    or _previous_payload.get("jobs")
+                    or []
+                )
             elif isinstance(_previous_payload, list):
                 _previous_live_jobs = list(_previous_payload)
         except Exception:
@@ -16583,7 +16618,7 @@ def main():
         ("exact", "central bank of ireland", scrape_central_bank_ireland_direct, 240, "Candidate Manager board"),
         ("exact", "microsoft", scrape_microsoft_ireland, 240, "Dublin/Ireland rendered search"),
         ("exact", "citi", scrape_citi_ireland, 240, "Dublin paginated search"),
-        ("exact", "red hat", scrape_redhat_ireland_batch18, 55, "Batch18 Workday detail-verified Ireland search"),
+        ("exact", "red hat", scrape_redhat_ireland_batch56, 55, "Batch56 current + prior Red Hat Workday union"),
         ("exact", "netflix", scrape_netflix_ireland, 120, "Eightfold, custom-branded domain"),
         ("exact", "irish life", scrape_irish_life_ireland, 180, "real careers board"),
         ("exact", "ups ireland", scrape_ups_ireland, 180, "real jobs board"),
@@ -17552,8 +17587,11 @@ def main():
     _prev_by_company = {}
     for _job in _previous_live_jobs:
         _n = str((_job or {}).get("company") or "").strip()
-        if _n:
-            _prev_by_company.setdefault(_n, []).append(_job)
+        if not _n:
+            continue
+        if (_job or {}).get("regression_guard") == "preserved_from_previous_run":
+            continue
+        _prev_by_company.setdefault(_n, []).append(_job)
 
     _cur_counts = {}
     for _job in live_jobs:
@@ -17582,27 +17620,25 @@ def main():
     _zero_regressions = []
     _count_decreases = []
 
-    # Union of previous-run and persistent historically-live companies.
-    _regression_names = set(_prev_by_company) | set(_last_nonzero_by_company)
+    # Only the immediately previous clean run may prevent a zero regression.
+    # This protects transient source failures across many companies at once,
+    # without keeping closed vacancies indefinitely.
+    _regression_names = set(_prev_by_company)
 
     for _name in sorted(_regression_names):
         _prev_jobs = _prev_by_company.get(_name) or []
-        _last_jobs = _last_nonzero_by_company.get(_name) or []
-        _reference_jobs = _last_jobs or _prev_jobs
-        _reference_count = len(_reference_jobs)
+        _reference_count = len(_prev_jobs)
         _cur_count = _cur_counts.get(_name, 0)
 
         if _reference_count > 0 and _cur_count == 0:
-            # Preserve the LAST KNOWN NON-ZERO set. This survives sequences such
-            # as 25 -> 0 -> 0 instead of forgetting the original live inventory.
-            for _old_job in _reference_jobs:
+            for _old_job in _prev_jobs:
                 _kept = dict(_old_job)
-                _kept["regression_guard"] = "preserved_from_last_known_nonzero"
+                _kept["regression_guard"] = "preserved_from_previous_run"
                 live_jobs.append(_kept)
             automated_zero.pop(_name, None)
             _zero_regressions.append((_name, _reference_count))
-        elif _prev_jobs and 0 < _cur_count < len(_prev_jobs):
-            _count_decreases.append((_name, len(_prev_jobs), _cur_count))
+        elif 0 < _cur_count < _reference_count:
+            _count_decreases.append((_name, _reference_count, _cur_count))
 
     if _zero_regressions:
         print("=== REGRESSION GUARD: prevented single-run disappearance for "
