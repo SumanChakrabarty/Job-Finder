@@ -10781,6 +10781,116 @@ def scrape_hp_ireland_batch45(session=None):
 
 
 
+
+# === TARGETED_DIRECT_BATCH_62_AVIVA_LISTING_AUTHORITY_FIX ===
+# Batch61 proved discovery is solved: 13 official Dublin cards were found, but
+# all 13 were lost inside the optional detail-verification stage.  The official
+# current Dublin result page is itself the vacancy source, so Batch62 emits
+# those cards directly.  Detail-page availability is no longer a requirement.
+#
+# This deliberately leaves the successful Batch61 ICON route untouched.
+
+def scrape_aviva_ireland_batch62(session=None):
+    session = session or requests.Session()
+    found = {}
+
+    roots = [
+        ("https://aviva.talent-community.com/projects/in/dublin", "Dublin, Ireland"),
+        ("https://aviva.talent-community.com/projects/in/dublin-18", "Dublin 18, Ireland"),
+    ]
+
+    for root, default_loc in roots:
+        for page in (1, 2, 3):
+            url = root if page == 1 else f"{root}?page={page}"
+            try:
+                raw, final = _batch48_http_get(session, url, 12)
+            except Exception:
+                continue
+            if not raw:
+                continue
+
+            hay = html.unescape(raw)
+            matches = list(re.finditer(
+                r'<a\b[^>]*href=["\']([^"\']*/projects/(?!in/|categories/|pool/)[^"\']+/\d+[^"\']*)["\'][^>]*>(.*?)</a>',
+                hay, re.I | re.S
+            ))
+            if not matches:
+                matches = list(re.finditer(
+                    r'href=["\']([^"\']*/projects/(?!in/|categories/|pool/)[^"\']+/\d+[^"\']*)["\']',
+                    hay, re.I
+                ))
+
+            before = len(found)
+            for i, m in enumerate(matches):
+                full = urllib.parse.urljoin(final, html.unescape(m.group(1))).split("#")[0]
+                if not re.search(r"/projects/[^/?#]+/\d+(?:\?|$)", full, re.I):
+                    continue
+
+                end = matches[i + 1].start() if i + 1 < len(matches) else min(len(hay), m.end() + 2200)
+                ctx = re.sub(
+                    r"\s+", " ",
+                    _html_to_text(hay[max(0, m.start() - 300):end])
+                ).strip()
+
+                # The page is explicitly location-filtered, but reject a card
+                # that positively identifies Northern Ireland.
+                if re.search(r"\bBelfast\b|\bNorthern Ireland\b", ctx, re.I) and not re.search(
+                    r"\bDublin(?:\s+18)?\s*,?\s*IE\b", ctx, re.I
+                ):
+                    continue
+
+                title = ""
+                if m.lastindex and m.lastindex >= 2:
+                    title = re.sub(r"\s+", " ", _html_to_text(m.group(2))).strip()
+                    title = re.split(
+                        r"\bDublin(?:\s+18)?\s*,?\s*IE\b",
+                        title, 1, flags=re.I
+                    )[0].strip(" -|")
+
+                # Canonical Aviva project URLs contain the actual vacancy slug.
+                # Use it whenever anchor/card markup is not a clean job title.
+                if not title or _looks_like_non_job_title(title) or len(title) > 220:
+                    title = _batch61_title_from_project_url(full)
+
+                title = _batch44_clean_title(title)
+                if not title or _looks_like_non_job_title(title):
+                    continue
+
+                loc = (
+                    "Dublin 18, Ireland"
+                    if re.search(r"\bDublin\s+18\b", ctx, re.I)
+                    else default_loc
+                )
+
+                # Only current official listing evidence is used.  No detail
+                # request is allowed to turn a live Dublin card into a false zero.
+                sponsorship, snippet = classify_sponsorship(ctx[:20000])
+                emp = normalize_employment_type(ctx, title)
+
+                rec = {
+                    "company": "Aviva Ireland",
+                    "title": title[:300],
+                    "location": loc,
+                    "posted_text": "Unknown",
+                    "posted_days_ago": None,
+                    "employment_type": emp,
+                    "url": full,
+                    "source": "batch62_aviva_official_current_dublin_listing",
+                    "visa_sponsorship": sponsorship,
+                    "visa_snippet": snippet,
+                }
+                key = full.split("?")[0].rstrip("/").lower()
+                found[key] = rec
+
+            if page > 1 and len(found) == before:
+                break
+
+    print(
+        f"      [batch62-aviva] {len(found)} current Dublin vacancies emitted "
+        f"directly from Aviva's official location-filtered listing"
+    )
+    return list(found.values())
+
 # === TARGETED_DIRECT_BATCH_61_ICON_AND_AVIVA_HIGH_YIELD_RECOVERY ===
 # Batch60 still finished with 89 zero companies. Fresh first-party evidence
 # identifies two high-confidence false zeroes worth fixing properly:
@@ -17038,6 +17148,7 @@ def scrape_wtw_ireland_batch26(session):
     print("=== TARGETED_DIRECT_BATCH_38_PRE_FULL_RUN_BULK ACTIVE: proven Uisce Oracle recovery retained + Edwards Lifesciences and HP moved to current official Workday ROI detail verification; wider zero audit completed; Manual queue untouched ===")
 
 print("=== TARGETED_DIRECT_BATCH_46_AVIVA_HIGH_YIELD_FIX ACTIVE: Aviva is removed from final defer and uses eight current official Dublin detail seeds plus live detail verification; failed Aldi/HP mechanisms are not expanded; proven positive routes preserved ===")
+print("=== TARGETED_DIRECT_BATCH_62_AVIVA_LISTING_AUTHORITY_FIX ACTIVE: Batch61 ICON 70-job win preserved exactly; Aviva current official Dublin cards emitted directly with no detail-verification loss ===")
 print("=== TARGETED_DIRECT_BATCH_61_ICON_AND_AVIVA_HIGH_YIELD_RECOVERY ACTIVE: ICON official Ireland-filtered 60+ board + Aviva 14-role Dublin listing-card recovery; failed Batch60 Red Hat route deferred ===")
 print("=== TARGETED_DIRECT_BATCH_60_PROVEN_LIVE_FALSE_ZERO_RECOVERY ACTIVE: Aviva current listing-card roles + Red Hat current Remote Ireland Workday detail; no speculative zero sweep ===")
 print("=== TARGETED_DIRECT_BATCH_59_HIGH_YIELD_AVIVA_HUBSPOT_AND_PARTIAL_GUARD ACTIVE: Aviva fast current board + HubSpot official Greenhouse + one-cycle >=50% partial regression protection; Batch58 zero mechanisms deferred ===")
@@ -17481,7 +17592,7 @@ def main():
         ("exact", "davy", scrape_davy_ireland_batch48, 35, "Batch48 Davy official current-opportunities index"),
         ("exact", "barclays", scrape_barclays_ireland_batch48, 35, "Batch48 Barclays official Ireland-filtered jobs search"),
         ("exact", "icon plc", scrape_icon_ireland_batch61, 55, "Batch61 ICON official Ireland-filtered board pagination"),
-        ("exact", "aviva ireland", scrape_aviva_ireland_batch61, 45, "Batch61 Aviva official Dublin listing cards + closure-only detail veto"),
+        ("exact", "aviva ireland", scrape_aviva_ireland_batch62, 35, "Batch62 Aviva official Dublin listing is authoritative; no detail-stage false-zero"),
         ("exact", "hubspot", scrape_hubspot_ireland_batch59, 35, "Batch59 official HubSpot Greenhouse hubspotjobs board"),
         ("exact", "fitch ratings", scrape_fitch_ireland_current, 75, "Fitch current official careers site"),
         ("prefix", "apple", scrape_apple_ireland, 180, "direct HTML scrape"),
@@ -17920,7 +18031,10 @@ def main():
             # Batch53: mechanism upgrades for previously-positive companies must
             # be regression-safe.  This final override intentionally occurs
             # after all older cache-key branches so it cannot be overwritten.
-            if _key in {"aviva ireland", "icon plc"}:
+            if _key == "aviva ireland":
+                cache_key = f"{name}::targeted_direct_batch62_aviva_listing_v1"
+                _carry_recent_positive_cache(browser_cache, name, cache_key)
+            elif _key == "icon plc":
                 cache_key = f"{name}::targeted_direct_batch61_high_yield_v1"
                 _carry_recent_positive_cache(browser_cache, name, cache_key)
             elif _key == "red hat":
