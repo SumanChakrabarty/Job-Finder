@@ -44875,87 +44875,87 @@
   },
   "Kepak Group::targeted_direct_batch7_multi_v1": {
     "jobs": [],
-    "checked_at": 1788869080.4612126,
+    "checked_at": 1788870789.948368,
     "consecutive_failures": 1
   },
   "AerCap::targeted_direct_batch51_v1": {
     "jobs": [],
-    "checked_at": 1788869080.6720977,
+    "checked_at": 1788870790.1092672,
     "consecutive_failures": 1
   },
   "ICON plc::targeted_direct_batch50_v1": {
     "jobs": [],
-    "checked_at": 1788869081.283811,
+    "checked_at": 1788870790.400758,
     "consecutive_failures": 1
   },
-  "HP (Hewlett-Packard)::friend_next4_v1": {
+  "Red Hat::targeted_direct_batch60_proven_live_v1": {
     "jobs": [],
-    "checked_at": 1788869081.6138287,
+    "checked_at": 1788870790.8644214,
     "consecutive_failures": 1
   },
   "Infosys::targeted_direct_batch47_v1": {
     "jobs": [],
-    "checked_at": 1788869081.642869,
+    "checked_at": 1788870791.019128,
+    "consecutive_failures": 1
+  },
+  "HP (Hewlett-Packard)::friend_next4_v1": {
+    "jobs": [],
+    "checked_at": 1788870791.354247,
     "consecutive_failures": 1
   },
   "VMware (Broadcom)::zero_only_batch20_v1": {
     "jobs": [],
-    "checked_at": 1788869082.6632595,
+    "checked_at": 1788870792.1718004,
     "consecutive_failures": 1
   },
   "DHL Ireland::targeted_direct_batch54_multi_v1": {
     "jobs": [],
-    "checked_at": 1788869083.0208201,
+    "checked_at": 1788870792.3094301,
     "consecutive_failures": 1
   },
   "Aldi Ireland::targeted_direct_batch50_v1": {
     "jobs": [],
-    "checked_at": 1788869083.0613089,
-    "consecutive_failures": 1
-  },
-  "QIAGEN::zero_only_batch20_v1": {
-    "jobs": [],
-    "checked_at": 1788869086.0350513,
+    "checked_at": 1788870792.8148031,
     "consecutive_failures": 1
   },
   "HCLTech::targeted_direct_batch50_v1": {
     "jobs": [],
-    "checked_at": 1788869086.1394763,
+    "checked_at": 1788870795.1293795,
     "consecutive_failures": 1
   },
   "An Post": {
     "jobs": [],
-    "checked_at": 1788869086.361478,
+    "checked_at": 1788870795.6139166,
+    "consecutive_failures": 1
+  },
+  "QIAGEN::zero_only_batch20_v1": {
+    "jobs": [],
+    "checked_at": 1788870795.709752,
     "consecutive_failures": 1
   },
   "SMBC Aviation Capital::friend_nonlive_batch10_v1": {
     "jobs": [],
-    "checked_at": 1788869087.5131698,
+    "checked_at": 1788870796.5957112,
     "consecutive_failures": 1
   },
-  "Red Hat": {
+  "Aviva Ireland::targeted_direct_batch60_proven_live_v1": {
     "jobs": [],
-    "checked_at": 1788869088.0807292,
+    "checked_at": 1788870804.7244003,
     "consecutive_failures": 1
   },
   "Boston Consulting Group (BCG)": {
     "jobs": [],
-    "checked_at": 1788869090.415755,
-    "consecutive_failures": 1
-  },
-  "Aviva Ireland::targeted_direct_batch59_high_yield_v1": {
-    "jobs": [],
-    "checked_at": 1788869100.1617475,
+    "checked_at": 1788870807.1325908,
     "consecutive_failures": 1
   },
   "EXL": {
     "jobs": [],
-    "checked_at": 1788869105.7461557,
+    "checked_at": 1788870813.246617,
     "consecutive_failures": 1
   },
   "Deutsche Bank::friend_logic_v1": {
     "jobs": [],
-    "checked_at": 1788869106.0771132,
+    "checked_at": 1788870815.5558515,
     "consecutive_failures": 1
   }
 }
