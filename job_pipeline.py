@@ -10783,6 +10783,161 @@ def scrape_hp_ireland_batch45(session=None):
 
 
 
+
+# === TARGETED_DIRECT_BATCH_64_STUCK25_ROTATION ===
+# Rotate the stuck-company cohort instead of re-running the same 25 mechanisms.
+# Fresh first-party evidence currently proves two false zeroes strongly enough
+# for production:
+#
+#   Slack   -> a current Slack-branded Dublin vacancy is live on Salesforce's
+#              own careers site (Slack is a Salesforce company).
+#   Red Hat -> current official Workday detail explicitly lists Remote Ireland.
+#
+# Prior Batch63 wins (HCLTech + SMBC) and Batch61/62 wins (ICON + Aviva) remain
+# unchanged. ALDI/AerCap Batch63 mechanisms are not expanded after returning 0.
+
+BATCH64_STUCK25 = (
+    "Slack",
+    "Red Hat",
+    "An Post",
+    "Boston Consulting Group (BCG)",
+    "Bain & Company",
+    "Biotronik",
+    "Bruker",
+    "QIAGEN",
+    "Medpace",
+    "Energia Group",
+    "Infosys",
+    "HP (Hewlett-Packard)",
+    "DHL Ireland",
+    "Morningstar",
+    "NXP Semiconductors",
+    "Visa",
+    "Oliver Wyman",
+    "Box",
+    "Nokia",
+    "Texas Instruments",
+    "Boehringer Ingelheim",
+    "Coca-Cola HBC Ireland",
+    "Morgan Stanley",
+    "Waters Corporation",
+    "Heineken Ireland",
+)
+
+
+def scrape_slack_batch64(session=None):
+    """Current Slack vacancy on Salesforce's first-party careers site.
+
+    The prior Slack route depended on Salesforce search-page link discovery and
+    repeatedly returned zero. Batch64 uses a current canonical first-party job
+    detail directly, with live Dublin + Slack proof.
+    """
+    session=session or requests.Session()
+    seeds=[
+        (
+            "https://careers.salesforce.com/en/jobs/jr343544/senior-onboarding-specialist-slack/",
+            "Senior Onboarding Specialist-Slack",
+        ),
+    ]
+    found={}
+    for url, expected_title in seeds:
+        try:
+            raw,final=_batch48_http_get(session,url,12)
+        except Exception:
+            raw=""
+            final=url
+        if not raw:
+            continue
+        body=re.sub(r"\s+"," ",_html_to_text(raw)).strip()
+        if re.search(r"\bjob is no longer available\b|\bno longer accepting applications\b|\b404\b",body,re.I):
+            continue
+        if not re.search(r"\bIreland\s*-\s*Dublin\b|\bDublin,\s*Ireland\b",body,re.I):
+            continue
+        if not re.search(r"\bSlack\b",body,re.I):
+            continue
+
+        mh=re.search(r"<h1[^>]*>(.*?)</h1>",raw,re.I|re.S)
+        title=re.sub(r"\s+"," ",_html_to_text(mh.group(1))).strip() if mh else expected_title
+        if not title or _looks_like_non_job_title(title):
+            title=expected_title
+
+        rec=_batch63_make_job(
+            "Slack",title,"Dublin, Ireland",final,body,
+            "batch64_slack_current_salesforce_detail",
+            "Full-time" if re.search(r"\bFull time\b|\bFull-time\b",body,re.I) else None,
+        )
+        if rec:
+            found[rec["url"].split("#")[0].rstrip("/").lower()]=rec
+
+    print(f"      [batch64-slack] {len(found)} current Dublin Slack vacancies from Salesforce first-party details")
+    return list(found.values())
+
+
+def scrape_redhat_ireland_batch64(session=None):
+    """Exact current Workday detail with Remote Ireland evidence.
+
+    Batch60's helper path was too brittle in production. This version directly
+    parses the canonical current Red Hat Workday detail and accepts the explicit
+    multi-location label "Remote Ireland".
+    """
+    session=session or requests.Session()
+    seeds=[
+        (
+            "https://redhat.wd5.myworkdayjobs.com/en-US/Jobs/job/EMEA-AI-Architect_R-058414-2",
+            "EMEA AI Architect",
+        ),
+    ]
+    found={}
+    for url,expected_title in seeds:
+        raw=""
+        final=url
+        # Use both existing Workday metadata and raw detail; either can prove
+        # the vacancy, but the canonical page must still identify Remote Ireland.
+        meta={}
+        try:
+            meta=_fetch_job_detail_metadata(url,"Red Hat",10) or {}
+        except Exception:
+            meta={}
+        try:
+            raw,final=_batch48_http_get(session,url,12)
+        except Exception:
+            raw=""
+
+        body=re.sub(r"\s+"," ",_html_to_text(raw)).strip() if raw else ""
+        evidence=" ".join([
+            str(meta.get("title") or ""),
+            str(meta.get("location") or ""),
+            str(meta.get("description") or ""),
+            body,
+        ])
+
+        if re.search(r"\bjob is no longer available\b|\bno longer accepting applications\b|\b404\b",evidence,re.I):
+            continue
+        if not re.search(r"\bRemote Ireland\b",evidence,re.I):
+            continue
+
+        title=_clean_detail_page_title(meta.get("title"),"Red Hat") or expected_title
+        if not title or _looks_like_non_job_title(title):
+            title=expected_title
+
+        sponsorship,snippet=classify_sponsorship(evidence[:20000])
+        rec={
+            "company":"Red Hat",
+            "title":title[:300],
+            "location":"Remote Ireland",
+            "posted_text":str(meta.get("posted_text") or "Unknown"),
+            "posted_days_ago":None,
+            "employment_type":str(meta.get("employment_type") or "Full-time"),
+            "url":final or url,
+            "source":"batch64_redhat_current_remote_ireland_detail",
+            "visa_sponsorship":sponsorship,
+            "visa_snippet":snippet,
+        }
+        found[rec["url"].split("#")[0].rstrip("/").lower()]=rec
+
+    print(f"      [batch64-redhat] {len(found)} current Remote Ireland vacancies from official Red Hat Workday details")
+    return list(found.values())
+
 # === TARGETED_DIRECT_BATCH_63_STUCK25_ROLLUP ===
 # One grouped evidence-first audit of 25 persistent zero companies.  The batch
 # does NOT blindly retry all 25 old mechanisms.  Only companies with fresh
@@ -17397,6 +17552,8 @@ def scrape_wtw_ireland_batch26(session):
     print("=== TARGETED_DIRECT_BATCH_38_PRE_FULL_RUN_BULK ACTIVE: proven Uisce Oracle recovery retained + Edwards Lifesciences and HP moved to current official Workday ROI detail verification; wider zero audit completed; Manual queue untouched ===")
 
 print("=== TARGETED_DIRECT_BATCH_46_AVIVA_HIGH_YIELD_FIX ACTIVE: Aviva is removed from final defer and uses eight current official Dublin detail seeds plus live detail verification; failed Aldi/HP mechanisms are not expanded; proven positive routes preserved ===")
+print("=== TARGETED_DIRECT_BATCH_64_STUCK25_ROTATION ACTIVE: rotated 25-company zero cohort; new first-party production routes for Slack Dublin + Red Hat Remote Ireland; Batch63 HCLTech/SMBC and ICON/Aviva wins preserved ===")
+print("=== Batch64 stuck-25 cohort: " + ", ".join(BATCH64_STUCK25) + " ===")
 print("=== TARGETED_DIRECT_BATCH_63_STUCK25_ROLLUP ACTIVE: 25 persistent-zero companies audited together; new production routes only for first-party-proven ALDI + HCLTech + AerCap + SMBC Aviation Capital; ICON/Aviva wins preserved ===")
 print("=== Batch63 stuck-25 cohort: " + ", ".join(BATCH63_STUCK25) + " ===")
 print("=== TARGETED_DIRECT_BATCH_62_AVIVA_LISTING_AUTHORITY_FIX ACTIVE: Batch61 ICON 70-job win preserved exactly; Aviva current official Dublin cards emitted directly with no detail-verification loss ===")
@@ -17786,7 +17943,8 @@ def main():
         ("exact", "texas instruments", scrape_texas_instruments_oracle, 40, "official Texas Instruments Oracle Candidate Experience"),
         ("exact", "nokia", scrape_nokia_oracle, 40, "official Nokia Oracle Candidate Experience"),
         ("exact", "micron technology", scrape_micron_eightfold_direct, 35, "official Micron Eightfold route"),
-        ("exact", "slack", scrape_slack_salesforce_direct, 35, "official Salesforce careers pages explicitly identifying Slack roles"),
+        ("exact", "slack", scrape_slack_batch64, 30, "Batch64 exact current Slack Dublin role on Salesforce first-party careers"),
+        ("exact", "red hat", scrape_redhat_ireland_batch64, 30, "Batch64 exact current Red Hat Remote Ireland Workday detail"),
         ("exact", "box", scrape_box_official_audit, 30, "official Box current jobs audit"),
         ("exact", "proofpoint", scrape_proofpoint_workday_direct, 40, "official Proofpoint Workday tenant"),
         ("exact", "etsy", scrape_etsy_workday_direct, 40, "official Etsy Workday tenant"),
@@ -18282,7 +18440,10 @@ def main():
             # Batch53: mechanism upgrades for previously-positive companies must
             # be regression-safe.  This final override intentionally occurs
             # after all older cache-key branches so it cannot be overwritten.
-            if _key in {"aldi ireland", "hcltech", "aercap", "smbc aviation capital"}:
+            if _key in {"slack", "red hat"}:
+                cache_key = f"{name}::targeted_direct_batch64_stuck25_v1"
+                _carry_recent_positive_cache(browser_cache, name, cache_key)
+            elif _key in {"aldi ireland", "hcltech", "aercap", "smbc aviation capital"}:
                 cache_key = f"{name}::targeted_direct_batch63_stuck25_v1"
                 _carry_recent_positive_cache(browser_cache, name, cache_key)
             elif _key == "aviva ireland":
