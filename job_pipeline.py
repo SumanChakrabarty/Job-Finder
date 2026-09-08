@@ -10780,6 +10780,281 @@ def scrape_hp_ireland_batch45(session=None):
 
 
 
+
+# === TARGETED_DIRECT_BATCH_61_ICON_AND_AVIVA_HIGH_YIELD_RECOVERY ===
+# Batch60 still finished with 89 zero companies. Fresh first-party evidence
+# identifies two high-confidence false zeroes worth fixing properly:
+#
+# ICON plc
+#   careers.iconplc.com/jobs?options=1434 is ICON's own Ireland-filtered board.
+#   It currently reports ~62 live Ireland results. The old Batch50 code crawled
+#   the unfiltered landing page and then over-relied on detail-page verification.
+#   Batch61 consumes the filtered current listing directly, page by page.
+#
+# Aviva Ireland
+#   /projects/in/dublin currently reports 14 live Dublin opportunities. Batch60
+#   discovered all 14 cards but title extraction rejected every one. Batch61
+#   treats each official current listing card + canonical /projects/.../<id> URL
+#   as sufficient vacancy evidence, using the detail page only as a closure veto.
+
+def _batch61_city_from_text(s):
+    s=str(s or "")
+    for city in ("Dublin","Limerick","Cork","Galway","Waterford","Wexford","Kilkenny","Kildare","Athlone","Sligo"):
+        if re.search(rf"\b{re.escape(city)}\b",s,re.I):
+            return f"{city}, Ireland"
+    if re.search(r"\bIreland\b|\bIE\b",s,re.I):
+        return "Republic of Ireland"
+    return ""
+
+
+def scrape_icon_ireland_batch61(session=None):
+    session=session or requests.Session()
+    found={}
+    base="https://careers.iconplc.com/jobs"
+
+    # options=1434 is ICON's own Ireland location filter ("View Jobs in Ireland").
+    # Enumerate enough pages for the current 60+ results, while staying bounded.
+    for page in range(1,9):
+        url=f"{base}?options=1434&page={page}"
+        try:
+            raw,final=_batch48_http_get(session,url,16)
+        except Exception:
+            continue
+        if not raw:
+            continue
+
+        hay=html.unescape(raw)
+        # Every real vacancy URL currently ends in -jid-<numeric id>.
+        rx=re.compile(
+            r'<a\b[^>]*href=["\']([^"\']*/job/[^"\']*-jid-\d+[^"\']*)["\'][^>]*>(.*?)</a>',
+            re.I|re.S
+        )
+        matches=list(rx.finditer(hay))
+        if not matches and page>1:
+            break
+
+        page_added=0
+        for i,m in enumerate(matches):
+            full=urllib.parse.urljoin(final,m.group(1)).split("#")[0]
+            if "careers.iconplc.com" not in full.lower():
+                continue
+
+            # Local card context only, bounded by next vacancy anchor.
+            start=max(0,m.start()-250)
+            end=(matches[i+1].start() if i+1<len(matches) else min(len(hay),m.end()+4200))
+            ctx_raw=hay[start:end]
+            ctx=re.sub(r"\s+"," ",_html_to_text(ctx_raw)).strip()
+
+            # The Ireland filter can include a global/multi-country role only if
+            # the vacancy itself has an ROI location. Require the card to prove it.
+            if re.search(r"\bBelfast\b|\bNorthern Ireland\b",ctx,re.I) and not re.search(
+                r"\b(?:Dublin|Limerick|Cork|Galway|Waterford|Wexford|Kilkenny|Kildare)\b",ctx,re.I
+            ):
+                continue
+            if not re.search(
+                r"\bIreland\s*,\s*(?:Dublin|Limerick|Cork|Galway|Waterford|Wexford|Kilkenny|Kildare)\b|"
+                r"\b(?:Dublin|Limerick|Cork|Galway|Waterford|Wexford|Kilkenny|Kildare)\b",
+                ctx,re.I
+            ):
+                continue
+
+            title=re.sub(r"\s+"," ",_html_to_text(m.group(2))).strip()
+            if not title or re.fullmatch(r"(?:read more|view job|apply|shortlist.*)",title,re.I):
+                # URL slug is first-party canonical vacancy metadata and is more
+                # reliable than nearby "Read more" anchor text.
+                slug=urllib.parse.unquote(urllib.parse.urlparse(full).path.rsplit("/",1)[-1])
+                slug=re.sub(r"-jid-\d+.*$","",slug,flags=re.I)
+                title=re.sub(r"[-_]+"," ",slug).strip()
+                # Keep common role acronyms readable.
+                title=title.title()
+                for a,b in {
+                    " Ai ":" AI "," It ":" IT "," Hris ":" HRIS "," Cra ":" CRA ",
+                    " Iii ":" III "," Ii ":" II "," Iv ":" IV "," Vp ":" VP ",
+                    " Qa ":" QA "," Qc ":" QC "," Emea ":" EMEA "," Gbs ":" GBS "
+                }.items():
+                    title=(" "+title+" ").replace(a,b).strip()
+
+            title=_batch44_clean_title(title)
+            if not title or _looks_like_non_job_title(title):
+                continue
+
+            loc=_batch61_city_from_text(ctx)
+            if not loc or not is_republic_of_ireland_location(loc):
+                continue
+
+            empm=re.search(r"\bJob Type\s+(.{1,80}?)(?=\bDescription\b|\bReference\b|$)",ctx,re.I)
+            emp=normalize_employment_type(empm.group(1) if empm else ctx,title)
+            sponsorship,snippet=classify_sponsorship(ctx[:20000])
+
+            rec={
+                "company":"ICON plc",
+                "title":title[:300],
+                "location":loc,
+                "posted_text":"Unknown",
+                "posted_days_ago":None,
+                "employment_type":emp,
+                "url":full,
+                "source":"batch61_icon_official_ireland_filtered_listing",
+                "visa_sponsorship":sponsorship,
+                "visa_snippet":snippet,
+            }
+            key=full.split("?")[0].rstrip("/").lower()
+            if key not in found:
+                found[key]=rec
+                page_added+=1
+
+        if page_added==0 and page>1:
+            # Filtered board currently paginates sequentially. Once a non-first
+            # page adds nothing, stop instead of burning requests.
+            break
+
+    print(f"      [batch61-icon] {len(found)} current ROI vacancies from ICON's official Ireland-filtered board")
+    return list(found.values())
+
+
+def _batch61_title_from_project_url(url):
+    try:
+        slug=urllib.parse.unquote(urllib.parse.urlparse(url).path.rstrip("/").split("/")[-2])
+    except Exception:
+        return ""
+    title=re.sub(r"[-_]+"," ",slug).strip()
+    title=title.title()
+    # Restore common role acronyms/casing conservatively.
+    repl={
+        " Ai ":" AI "," It ":" IT "," Hr ":" HR "," Coo ":" COO "," Cto ":" CTO ",
+        " Pmo ":" PMO "," Qa ":" QA "," Ux ":" UX "," Ui ":" UI "," Dlg ":" DLG ",
+        " And ":" and "," Of ":" of "," To ":" to "," In ":" in "
+    }
+    out=" "+title+" "
+    for a,b in repl.items():
+        out=out.replace(a,b)
+    return re.sub(r"\s+"," ",out).strip()
+
+
+def scrape_aviva_ireland_batch61(session=None):
+    session=session or requests.Session()
+    candidates={}
+
+    # These two current first-party location pages cover the live Dublin set.
+    for root,default_loc in [
+        ("https://aviva.talent-community.com/projects/in/dublin","Dublin, Ireland"),
+        ("https://aviva.talent-community.com/projects/in/dublin-18","Dublin 18, Ireland"),
+    ]:
+        for page in (1,2,3):
+            url=root if page==1 else f"{root}?page={page}"
+            try:
+                raw,final=_batch48_http_get(session,url,12)
+            except Exception:
+                continue
+            if not raw:
+                continue
+
+            hay=html.unescape(raw)
+            rx=re.compile(
+                r'<a\b[^>]*href=["\']([^"\']*/projects/(?!in/|categories/|pool/)[^"\']+/\d+[^"\']*)["\'][^>]*>(.*?)</a>',
+                re.I|re.S
+            )
+            matches=list(rx.finditer(hay))
+            if not matches:
+                # Site variants sometimes omit usable anchor text.
+                matches=list(re.finditer(
+                    r'href=["\']([^"\']*/projects/(?!in/|categories/|pool/)[^"\']+/\d+[^"\']*)["\']',
+                    hay,re.I
+                ))
+
+            before=len(candidates)
+            for i,m in enumerate(matches):
+                full=urllib.parse.urljoin(final,m.group(1)).split("#")[0]
+                if not re.search(r"/projects/[^/?#]+/\d+(?:\?|$)",full,re.I):
+                    continue
+
+                end=(matches[i+1].start() if i+1<len(matches) else min(len(hay),m.end()+1800))
+                ctx=re.sub(r"\s+"," ",_html_to_text(hay[max(0,m.start()-250):end])).strip()
+
+                # The location-filtered page itself proves ROI, but keep card-level
+                # NI protection in case navigation text leaks into the window.
+                if re.search(r"\bBelfast\b|\bNorthern Ireland\b",ctx,re.I) and not re.search(
+                    r"\bDublin(?:\s+18)?\s*,?\s*IE\b",ctx,re.I
+                ):
+                    continue
+
+                title=""
+                if m.lastindex and m.lastindex>=2:
+                    title=re.sub(r"\s+"," ",_html_to_text(m.group(2))).strip()
+                    # Full-card anchors often append location/type after title.
+                    title=re.split(r"\bDublin(?:\s+18)?\s*,?\s*IE\b",title,1,flags=re.I)[0].strip(" -|")
+                if not title or _looks_like_non_job_title(title) or len(title)>220:
+                    title=_batch61_title_from_project_url(full)
+                if not title or _looks_like_non_job_title(title):
+                    continue
+
+                loc="Dublin 18, Ireland" if re.search(r"\bDublin\s+18\b",ctx,re.I) else default_loc
+                candidates[full.split("?")[0].rstrip("/").lower()]={
+                    "url":full,"title":title,"location":loc,"ctx":ctx
+                }
+
+            if page>1 and len(candidates)==before:
+                break
+
+    def verify(c):
+        # Current listing card + canonical project URL are enough to count.
+        # Detail is only an explicit closure veto and optional enrichment.
+        raw=""
+        final=c["url"]
+        try:
+            raw,final=_batch48_http_get(requests.Session(),c["url"],9)
+        except Exception:
+            raw=""
+        body=re.sub(r"\s+"," ",_html_to_text(raw)).strip() if raw else ""
+
+        if body and re.search(
+            r"\bOpportunity is closed\b|\bOpportunity has closed\b|\bno longer available\b|\bnot accepting applications\b",
+            body,re.I
+        ):
+            return None
+
+        title=c["title"]
+        loc=c["location"]
+        evidence=(body+" "+c["ctx"])[:20000]
+        if body:
+            mh=re.search(r"<h1[^>]*>(.*?)</h1>",raw,re.I|re.S)
+            dt=_batch44_clean_title(mh.group(1)) if mh else ""
+            if dt and not _looks_like_non_job_title(dt) and not re.search(r"\bOpportunity is closed\b",dt,re.I):
+                title=dt
+            if re.search(r"\bLocation\s+Dublin\s+18\b",body,re.I):
+                loc="Dublin 18, Ireland"
+            elif re.search(r"\bLocation\s+Dublin\b",body,re.I):
+                loc="Dublin, Ireland"
+
+        sponsorship,snippet=classify_sponsorship(evidence)
+        return {
+            "company":"Aviva Ireland",
+            "title":title[:300],
+            "location":loc,
+            "posted_text":"Unknown",
+            "posted_days_ago":None,
+            "employment_type":normalize_employment_type(evidence,title),
+            "url":final or c["url"],
+            "source":"batch61_aviva_current_official_listing_card",
+            "visa_sponsorship":sponsorship,
+            "visa_snippet":snippet,
+        }
+
+    found={}
+    with ThreadPoolExecutor(max_workers=min(12,max(1,len(candidates)))) as ex:
+        futs=[ex.submit(verify,c) for c in candidates.values()]
+        for fut in as_completed(futs):
+            try:
+                rec=fut.result()
+            except Exception:
+                rec=None
+            if rec:
+                found[rec["url"].split("?")[0].rstrip("/").lower()]=rec
+
+    print(f"      [batch61-aviva] {len(found)} current Dublin vacancies from {len(candidates)} official listing cards")
+    return list(found.values())
+
+
 # === TARGETED_DIRECT_BATCH_60_PROVEN_LIVE_FALSE_ZERO_RECOVERY ===
 # Batch59 did not move the key metric: the latest run finished with 3174 live
 # jobs but 89 zero companies. This batch only integrates companies with fresh,
@@ -16763,6 +17038,7 @@ def scrape_wtw_ireland_batch26(session):
     print("=== TARGETED_DIRECT_BATCH_38_PRE_FULL_RUN_BULK ACTIVE: proven Uisce Oracle recovery retained + Edwards Lifesciences and HP moved to current official Workday ROI detail verification; wider zero audit completed; Manual queue untouched ===")
 
 print("=== TARGETED_DIRECT_BATCH_46_AVIVA_HIGH_YIELD_FIX ACTIVE: Aviva is removed from final defer and uses eight current official Dublin detail seeds plus live detail verification; failed Aldi/HP mechanisms are not expanded; proven positive routes preserved ===")
+print("=== TARGETED_DIRECT_BATCH_61_ICON_AND_AVIVA_HIGH_YIELD_RECOVERY ACTIVE: ICON official Ireland-filtered 60+ board + Aviva 14-role Dublin listing-card recovery; failed Batch60 Red Hat route deferred ===")
 print("=== TARGETED_DIRECT_BATCH_60_PROVEN_LIVE_FALSE_ZERO_RECOVERY ACTIVE: Aviva current listing-card roles + Red Hat current Remote Ireland Workday detail; no speculative zero sweep ===")
 print("=== TARGETED_DIRECT_BATCH_59_HIGH_YIELD_AVIVA_HUBSPOT_AND_PARTIAL_GUARD ACTIVE: Aviva fast current board + HubSpot official Greenhouse + one-cycle >=50% partial regression protection; Batch58 zero mechanisms deferred ===")
 print("=== TARGETED_DIRECT_BATCH_58_MULTI_COMPANY_CURRENT_FALSE_ZERO_RECOVERY ACTIVE: McKinsey + An Post + PayPal; additive first-party current mechanisms, fresh cache namespace, prior routes preserved ===")
@@ -17204,9 +17480,8 @@ def main():
         ("exact", "bdo ireland", scrape_bdo_ireland_pinpoint, 30, "BDO Ireland official Pinpoint API"),
         ("exact", "davy", scrape_davy_ireland_batch48, 35, "Batch48 Davy official current-opportunities index"),
         ("exact", "barclays", scrape_barclays_ireland_batch48, 35, "Batch48 Barclays official Ireland-filtered jobs search"),
-        ("exact", "icon plc", scrape_icon_ireland_batch50, 55, "Batch50 ICON first-party Ireland page + detail verification"),
-        ("exact", "aviva ireland", scrape_aviva_ireland_batch60, 45, "Batch60 current Aviva Dublin listing-card verification + closure-veto details"),
-        ("exact", "red hat", scrape_redhat_ireland_batch60, 30, "Batch60 current Red Hat Remote Ireland Workday detail"),
+        ("exact", "icon plc", scrape_icon_ireland_batch61, 55, "Batch61 ICON official Ireland-filtered board pagination"),
+        ("exact", "aviva ireland", scrape_aviva_ireland_batch61, 45, "Batch61 Aviva official Dublin listing cards + closure-only detail veto"),
         ("exact", "hubspot", scrape_hubspot_ireland_batch59, 35, "Batch59 official HubSpot Greenhouse hubspotjobs board"),
         ("exact", "fitch ratings", scrape_fitch_ireland_current, 75, "Fitch current official careers site"),
         ("prefix", "apple", scrape_apple_ireland, 180, "direct HTML scrape"),
@@ -17645,7 +17920,10 @@ def main():
             # Batch53: mechanism upgrades for previously-positive companies must
             # be regression-safe.  This final override intentionally occurs
             # after all older cache-key branches so it cannot be overwritten.
-            if _key in {"aviva ireland", "red hat"}:
+            if _key in {"aviva ireland", "icon plc"}:
+                cache_key = f"{name}::targeted_direct_batch61_high_yield_v1"
+                _carry_recent_positive_cache(browser_cache, name, cache_key)
+            elif _key == "red hat":
                 cache_key = f"{name}::targeted_direct_batch60_proven_live_v1"
                 _carry_recent_positive_cache(browser_cache, name, cache_key)
             elif _key == "hubspot":
