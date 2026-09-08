@@ -39559,8 +39559,8 @@
   },
   "NXP Semiconductors::zero_only_batch20_v1": {
     "jobs": [],
-    "checked_at": 1788867459.7845051,
-    "consecutive_failures": 61
+    "checked_at": 1788873854.271765,
+    "consecutive_failures": 62
   },
   "Haleon::zero_only_batch20_v1": {
     "jobs": [
@@ -44873,41 +44873,6 @@
     "checked_at": 1788867534.1360965,
     "consecutive_failures": 1
   },
-  "Kepak Group::targeted_direct_batch7_multi_v1": {
-    "jobs": [],
-    "checked_at": 1788871889.7631767,
-    "consecutive_failures": 1
-  },
-  "AerCap::targeted_direct_batch51_v1": {
-    "jobs": [],
-    "checked_at": 1788871890.0638146,
-    "consecutive_failures": 1
-  },
-  "Infosys::targeted_direct_batch47_v1": {
-    "jobs": [],
-    "checked_at": 1788871891.4455357,
-    "consecutive_failures": 1
-  },
-  "HP (Hewlett-Packard)::friend_next4_v1": {
-    "jobs": [],
-    "checked_at": 1788871892.1126885,
-    "consecutive_failures": 1
-  },
-  "VMware (Broadcom)::zero_only_batch20_v1": {
-    "jobs": [],
-    "checked_at": 1788871893.9065344,
-    "consecutive_failures": 1
-  },
-  "DHL Ireland::targeted_direct_batch54_multi_v1": {
-    "jobs": [],
-    "checked_at": 1788871894.6362677,
-    "consecutive_failures": 1
-  },
-  "Aldi Ireland::targeted_direct_batch50_v1": {
-    "jobs": [],
-    "checked_at": 1788871895.306442,
-    "consecutive_failures": 1
-  },
   "ICON plc::targeted_direct_batch61_high_yield_v1": {
     "jobs": [
       {
@@ -44921,7 +44886,7 @@
         "source": "batch61_icon_official_ireland_filtered_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T12:52:01.263350+00:00",
         "posted_age_known": false
       },
@@ -44936,7 +44901,7 @@
         "source": "batch61_icon_official_ireland_filtered_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T12:52:01.263350+00:00",
         "posted_age_known": false
       },
@@ -44951,7 +44916,7 @@
         "source": "batch61_icon_official_ireland_filtered_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T12:52:01.263350+00:00",
         "posted_age_known": false
       },
@@ -44966,7 +44931,7 @@
         "source": "batch61_icon_official_ireland_filtered_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T12:52:01.263350+00:00",
         "posted_age_known": false
       },
@@ -44981,7 +44946,7 @@
         "source": "batch61_icon_official_ireland_filtered_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T12:52:01.263350+00:00",
         "posted_age_known": false
       },
@@ -44996,7 +44961,7 @@
         "source": "batch61_icon_official_ireland_filtered_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T12:52:01.263350+00:00",
         "posted_age_known": false
       },
@@ -45011,7 +44976,7 @@
         "source": "batch61_icon_official_ireland_filtered_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T12:52:01.263350+00:00",
         "posted_age_known": false
       },
@@ -45026,7 +44991,7 @@
         "source": "batch61_icon_official_ireland_filtered_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T12:52:01.263350+00:00",
         "posted_age_known": false
       },
@@ -45041,7 +45006,7 @@
         "source": "batch61_icon_official_ireland_filtered_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T12:52:01.263350+00:00",
         "posted_age_known": false
       },
@@ -45056,7 +45021,7 @@
         "source": "batch61_icon_official_ireland_filtered_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T12:52:01.263350+00:00",
         "posted_age_known": false
       },
@@ -45071,7 +45036,7 @@
         "source": "batch61_icon_official_ireland_filtered_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T12:52:01.263350+00:00",
         "posted_age_known": false
       },
@@ -45086,7 +45051,7 @@
         "source": "batch61_icon_official_ireland_filtered_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T12:52:01.263350+00:00",
         "posted_age_known": false
       },
@@ -45101,7 +45066,7 @@
         "source": "batch61_icon_official_ireland_filtered_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T12:52:01.263350+00:00",
         "posted_age_known": false
       },
@@ -45116,7 +45081,7 @@
         "source": "batch61_icon_official_ireland_filtered_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T12:52:01.263350+00:00",
         "posted_age_known": false
       },
@@ -45131,7 +45096,7 @@
         "source": "batch61_icon_official_ireland_filtered_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T12:52:01.263350+00:00",
         "posted_age_known": false
       },
@@ -45146,7 +45111,7 @@
         "source": "batch61_icon_official_ireland_filtered_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T12:52:01.263350+00:00",
         "posted_age_known": false
       },
@@ -45161,7 +45126,7 @@
         "source": "batch61_icon_official_ireland_filtered_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T12:52:01.263350+00:00",
         "posted_age_known": false
       },
@@ -45176,7 +45141,7 @@
         "source": "batch61_icon_official_ireland_filtered_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T12:52:01.263350+00:00",
         "posted_age_known": false
       },
@@ -45191,7 +45156,7 @@
         "source": "batch61_icon_official_ireland_filtered_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T12:52:01.263350+00:00",
         "posted_age_known": false
       },
@@ -45206,7 +45171,7 @@
         "source": "batch61_icon_official_ireland_filtered_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T12:52:01.263350+00:00",
         "posted_age_known": false
       },
@@ -45221,7 +45186,7 @@
         "source": "batch61_icon_official_ireland_filtered_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T12:52:01.263350+00:00",
         "posted_age_known": false
       },
@@ -45236,7 +45201,7 @@
         "source": "batch61_icon_official_ireland_filtered_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T12:52:01.263350+00:00",
         "posted_age_known": false
       },
@@ -45251,7 +45216,7 @@
         "source": "batch61_icon_official_ireland_filtered_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T12:52:01.263350+00:00",
         "posted_age_known": false
       },
@@ -45266,7 +45231,7 @@
         "source": "batch61_icon_official_ireland_filtered_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T12:52:01.263350+00:00",
         "posted_age_known": false
       },
@@ -45281,7 +45246,7 @@
         "source": "batch61_icon_official_ireland_filtered_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T12:52:01.263350+00:00",
         "posted_age_known": false
       },
@@ -45296,7 +45261,7 @@
         "source": "batch61_icon_official_ireland_filtered_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T12:52:01.263350+00:00",
         "posted_age_known": false
       },
@@ -45311,7 +45276,7 @@
         "source": "batch61_icon_official_ireland_filtered_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T12:52:01.263350+00:00",
         "posted_age_known": false
       },
@@ -45326,7 +45291,7 @@
         "source": "batch61_icon_official_ireland_filtered_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T12:52:01.263350+00:00",
         "posted_age_known": false
       },
@@ -45356,7 +45321,7 @@
         "source": "batch61_icon_official_ireland_filtered_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T12:52:01.263350+00:00",
         "posted_age_known": false
       },
@@ -45371,7 +45336,7 @@
         "source": "batch61_icon_official_ireland_filtered_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T12:52:01.263350+00:00",
         "posted_age_known": false
       },
@@ -45386,7 +45351,7 @@
         "source": "batch61_icon_official_ireland_filtered_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T12:52:01.263350+00:00",
         "posted_age_known": false
       },
@@ -45401,7 +45366,7 @@
         "source": "batch61_icon_official_ireland_filtered_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T12:52:01.263350+00:00",
         "posted_age_known": false
       },
@@ -45416,7 +45381,7 @@
         "source": "batch61_icon_official_ireland_filtered_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T12:52:01.263350+00:00",
         "posted_age_known": false
       },
@@ -45431,7 +45396,7 @@
         "source": "batch61_icon_official_ireland_filtered_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T12:52:01.263350+00:00",
         "posted_age_known": false
       },
@@ -45446,7 +45411,7 @@
         "source": "batch61_icon_official_ireland_filtered_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T12:52:01.263350+00:00",
         "posted_age_known": false
       },
@@ -45461,7 +45426,7 @@
         "source": "batch61_icon_official_ireland_filtered_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T12:52:01.263350+00:00",
         "posted_age_known": false
       },
@@ -45476,7 +45441,7 @@
         "source": "batch61_icon_official_ireland_filtered_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T12:52:01.263350+00:00",
         "posted_age_known": false
       },
@@ -45491,7 +45456,7 @@
         "source": "batch61_icon_official_ireland_filtered_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T12:52:01.263350+00:00",
         "posted_age_known": false
       },
@@ -45506,7 +45471,7 @@
         "source": "batch61_icon_official_ireland_filtered_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T12:52:01.263350+00:00",
         "posted_age_known": false
       },
@@ -45521,7 +45486,7 @@
         "source": "batch61_icon_official_ireland_filtered_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T12:52:01.263350+00:00",
         "posted_age_known": false
       },
@@ -45536,7 +45501,7 @@
         "source": "batch61_icon_official_ireland_filtered_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T12:52:01.263350+00:00",
         "posted_age_known": false
       },
@@ -45551,7 +45516,7 @@
         "source": "batch61_icon_official_ireland_filtered_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T12:52:01.263350+00:00",
         "posted_age_known": false
       },
@@ -45566,7 +45531,7 @@
         "source": "batch61_icon_official_ireland_filtered_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T12:52:01.263350+00:00",
         "posted_age_known": false
       },
@@ -45581,7 +45546,7 @@
         "source": "batch61_icon_official_ireland_filtered_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T12:52:01.263350+00:00",
         "posted_age_known": false
       },
@@ -45596,7 +45561,7 @@
         "source": "batch61_icon_official_ireland_filtered_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T12:52:01.263350+00:00",
         "posted_age_known": false
       },
@@ -45611,7 +45576,7 @@
         "source": "batch61_icon_official_ireland_filtered_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T12:52:01.263350+00:00",
         "posted_age_known": false
       },
@@ -45626,7 +45591,7 @@
         "source": "batch61_icon_official_ireland_filtered_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T12:52:01.263350+00:00",
         "posted_age_known": false
       },
@@ -45641,7 +45606,7 @@
         "source": "batch61_icon_official_ireland_filtered_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T12:52:01.263350+00:00",
         "posted_age_known": false
       },
@@ -45656,7 +45621,7 @@
         "source": "batch61_icon_official_ireland_filtered_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T12:52:01.263350+00:00",
         "posted_age_known": false
       },
@@ -45671,7 +45636,7 @@
         "source": "batch61_icon_official_ireland_filtered_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T12:52:01.263350+00:00",
         "posted_age_known": false
       },
@@ -45686,7 +45651,7 @@
         "source": "batch61_icon_official_ireland_filtered_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T12:52:01.263350+00:00",
         "posted_age_known": false
       },
@@ -45701,7 +45666,7 @@
         "source": "batch61_icon_official_ireland_filtered_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T12:52:01.263350+00:00",
         "posted_age_known": false
       },
@@ -45716,7 +45681,7 @@
         "source": "batch61_icon_official_ireland_filtered_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T12:52:01.263350+00:00",
         "posted_age_known": false
       },
@@ -45731,7 +45696,7 @@
         "source": "batch61_icon_official_ireland_filtered_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T12:52:01.263350+00:00",
         "posted_age_known": false
       },
@@ -45746,7 +45711,7 @@
         "source": "batch61_icon_official_ireland_filtered_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T12:52:01.263350+00:00",
         "posted_age_known": false
       },
@@ -45761,7 +45726,7 @@
         "source": "batch61_icon_official_ireland_filtered_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T12:52:01.263350+00:00",
         "posted_age_known": false
       },
@@ -45776,7 +45741,7 @@
         "source": "batch61_icon_official_ireland_filtered_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T12:52:01.263350+00:00",
         "posted_age_known": false
       },
@@ -45791,7 +45756,7 @@
         "source": "batch61_icon_official_ireland_filtered_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T12:52:01.263350+00:00",
         "posted_age_known": false
       },
@@ -45806,7 +45771,7 @@
         "source": "batch61_icon_official_ireland_filtered_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T12:52:01.263350+00:00",
         "posted_age_known": false
       },
@@ -45821,7 +45786,7 @@
         "source": "batch61_icon_official_ireland_filtered_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T12:52:01.263350+00:00",
         "posted_age_known": false
       },
@@ -45836,7 +45801,7 @@
         "source": "batch61_icon_official_ireland_filtered_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T12:52:01.263350+00:00",
         "posted_age_known": false
       },
@@ -45851,7 +45816,7 @@
         "source": "batch61_icon_official_ireland_filtered_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T12:52:01.263350+00:00",
         "posted_age_known": false
       },
@@ -45866,7 +45831,7 @@
         "source": "batch61_icon_official_ireland_filtered_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T12:52:01.263350+00:00",
         "posted_age_known": false
       },
@@ -45881,7 +45846,7 @@
         "source": "batch61_icon_official_ireland_filtered_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T12:52:01.263350+00:00",
         "posted_age_known": false
       },
@@ -45896,7 +45861,7 @@
         "source": "batch61_icon_official_ireland_filtered_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T12:52:01.263350+00:00",
         "posted_age_known": false
       },
@@ -45911,7 +45876,7 @@
         "source": "batch61_icon_official_ireland_filtered_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T12:52:01.263350+00:00",
         "posted_age_known": false
       },
@@ -45926,7 +45891,7 @@
         "source": "batch61_icon_official_ireland_filtered_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T12:52:01.263350+00:00",
         "posted_age_known": false
       },
@@ -45941,7 +45906,7 @@
         "source": "batch61_icon_official_ireland_filtered_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T12:52:01.263350+00:00",
         "posted_age_known": false
       },
@@ -45956,7 +45921,7 @@
         "source": "batch61_icon_official_ireland_filtered_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T12:52:01.263350+00:00",
         "posted_age_known": false
       }
@@ -45964,49 +45929,280 @@
     "checked_at": 1788871895.622473,
     "consecutive_failures": 0
   },
-  "QIAGEN::zero_only_batch20_v1": {
+  "Kepak Group::targeted_direct_batch7_multi_v1": {
     "jobs": [],
-    "checked_at": 1788871897.0366778,
+    "checked_at": 1788873828.6509652,
+    "consecutive_failures": 1
+  },
+  "AerCap::targeted_direct_batch51_v1": {
+    "jobs": [],
+    "checked_at": 1788873828.8816526,
+    "consecutive_failures": 1
+  },
+  "Infosys::targeted_direct_batch47_v1": {
+    "jobs": [],
+    "checked_at": 1788873829.785012,
+    "consecutive_failures": 1
+  },
+  "HP (Hewlett-Packard)::friend_next4_v1": {
+    "jobs": [],
+    "checked_at": 1788873829.8617709,
+    "consecutive_failures": 1
+  },
+  "VMware (Broadcom)::zero_only_batch20_v1": {
+    "jobs": [],
+    "checked_at": 1788873831.2053485,
+    "consecutive_failures": 1
+  },
+  "Aldi Ireland::targeted_direct_batch50_v1": {
+    "jobs": [],
+    "checked_at": 1788873831.412639,
+    "consecutive_failures": 1
+  },
+  "DHL Ireland::targeted_direct_batch54_multi_v1": {
+    "jobs": [],
+    "checked_at": 1788873831.737,
     "consecutive_failures": 1
   },
   "HCLTech::targeted_direct_batch50_v1": {
     "jobs": [],
-    "checked_at": 1788871898.3171935,
+    "checked_at": 1788873833.8773117,
     "consecutive_failures": 1
   },
   "An Post": {
     "jobs": [],
-    "checked_at": 1788871900.950539,
+    "checked_at": 1788873833.9158046,
+    "consecutive_failures": 1
+  },
+  "QIAGEN::zero_only_batch20_v1": {
+    "jobs": [],
+    "checked_at": 1788873834.2975624,
     "consecutive_failures": 1
   },
   "SMBC Aviation Capital::friend_nonlive_batch10_v1": {
     "jobs": [],
-    "checked_at": 1788871901.0432618,
+    "checked_at": 1788873835.9226751,
     "consecutive_failures": 1
   },
-  "Aviva Ireland::targeted_direct_batch61_high_yield_v1": {
-    "jobs": [],
-    "checked_at": 1788871907.8154855,
-    "consecutive_failures": 1
+  "Aviva Ireland::targeted_direct_batch62_aviva_listing_v1": {
+    "jobs": [
+      {
+        "company": "Aviva Ireland",
+        "title": "Head of Broker Distribution",
+        "location": "Dublin 18, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Full-time",
+        "url": "https://aviva.talent-community.com/projects/head-of-broker-distribution/73843",
+        "source": "batch62_aviva_official_current_dublin_listing",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-09-08T13:24:18.734603+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Aviva Ireland",
+        "title": "Risk Claims Administration Support",
+        "location": "Dublin 18, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Full-time",
+        "url": "https://aviva.talent-community.com/projects/risk-claims-administration-support/73529",
+        "source": "batch62_aviva_official_current_dublin_listing",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-09-08T13:24:18.734603+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Aviva Ireland",
+        "title": "AI Transformation & Adoption Lead – Customer Operations",
+        "location": "Dublin 18, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Full-time",
+        "url": "https://aviva.talent-community.com/projects/ai-transformation-%2526-adoption-lead-%25E2%2580%2593-customer-operations/73451",
+        "source": "batch62_aviva_official_current_dublin_listing",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-09-08T13:24:18.734603+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Aviva Ireland",
+        "title": "Group Protection Administrator",
+        "location": "Dublin 18, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Full-time",
+        "url": "https://aviva.talent-community.com/projects/group-protection-administrator/73438",
+        "source": "batch62_aviva_official_current_dublin_listing",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-09-08T13:24:18.734603+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Aviva Ireland",
+        "title": "Commercial Motor Underwriter",
+        "location": "Dublin 18, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Full-time",
+        "url": "https://aviva.talent-community.com/projects/commercial-motor-underwriter/72872",
+        "source": "batch62_aviva_official_current_dublin_listing",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-09-08T13:24:18.734603+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Aviva Ireland",
+        "title": "Financial Risk Actuary",
+        "location": "Dublin 18, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Full-time",
+        "url": "https://aviva.talent-community.com/projects/financial-risk-actuary/72248",
+        "source": "batch62_aviva_official_current_dublin_listing",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-09-08T13:24:18.734603+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Aviva Ireland",
+        "title": "Retirement Payroll Administrator",
+        "location": "Dublin 18, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Full-time",
+        "url": "https://aviva.talent-community.com/projects/retirement-payroll-administrator/72111",
+        "source": "batch62_aviva_official_current_dublin_listing",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-09-08T13:24:18.734603+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Aviva Ireland",
+        "title": "Engineering Manager",
+        "location": "Dublin 18, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Full-time",
+        "url": "https://aviva.talent-community.com/projects/engineering-manager/71824",
+        "source": "batch62_aviva_official_current_dublin_listing",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-09-08T13:24:18.734603+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Aviva Ireland",
+        "title": "Data Protection & Risk Specialist",
+        "location": "Dublin 18, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Full-time",
+        "url": "https://aviva.talent-community.com/projects/data-protection-%2526-risk-specialist/71287",
+        "source": "batch62_aviva_official_current_dublin_listing",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-09-08T13:24:18.734603+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Aviva Ireland",
+        "title": "Head of Pensions Policy, Governance & Oversight",
+        "location": "Dublin 18, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Full-time",
+        "url": "https://aviva.talent-community.com/projects/head-of-pensions-policy%252C-governance-%2526-oversight/70690",
+        "source": "batch62_aviva_official_current_dublin_listing",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-09-08T13:24:18.734603+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Aviva Ireland",
+        "title": "Capital Management Actuary",
+        "location": "Dublin 18, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Full-time",
+        "url": "https://aviva.talent-community.com/projects/capital-management-actuary/69755",
+        "source": "batch62_aviva_official_current_dublin_listing",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-09-08T13:24:18.734603+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Aviva Ireland",
+        "title": "Head of Retirement Operations",
+        "location": "Dublin 18, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Full-time",
+        "url": "https://aviva.talent-community.com/projects/head-of-retirement-operations/68275",
+        "source": "batch62_aviva_official_current_dublin_listing",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-09-08T13:24:18.734603+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Aviva Ireland",
+        "title": "Pensions Administrator",
+        "location": "Dublin 18, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Full-time",
+        "url": "https://aviva.talent-community.com/projects/pensions-administrator/63384",
+        "source": "batch62_aviva_official_current_dublin_listing",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-09-08T13:24:18.734603+00:00",
+        "posted_age_known": false
+      }
+    ],
+    "checked_at": 1788873836.4296362,
+    "consecutive_failures": 0
   },
   "Red Hat": {
     "jobs": [],
-    "checked_at": 1788871911.450455,
-    "consecutive_failures": 1
-  },
-  "EXL": {
-    "jobs": [],
-    "checked_at": 1788871912.4169872,
+    "checked_at": 1788873838.0522242,
     "consecutive_failures": 1
   },
   "Boston Consulting Group (BCG)": {
     "jobs": [],
-    "checked_at": 1788871915.615084,
+    "checked_at": 1788873844.5294366,
+    "consecutive_failures": 1
+  },
+  "EXL": {
+    "jobs": [],
+    "checked_at": 1788873848.6637568,
     "consecutive_failures": 1
   },
   "Deutsche Bank::friend_logic_v1": {
     "jobs": [],
-    "checked_at": 1788871918.7379453,
+    "checked_at": 1788873854.0793517,
     "consecutive_failures": 1
   }
 }
