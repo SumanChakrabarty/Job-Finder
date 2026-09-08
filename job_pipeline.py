@@ -10778,6 +10778,121 @@ def scrape_hp_ireland_batch45(session=None):
 
 
 
+
+# === TARGETED_DIRECT_BATCH_59_HIGH_YIELD_AVIVA_HUBSPOT_AND_PARTIAL_GUARD ===
+# Evidence-first recovery after Batch58:
+#   * Aviva: current official Dublin board exposes 14-15 live roles, while the
+#     old route spends too long crawling six locations serially and times out.
+#   * HubSpot: previous run had 40 jobs, then generic ATS discovery returned 0.
+#     HubSpot's own careers page points to Greenhouse board "hubspotjobs".
+#   * Large partial regressions (e.g. DXC 10->3, Jacobs 14->7) now get one-cycle
+#     missing-record protection, same philosophy as the existing zero guard.
+
+def scrape_aviva_ireland_batch59(session=None):
+    """Fast current Aviva Dublin recovery.
+
+    The current first-party Randstad/Aviva board exposes 8 cards per page and
+    about 14-15 Dublin results.  Enumerate only the two relevant Dublin roots
+    and first two pages, then verify details concurrently.  This is a genuinely
+    different bounded mechanism from the serial Batch52 crawl that timed out.
+    """
+    session=session or requests.Session()
+    roots=[
+        "https://aviva.talent-community.com/projects/in/dublin",
+        "https://aviva.talent-community.com/projects/in/dublin-18",
+    ]
+    links={}
+    for root in roots:
+        for page in (1,2,3):
+            url=root if page==1 else f"{root}?page={page}"
+            try:
+                raw,final=_batch48_http_get(session,url,10)
+            except Exception:
+                continue
+            if not raw:
+                continue
+            before=len(links)
+            for m in re.finditer(r'href=["\']([^"\']*/projects/[^"\']+/\d+[^"\']*)["\']',raw,re.I):
+                full=urllib.parse.urljoin(final,html.unescape(m.group(1))).split("#")[0]
+                if "/projects/in/" in full.lower():
+                    continue
+                links[full.lower()]=full
+            if page>1 and len(links)==before:
+                break
+
+    def verify(url):
+        s=requests.Session()
+        try:
+            raw,final=_batch48_http_get(s,url,10)
+        except Exception:
+            return None
+        if not raw:
+            return None
+        body=re.sub(r"\s+"," ",_html_to_text(raw)).strip()
+        if re.search(r"\bBelfast\b|\bNorthern Ireland\b",body,re.I):
+            return None
+        # Current detail pages explicitly show Location / Dublin or Dublin 18.
+        if not re.search(r"\bLocation\b.{0,80}\bDublin(?:\s+18)?\b|\bDublin(?:\s+18)?\b",body,re.I):
+            return None
+        if re.search(r"\bno longer available\b|\bopportunity has closed\b|\bnot accepting applications\b",body,re.I):
+            return None
+        mh=re.search(r"<h1[^>]*>(.*?)</h1>",raw,re.I|re.S)
+        title=_batch44_clean_title(mh.group(1)) if mh else ""
+        title=re.sub(r"\s+at\s+Aviva.*$","",title,flags=re.I).strip()
+        if not title or _looks_like_non_job_title(title):
+            return None
+        loc="Dublin 18, Ireland" if re.search(r"\bDublin\s+18\b",body,re.I) else "Dublin, Ireland"
+        rec=_batch44_job_record(
+            "Aviva Ireland",title,loc,final,body,"batch59_aviva_fast_current_board"
+        )
+        if rec:
+            # Detail page exposes "Contract type Permanent opportunity" etc.
+            cm=re.search(r"\bContract type\b\s*([^<]{0,80})",_html_to_text(raw),re.I)
+            if cm:
+                rec["employment_type"]=normalize_employment_type(cm.group(1),title)
+        return rec
+
+    found={}
+    with ThreadPoolExecutor(max_workers=min(10,max(1,len(links)))) as ex:
+        futs=[ex.submit(verify,u) for u in links.values()]
+        for fut in as_completed(futs):
+            try:
+                rec=fut.result()
+            except Exception:
+                rec=None
+            if rec:
+                found[rec["url"].split("#")[0].rstrip("/").lower()]=rec
+
+    print(f"      [batch59-aviva] {len(found)} verified Dublin vacancies from {len(links)} current first-party project details")
+    return list(found.values())
+
+
+def scrape_hubspot_ireland_batch59(session=None):
+    """Dedicated HubSpot Greenhouse recovery using the slug advertised by
+    HubSpot's own careers site (job_board=hubspotjobs)."""
+    session=session or requests.Session()
+    jobs=try_greenhouse("hubspotjobs",session) or []
+    found={}
+    for raw in jobs:
+        rec=normalize_greenhouse_job("HubSpot",raw)
+        if not rec:
+            continue
+        loc=str(rec.get("location") or "")
+        if re.search(r"\bBelfast\b|\bNorthern Ireland\b",loc,re.I):
+            continue
+        if not is_republic_of_ireland_location(loc):
+            continue
+        title=str(rec.get("title") or "").strip()
+        if not title or _looks_like_non_job_title(title):
+            continue
+        u=(rec.get("url") or "").split("#")[0].rstrip("/").lower()
+        if u:
+            rec["source"]="batch59_hubspot_official_greenhouse"
+            found[u]=rec
+    print(f"      [batch59-hubspot] {len(found)} verified ROI vacancies from official HubSpot Greenhouse board")
+    return list(found.values())
+
+
 # === TARGETED_DIRECT_BATCH_58_MULTI_COMPANY_CURRENT_FALSE_ZERO_RECOVERY ===
 # Latest log: 3145 live jobs but zero bucket regressed to 89.  Batch58 attacks
 # three currently false-zero companies together using current first-party
@@ -16425,6 +16540,7 @@ def scrape_wtw_ireland_batch26(session):
     print("=== TARGETED_DIRECT_BATCH_38_PRE_FULL_RUN_BULK ACTIVE: proven Uisce Oracle recovery retained + Edwards Lifesciences and HP moved to current official Workday ROI detail verification; wider zero audit completed; Manual queue untouched ===")
 
 print("=== TARGETED_DIRECT_BATCH_46_AVIVA_HIGH_YIELD_FIX ACTIVE: Aviva is removed from final defer and uses eight current official Dublin detail seeds plus live detail verification; failed Aldi/HP mechanisms are not expanded; proven positive routes preserved ===")
+print("=== TARGETED_DIRECT_BATCH_59_HIGH_YIELD_AVIVA_HUBSPOT_AND_PARTIAL_GUARD ACTIVE: Aviva fast current board + HubSpot official Greenhouse + one-cycle >=50% partial regression protection; Batch58 zero mechanisms deferred ===")
 print("=== TARGETED_DIRECT_BATCH_58_MULTI_COMPANY_CURRENT_FALSE_ZERO_RECOVERY ACTIVE: McKinsey + An Post + PayPal; additive first-party current mechanisms, fresh cache namespace, prior routes preserved ===")
 print("=== TARGETED_DIRECT_BATCH_57_MULTI_COMPANY_LATE_RESULT_RECOVERY ACTIVE: productive timed-out workers are harvested if they finish later; positive fallbacks are soft not hard errors; Red Hat Batch56 repeat deferred after confirmed zero ===")
 print("=== TARGETED_DIRECT_BATCH_56_MULTI_COMPANY_REGRESSION_AND_REDHAT ACTIVE: previous live_jobs guard fixed globally; one-cycle preservation only; Red Hat current+prior Workday union ===")
@@ -16829,9 +16945,7 @@ def main():
         ("exact", "daa (dublin airport authority)", scrape_daa_batch54, 75, "Batch54 official daa Oracle Candidate Experience CX_1"),
         ("exact", "eli lilly", scrape_lilly_ireland_batch54, 75, "Batch54 official Lilly Phenom Ireland board"),
         ("exact", "dhl ireland", scrape_dhl_ireland_batch54, 75, "Batch54 official DHL Phenom Ireland board"),
-        ("exact", "paypal", scrape_paypal_ireland_batch58, 75, "Batch58 PayPal official Ireland page + Eightfold HTML/API union"),
         ("exact", "linkedin", scrape_linkedin_ireland_batch54, 75, "Batch54 LinkedIn first-party Dublin jobs details"),
-        ("exact", "an post", scrape_an_post_batch58, 55, "Batch58 An Post Oracle country-filtered + wide ROI union"),
         ("exact", "kepak group", scrape_kepak_workable, 35, "official Kepak Workable board"),
         ("exact", "glaxosmithkline (gsk)", scrape_gsk_ireland_current, 55, "official GSK current-jobs Ireland search"),
         ("exact", "bord gáis energy", scrape_bord_gais_energy_workday, 40, "official Bord Gais Energy Centrica Workday route"),
@@ -16867,7 +16981,8 @@ def main():
         ("exact", "davy", scrape_davy_ireland_batch48, 35, "Batch48 Davy official current-opportunities index"),
         ("exact", "barclays", scrape_barclays_ireland_batch48, 35, "Batch48 Barclays official Ireland-filtered jobs search"),
         ("exact", "icon plc", scrape_icon_ireland_batch50, 55, "Batch50 ICON first-party Ireland page + detail verification"),
-        ("exact", "aviva ireland", scrape_aviva_ireland_batch53, 45, "Batch55 Aviva proven-route-first bounded fallback"),
+        ("exact", "aviva ireland", scrape_aviva_ireland_batch59, 45, "Batch59 fast current Aviva Dublin board + parallel detail verification"),
+        ("exact", "hubspot", scrape_hubspot_ireland_batch59, 35, "Batch59 official HubSpot Greenhouse hubspotjobs board"),
         ("exact", "fitch ratings", scrape_fitch_ireland_current, 75, "Fitch current official careers site"),
         ("prefix", "apple", scrape_apple_ireland, 180, "direct HTML scrape"),
         ("exact", "google", scrape_google_ireland, 240, "real browser automation"),
@@ -16932,7 +17047,6 @@ def main():
         ("exact", "edwards lifesciences", scrape_edwards_lifesciences_batch38, 60, "Batch38 official Edwards Workday current ROI route"),
         ("exact", "oracle", scrape_oracle_ireland_attempt2, 60, "attempt 2 rendered Oracle Ireland board"),
         ("exact", "bausch + lomb", scrape_bausch_lomb_friend, 60, "friend-referenced Bausch + Lomb Ireland board"),
-        ("exact", "mckinsey & company", scrape_mckinsey_ireland_batch58, 70, "Batch58 current McKinsey Dublin multi-detail union"),
         ("exact", "hse (health service executive)", scrape_hse_current_board_batch51, 95, "Batch51 current official HSE board/detail verification"),
         ("exact", "honeywell", scrape_honeywell_attempt2, 90, "Honeywell second/final Ireland attempt"),
         ("exact", "schneider electric", scrape_schneider_batch18, 90, "Batch18 Schneider rendered + sitemap fallback"),
@@ -17306,7 +17420,10 @@ def main():
             # Batch53: mechanism upgrades for previously-positive companies must
             # be regression-safe.  This final override intentionally occurs
             # after all older cache-key branches so it cannot be overwritten.
-            if _key in {"mckinsey & company", "paypal", "an post"}:
+            if _key in {"aviva ireland", "hubspot"}:
+                cache_key = f"{name}::targeted_direct_batch59_high_yield_v1"
+                _carry_recent_positive_cache(browser_cache, name, cache_key)
+            elif _key in {"mckinsey & company", "paypal", "an post"}:
                 cache_key = f"{name}::targeted_direct_batch58_multi_v1"
                 _carry_recent_positive_cache(browser_cache, name, cache_key)
             elif _key in {"daa (dublin airport authority)", "eli lilly", "dhl ireland", "linkedin"}:
@@ -17918,7 +18035,7 @@ def main():
         _n = str((_job or {}).get("company") or "").strip()
         if not _n:
             continue
-        if (_job or {}).get("regression_guard") == "preserved_from_previous_run":
+        if str((_job or {}).get("regression_guard") or "").startswith("preserved_from_previous_run"):
             continue
         _prev_by_company.setdefault(_n, []).append(_job)
 
@@ -17968,6 +18085,30 @@ def main():
             _zero_regressions.append((_name, _reference_count))
         elif 0 < _cur_count < _reference_count:
             _count_decreases.append((_name, _reference_count, _cur_count))
+
+            # Batch59: if a previously healthy company suddenly loses at least
+            # half its inventory, preserve only the missing previous records for
+            # ONE cycle. This catches obvious parser/API regressions such as
+            # DXC 10->3 or Jacobs 14->7 without freezing normal small count drift.
+            if _reference_count >= 5 and _cur_count <= max(1, _reference_count // 2):
+                _current_urls = {
+                    str((j or {}).get("url") or "").split("#")[0].rstrip("/").lower()
+                    for j in live_jobs
+                    if str((j or {}).get("company") or "").strip() == _name
+                }
+                _added = 0
+                for _old_job in _prev_jobs:
+                    _u = str((_old_job or {}).get("url") or "").split("#")[0].rstrip("/").lower()
+                    if not _u or _u in _current_urls:
+                        continue
+                    _kept = dict(_old_job)
+                    _kept["regression_guard"] = "preserved_from_previous_run_partial"
+                    live_jobs.append(_kept)
+                    _current_urls.add(_u)
+                    _added += 1
+                if _added:
+                    print(f"      [regression-partial] {_name}: {_reference_count} -> {_cur_count}; "
+                          f"preserved {_added} missing previous records for one clean recheck")
 
     if _zero_regressions:
         print("=== REGRESSION GUARD: prevented single-run disappearance for "
