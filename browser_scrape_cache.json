@@ -40388,8 +40388,8 @@
   },
   "Morningstar::targeted_direct_batch35_v1": {
     "jobs": [],
-    "checked_at": 1788867433.8009121,
-    "consecutive_failures": 54
+    "checked_at": 1788875485.3267488,
+    "consecutive_failures": 55
   },
   "Susquehanna International Group (SIG)::friend_nonlive_batch10_v1": {
     "jobs": [
@@ -45929,61 +45929,6 @@
     "checked_at": 1788871895.622473,
     "consecutive_failures": 0
   },
-  "Kepak Group::targeted_direct_batch7_multi_v1": {
-    "jobs": [],
-    "checked_at": 1788873828.6509652,
-    "consecutive_failures": 1
-  },
-  "AerCap::targeted_direct_batch51_v1": {
-    "jobs": [],
-    "checked_at": 1788873828.8816526,
-    "consecutive_failures": 1
-  },
-  "Infosys::targeted_direct_batch47_v1": {
-    "jobs": [],
-    "checked_at": 1788873829.785012,
-    "consecutive_failures": 1
-  },
-  "HP (Hewlett-Packard)::friend_next4_v1": {
-    "jobs": [],
-    "checked_at": 1788873829.8617709,
-    "consecutive_failures": 1
-  },
-  "VMware (Broadcom)::zero_only_batch20_v1": {
-    "jobs": [],
-    "checked_at": 1788873831.2053485,
-    "consecutive_failures": 1
-  },
-  "Aldi Ireland::targeted_direct_batch50_v1": {
-    "jobs": [],
-    "checked_at": 1788873831.412639,
-    "consecutive_failures": 1
-  },
-  "DHL Ireland::targeted_direct_batch54_multi_v1": {
-    "jobs": [],
-    "checked_at": 1788873831.737,
-    "consecutive_failures": 1
-  },
-  "HCLTech::targeted_direct_batch50_v1": {
-    "jobs": [],
-    "checked_at": 1788873833.8773117,
-    "consecutive_failures": 1
-  },
-  "An Post": {
-    "jobs": [],
-    "checked_at": 1788873833.9158046,
-    "consecutive_failures": 1
-  },
-  "QIAGEN::zero_only_batch20_v1": {
-    "jobs": [],
-    "checked_at": 1788873834.2975624,
-    "consecutive_failures": 1
-  },
-  "SMBC Aviation Capital::friend_nonlive_batch10_v1": {
-    "jobs": [],
-    "checked_at": 1788873835.9226751,
-    "consecutive_failures": 1
-  },
   "Aviva Ireland::targeted_direct_batch62_aviva_listing_v1": {
     "jobs": [
       {
@@ -45997,7 +45942,7 @@
         "source": "batch62_aviva_official_current_dublin_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T13:24:18.734603+00:00",
         "posted_age_known": false
       },
@@ -46012,7 +45957,7 @@
         "source": "batch62_aviva_official_current_dublin_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T13:24:18.734603+00:00",
         "posted_age_known": false
       },
@@ -46027,7 +45972,7 @@
         "source": "batch62_aviva_official_current_dublin_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T13:24:18.734603+00:00",
         "posted_age_known": false
       },
@@ -46042,7 +45987,7 @@
         "source": "batch62_aviva_official_current_dublin_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T13:24:18.734603+00:00",
         "posted_age_known": false
       },
@@ -46057,7 +46002,7 @@
         "source": "batch62_aviva_official_current_dublin_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T13:24:18.734603+00:00",
         "posted_age_known": false
       },
@@ -46072,7 +46017,7 @@
         "source": "batch62_aviva_official_current_dublin_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T13:24:18.734603+00:00",
         "posted_age_known": false
       },
@@ -46087,7 +46032,7 @@
         "source": "batch62_aviva_official_current_dublin_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T13:24:18.734603+00:00",
         "posted_age_known": false
       },
@@ -46102,7 +46047,7 @@
         "source": "batch62_aviva_official_current_dublin_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T13:24:18.734603+00:00",
         "posted_age_known": false
       },
@@ -46117,7 +46062,7 @@
         "source": "batch62_aviva_official_current_dublin_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T13:24:18.734603+00:00",
         "posted_age_known": false
       },
@@ -46132,7 +46077,7 @@
         "source": "batch62_aviva_official_current_dublin_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T13:24:18.734603+00:00",
         "posted_age_known": false
       },
@@ -46147,7 +46092,7 @@
         "source": "batch62_aviva_official_current_dublin_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T13:24:18.734603+00:00",
         "posted_age_known": false
       },
@@ -46162,7 +46107,7 @@
         "source": "batch62_aviva_official_current_dublin_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T13:24:18.734603+00:00",
         "posted_age_known": false
       },
@@ -46177,7 +46122,7 @@
         "source": "batch62_aviva_official_current_dublin_listing",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-08T13:24:18.734603+00:00",
         "posted_age_known": false
       }
@@ -46185,24 +46130,186 @@
     "checked_at": 1788873836.4296362,
     "consecutive_failures": 0
   },
+  "Kepak Group::targeted_direct_batch7_multi_v1": {
+    "jobs": [],
+    "checked_at": 1788875455.9833167,
+    "consecutive_failures": 1
+  },
+  "AerCap::targeted_direct_batch63_stuck25_v1": {
+    "jobs": [],
+    "checked_at": 1788875456.4417644,
+    "consecutive_failures": 1
+  },
+  "Infosys::targeted_direct_batch47_v1": {
+    "jobs": [],
+    "checked_at": 1788875457.2814045,
+    "consecutive_failures": 1
+  },
+  "HP (Hewlett-Packard)::friend_next4_v1": {
+    "jobs": [],
+    "checked_at": 1788875457.3220649,
+    "consecutive_failures": 1
+  },
+  "HCLTech::targeted_direct_batch63_stuck25_v1": {
+    "jobs": [
+      {
+        "company": "HCLTech",
+        "title": "Senior Group Technical Architect",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.hcltech.com/job/Senior-Group-Technical-Architect/133007-en_US/",
+        "source": "batch63_hcltech_current_detail",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-09-08T13:51:47.308591+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "HCLTech",
+        "title": "Technical Lead",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.hcltech.com/job/Technical-Lead/153600-en_US/",
+        "source": "batch63_hcltech_current_detail",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-09-08T13:51:47.308591+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "HCLTech",
+        "title": "Senior Solution Architect",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.hcltech.com/job/Senior-Solution-Architect/133012-en_US/",
+        "source": "batch63_hcltech_current_detail",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-09-08T13:51:47.308591+00:00",
+        "posted_age_known": false
+      }
+    ],
+    "checked_at": 1788875457.8611543,
+    "consecutive_failures": 0
+  },
+  "VMware (Broadcom)::zero_only_batch20_v1": {
+    "jobs": [],
+    "checked_at": 1788875458.0437596,
+    "consecutive_failures": 1
+  },
+  "Aldi Ireland::targeted_direct_batch63_stuck25_v1": {
+    "jobs": [],
+    "checked_at": 1788875458.077663,
+    "consecutive_failures": 1
+  },
+  "DHL Ireland::targeted_direct_batch54_multi_v1": {
+    "jobs": [],
+    "checked_at": 1788875458.516092,
+    "consecutive_failures": 1
+  },
+  "SMBC Aviation Capital::targeted_direct_batch63_stuck25_v1": {
+    "jobs": [
+      {
+        "company": "SMBC Aviation Capital",
+        "title": "Analyst - Commercial Negotiation and Execution - Document Management",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://www.smbc.aero/careers/current-opportunities/analyst-commercial-negotiation-and-execution-document-management",
+        "source": "batch63_smbc_aviation_current_detail",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-09-08T13:51:47.308591+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "SMBC Aviation Capital",
+        "title": "AVP Customer Operations - Permanent/ Fixed Term Contract",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Contract",
+        "url": "https://www.smbc.aero/careers/current-opportunities/avp-customer-operations-permanent-fixed-term-contract",
+        "source": "batch63_smbc_aviation_current_detail",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-09-08T13:51:47.308591+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "SMBC Aviation Capital",
+        "title": "VP/SVP Commercial Negotiation and Execution - Transaction Negotiation",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://www.smbc.aero/careers/current-opportunities/vp-svp-commercial-negotiation-execution-ftc",
+        "source": "batch63_smbc_aviation_current_detail",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-09-08T13:51:47.308591+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "SMBC Aviation Capital",
+        "title": "AVP/VP Commercial Negotiation & Execution (Insurance)",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://www.smbc.aero/careers/current-opportunities/avpvp-commercial-negotiation-execution-insurance",
+        "source": "batch63_smbc_aviation_current_detail",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-09-08T13:51:47.308591+00:00",
+        "posted_age_known": false
+      }
+    ],
+    "checked_at": 1788875458.8052516,
+    "consecutive_failures": 0
+  },
+  "An Post": {
+    "jobs": [],
+    "checked_at": 1788875460.8704538,
+    "consecutive_failures": 1
+  },
+  "QIAGEN::zero_only_batch20_v1": {
+    "jobs": [],
+    "checked_at": 1788875461.8602376,
+    "consecutive_failures": 1
+  },
   "Red Hat": {
     "jobs": [],
-    "checked_at": 1788873838.0522242,
+    "checked_at": 1788875464.429993,
     "consecutive_failures": 1
   },
   "Boston Consulting Group (BCG)": {
     "jobs": [],
-    "checked_at": 1788873844.5294366,
-    "consecutive_failures": 1
-  },
-  "EXL": {
-    "jobs": [],
-    "checked_at": 1788873848.6637568,
+    "checked_at": 1788875474.4053535,
     "consecutive_failures": 1
   },
   "Deutsche Bank::friend_logic_v1": {
     "jobs": [],
-    "checked_at": 1788873854.0793517,
+    "checked_at": 1788875482.0672233,
+    "consecutive_failures": 1
+  },
+  "EXL": {
+    "jobs": [],
+    "checked_at": 1788875484.9295316,
     "consecutive_failures": 1
   }
 }
