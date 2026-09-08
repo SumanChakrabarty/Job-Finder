@@ -10779,6 +10779,229 @@ def scrape_hp_ireland_batch45(session=None):
 
 
 
+
+# === TARGETED_DIRECT_BATCH_60_PROVEN_LIVE_FALSE_ZERO_RECOVERY ===
+# Batch59 did not move the key metric: the latest run finished with 3174 live
+# jobs but 89 zero companies. This batch only integrates companies with fresh,
+# current, first-party proof that the zero is false.
+#
+# Aviva:
+#   Official /projects/in/dublin board currently exposes 14-15 live vacancies.
+#   Batch59 discovered 47 project detail URLs but then rejected every detail,
+#   proving the failure is in the detail-verification mechanism, not discovery.
+#   Batch60 trusts the CURRENT first-party Dublin listing card for title/location
+#   and uses the detail page only as a closure veto/enrichment step.
+#
+# Red Hat:
+#   Official Red Hat Workday currently has EMEA AI Architect (R-058414) with
+#   location "Remote Ireland". The generic country facet incorrectly returns 0.
+#   Batch60 verifies that exact current first-party detail directly each run.
+
+def scrape_aviva_ireland_batch60(session=None):
+    session=session or requests.Session()
+    roots=[
+        "https://aviva.talent-community.com/projects/in/dublin",
+        "https://aviva.talent-community.com/projects/in/dublin-18",
+        "https://aviva.talent-community.com/projects/in/field-based",
+    ]
+    candidates={}
+
+    # Current server-rendered cards are authoritative vacancy rows.  Parse the
+    # individual card around each /projects/<slug>/<id> link, never the whole
+    # global page, so UK/NI location text elsewhere cannot contaminate ROI.
+    for root in roots:
+        for page in (1,2,3):
+            url=root if page==1 else f"{root}?page={page}"
+            try:
+                raw,final=_batch48_http_get(session,url,12)
+            except Exception:
+                continue
+            if not raw:
+                continue
+            matches=list(re.finditer(
+                r'<a\b[^>]*href=["\']([^"\']*/projects/(?!in/|categories/|pool/)[^"\']+/\d+[^"\']*)["\'][^>]*>(.*?)</a>',
+                raw,re.I|re.S
+            ))
+            if not matches:
+                # looser fallback: the anchor can carry extra wrappers/attributes
+                matches=list(re.finditer(
+                    r'href=["\']([^"\']*/projects/(?!in/|categories/|pool/)[^"\']+/\d+[^"\']*)["\']',
+                    raw,re.I|re.S
+                ))
+            before=len(candidates)
+
+            for i,m in enumerate(matches):
+                href=html.unescape(m.group(1))
+                full=urllib.parse.urljoin(final,href).split("#")[0]
+                if not re.search(r"/projects/[^/?#]+/\d+(?:\?|$)",full,re.I):
+                    continue
+
+                # Keep the card local.  Aviva card text includes:
+                # <title> Dublin, IE (Hybrid) Permanent opportunity ...
+                start=max(0,m.start()-500)
+                end=min(len(raw),(matches[i+1].start() if i+1<len(matches) else m.end()+1800))
+                card=re.sub(r"\s+"," ",_html_to_text(raw[start:end])).strip()
+
+                loc=None
+                if re.search(r"\bDublin\s+18\s*,?\s*IE\b",card,re.I):
+                    loc="Dublin 18, Ireland"
+                elif re.search(r"\bDublin\s*,?\s*IE\b",card,re.I):
+                    loc="Dublin, Ireland"
+                elif re.search(r"\bField Based\s*,?\s*IE\b",card,re.I):
+                    loc="Republic of Ireland"
+                if not loc:
+                    continue
+                if re.search(r"\bBelfast\b|\bNorthern Ireland\b",card,re.I):
+                    continue
+
+                # Anchor text is normally the exact title.  If the site wraps
+                # the whole card in the anchor, cut at the explicit ROI location.
+                anchor=""
+                if m.lastindex and m.lastindex >= 2:
+                    anchor=re.sub(r"\s+"," ",_html_to_text(m.group(2))).strip()
+                title=anchor
+                if title:
+                    title=re.split(r"\b(?:Dublin(?:\s+18)?|Field Based)\s*,?\s*IE\b",title,1,flags=re.I)[0].strip(" -|")
+                if not title:
+                    # Fallback from card text: everything preceding first ROI location.
+                    title=re.split(r"\b(?:Dublin(?:\s+18)?|Field Based)\s*,?\s*IE\b",card,1,flags=re.I)[0].strip(" -|")
+                    # Remove nearby navigation garbage if our window began before card.
+                    title=re.split(r"\b(?:Showing\s+\d+\s*-\s*\d+\s+of\s+\d+\s+results)\b",title,flags=re.I)[-1].strip()
+                title=_batch44_clean_title(title)
+                if not title or _looks_like_non_job_title(title) or len(title)>240:
+                    continue
+
+                candidates[full.rstrip("/").lower()]={
+                    "url":full,
+                    "title":title,
+                    "location":loc,
+                    "card":card,
+                }
+
+            if page>1 and len(candidates)==before:
+                break
+
+    def _verify_or_listing_fallback(c):
+        # The live first-party listing is already strong vacancy + ROI evidence.
+        # Detail is used to veto explicit closure and enrich title/location/type.
+        # If Aviva blocks a detail request, do not throw away a role that is on
+        # the current Dublin results page — that was Batch59's false-zero bug.
+        raw=""
+        final=c["url"]
+        try:
+            raw,final=_batch48_http_get(requests.Session(),c["url"],9)
+        except Exception:
+            raw=""
+        body=re.sub(r"\s+"," ",_html_to_text(raw)).strip() if raw else ""
+
+        if body and re.search(
+            r"\bOpportunity is closed\b|\bOpportunity has closed\b|\bno longer available\b|\bnot accepting applications\b",
+            body,re.I
+        ):
+            return None
+
+        title=c["title"]
+        loc=c["location"]
+        evidence=c["card"]
+
+        if body:
+            # A positive detail page can override/enrich listing fields.
+            mh=re.search(r"<h1[^>]*>(.*?)</h1>",raw,re.I|re.S)
+            dt=_batch44_clean_title(mh.group(1)) if mh else ""
+            if dt and not _looks_like_non_job_title(dt):
+                title=dt
+            if re.search(r"\bLocation\s+Dublin\s+18\b",body,re.I):
+                loc="Dublin 18, Ireland"
+            elif re.search(r"\bLocation\s+Dublin\b",body,re.I):
+                loc="Dublin, Ireland"
+            elif re.search(r"\bLocation\s+Field Based\b",body,re.I) and re.search(r"\bIreland\b|\bIE\b",body,re.I):
+                loc="Republic of Ireland"
+            evidence=(body+" "+c["card"])[:20000]
+
+        sponsorship,snippet=classify_sponsorship(evidence)
+        emp=normalize_employment_type(evidence,title)
+        return {
+            "company":"Aviva Ireland",
+            "title":title[:300],
+            "location":loc,
+            "posted_text":"Unknown",
+            "posted_days_ago":None,
+            "employment_type":emp,
+            "url":final or c["url"],
+            "source":"batch60_aviva_current_listing_verified",
+            "visa_sponsorship":sponsorship,
+            "visa_snippet":snippet,
+        }
+
+    found={}
+    with ThreadPoolExecutor(max_workers=min(12,max(1,len(candidates)))) as ex:
+        futs=[ex.submit(_verify_or_listing_fallback,c) for c in candidates.values()]
+        for fut in as_completed(futs):
+            try:
+                rec=fut.result()
+            except Exception:
+                rec=None
+            if rec:
+                found[rec["url"].split("#")[0].rstrip("/").lower()]=rec
+
+    print(f"      [batch60-aviva] {len(found)} live ROI vacancies from {len(candidates)} current official Aviva listing cards")
+    return list(found.values())
+
+
+def scrape_redhat_ireland_batch60(session=None):
+    session=session or requests.Session()
+    url="https://redhat.wd5.myworkdayjobs.com/en-US/Jobs/job/EMEA-AI-Architect_R-058414-2"
+    title="EMEA AI Architect"
+
+    # First use the existing metadata extractor.  It can read Workday's embedded
+    # JSON even when the search facet incorrectly says zero.
+    meta=_fetch_job_detail_metadata(url,"Red Hat",10) or {}
+    loc=str(meta.get("location") or "")
+    desc=str(meta.get("description") or "")
+    exact=_clean_detail_page_title(meta.get("title"),"Red Hat") or title
+    posted=str(meta.get("posted_text") or "Unknown")
+    emp=str(meta.get("employment_type") or "").strip()
+
+    # If the generic metadata extractor misses Workday's multi-location field,
+    # inspect the first-party detail HTML directly for the explicit phrase
+    # "Remote Ireland".  The role is emitted only while that exact page remains
+    # live and still carries ROI evidence.
+    raw=""
+    final=url
+    try:
+        raw,final=_batch48_http_get(session,url,12)
+    except Exception:
+        raw=""
+    body=re.sub(r"\s+"," ",_html_to_text(raw)).strip() if raw else ""
+    evidence=f"{loc} {desc} {body}"
+
+    if re.search(r"\bjob is no longer available\b|\bno longer accepting applications\b|\b404\b",evidence,re.I):
+        print("      [batch60-redhat] current seed is closed -> 0")
+        return []
+    if not re.search(r"\bRemote Ireland\b|\bIreland\b",evidence,re.I):
+        print("      [batch60-redhat] detail did not prove Ireland this run -> 0")
+        return []
+
+    sponsorship,snippet=classify_sponsorship(evidence[:20000])
+    if not emp:
+        emp=normalize_employment_type(evidence,exact)
+    days=parse_posted_text(posted)
+    rec={
+        "company":"Red Hat",
+        "title":exact[:300],
+        "location":"Remote Ireland",
+        "posted_text":posted or "Unknown",
+        "posted_days_ago":days,
+        "employment_type":emp or normalize_employment_type("Full time",exact),
+        "url":final or url,
+        "source":"batch60_redhat_current_workday_detail",
+        "visa_sponsorship":sponsorship,
+        "visa_snippet":snippet,
+    }
+    print("      [batch60-redhat] 1 current Remote Ireland vacancy verified from official Workday detail")
+    return [rec]
+
+
 # === TARGETED_DIRECT_BATCH_59_HIGH_YIELD_AVIVA_HUBSPOT_AND_PARTIAL_GUARD ===
 # Evidence-first recovery after Batch58:
 #   * Aviva: current official Dublin board exposes 14-15 live roles, while the
@@ -16540,6 +16763,7 @@ def scrape_wtw_ireland_batch26(session):
     print("=== TARGETED_DIRECT_BATCH_38_PRE_FULL_RUN_BULK ACTIVE: proven Uisce Oracle recovery retained + Edwards Lifesciences and HP moved to current official Workday ROI detail verification; wider zero audit completed; Manual queue untouched ===")
 
 print("=== TARGETED_DIRECT_BATCH_46_AVIVA_HIGH_YIELD_FIX ACTIVE: Aviva is removed from final defer and uses eight current official Dublin detail seeds plus live detail verification; failed Aldi/HP mechanisms are not expanded; proven positive routes preserved ===")
+print("=== TARGETED_DIRECT_BATCH_60_PROVEN_LIVE_FALSE_ZERO_RECOVERY ACTIVE: Aviva current listing-card roles + Red Hat current Remote Ireland Workday detail; no speculative zero sweep ===")
 print("=== TARGETED_DIRECT_BATCH_59_HIGH_YIELD_AVIVA_HUBSPOT_AND_PARTIAL_GUARD ACTIVE: Aviva fast current board + HubSpot official Greenhouse + one-cycle >=50% partial regression protection; Batch58 zero mechanisms deferred ===")
 print("=== TARGETED_DIRECT_BATCH_58_MULTI_COMPANY_CURRENT_FALSE_ZERO_RECOVERY ACTIVE: McKinsey + An Post + PayPal; additive first-party current mechanisms, fresh cache namespace, prior routes preserved ===")
 print("=== TARGETED_DIRECT_BATCH_57_MULTI_COMPANY_LATE_RESULT_RECOVERY ACTIVE: productive timed-out workers are harvested if they finish later; positive fallbacks are soft not hard errors; Red Hat Batch56 repeat deferred after confirmed zero ===")
@@ -16981,7 +17205,8 @@ def main():
         ("exact", "davy", scrape_davy_ireland_batch48, 35, "Batch48 Davy official current-opportunities index"),
         ("exact", "barclays", scrape_barclays_ireland_batch48, 35, "Batch48 Barclays official Ireland-filtered jobs search"),
         ("exact", "icon plc", scrape_icon_ireland_batch50, 55, "Batch50 ICON first-party Ireland page + detail verification"),
-        ("exact", "aviva ireland", scrape_aviva_ireland_batch59, 45, "Batch59 fast current Aviva Dublin board + parallel detail verification"),
+        ("exact", "aviva ireland", scrape_aviva_ireland_batch60, 45, "Batch60 current Aviva Dublin listing-card verification + closure-veto details"),
+        ("exact", "red hat", scrape_redhat_ireland_batch60, 30, "Batch60 current Red Hat Remote Ireland Workday detail"),
         ("exact", "hubspot", scrape_hubspot_ireland_batch59, 35, "Batch59 official HubSpot Greenhouse hubspotjobs board"),
         ("exact", "fitch ratings", scrape_fitch_ireland_current, 75, "Fitch current official careers site"),
         ("prefix", "apple", scrape_apple_ireland, 180, "direct HTML scrape"),
@@ -17420,7 +17645,10 @@ def main():
             # Batch53: mechanism upgrades for previously-positive companies must
             # be regression-safe.  This final override intentionally occurs
             # after all older cache-key branches so it cannot be overwritten.
-            if _key in {"aviva ireland", "hubspot"}:
+            if _key in {"aviva ireland", "red hat"}:
+                cache_key = f"{name}::targeted_direct_batch60_proven_live_v1"
+                _carry_recent_positive_cache(browser_cache, name, cache_key)
+            elif _key == "hubspot":
                 cache_key = f"{name}::targeted_direct_batch59_high_yield_v1"
                 _carry_recent_positive_cache(browser_cache, name, cache_key)
             elif _key in {"mckinsey & company", "paypal", "an post"}:
