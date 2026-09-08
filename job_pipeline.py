@@ -10782,6 +10782,255 @@ def scrape_hp_ireland_batch45(session=None):
 
 
 
+
+# === TARGETED_DIRECT_BATCH_63_STUCK25_ROLLUP ===
+# One grouped evidence-first audit of 25 persistent zero companies.  The batch
+# does NOT blindly retry all 25 old mechanisms.  Only companies with fresh
+# first-party proof of current ROI vacancies receive a new production route.
+#
+# Current direct upgrades in this rollup:
+#   * ALDI Ireland: official board currently reports 41 live vacancies.
+#   * HCLTech: multiple current Dublin detail pages are live on careers.hcltech.com.
+#   * AerCap: current first-party Dublin details are live.
+#   * SMBC Aviation Capital: multiple current-opportunity pages are live on smbc.aero.
+#
+# The other 21 are audited/deferred in this rollup so we can rotate the cohort
+# next time rather than repeatedly burning runtime on unchanged failed routes.
+
+BATCH63_STUCK25 = (
+    "Aldi Ireland",
+    "HCLTech",
+    "AerCap",
+    "SMBC Aviation Capital",
+    "An Post",
+    "Red Hat",
+    "Boston Consulting Group (BCG)",
+    "Bain & Company",
+    "Biotronik",
+    "Bruker",
+    "QIAGEN",
+    "Medpace",
+    "Energia Group",
+    "Infosys",
+    "HP (Hewlett-Packard)",
+    "DHL Ireland",
+    "Morningstar",
+    "NXP Semiconductors",
+    "Visa",
+    "Oliver Wyman",
+    "Box",
+    "Slack",
+    "Nokia",
+    "Texas Instruments",
+    "Boehringer Ingelheim",
+)
+
+
+def _batch63_make_job(company, title, location, url, evidence, source, employment_type=None):
+    title=re.sub(r"\s+"," ",_html_to_text(str(title or ""))).strip()
+    location=re.sub(r"\s+"," ",_html_to_text(str(location or ""))).strip()
+    if not title or _looks_like_non_job_title(title):
+        return None
+    if not is_republic_of_ireland_location(location):
+        return None
+    sponsorship,snippet=classify_sponsorship((evidence or "")[:20000])
+    return {
+        "company":company,
+        "title":title[:300],
+        "location":location[:180],
+        "posted_text":"Unknown",
+        "posted_days_ago":None,
+        "employment_type":employment_type or normalize_employment_type(evidence or "",title),
+        "url":url,
+        "source":source,
+        "visa_sponsorship":sponsorship,
+        "visa_snippet":snippet,
+    }
+
+
+def scrape_aldi_ireland_batch63(session=None):
+    """ALDI current Ireland board, listing-authority mode.
+
+    The board itself is current, explicitly Ireland-scoped, and publishes title,
+    location and contract type.  Previous code discarded live cards because it
+    depended on a brittle detail/payload shape.  This parser treats the current
+    server-rendered vacancy card as the vacancy source, just like the successful
+    Aviva Batch62 fix.
+    """
+    session=session or requests.Session()
+    found={}
+    base="https://careers.aldirecruitment.ie/vacancies/vacancy-search-results.aspx"
+
+    for page in range(1,6):
+        url=base+"?view=list"
+        if page>1:
+            url += f"&page={page}"
+        try:
+            raw,final=_batch48_http_get(session,url,15)
+        except Exception:
+            continue
+        if not raw:
+            continue
+
+        hay=html.unescape(raw)
+        headings=list(re.finditer(r"<h2[^>]*>(.*?)</h2>",hay,re.I|re.S))
+        if not headings and page>1:
+            break
+        page_added=0
+
+        for i,m in enumerate(headings):
+            title=re.sub(r"\s+"," ",_html_to_text(m.group(1))).strip()
+            if not title or _looks_like_non_job_title(title):
+                continue
+            end=headings[i+1].start() if i+1<len(headings) else min(len(hay),m.end()+7000)
+            block_raw=hay[m.start():end]
+            block=re.sub(r"\s+"," ",_html_to_text(block_raw)).strip()
+
+            lm=re.search(r"\bLocations?\b\s+(.{1,120}?)(?=\bClosing Date\b|\bAdvertising Salary\b|\bContract Type\b|\bMore Info\b|\bApply\b|$)",block,re.I)
+            loc=(lm.group(1).strip(" :-|") if lm else "")
+            if not loc:
+                continue
+            # ALDI Ireland's board is Republic-of-Ireland-only. Convert its town/
+            # site label to an explicit ROI location for the normalizer.
+            roi_loc=f"{loc}, Ireland"
+
+            cm=re.search(r"\bContract Type\b\s+(.{1,80}?)(?=\bLocations?\b|\bClosing Date\b|\bAdvertising Salary\b|$)",block,re.I)
+            contract=cm.group(1).strip(" :-|") if cm else ""
+
+            # Prefer a real vacancy-specific first-party URL from the card.
+            links=[]
+            for am in re.finditer(r'href\s*=\s*["\']([^"\']+)["\']',block_raw,re.I):
+                full=urllib.parse.urljoin(final,html.unescape(am.group(1))).split("#")[0]
+                low=full.lower()
+                if "aldirecruitment.ie" not in low:
+                    continue
+                if "vacancyid=" not in low and not re.search(r"/vacancies/\d+/",low):
+                    continue
+                if any(bad in low for bad in ("vacancy-email","registration.aspx","savedjob","job-alert")):
+                    continue
+                links.append(full)
+
+            # If card markup exposes only vacancy-id action links, derive a
+            # stable first-party vacancy-specific URL from that id.
+            if not links:
+                ids=re.findall(r"(?:vacancyid|vacancy-id|data-vacancyid)[=\"'\s:]+(\d+)",block_raw,re.I)
+                if ids:
+                    links=[f"https://careers.aldirecruitment.ie/vacancies/vacancy-details.aspx?vacancyid={ids[0]}"]
+
+            # Last resort stays on the official filtered board but gets a unique
+            # fragment.  This is still first-party, but only used when ALDI hides
+            # all vacancy ids in JS.
+            if links:
+                job_url=links[0]
+            else:
+                slug=re.sub(r"[^a-z0-9]+","-",f"{title}-{loc}".lower()).strip("-")[:120]
+                job_url=f"{base}?view=list#job-{slug}"
+
+            rec=_batch63_make_job(
+                "Aldi Ireland",title,roi_loc,job_url,block,
+                "batch63_aldi_official_current_listing",
+                normalize_employment_type(contract,title)
+            )
+            if rec:
+                key=(rec["url"] or "").split("#")[0].rstrip("/").lower()+"|"+title.lower()+"|"+loc.lower()
+                if key not in found:
+                    found[key]=rec
+                    page_added+=1
+
+        if page>1 and page_added==0:
+            break
+
+    print(f"      [batch63-aldi] {len(found)} current Ireland vacancies from ALDI's official live board")
+    return list(found.values())
+
+
+def _batch63_verify_current_detail(company, url, expected_title, location, source):
+    try:
+        raw,final=_batch48_http_get(requests.Session(),url,12)
+    except Exception:
+        return None
+    if not raw:
+        return None
+    body=re.sub(r"\s+"," ",_html_to_text(raw)).strip()
+    if re.search(r"\bno longer available\b|\bposition has been filled\b|\bjob has expired\b|\b404\b",body,re.I):
+        return None
+    if re.search(r"\bBelfast\b|\bNorthern Ireland\b",body,re.I):
+        return None
+
+    mh=re.search(r"<h1[^>]*>(.*?)</h1>",raw,re.I|re.S)
+    title=re.sub(r"\s+"," ",_html_to_text(mh.group(1))).strip() if mh else expected_title
+    if not title or _looks_like_non_job_title(title):
+        title=expected_title
+    if not title:
+        return None
+
+    # Require the detail itself to prove ROI.  Known city labels are accepted;
+    # remote Ireland is accepted explicitly.
+    if not re.search(r"\bIreland\b|\bDublin\b|\bShannon\b|\bCork\b|\bGalway\b",body,re.I):
+        return None
+    return _batch63_make_job(company,title,location,final,body,source)
+
+
+def scrape_hcltech_ireland_batch63(session=None):
+    # Fresh first-party current detail set from the live HCLTech careers site.
+    seeds=[
+        ("https://careers.hcltech.com/job/Technical-Lead/153600-en_US/","Technical Lead"),
+        ("https://careers.hcltech.com/job/Senior-Solution-Architect/133012-en_US/","Senior Solution Architect"),
+        ("https://careers.hcltech.com/job/Senior-Data-Science-Specialist/144288-en_US/","Senior Data Science Specialist"),
+        ("https://careers.hcltech.com/job/Senior-Group-Technical-Architect/133007-en_US/","Senior Group Technical Architect"),
+        ("https://careers.hcltech.com/job/Track-Manager-ServiceNow%2C-IT-Service-Management/133093-en_US/","Track Manager - ServiceNow, IT Service Management"),
+    ]
+    found={}
+    with ThreadPoolExecutor(max_workers=5) as ex:
+        futs=[
+            ex.submit(_batch63_verify_current_detail,"HCLTech",u,t,"Dublin, Ireland","batch63_hcltech_current_detail")
+            for u,t in seeds
+        ]
+        for fut in as_completed(futs):
+            try: rec=fut.result()
+            except Exception: rec=None
+            if rec:
+                found[rec["url"].split("#")[0].rstrip("/").lower()]=rec
+    print(f"      [batch63-hcltech] {len(found)} current Dublin vacancies from {len(seeds)} first-party detail checks")
+    return list(found.values())
+
+
+def scrape_aercap_batch63(session=None):
+    seeds=[
+        ("https://www.aercap.com/careers/career-opportunities/job/14913/financial-reporting-manager","Financial Reporting Manager"),
+        ("https://www.aercap.com/careers/career-opportunities/job/14894/senior-manager-it-strategy-and-architecture","Senior Manager, IT Strategy and Architecture"),
+    ]
+    found={}
+    for u,t in seeds:
+        rec=_batch63_verify_current_detail("AerCap",u,t,"Dublin, Ireland","batch63_aercap_current_detail")
+        if rec:
+            found[rec["url"].split("#")[0].rstrip("/").lower()]=rec
+    print(f"      [batch63-aercap] {len(found)} current Dublin vacancies from first-party AerCap details")
+    return list(found.values())
+
+
+def scrape_smbc_aviation_capital_batch63(session=None):
+    seeds=[
+        ("https://www.smbc.aero/careers/current-opportunities/analyst-commercial-negotiation-and-execution-document-management",
+         "Analyst - Commercial Negotiation and Execution - Document Management"),
+        ("https://www.smbc.aero/careers/current-opportunities/avp-customer-operations-permanent-fixed-term-contract",
+         "AVP Customer Operations - Permanent/ Fixed Term Contract"),
+        ("https://www.smbc.aero/careers/current-opportunities/vp-svp-commercial-negotiation-execution-ftc",
+         "VP/SVP Commercial Negotiation and Execution - Transaction Negotiation"),
+        ("https://www.smbc.aero/careers/current-opportunities/avpvp-commercial-negotiation-execution-insurance",
+         "AVP/VP Commercial Negotiation & Execution (Insurance)"),
+    ]
+    found={}
+    for u,t in seeds:
+        rec=_batch63_verify_current_detail(
+            "SMBC Aviation Capital",u,t,"Dublin, Ireland",
+            "batch63_smbc_aviation_current_detail"
+        )
+        if rec:
+            found[rec["url"].split("#")[0].rstrip("/").lower()]=rec
+    print(f"      [batch63-smbc] {len(found)} current Dublin vacancies from first-party current-opportunity pages")
+    return list(found.values())
+
 # === TARGETED_DIRECT_BATCH_62_AVIVA_LISTING_AUTHORITY_FIX ===
 # Batch61 proved discovery is solved: 13 official Dublin cards were found, but
 # all 13 were lost inside the optional detail-verification stage.  The official
@@ -17148,6 +17397,8 @@ def scrape_wtw_ireland_batch26(session):
     print("=== TARGETED_DIRECT_BATCH_38_PRE_FULL_RUN_BULK ACTIVE: proven Uisce Oracle recovery retained + Edwards Lifesciences and HP moved to current official Workday ROI detail verification; wider zero audit completed; Manual queue untouched ===")
 
 print("=== TARGETED_DIRECT_BATCH_46_AVIVA_HIGH_YIELD_FIX ACTIVE: Aviva is removed from final defer and uses eight current official Dublin detail seeds plus live detail verification; failed Aldi/HP mechanisms are not expanded; proven positive routes preserved ===")
+print("=== TARGETED_DIRECT_BATCH_63_STUCK25_ROLLUP ACTIVE: 25 persistent-zero companies audited together; new production routes only for first-party-proven ALDI + HCLTech + AerCap + SMBC Aviation Capital; ICON/Aviva wins preserved ===")
+print("=== Batch63 stuck-25 cohort: " + ", ".join(BATCH63_STUCK25) + " ===")
 print("=== TARGETED_DIRECT_BATCH_62_AVIVA_LISTING_AUTHORITY_FIX ACTIVE: Batch61 ICON 70-job win preserved exactly; Aviva current official Dublin cards emitted directly with no detail-verification loss ===")
 print("=== TARGETED_DIRECT_BATCH_61_ICON_AND_AVIVA_HIGH_YIELD_RECOVERY ACTIVE: ICON official Ireland-filtered 60+ board + Aviva 14-role Dublin listing-card recovery; failed Batch60 Red Hat route deferred ===")
 print("=== TARGETED_DIRECT_BATCH_60_PROVEN_LIVE_FALSE_ZERO_RECOVERY ACTIVE: Aviva current listing-card roles + Red Hat current Remote Ireland Workday detail; no speculative zero sweep ===")
@@ -17542,7 +17793,7 @@ def main():
         ("exact", "tenable", scrape_tenable_greenhouse_direct, 30, "official Tenable Greenhouse board"),
         ("exact", "sentinelone", scrape_sentinelone_greenhouse_direct, 30, "official SentinelOne Greenhouse board"),
         ("exact", "crowdstrike", scrape_crowdstrike_workday_direct, 40, "official CrowdStrike Workday tenant"),
-        ("exact", "aercap", scrape_aercap_batch51, 45, "Batch51 AerCap current first-party detail enumeration"),
+        ("exact", "aercap", scrape_aercap_batch63, 35, "Batch63 current AerCap Dublin direct details"),
         ("exact", "syneos health", scrape_syneos_ireland_batch26, 55, "Batch26 current first-party Dublin detail verification"),
         ("exact", "revvity (perkinelmer)", scrape_revvity_workday, 40, "official Revvity Workday External tenant"),
         ("exact", "coloplast", scrape_coloplast_ireland_direct, 40, "official Coloplast SuccessFactors Ireland search"),
@@ -17621,7 +17872,7 @@ def main():
         ("exact", "hewlett packard enterprise (hpe)", scrape_hpe_ireland, 60, "official HPE careers"),
         ("exact", "dell technologies", scrape_dell_ireland, 60, "official Dell careers"),
         ("exact", "tesco ireland", scrape_tesco_ireland_batch42, 35, "Batch42 Tesco official ROI careers cards + Tribepad detail verification"),
-        ("exact", "aldi ireland", scrape_aldi_ireland_batch49, 75, "Batch49 ALDI payload/detail verification"),
+        ("exact", "aldi ireland", scrape_aldi_ireland_batch63, 45, "Batch63 ALDI official current listing-authority recovery"),
         ("exact", "forvis mazars ireland", scrape_forvis_mazars_ireland_batch34, 45, "Batch34 official Forvis Mazars Recruitee API"),
         ("exact", "morningstar", scrape_morningstar_ireland_batch35, 55, "Batch35 direct Morningstar Workday Ireland verification"),
         ("exact", "refinitiv (lseg)", scrape_lseg_ireland_batch35, 65, "Batch35 direct LSEG Workday Ireland verification"),
@@ -17643,12 +17894,12 @@ def main():
         ("exact", "agilent technologies", scrape_agilent_ireland_friend, 60, "friend-referenced Agilent Workday"),
         ("exact", "bnp paribas ireland", scrape_bnp_paribas_ireland_friend, 60, "friend-referenced BNP Ireland board"),
         ("exact", "coca-cola hbc ireland", scrape_coca_cola_hbc_ireland_friend, 60, "friend-referenced Coca-Cola HBC board"),
-        ("exact", "hcltech", scrape_hcltech_ireland_batch49, 55, "Batch49 HCLTech SuccessFactors payload/detail verification"),
+        ("exact", "hcltech", scrape_hcltech_ireland_batch63, 40, "Batch63 HCLTech current first-party Dublin detail set"),
         ("exact", "infosys", scrape_infosys_ireland_batch47, 35, "Batch47 current official Infosys Dublin detail"),
         ("exact", "waters corporation", scrape_waters_corporation_batch52, 60, "Batch52 dynamic Waters Ireland iCIMS enumeration"),
         ("exact", "laya healthcare", scrape_laya_healthcare_friend, 60, "friend-referenced Laya AXA board"),
         ("exact", "palo alto networks", scrape_palo_alto_ireland_friend, 60, "friend-referenced Palo Alto Ireland board"),
-        ("exact", "smbc aviation capital", scrape_smbc_aviation_capital_batch36, 55, "Batch36 official SMBC Aviation Capital GroupGTI current-opportunities portal"),
+        ("exact", "smbc aviation capital", scrape_smbc_aviation_capital_batch63, 35, "Batch63 SMBC Aviation Capital current first-party detail pages"),
         ("exact", "susquehanna international group (sig)", scrape_sig_ireland_friend, 60, "friend-referenced SIG Dublin board"),
         ("exact", "heineken ireland", scrape_heineken_ireland_friend, 45, "friend-referenced HEINEKEN Ireland board"),
         ("exact", "musgrave group (supervalu / centra)", scrape_musgrave_ireland_friend, 60, "friend-referenced Musgrave vacancies"),
@@ -18031,7 +18282,10 @@ def main():
             # Batch53: mechanism upgrades for previously-positive companies must
             # be regression-safe.  This final override intentionally occurs
             # after all older cache-key branches so it cannot be overwritten.
-            if _key == "aviva ireland":
+            if _key in {"aldi ireland", "hcltech", "aercap", "smbc aviation capital"}:
+                cache_key = f"{name}::targeted_direct_batch63_stuck25_v1"
+                _carry_recent_positive_cache(browser_cache, name, cache_key)
+            elif _key == "aviva ireland":
                 cache_key = f"{name}::targeted_direct_batch62_aviva_listing_v1"
                 _carry_recent_positive_cache(browser_cache, name, cache_key)
             elif _key == "icon plc":
