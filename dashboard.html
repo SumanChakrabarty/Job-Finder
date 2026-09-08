@@ -18,6 +18,48 @@
 #app[hidden],.auth-screen[hidden]{display:none!important}
 
 .cvbar{display:flex;align-items:center;gap:10px;padding:0 0 12px;font-size:11px;color:var(--muted);flex-wrap:wrap}.cv-upload{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:7px;padding:7px 10px;cursor:pointer;font-weight:700}.cv-upload:hover{border-color:#4d6785}.cv-upload span{font-weight:400;color:var(--muted)}.cv-toggle{display:inline-flex;align-items:center;gap:6px;border-left:1px solid var(--line);padding-left:10px;color:var(--ink);cursor:pointer}.cv-toggle input{accent-color:var(--green)}.cv-toggle:has(input:disabled){opacity:.45;cursor:default}.cv-note{color:var(--muted)}.cvbar .status{margin-left:auto}@media(max-width:700px){.cv-note{width:100%;order:5}.cvbar .status{margin-left:0}}
+
+/* === PROFESSIONAL UI PASS === */
+:root{
+  --bg:#090e14;--panel:#101821;--panel2:#151f2b;--panel3:#192432;
+  --line:#263447;--line2:#34465e;--ink:#f6f8fb;--muted:#96a5b8;
+  --green:#48d5a3;--green-soft:#48d5a318;--amber:#f0b44f;--red:#f07a6c;
+  --blue:#83b6ff;--blue-soft:#83b6ff18;--shadow:0 16px 40px rgba(0,0,0,.24);
+}
+body{background:radial-gradient(900px 420px at 15% -10%,rgba(57,107,169,.10),transparent 62%),var(--bg)}
+.shell{max-width:1540px;padding:0 24px}
+.top{background:rgba(9,14,20,.94);border-bottom:1px solid rgba(255,255,255,.07);box-shadow:0 1px 0 rgba(255,255,255,.02);backdrop-filter:blur(18px)}
+.head{padding:20px 0 15px}.brand{display:flex;align-items:center;gap:13px}.brand-mark{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;font:800 13px var(--mono);letter-spacing:.05em;color:#07130f;background:linear-gradient(135deg,#67e0b3,#31b987);box-shadow:0 8px 24px rgba(72,213,163,.18)}
+.eyebrow{font-size:9px;letter-spacing:.16em;margin-bottom:3px;color:var(--green)}
+h1{font-size:24px;line-height:1.1;letter-spacing:-.02em}.sub{font-size:12.5px;margin-top:5px}
+.stats{gap:8px;align-items:stretch}.stat,.stats>div{min-width:92px;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.07);border-radius:11px;padding:9px 11px}.stat b,.stats>div b{font-size:19px;letter-spacing:-.03em}.stat span,.stats>div span{display:block;margin-top:2px;font-size:8.5px;letter-spacing:.07em}
+.filter-panel{display:grid;grid-template-columns:minmax(280px,1.55fr) repeat(5,minmax(135px,.72fr)) auto;gap:8px;align-items:end;padding:13px;background:linear-gradient(180deg,rgba(255,255,255,.025),rgba(255,255,255,.015));border:1px solid rgba(255,255,255,.075);border-radius:14px;margin:0 0 10px;box-shadow:0 8px 26px rgba(0,0,0,.12)}
+.filter-field,.filter-search{min-width:0}.filter-field label,.filter-search label{display:block;margin:0 0 5px 2px;font:700 8.5px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:#7f90a6}
+.search-wrap{position:relative}.search-icon{position:absolute;left:12px;top:50%;transform:translateY(-51%);color:#72839a;font-size:18px;pointer-events:none}.search-wrap .search{padding-left:36px}
+.control{width:100%;height:39px;background:#111b27;border:1px solid #2a394c;border-radius:9px;padding:8px 10px;color:var(--ink);font-size:11.5px;outline:none;transition:border .15s,box-shadow .15s,background .15s}
+.control:hover{border-color:#3a4d66;background:#14202d}.control:focus{border-color:#5c82b1;box-shadow:0 0 0 3px rgba(94,139,193,.12)}
+.clear-btn{height:39px;border:1px solid #304157;background:transparent;color:#9cabbd;border-radius:9px;padding:0 13px;font:700 10px var(--mono);cursor:pointer;transition:.15s}.clear-btn:hover{color:var(--ink);border-color:#52677f;background:#151f2b}
+.cvbar{padding:2px 2px 13px;gap:9px}.cv-upload,.cv-filter-btn,.logout-btn{border-radius:8px}.status{font-weight:700}
+main{padding-top:18px}.views{gap:7px;padding:0 0 15px;border-bottom:1px solid rgba(255,255,255,.06);margin-bottom:14px}.view{padding:8px 12px;background:transparent;border-color:#2b3a4d;color:#9dabbc;transition:.15s}.view:hover{background:#121c28;color:#dce4ee;border-color:#3a4d66}.view.active{background:#1a2a3c;color:#fff;border-color:#4b698a;box-shadow:inset 0 0 0 1px rgba(131,182,255,.08)}
+.result{padding-left:12px;color:#8091a6}
+.grid{grid-template-columns:repeat(auto-fill,minmax(350px,1fr));gap:12px}
+.card{position:relative;background:linear-gradient(180deg,#111a25 0%,#0f1721 100%);border:1px solid rgba(255,255,255,.085);border-radius:14px;padding:16px;gap:12px;min-height:220px;box-shadow:0 5px 18px rgba(0,0,0,.10);transition:transform .16s,border-color .16s,box-shadow .16s,background .16s;overflow:hidden}
+.card:before{content:"";position:absolute;inset:0 0 auto 0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.10),transparent)}
+.card:hover{transform:translateY(-2px);border-color:#405773;box-shadow:var(--shadow);background:linear-gradient(180deg,#131e2a 0%,#101924 100%)}
+.card-top{display:flex;align-items:center;gap:10px}.company-avatar{width:34px;height:34px;flex:0 0 34px;border-radius:9px;display:grid;place-items:center;background:#1a2838;border:1px solid #304257;color:#b8c8da;font:800 12px var(--mono)}
+.company-block{min-width:0;flex:1}.company{font-size:10px;letter-spacing:.08em;color:#7fe2bb;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.source-line{margin-top:2px;font-size:9.5px;color:#687a90}
+.new-badge{align-self:flex-start;padding:4px 7px;border-radius:999px;background:var(--green-soft);border:1px solid rgba(72,213,163,.28);color:#76e3ba;font:800 8px var(--mono);letter-spacing:.08em}
+.title{font-size:16px;line-height:1.38;letter-spacing:-.01em;min-height:44px}
+.meta{gap:6px}.chip{padding:4px 7px;border-radius:6px;background:#141f2c;border-color:#2b3a4e;color:#9eafc2;font-size:9.5px}.chip.fresh{background:rgba(72,213,163,.09);border-color:rgba(72,213,163,.28)}.type-chip{color:#b7c7da}
+.signal{min-height:20px;padding-top:1px}.visa{font-size:10.5px}.fit{padding:3px 6px;border-radius:5px;background:rgba(131,182,255,.09)}
+.foot{padding-top:11px;border-top:1px solid rgba(255,255,255,.07)}.posted{font-size:10px;color:#718398}.open{display:inline-flex;align-items:center;gap:4px;padding:6px 9px;border-radius:7px;background:#172436;border:1px solid #30435a;color:#f3c266;font-size:10.5px;transition:.15s}.card:hover .open{border-color:#526b87;background:#1a2a3d}
+.empty{border-radius:14px;background:#0f1721;padding:72px 20px}
+.dir-grid{gap:10px}.dir-card{border-radius:12px;padding:14px;background:#101821;transition:.15s}.dir-card:hover{border-color:#405773;background:#121c28}
+.auth-card{border-radius:18px;border-color:rgba(255,255,255,.10);box-shadow:0 30px 90px rgba(0,0,0,.52)}.auth-button{border-radius:10px;background:linear-gradient(180deg,#1b3046,#17283a)}
+@media(max-width:1180px){.filter-panel{grid-template-columns:2fr repeat(3,1fr)}.filter-search{grid-column:span 2}.clear-btn{width:100%}}
+@media(max-width:760px){.shell{padding:0 14px}.head{align-items:flex-start}.brand-mark{width:38px;height:38px}.filter-panel{grid-template-columns:1fr 1fr}.filter-search{grid-column:1/-1}.clear-btn{grid-column:1/-1}.grid{grid-template-columns:1fr}.views{margin-bottom:12px}}
+@media(max-width:520px){.filter-panel{grid-template-columns:1fr}.filter-search,.clear-btn{grid-column:auto}.brand-mark{display:none}.card{min-height:0}}
+
 </style></head><body>
 <div id="authScreen" class="auth-screen">
   <form id="authForm" class="auth-card" autocomplete="on">
@@ -32,23 +74,40 @@
 </div>
 <div id="app" hidden>
 <div class="top"><div class="shell">
-<div class="head"><div><p class="eyebrow">Ireland job search</p><h1>Job Radar</h1><p class="sub">All current Ireland roles in one place.</p></div><div class="stats"><div class="stat"><b id="sLive">0</b><span>LIVE JOBS</span></div><div class="stat"><b id="sToday">0</b><span>POSTED TODAY</span></div><div><b id="sNew">0</b><span>NEW THIS RUN</span></div><div class="stat"><b id="sWeek">0</b><span>≤ 7 DAYS</span></div></div></div>
-<div class="toolbar"><input id="fSearch" class="control search" placeholder="Search role, company or skill…"><select id="fPosted" class="control"><option value="any">Any posting date</option><option value="today">Today</option><option value="yesterday">Yesterday</option><option value="3d">Posted ≤ 3 days</option><option value="7d">Posted ≤ 7 days</option><option value="14d">Posted ≤ 14 days</option><option value="30d">Posted ≤ 30 days</option><option value="unknown">Date unknown</option></select><select id="fLocation" class="control"><option value="">Anywhere in Ireland</option><option value="cork">Cork</option><option value="dublin">Dublin</option><option value="galway">Galway</option><option value="limerick">Limerick</option><option value="remote">Remote / Hybrid</option></select><select id="fType" class="control">
-<option value="">Any job type</option>
-<option value="full_time">Full-time</option>
-<option value="part_time">Part-time</option>
-<option value="permanent">Permanent</option>
-<option value="contract">Contract</option>
-<option value="fixed_term">Fixed-term</option>
-<option value="temporary">Temporary</option>
-<option value="internship">Internship</option>
-<option value="graduate">Graduate programme</option>
-<option value="apprenticeship">Apprenticeship / Trainee</option>
-<option value="placement">Placement / Co-op</option>
-<option value="seasonal">Seasonal</option>
-<option value="casual">Casual</option>
-<option value="other">Other / Unspecified</option>
-</select><select id="fVisa" class="control"><option value="">Any visa signal</option><option value="positive">Sponsorship / permit evidence</option><option value="posting">Posting mentions sponsorship</option><option value="permits">Company has permit history</option><option value="negative">Posting rules out sponsorship</option></select></div>
+<div class="head">
+  <div class="brand">
+    <div class="brand-mark">JR</div>
+    <div><p class="eyebrow">Ireland job search</p><h1>Job Radar</h1><p class="sub">Live opportunities from company career sites across Ireland.</p></div>
+  </div>
+  <div class="stats">
+    <div class="stat"><b id="sLive">0</b><span>LIVE JOBS</span></div>
+    <div class="stat"><b id="sToday">0</b><span>POSTED TODAY</span></div>
+    <div class="stat"><b id="sNew">0</b><span>NEW THIS RUN</span></div>
+    <div class="stat"><b id="sWeek">0</b><span>≤ 7 DAYS</span></div>
+  </div>
+</div>
+<div class="filter-panel">
+  <div class="filter-search">
+    <label for="fSearch">Search</label>
+    <div class="search-wrap"><span class="search-icon">⌕</span><input id="fSearch" class="control search" placeholder="Job title, company or skill"></div>
+  </div>
+  <div class="filter-field"><label for="fPosted">Date posted</label><select id="fPosted" class="control">
+    <option value="any">Any posting date</option><option value="today">Today</option><option value="yesterday">Yesterday</option><option value="3d">Posted ≤ 3 days</option><option value="7d">Posted ≤ 7 days</option><option value="14d">Posted ≤ 14 days</option><option value="30d">Posted ≤ 30 days</option><option value="unknown">Date unknown</option>
+  </select></div>
+  <div class="filter-field"><label for="fLocation">Location</label><select id="fLocation" class="control">
+    <option value="">Anywhere in Ireland</option><option value="cork">Cork</option><option value="dublin">Dublin</option><option value="galway">Galway</option><option value="limerick">Limerick</option><option value="remote">Remote / Hybrid</option>
+  </select></div>
+  <div class="filter-field"><label for="fType">Job type</label><select id="fType" class="control">
+    <option value="">Any job type</option><option value="full_time">Full-time</option><option value="part_time">Part-time</option><option value="permanent">Permanent</option><option value="contract">Contract</option><option value="fixed_term">Fixed-term</option><option value="temporary">Temporary</option><option value="internship">Internship</option><option value="graduate">Graduate programme</option><option value="apprenticeship">Apprenticeship / Trainee</option><option value="placement">Placement / Co-op</option><option value="seasonal">Seasonal</option><option value="casual">Casual</option><option value="other">Other / Unspecified</option>
+  </select></div>
+  <div class="filter-field"><label for="fVisa">Visa signal</label><select id="fVisa" class="control">
+    <option value="">Any visa signal</option><option value="positive">Sponsorship / permit evidence</option><option value="posting">Posting mentions sponsorship</option><option value="permits">Company has permit history</option><option value="negative">Posting rules out sponsorship</option>
+  </select></div>
+  <div class="filter-field"><label for="fSort">Sort</label><select id="fSort" class="control">
+    <option value="best">Best match</option><option value="newest">Newest first</option><option value="company">Company A–Z</option>
+  </select></div>
+  <button id="clearFilters" class="clear-btn" type="button">Clear</button>
+</div>
 <div class="cvbar"><label class="cv-upload" for="cvFile">Upload CV <span>optional</span></label><input id="cvFile" type="file" accept=".pdf,.txt,text/plain,application/pdf" hidden><button id="cvFilterBtn" class="cv-filter-btn" type="button" disabled>Use strict CV filter</button><span id="cvNote" class="cv-note">Optional — upload a CV, then choose whether to use it.</span><span id="liveStatus" class="status">● connecting</span><button id="logoutBtn" class="logout-btn" type="button">Sign out</button></div>
 </div></div>
 <div class="shell"><main><div class="views"><button class="view active" data-view="all">All jobs</button><button class="view" data-view="today">Posted today</button><button class="view" data-view="new">New this run</button><button class="view" data-view="fresh">Fresh ≤ 3 days</button><button class="view" data-view="visa">Visa-friendly</button><button class="view" data-view="zero">No current jobs</button><button class="view" data-view="manual">Fetch / Manual</button><div id="resultCount" class="result">0 jobs</div></div><section id="jobs"><div id="grid" class="grid"></div><div id="empty" class="empty" style="display:none">No jobs match these filters.</div></section><section id="zero" class="directory"><div id="zeroGrid" class="dir-grid"></div></section><section id="manual" class="directory"><div id="manualGrid" class="dir-grid"></div></section></main></div>
@@ -254,15 +313,46 @@ function jobType(j){
   return {key:'other',label:(j.employment_type&&norm(j.employment_type)!=='unspecified')?j.employment_type:'Other / Unspecified'};
 }
 
-function render(){if(VIEW==='zero'||VIEW==='manual'){renderDirectory();return}$('jobs').style.display='block';$('zero').style.display='none';$('manual').style.display='none';const search=norm($('fSearch').value),posted=$('fPosted').value,loc=norm($('fLocation').value),typeF=$('fType').value,visaF=$('fVisa').value;let rows=JOBS.filter(j=>{const hay=norm(`${j.title} ${j.company} ${j.location} ${j.description||''} ${j.summary||''}`),v=visa(j);if(search&&!hay.includes(search))return false;if(!passesDate(j,posted))return false;if(loc&&!norm(j.location).includes(loc))return false;if(typeF&&jobType(j).key!==typeF)return false;if(visaF==='positive'&&!['posting','permits','history'].includes(v.kind))return false;if(visaF&&visaF!=='positive'&&v.kind!==visaF)return false;if(!cvPass(j))return false;if(VIEW==='today'&&(j.posted_days_ago==null||j.posted_days_ago>0))return false;if(VIEW==='new'&&!j.new_since_last_check)return false;if(VIEW==='fresh'&&(j.posted_days_ago==null||j.posted_days_ago>3))return false;if(VIEW==='visa'&&!['posting','permits','history'].includes(v.kind))return false;return true});rows.sort((a,b)=>priority(b)-priority(a)||(a.posted_days_ago??999)-(b.posted_days_ago??999));$('resultCount').textContent=`${rows.length} shown${CV_ACTIVE?' · STRICT CV FILTER ON':''} · ${JOBS.length} live jobs`;$('grid').innerHTML='';$('empty').style.display=rows.length?'none':'block';rows.forEach(j=>$('grid').appendChild(card(j)))}
-function card(j){const d=j.posted_days_ago,v=visa(j),score=CV_ACTIVE?cvScore(j).score:0,c=document.createElement('article');c.className='card';const ageCls=d!=null&&d<=3?'fresh':d!=null&&d>30?'warn':'';const cvLine=CV_ACTIVE?`<span class="fit ${score>=8?'strong':score>=4?'good':'maybe'}">${score>=8?'Strong match':score>=4?'Good match':'Possible match'}</span><span>·</span>`:'';c.innerHTML=`<div class="company">${esc(j.company)}</div><div class="title">${esc(j.title||'Untitled role')}</div><div class="meta"><span class="chip ${ageCls}">${esc(ageText(j))}</span><span class="chip">${esc(j.location||'—')}</span>${`<span class="chip">${esc(jobType(j).label)}</span>`}</div><div class="signal">${cvLine}<span class="visa ${v.kind==='negative'?'bad':['posting','permits','history'].includes(v.kind)?'good':''}">${esc(v.label)}</span></div><div class="foot"><span class="posted">${j.new_since_last_check?'New since last scan':''}</span><span class="open">Open exact job →</span></div>`;c.onclick=()=>window.open(j.url,'_blank','noopener');return c}
+function render(){if(VIEW==='zero'||VIEW==='manual'){renderDirectory();return}$('jobs').style.display='block';$('zero').style.display='none';$('manual').style.display='none';const search=norm($('fSearch').value),posted=$('fPosted').value,loc=norm($('fLocation').value),typeF=$('fType').value,visaF=$('fVisa').value;let rows=JOBS.filter(j=>{const hay=norm(`${j.title} ${j.company} ${j.location} ${j.description||''} ${j.summary||''}`),v=visa(j);if(search&&!hay.includes(search))return false;if(!passesDate(j,posted))return false;if(loc&&!norm(j.location).includes(loc))return false;if(typeF&&jobType(j).key!==typeF)return false;if(visaF==='positive'&&!['posting','permits','history'].includes(v.kind))return false;if(visaF&&visaF!=='positive'&&v.kind!==visaF)return false;if(!cvPass(j))return false;if(VIEW==='today'&&(j.posted_days_ago==null||j.posted_days_ago>0))return false;if(VIEW==='new'&&!j.new_since_last_check)return false;if(VIEW==='fresh'&&(j.posted_days_ago==null||j.posted_days_ago>3))return false;if(VIEW==='visa'&&!['posting','permits','history'].includes(v.kind))return false;return true});const sortBy=$('fSort').value;
+if(sortBy==='newest')rows.sort((a,b)=>(a.posted_days_ago??999)-(b.posted_days_ago??999)||priority(b)-priority(a));
+else if(sortBy==='company')rows.sort((a,b)=>String(a.company||'').localeCompare(String(b.company||''))||String(a.title||'').localeCompare(String(b.title||'')));
+else rows.sort((a,b)=>priority(b)-priority(a)||(a.posted_days_ago??999)-(b.posted_days_ago??999));$('resultCount').textContent=`${rows.length} shown${CV_ACTIVE?' · STRICT CV FILTER ON':''} · ${JOBS.length} live jobs`;$('grid').innerHTML='';$('empty').style.display=rows.length?'none':'block';rows.forEach(j=>$('grid').appendChild(card(j)))}
+function card(j){
+  const d=j.posted_days_ago,v=visa(j),score=CV_ACTIVE?cvScore(j).score:0,c=document.createElement('article');
+  c.className='card';
+  const ageCls=d!=null&&d<=3?'fresh':d!=null&&d>30?'warn':'';
+  const cvLine=CV_ACTIVE?`<span class="fit ${score>=8?'strong':score>=4?'good':'maybe'}">${score>=8?'Strong match':score>=4?'Good match':'Possible match'}</span>`:'';
+  const initial=String(j.company||'?').trim().charAt(0).toUpperCase();
+  const newTag=j.new_since_last_check?'<span class="new-badge">NEW</span>':'';
+  c.innerHTML=`
+    <div class="card-top">
+      <div class="company-avatar">${esc(initial)}</div>
+      <div class="company-block"><div class="company">${esc(j.company)}</div><div class="source-line">Ireland vacancy</div></div>
+      ${newTag}
+    </div>
+    <div class="title">${esc(j.title||'Untitled role')}</div>
+    <div class="meta">
+      <span class="chip ${ageCls}">${esc(ageText(j))}</span>
+      <span class="chip">${esc(j.location||'—')}</span>
+      <span class="chip type-chip">${esc(jobType(j).label)}</span>
+    </div>
+    <div class="signal">${cvLine}<span class="visa ${v.kind==='negative'?'bad':['posting','permits','history'].includes(v.kind)?'good':''}">${esc(v.label)}</span></div>
+    <div class="foot">
+      <span class="posted">${j.new_since_last_check?'Discovered in latest scan':'Current vacancy'}</span>
+      <span class="open">View job <span aria-hidden="true">↗</span></span>
+    </div>`;
+  c.onclick=()=>window.open(j.url,'_blank','noopener');
+  return c
+}
 function renderDirectory(){$('jobs').style.display='none';$('zero').style.display=VIEW==='zero'?'block':'none';$('manual').style.display=VIEW==='manual'?'block':'none';const list=VIEW==='zero'?ZERO:MANUAL,grid=VIEW==='zero'?$('zeroGrid'):$('manualGrid'),search=norm($('fSearch').value);const rows=list.filter(c=>!search||norm(c.company||c.company_name).includes(search)).sort((a,b)=>String(a.company||a.company_name).localeCompare(String(b.company||b.company_name)));$('resultCount').textContent=`${rows.length} companies`;grid.innerHTML='';rows.forEach(c=>{const name=c.company||c.company_name||'Unknown company',url=c.url||c.career_url||'#',d=document.createElement('div');d.className='dir-card';d.innerHTML=`<div class="dir-name">${esc(name)}</div><div class="dir-sub">${VIEW==='zero'?'Checked successfully — no current Ireland jobs':'Fetching issue / check manually'}</div>`;d.onclick=()=>{if(url&&url!=='#')window.open(url,'_blank','noopener')};grid.appendChild(d)})}
 function setView(v){VIEW=v;document.querySelectorAll('.view').forEach(b=>b.classList.toggle('active',b.dataset.view===v));render()}
 async function extractPdf(file){if(!window.pdfjsLib)throw Error('PDF reader unavailable');const data=await file.arrayBuffer();const pdf=await pdfjsLib.getDocument({data}).promise;let text='';for(let i=1;i<=pdf.numPages;i++){const page=await pdf.getPage(i),content=await page.getTextContent();text+='\n'+content.items.map(x=>x.str).join(' ')}return text}
 async function handleCv(file){if(!file)return;try{$('cvNote').textContent='Reading CV…';let text='';if(file.type==='application/pdf'||/\.pdf$/i.test(file.name))text=await extractPdf(file);else text=await file.text();if(norm(text).length<80)throw Error('Not enough readable text');buildCvProfile(text);CV_ACTIVE=false;$('cvFilterBtn').disabled=false;$('cvFilterBtn').classList.remove('active');$('cvFilterBtn').textContent='Use strict CV filter';$('cvNote').textContent='CV ready — all jobs are still showing. Turn on strict filtering only when you want it.';render()}catch(e){CV_TEXT='';CV_TERMS=[];CV_ROLES=[];CV_ACTIVE=false;$('cvFilterBtn').disabled=true;$('cvFilterBtn').classList.remove('active');$('cvFilterBtn').textContent='Use strict CV filter';$('cvNote').textContent='Could not read that CV. Try a text-based PDF or .txt file.'}}
 async function fetchJobs(){try{const r=await fetch('./jobs.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);loadData(await r.json());$('liveStatus').textContent='● live data connected';$('liveStatus').classList.remove('bad')}catch(e){$('liveStatus').textContent='○ jobs.json not connected';$('liveStatus').classList.add('bad')}}
 let REFRESH_TIMER=null,DASHBOARD_STARTED=false;
-function initDashboard(){if(DASHBOARD_STARTED)return;DASHBOARD_STARTED=true;['fSearch','fPosted','fLocation','fType','fVisa'].forEach(id=>{$(id).addEventListener('input',render);$(id).addEventListener('change',render)});$('cvFile').addEventListener('change',e=>handleCv(e.target.files&&e.target.files[0]));$('cvFilterBtn').addEventListener('click',()=>{if(!CV_TEXT)return;CV_ACTIVE=!CV_ACTIVE;$('cvFilterBtn').classList.toggle('active',CV_ACTIVE);$('cvFilterBtn').textContent=CV_ACTIVE?'STRICT CV FILTER ON':'Use strict CV filter';$('cvNote').textContent=CV_ACTIVE?'Showing only strong matches to the uploaded CV.':'CV ready — all jobs are showing.';render()});document.querySelectorAll('.view').forEach(b=>b.onclick=()=>setView(b.dataset.view));fetchJobs();REFRESH_TIMER=setInterval(fetchJobs,5*60*1000)}
+function initDashboard(){if(DASHBOARD_STARTED)return;DASHBOARD_STARTED=true;['fSearch','fPosted','fLocation','fType','fVisa','fSort'].forEach(id=>{$(id).addEventListener('input',render);$(id).addEventListener('change',render)});$('cvFile').addEventListener('change',e=>handleCv(e.target.files&&e.target.files[0]));$('cvFilterBtn').addEventListener('click',()=>{if(!CV_TEXT)return;CV_ACTIVE=!CV_ACTIVE;$('cvFilterBtn').classList.toggle('active',CV_ACTIVE);$('cvFilterBtn').textContent=CV_ACTIVE?'STRICT CV FILTER ON':'Use strict CV filter';$('cvNote').textContent=CV_ACTIVE?'Showing only strong matches to the uploaded CV.':'CV ready — all jobs are showing.';render()});document.querySelectorAll('.view').forEach(b=>b.onclick=()=>setView(b.dataset.view));
+$('clearFilters').addEventListener('click',()=>{$('fSearch').value='';$('fPosted').value='any';$('fLocation').value='';$('fType').value='';$('fVisa').value='';$('fSort').value='best';setView('all')});
+fetchJobs();REFRESH_TIMER=setInterval(fetchJobs,5*60*1000)}
 </script>
 <script>
 const AUTH_HASH='f2a39ab4a6577cb730bb6498aa46009668686a7518b2a3d04471b0bc0b17421c';

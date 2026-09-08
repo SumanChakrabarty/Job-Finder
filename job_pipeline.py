@@ -10777,6 +10777,307 @@ def scrape_hp_ireland_batch45(session=None):
 
 
 
+
+# === TARGETED_DIRECT_BATCH_58_MULTI_COMPANY_CURRENT_FALSE_ZERO_RECOVERY ===
+# Latest log: 3145 live jobs but zero bucket regressed to 89.  Batch58 attacks
+# three currently false-zero companies together using current first-party
+# evidence and additive mechanisms only:
+#   * McKinsey & Company: current first-party Dublin role details are live.
+#   * An Post: current Dublin vacancies exist; the old Oracle country facet can
+#     miss them, so use a wide Candidate Experience query + local ROI filtering.
+#   * PayPal: official Ireland careers page still links to PayPal's Eightfold
+#     board; crawl the actual first-party HTML/details as a fallback to the API.
+
+def _batch58_union(*groups):
+    out={}
+    for group in groups:
+        for j in group or []:
+            if not isinstance(j,dict):
+                continue
+            u=(j.get("url") or "").split("#")[0].rstrip("/").lower()
+            if u:
+                out.setdefault(u,j)
+    return list(out.values())
+
+
+def _oracle_candidate_experience_wide_roi(company_name, host, site_number, session=None, max_pages=12):
+    """Oracle Candidate Experience fallback without the unreliable country facet.
+
+    Some Oracle boards return zero when workLocationCountryCode=IE even though
+    current Dublin roles are visible publicly.  Enumerate the site's requisitions
+    and perform Republic-of-Ireland filtering locally instead.
+    """
+    session=session or requests.Session()
+    base=host.rstrip("/")
+    endpoint=base + "/hcmRestApi/resources/latest/recruitingCEJobRequisitions"
+    found={}
+    limit=100
+
+    for page in range(max_pages):
+        offset=page*limit
+        finder=f"findReqs;siteNumber={site_number},limit={limit},offset={offset}"
+        params={"onlyData":"true","expand":"requisitionList","finder":finder}
+        try:
+            r=session.get(
+                endpoint,
+                params=params,
+                headers={**HEADERS,"Accept":"application/json"},
+                timeout=15,
+            )
+            if r.status_code != 200:
+                break
+            data=r.json()
+        except Exception:
+            break
+
+        rows=[]
+        for item in data.get("items") or []:
+            reqs=item.get("requisitionList")
+            if isinstance(reqs,list):
+                rows.extend(reqs)
+            elif item.get("Title"):
+                rows.append(item)
+        if not rows:
+            break
+
+        for j in rows:
+            title=str(j.get("Title") or j.get("title") or "").strip()
+            loc=str(j.get("PrimaryLocation") or j.get("Location") or j.get("location") or "").strip()
+            country=str(
+                j.get("PrimaryLocationCountry")
+                or j.get("Country")
+                or j.get("country")
+                or ""
+            ).strip()
+            blob=f"{loc} {country}"
+            if re.search(r"\bBelfast\b|\bNorthern Ireland\b",blob,re.I):
+                continue
+            if not (is_republic_of_ireland_location(loc) or re.search(r"\bIreland\b|\bDublin\b|\bCork\b|\bGalway\b|\bLimerick\b",blob,re.I)):
+                continue
+
+            req_id=j.get("Id") or j.get("RequisitionId") or j.get("RequisitionNumber") or j.get("JobId")
+            if not title or req_id is None or _looks_like_non_job_title(title):
+                continue
+
+            req_id=str(req_id)
+            url=f"{base}/hcmUI/CandidateExperience/en/sites/{site_number}/job/{urllib.parse.quote(req_id)}/"
+            desc=str(j.get("ShortDescriptionStr") or "")
+            sponsorship,snippet=classify_sponsorship(desc[:5000])
+            posted="Unknown"
+            days=None
+            posted_raw=j.get("PostedDate") or j.get("PostingStartDate")
+            if posted_raw:
+                try:
+                    dt=datetime.fromisoformat(str(posted_raw).replace("Z","+00:00"))
+                    if dt.tzinfo is None:
+                        dt=dt.replace(tzinfo=timezone.utc)
+                    days=max(0,(datetime.now(timezone.utc)-dt).days)
+                    posted="Posted today" if days==0 else ("Posted yesterday" if days==1 else f"Posted {days} days ago")
+                except Exception:
+                    pass
+
+            location=loc or "Dublin, Ireland"
+            if not is_republic_of_ireland_location(location):
+                location="Dublin, Ireland" if re.search(r"\bDublin\b",blob,re.I) else "Republic of Ireland"
+
+            found[url.lower()]={
+                "company":company_name,
+                "title":title[:300],
+                "location":location[:180],
+                "posted_text":posted,
+                "posted_days_ago":days,
+                "employment_type":normalize_employment_type(
+                    j.get("WorkerType") or j.get("EmploymentType") or "", title
+                ),
+                "url":url,
+                "source":"batch58_oracle_wide_roi",
+                "visa_sponsorship":sponsorship,
+                "visa_snippet":snippet,
+            }
+
+        if not data.get("hasMore") and len(rows)<limit:
+            break
+
+    return list(found.values())
+
+
+def scrape_an_post_batch58(session=None):
+    session=session or requests.Session()
+    # Keep the existing country-filtered route, then add a genuinely different
+    # wide Oracle query so a broken IE facet cannot force a false zero.
+    old=[]
+    wide=[]
+    try:
+        old=scrape_an_post_oracle(session) or []
+    except Exception as exc:
+        print(f"      [batch58-anpost] existing Oracle route failed: {exc}")
+    try:
+        wide=_oracle_candidate_experience_wide_roi(
+            "An Post",
+            "https://fa-ewnd-saasfaprod1.fa.ocs.oraclecloud.com",
+            "CX_2001",
+            session,
+            max_pages=10,
+        )
+    except Exception as exc:
+        print(f"      [batch58-anpost] wide Oracle fallback failed: {exc}")
+    jobs=_batch58_union(old,wide)
+    print(f"      [batch58-anpost] {len(jobs)} ROI vacancies after country-filtered + wide Oracle union")
+    return jobs
+
+
+def scrape_mckinsey_ireland_batch58(session=None):
+    session=session or requests.Session()
+    merged={}
+
+    # Preserve prior mechanisms first.
+    for fn in (scrape_mckinsey_ireland_batch49, scrape_mckinsey_ireland_attempt2):
+        try:
+            for j in fn(session) or []:
+                u=(j.get("url") or "").split("#")[0].rstrip("/").lower()
+                if u:
+                    merged[u]=j
+        except Exception:
+            pass
+
+    # Current first-party details verified in September 2026.  These are not
+    # category pages: every URL is a real McKinsey vacancy detail and each one
+    # is re-fetched before emission.  This expands beyond the old BA/Intern-only
+    # fallback and covers experienced/internal roles too.
+    current_paths=[
+        "/careers/search-jobs/jobs/headofengineering-growthmarketingsales-108866",
+        "/careers/search-jobs/jobs/specialist-communications-110429",
+        "/careers/search-jobs/jobs/communicationsspecialist-socialhealthcarepublicentities-109567",
+        "/careers/search-jobs/jobs/dataanalyticsspecialist-110198",
+        "/careers/search-jobs/jobs/associate-15178",
+        "/careers/search-jobs/jobs/businessanalyst-15136",
+        "/careers/search-jobs/jobs/businessanalystintern-15275",
+    ]
+    base="https://www.mckinsey.com"
+    for path in current_paths:
+        url=urllib.parse.urljoin(base,path)
+        try:
+            raw,final=_batch48_http_get(session,url,12)
+        except Exception:
+            continue
+        if not raw:
+            continue
+        body=re.sub(r"\s+"," ",_html_to_text(raw)).strip()
+        if not re.search(r"\bDublin\b",body,re.I):
+            continue
+        if re.search(r"\bno longer available\b|\bposition has been filled\b",body,re.I):
+            continue
+        mh=re.search(r"<h1[^>]*>(.*?)</h1>",raw,re.I|re.S)
+        title=_batch44_clean_title(mh.group(1)) if mh else ""
+        rec=_batch44_job_record(
+            "McKinsey & Company",
+            title,
+            "Dublin, Ireland",
+            final,
+            body,
+            "batch58_mckinsey_current_first_party_detail",
+        )
+        if rec:
+            merged[rec["url"].split("#")[0].rstrip("/").lower()]=rec
+
+    print(f"      [batch58-mckinsey] {len(merged)} current Dublin vacancies after old + new first-party detail union")
+    return list(merged.values())
+
+
+def scrape_paypal_ireland_batch58(session=None):
+    session=session or requests.Session()
+    merged={}
+
+    # Preserve Batch54 API route.
+    try:
+        for j in scrape_paypal_ireland_batch54(session) or []:
+            u=(j.get("url") or "").split("#")[0].rstrip("/").lower()
+            if u:
+                merged[u]=j
+    except Exception:
+        pass
+
+    # Start from PayPal's own Ireland careers page, which links to its official
+    # paypal.eightfold.ai vacancy board. Follow that first-party path rather than
+    # guessing Eightfold JSON parameters.
+    roots=[
+        "https://careers.pypl.com/locations/ireland/",
+        "https://careers.pypl.com/locations/ireland/default.aspx",
+    ]
+    board_urls=set()
+    for root in roots:
+        try:
+            raw,final=_batch48_http_get(session,root,12)
+        except Exception:
+            continue
+        if not raw:
+            continue
+        for m in re.finditer(r'href=["\']([^"\']*paypal\.eightfold\.ai[^"\']*)["\']',raw,re.I):
+            board_urls.add(html.unescape(m.group(1)))
+
+    # Known official board root is added only as discovery fallback; emitted
+    # vacancies still must live-verify from their own detail pages.
+    board_urls.update([
+        "https://paypal.eightfold.ai/careers",
+        "https://paypal.eightfold.ai/careers?location=Dublin%2C%20Ireland",
+    ])
+
+    detail_links={}
+    for board in list(board_urls)[:6]:
+        try:
+            raw,final=_batch48_http_get(session,board,15)
+        except Exception:
+            continue
+        if not raw:
+            continue
+        hay=html.unescape(raw).replace(r"\/","/")
+        for m in re.finditer(
+            r'(?:"|\'|href=)(https?://paypal\.eightfold\.ai/careers/job/[^"\'<>\s]+|/careers/job/[^"\'<>\s]+)',
+            hay,re.I
+        ):
+            full=urllib.parse.urljoin(final,m.group(1)).split("#")[0]
+            detail_links[full.lower()]=full
+
+    def verify(url):
+        s=requests.Session()
+        try:
+            raw,final=_batch48_http_get(s,url,12)
+        except Exception:
+            return None
+        if not raw:
+            return None
+        body=re.sub(r"\s+"," ",_html_to_text(raw)).strip()
+        if re.search(r"\bBelfast\b|\bNorthern Ireland\b",body,re.I):
+            return None
+        if not re.search(r"\bDublin\b|\bIreland\b",body,re.I):
+            return None
+        if re.search(r"\bjob is no longer available\b|\bno longer accepting applications\b",body,re.I):
+            return None
+        mh=re.search(r"<h1[^>]*>(.*?)</h1>",raw,re.I|re.S)
+        title=_batch44_clean_title(mh.group(1)) if mh else ""
+        if not title:
+            tm=re.search(r"<title[^>]*>(.*?)</title>",raw,re.I|re.S)
+            title=_batch44_clean_title(tm.group(1)) if tm else ""
+            title=re.sub(r"\s*[|-]\s*PayPal.*$","",title,flags=re.I).strip()
+        loc="Dublin, Ireland" if re.search(r"\bDublin\b",body,re.I) else "Republic of Ireland"
+        return _batch44_job_record(
+            "PayPal",title,loc,final,body,"batch58_paypal_first_party_eightfold_html"
+        )
+
+    with ThreadPoolExecutor(max_workers=10) as ex:
+        futs=[ex.submit(verify,u) for u in list(detail_links.values())[:100]]
+        for fut in as_completed(futs):
+            try:
+                rec=fut.result()
+            except Exception:
+                rec=None
+            if rec:
+                merged[rec["url"].split("#")[0].rstrip("/").lower()]=rec
+
+    print(f"      [batch58-paypal] {len(merged)} ROI vacancies after API + first-party Eightfold HTML/detail union")
+    return list(merged.values())
+
+
 # === TARGETED_DIRECT_BATCH_56_MULTI_COMPANY_REGRESSION_AND_REDHAT ===
 # Latest log moved from 86 -> 88 zero companies while the regression guard
 # was silently reading the wrong jobs.json key. Batch56 fixes that globally.
@@ -16124,6 +16425,7 @@ def scrape_wtw_ireland_batch26(session):
     print("=== TARGETED_DIRECT_BATCH_38_PRE_FULL_RUN_BULK ACTIVE: proven Uisce Oracle recovery retained + Edwards Lifesciences and HP moved to current official Workday ROI detail verification; wider zero audit completed; Manual queue untouched ===")
 
 print("=== TARGETED_DIRECT_BATCH_46_AVIVA_HIGH_YIELD_FIX ACTIVE: Aviva is removed from final defer and uses eight current official Dublin detail seeds plus live detail verification; failed Aldi/HP mechanisms are not expanded; proven positive routes preserved ===")
+print("=== TARGETED_DIRECT_BATCH_58_MULTI_COMPANY_CURRENT_FALSE_ZERO_RECOVERY ACTIVE: McKinsey + An Post + PayPal; additive first-party current mechanisms, fresh cache namespace, prior routes preserved ===")
 print("=== TARGETED_DIRECT_BATCH_57_MULTI_COMPANY_LATE_RESULT_RECOVERY ACTIVE: productive timed-out workers are harvested if they finish later; positive fallbacks are soft not hard errors; Red Hat Batch56 repeat deferred after confirmed zero ===")
 print("=== TARGETED_DIRECT_BATCH_56_MULTI_COMPANY_REGRESSION_AND_REDHAT ACTIVE: previous live_jobs guard fixed globally; one-cycle preservation only; Red Hat current+prior Workday union ===")
 print("=== TARGETED_DIRECT_BATCH_55_LOG_DRIVEN_STABILITY_FIX ACTIVE: daa NameError fixed; Aviva proven-route-first bounded fallback; Batch54 HSE/LinkedIn/Lilly wins preserved ===")
@@ -16527,9 +16829,9 @@ def main():
         ("exact", "daa (dublin airport authority)", scrape_daa_batch54, 75, "Batch54 official daa Oracle Candidate Experience CX_1"),
         ("exact", "eli lilly", scrape_lilly_ireland_batch54, 75, "Batch54 official Lilly Phenom Ireland board"),
         ("exact", "dhl ireland", scrape_dhl_ireland_batch54, 75, "Batch54 official DHL Phenom Ireland board"),
-        ("exact", "paypal", scrape_paypal_ireland_batch54, 75, "Batch54 official PayPal Eightfold Ireland board"),
+        ("exact", "paypal", scrape_paypal_ireland_batch58, 75, "Batch58 PayPal official Ireland page + Eightfold HTML/API union"),
         ("exact", "linkedin", scrape_linkedin_ireland_batch54, 75, "Batch54 LinkedIn first-party Dublin jobs details"),
-        ("exact", "an post", scrape_an_post_oracle, 40, "official An Post Oracle Candidate Experience CX_2001"),
+        ("exact", "an post", scrape_an_post_batch58, 55, "Batch58 An Post Oracle country-filtered + wide ROI union"),
         ("exact", "kepak group", scrape_kepak_workable, 35, "official Kepak Workable board"),
         ("exact", "glaxosmithkline (gsk)", scrape_gsk_ireland_current, 55, "official GSK current-jobs Ireland search"),
         ("exact", "bord gáis energy", scrape_bord_gais_energy_workday, 40, "official Bord Gais Energy Centrica Workday route"),
@@ -16630,7 +16932,7 @@ def main():
         ("exact", "edwards lifesciences", scrape_edwards_lifesciences_batch38, 60, "Batch38 official Edwards Workday current ROI route"),
         ("exact", "oracle", scrape_oracle_ireland_attempt2, 60, "attempt 2 rendered Oracle Ireland board"),
         ("exact", "bausch + lomb", scrape_bausch_lomb_friend, 60, "friend-referenced Bausch + Lomb Ireland board"),
-        ("exact", "mckinsey & company", scrape_mckinsey_ireland_batch49, 45, "Batch49 McKinsey Ireland applications-open roles"),
+        ("exact", "mckinsey & company", scrape_mckinsey_ireland_batch58, 70, "Batch58 current McKinsey Dublin multi-detail union"),
         ("exact", "hse (health service executive)", scrape_hse_current_board_batch51, 95, "Batch51 current official HSE board/detail verification"),
         ("exact", "honeywell", scrape_honeywell_attempt2, 90, "Honeywell second/final Ireland attempt"),
         ("exact", "schneider electric", scrape_schneider_batch18, 90, "Batch18 Schneider rendered + sitemap fallback"),
@@ -17004,7 +17306,10 @@ def main():
             # Batch53: mechanism upgrades for previously-positive companies must
             # be regression-safe.  This final override intentionally occurs
             # after all older cache-key branches so it cannot be overwritten.
-            if _key in {"daa (dublin airport authority)", "eli lilly", "dhl ireland", "paypal", "linkedin"}:
+            if _key in {"mckinsey & company", "paypal", "an post"}:
+                cache_key = f"{name}::targeted_direct_batch58_multi_v1"
+                _carry_recent_positive_cache(browser_cache, name, cache_key)
+            elif _key in {"daa (dublin airport authority)", "eli lilly", "dhl ireland", "linkedin"}:
                 cache_key = f"{name}::targeted_direct_batch54_multi_v1"
                 _carry_recent_positive_cache(browser_cache, name, cache_key)
             elif _key == "aviva ireland":
