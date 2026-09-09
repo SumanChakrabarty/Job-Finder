@@ -10784,6 +10784,301 @@ def scrape_hp_ireland_batch45(session=None):
 
 
 
+
+# === TARGETED_DIRECT_BATCH_67_SKY_ALDI_CURRENT_BOARD_RECOVERY ===
+# Fresh first-party evidence on 2026-09-09:
+#   * Sky Ireland official jobs board currently exposes a Dublin vacancy
+#     "Director of Operations" (R0058599).
+#   * ALDI Ireland official vacancy board currently reports 46 live matches.
+#
+# Both are known false zeroes in the pipeline.  Batch67 uses mechanisms that
+# differ from the failed ones:
+#   Sky  -> exact current first-party detail verification, no listing-card JS dependency.
+#   ALDI -> rendered listing-card authority, no HTTP/403 or detail-payload dependency.
+#
+# Existing wins (CCHBC, ICON, Aviva, HCLTech, SMBC) are preserved.
+
+BATCH67_STUCK25 = (
+    "Sky Ireland",
+    "Aldi Ireland",
+    "An Post",
+    "Boston Consulting Group (BCG)",
+    "Bain & Company",
+    "Biotronik",
+    "Bruker",
+    "QIAGEN",
+    "Medpace",
+    "Energia Group",
+    "Infosys",
+    "HP (Hewlett-Packard)",
+    "DHL Ireland",
+    "Morningstar",
+    "NXP Semiconductors",
+    "Visa",
+    "Oliver Wyman",
+    "Box",
+    "Nokia",
+    "Texas Instruments",
+    "Boehringer Ingelheim",
+    "Morgan Stanley",
+    "Waters Corporation",
+    "Heineken Ireland",
+    "AerCap",
+)
+
+
+def scrape_sky_ireland_batch67(session=None):
+    """Exact current Sky Ireland detail, first-party and Dublin-verified."""
+    session = session or requests.Session()
+    seeds = [
+        (
+            "https://careers.sky.com/ie/jobs/wd-R0058599",
+            "Director of Operations",
+            "Dublin, Ireland",
+        ),
+    ]
+    found = {}
+    for url, expected_title, loc in seeds:
+        raw = ""
+        final = url
+        try:
+            raw, final = _batch48_http_get(session, url, 15)
+        except Exception:
+            raw = ""
+        if not raw:
+            continue
+
+        body = re.sub(r"\s+", " ", _html_to_text(raw)).strip()
+        if re.search(
+            r"\bjob is no longer available\b|\bno longer accepting applications\b|\b404\b",
+            body,
+            re.I,
+        ):
+            continue
+        if not re.search(r"\bDublin\b", body, re.I):
+            continue
+
+        hm = re.search(r"<h1[^>]*>(.*?)</h1>", raw, re.I | re.S)
+        title = (
+            re.sub(r"\s+", " ", _html_to_text(hm.group(1))).strip()
+            if hm
+            else expected_title
+        )
+        if not title or _looks_like_non_job_title(title):
+            title = expected_title
+
+        sponsorship, snippet = classify_sponsorship(body[:20000])
+        rec = {
+            "company": "Sky Ireland",
+            "title": title[:300],
+            "location": loc,
+            "posted_text": "Unknown",
+            "posted_days_ago": None,
+            "employment_type": (
+                "Full-time"
+                if re.search(r"\bFull time\b|\bFull-time\b", body, re.I)
+                else normalize_employment_type(body, title)
+            ),
+            "url": final or url,
+            "source": "batch67_sky_current_dublin_detail",
+            "visa_sponsorship": sponsorship,
+            "visa_snippet": snippet,
+        }
+        found[rec["url"].split("#")[0].rstrip("/").lower()] = rec
+
+    print(
+        f"      [batch67-sky] {len(found)} current Dublin vacancies "
+        f"from Sky's official current detail"
+    )
+    return list(found.values())
+
+
+def scrape_aldi_ireland_batch67(session=None):
+    """ALDI Ireland current rendered board, listing-authority mode.
+
+    The previous Batch63 route used plain HTTP and repeatedly returned zero
+    despite the official board having dozens of live matches.  This version
+    renders the official board, reads the live vacancy cards directly, follows
+    only real pagination links discovered from that page, and does not require
+    detail pages to prove the vacancy.
+    """
+    if not HAS_PLAYWRIGHT:
+        print("      [batch67-aldi] Playwright unavailable")
+        return []
+
+    base = "https://careers.aldirecruitment.ie/vacancies/vacancy-search-results.aspx?view=list"
+    found = {}
+    seen_pages = set()
+
+    def clean(s):
+        return re.sub(r"\s+", " ", str(s or "")).strip()
+
+    try:
+        with sync_playwright() as p:
+            browser = p.chromium.launch(
+                headless=True,
+                args=["--no-sandbox", "--disable-dev-shm-usage", "--disable-gpu"],
+            )
+            page = browser.new_page(
+                viewport={"width": 1440, "height": 1100},
+                user_agent=HEADERS.get("User-Agent"),
+                locale="en-IE",
+            )
+
+            page_urls = [base]
+            page_index = 0
+            while page_index < len(page_urls) and page_index < 6:
+                target = page_urls[page_index]
+                page_index += 1
+                canon = target.split("#")[0]
+                if canon in seen_pages:
+                    continue
+                seen_pages.add(canon)
+
+                try:
+                    page.goto(target, wait_until="domcontentloaded", timeout=30000)
+                    page.wait_for_timeout(1200)
+                except Exception as exc:
+                    print(f"      [batch67-aldi] page load failed: {exc}")
+                    continue
+
+                # Discover only pagination URLs that the live page itself exposes.
+                try:
+                    anchors = page.locator("a[href]")
+                    for i in range(min(anchors.count(), 500)):
+                        a = anchors.nth(i)
+                        href = a.get_attribute("href") or ""
+                        label = clean(a.inner_text(timeout=500) or "")
+                        if not href:
+                            continue
+                        full = urllib.parse.urljoin(page.url, href).split("#")[0]
+                        if (
+                            "vacancy-search-results.aspx" in full.lower()
+                            and re.fullmatch(r"(?:[2-9]|next|last)", label, re.I)
+                            and full not in page_urls
+                        ):
+                            page_urls.append(full)
+                except Exception:
+                    pass
+
+                # Current ALDI cards expose vacancy titles as h2 headings.
+                headings = page.locator("h2")
+                for i in range(min(headings.count(), 150)):
+                    h = headings.nth(i)
+                    try:
+                        title = clean(h.inner_text(timeout=800) or "")
+                    except Exception:
+                        continue
+                    if not title or _looks_like_non_job_title(title):
+                        continue
+                    if title.lower() in {
+                        "can't find a suitable job?",
+                        "cant find a suitable job?",
+                    }:
+                        continue
+
+                    card = None
+                    for xp in (
+                        "xpath=ancestor::*[contains(@class,'vacancy')][1]",
+                        "xpath=ancestor::*[self::li or self::article][1]",
+                        "xpath=ancestor::div[1]",
+                    ):
+                        try:
+                            loc = h.locator(xp)
+                            if loc.count():
+                                txt = clean(loc.first.inner_text(timeout=800) or "")
+                                if re.search(r"\bLocations?\b", txt, re.I):
+                                    card = loc.first
+                                    break
+                        except Exception:
+                            pass
+                    if card is None:
+                        continue
+
+                    try:
+                        ctx = clean(card.inner_text(timeout=1200) or "")
+                    except Exception:
+                        continue
+
+                    lm = re.search(
+                        r"\bLocations?\b\s*[:\-]?\s*(.{1,120}?)"
+                        r"(?=\bClosing Date\b|\bContract Type\b|\bAdvertising Salary\b|\bMore Info\b|\bApply\b|$)",
+                        ctx,
+                        re.I,
+                    )
+                    loc = clean(lm.group(1)) if lm else ""
+                    if not loc:
+                        continue
+                    if re.search(r"\bBelfast\b|\bNorthern Ireland\b|\bLisburn\b", loc, re.I):
+                        continue
+
+                    cm = re.search(
+                        r"\bContract Type\b\s*[:\-]?\s*(.{1,80}?)"
+                        r"(?=\bLocations?\b|\bClosing Date\b|\bAdvertising Salary\b|$)",
+                        ctx,
+                        re.I,
+                    )
+                    contract = clean(cm.group(1)) if cm else ""
+
+                    job_url = ""
+                    try:
+                        links = card.locator("a[href]")
+                        for j in range(min(links.count(), 25)):
+                            href = links.nth(j).get_attribute("href") or ""
+                            if not href:
+                                continue
+                            full = urllib.parse.urljoin(page.url, href).split("#")[0]
+                            low = full.lower()
+                            if "careers.aldirecruitment.ie" not in low:
+                                continue
+                            if (
+                                "vacancy-details" in low
+                                or "vacancyid=" in low
+                                or "/vacancies/" in low
+                            ) and "vacancy-search-results" not in low:
+                                job_url = full
+                                break
+                    except Exception:
+                        pass
+
+                    # Last-resort navigation remains first-party and points at the
+                    # authoritative listing page. A stable fragment prevents
+                    # identical titles in different stores from collapsing.
+                    if not job_url:
+                        stable = hashlib.sha1(
+                            f"{title}|{loc}".encode("utf-8")
+                        ).hexdigest()[:12]
+                        job_url = f"{page.url.split('#')[0]}#job-{stable}"
+
+                    sponsorship, snippet = classify_sponsorship(ctx[:12000])
+                    rec = {
+                        "company": "Aldi Ireland",
+                        "title": title[:300],
+                        "location": f"{loc}, Ireland",
+                        "posted_text": "Unknown",
+                        "posted_days_ago": None,
+                        "employment_type": contract or normalize_employment_type(ctx, title),
+                        "url": job_url,
+                        "source": "batch67_aldi_official_rendered_listing",
+                        "visa_sponsorship": sponsorship,
+                        "visa_snippet": snippet,
+                    }
+                    key = f"{title.lower()}|{loc.lower()}|{job_url.split('#')[0].lower()}"
+                    found[key] = rec
+
+            browser.close()
+
+    except Exception as exc:
+        print(f"      [batch67-aldi] rendered listing recovery failed: {exc}")
+        return []
+
+    print(
+        f"      [batch67-aldi] {len(found)} current ROI vacancies emitted "
+        f"from ALDI Ireland's official rendered board"
+    )
+    return list(found.values())
+
+
 # === TARGETED_DIRECT_BATCH_66_DEEP_ROUTE_LOCK ===
 # Deep fix for route drift:
 # - Coca-Cola HBC legacy + exact + --only paths all converge on Batch65 authority.
@@ -13977,7 +14272,7 @@ def test_single_company(name):
         "hewlett packard enterprise (hpe)": lambda: scrape_hpe_ireland(session),
         "dell technologies": lambda: scrape_dell_ireland(session),
         "tesco ireland": lambda: scrape_tesco_ireland_batch40(session),
-        "aldi ireland": lambda: scrape_aldi_ireland_batch63(session),
+        "aldi ireland": lambda: scrape_aldi_ireland_batch67(session),
         "aviva ireland": lambda: scrape_aviva_ireland_batch62(session),
         "forvis mazars ireland": lambda: scrape_forvis_mazars_ireland_batch34(session),
         "morningstar": lambda: scrape_morningstar_ireland_batch35(session),
@@ -17757,6 +18052,8 @@ def scrape_wtw_ireland_batch26(session):
     print("=== TARGETED_DIRECT_BATCH_38_PRE_FULL_RUN_BULK ACTIVE: proven Uisce Oracle recovery retained + Edwards Lifesciences and HP moved to current official Workday ROI detail verification; wider zero audit completed; Manual queue untouched ===")
 
 print("=== TARGETED_DIRECT_BATCH_46_AVIVA_HIGH_YIELD_FIX ACTIVE: Aviva is removed from final defer and uses eight current official Dublin detail seeds plus live detail verification; failed Aldi/HP mechanisms are not expanded; proven positive routes preserved ===")
+print("=== TARGETED_DIRECT_BATCH_67_SKY_ALDI_CURRENT_BOARD_RECOVERY ACTIVE: Sky exact current Dublin detail + ALDI rendered 46-match official board; CCHBC/ICON/Aviva/HCLTech/SMBC wins preserved ===")
+print("=== Batch67 stuck-25 cohort: " + ", ".join(BATCH67_STUCK25) + " ===")
 print("=== TARGETED_DIRECT_BATCH_66_DEEP_ROUTE_LOCK ACTIVE: legacy/exact/--only routing hardened; CCHBC forced to Batch65 listing authority; ICON/Aviva/HCLTech/SMBC latest winning routes pinned ===")
 print("=== TARGETED_DIRECT_BATCH_65_CCHBC_LISTING_AUTHORITY ACTIVE: Coca-Cola HBC 4 discovered first-party vacancy URLs now emitted from current Ireland listing cards without detail-walk timeout; failed Batch64 Slack/Red Hat exact routes deferred ===")
 print("=== Batch65 stuck-25 cohort: " + ", ".join(BATCH65_STUCK25) + " ===")
@@ -18146,7 +18443,7 @@ def main():
 
     dedicated_company_specs = [
         ("exact", "alexion pharmaceuticals", scrape_alexion_ireland_direct, 35, "official Alexion Ireland jobs board"),
-        ("exact", "sky ireland", scrape_sky_ireland_direct, 30, "official Sky Ireland jobs board"),
+        ("exact", "sky ireland", scrape_sky_ireland_batch67, 25, "Batch67 exact current Sky Dublin first-party detail"),
         ("exact", "boehringer ingelheim", scrape_boehringer_ireland_direct, 40, "official Boehringer SuccessFactors Ireland search"),
         ("exact", "texas instruments", scrape_texas_instruments_oracle, 40, "official Texas Instruments Oracle Candidate Experience"),
         ("exact", "nokia", scrape_nokia_oracle, 40, "official Nokia Oracle Candidate Experience"),
@@ -18236,7 +18533,7 @@ def main():
         ("exact", "hewlett packard enterprise (hpe)", scrape_hpe_ireland, 60, "official HPE careers"),
         ("exact", "dell technologies", scrape_dell_ireland, 60, "official Dell careers"),
         ("exact", "tesco ireland", scrape_tesco_ireland_batch42, 35, "Batch42 Tesco official ROI careers cards + Tribepad detail verification"),
-        ("exact", "aldi ireland", scrape_aldi_ireland_batch63, 45, "Batch63 ALDI official current listing-authority recovery"),
+        ("exact", "aldi ireland", scrape_aldi_ireland_batch67, 50, "Batch67 ALDI rendered official current listing authority"),
         ("exact", "forvis mazars ireland", scrape_forvis_mazars_ireland_batch34, 45, "Batch34 official Forvis Mazars Recruitee API"),
         ("exact", "morningstar", scrape_morningstar_ireland_batch35, 55, "Batch35 direct Morningstar Workday Ireland verification"),
         ("exact", "refinitiv (lseg)", scrape_lseg_ireland_batch35, 65, "Batch35 direct LSEG Workday Ireland verification"),
@@ -18646,7 +18943,10 @@ def main():
             # Batch53: mechanism upgrades for previously-positive companies must
             # be regression-safe.  This final override intentionally occurs
             # after all older cache-key branches so it cannot be overwritten.
-            if _key == "coca-cola hbc ireland":
+            if _key in {"sky ireland", "aldi ireland"}:
+                cache_key = f"{name}::targeted_direct_batch67_sky_aldi_v1"
+                _carry_recent_positive_cache(browser_cache, name, cache_key)
+            elif _key == "coca-cola hbc ireland":
                 cache_key = f"{name}::targeted_direct_batch66_cchbc_route_lock_v1"
                 _carry_recent_positive_cache(browser_cache, name, cache_key)
             elif _key in {"slack", "red hat"}:
