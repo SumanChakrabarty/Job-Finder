@@ -38952,8 +38952,8 @@
   },
   "NXP Semiconductors::zero_only_batch20_v1": {
     "jobs": [],
-    "checked_at": 1788957425.8788564,
-    "consecutive_failures": 69
+    "checked_at": 1788963017.6414104,
+    "consecutive_failures": 70
   },
   "Haleon::zero_only_batch20_v1": {
     "jobs": [
@@ -45773,72 +45773,72 @@
   },
   "Kepak Group::targeted_direct_batch7_multi_v1": {
     "jobs": [],
-    "checked_at": 1788961950.6113894,
+    "checked_at": 1788962991.9508257,
     "consecutive_failures": 1
   },
   "AerCap::targeted_direct_batch63_stuck25_v1": {
     "jobs": [],
-    "checked_at": 1788961951.0798123,
-    "consecutive_failures": 1
-  },
-  "Infosys::targeted_direct_batch47_v1": {
-    "jobs": [],
-    "checked_at": 1788961952.3602393,
+    "checked_at": 1788962992.2501333,
     "consecutive_failures": 1
   },
   "HP (Hewlett-Packard)::friend_next4_v1": {
     "jobs": [],
-    "checked_at": 1788961953.0308533,
+    "checked_at": 1788962993.0556455,
+    "consecutive_failures": 1
+  },
+  "Infosys::targeted_direct_batch47_v1": {
+    "jobs": [],
+    "checked_at": 1788962993.0983603,
     "consecutive_failures": 1
   },
   "VMware (Broadcom)::zero_only_batch20_v1": {
     "jobs": [],
-    "checked_at": 1788961953.9253702,
+    "checked_at": 1788962993.7831562,
     "consecutive_failures": 1
   },
   "DHL Ireland::targeted_direct_batch54_multi_v1": {
     "jobs": [],
-    "checked_at": 1788961954.9975781,
-    "consecutive_failures": 1
-  },
-  "Sky Ireland::targeted_direct_batch68_sky_aldi_domlink_v1": {
-    "jobs": [],
-    "checked_at": 1788961954.9989033,
+    "checked_at": 1788962993.8915882,
     "consecutive_failures": 1
   },
   "Aldi Ireland::targeted_direct_batch68_sky_aldi_domlink_v1": {
     "jobs": [],
-    "checked_at": 1788961956.3512685,
+    "checked_at": 1788962994.7388802,
+    "consecutive_failures": 1
+  },
+  "Sky Ireland::targeted_direct_batch68_sky_aldi_domlink_v1": {
+    "jobs": [],
+    "checked_at": 1788962995.023004,
     "consecutive_failures": 1
   },
   "QIAGEN::zero_only_batch20_v1": {
     "jobs": [],
-    "checked_at": 1788961958.576409,
+    "checked_at": 1788962997.5000415,
     "consecutive_failures": 1
   },
   "An Post": {
     "jobs": [],
-    "checked_at": 1788961961.598283,
+    "checked_at": 1788963000.4320478,
     "consecutive_failures": 1
   },
   "Red Hat": {
     "jobs": [],
-    "checked_at": 1788961968.057114,
+    "checked_at": 1788963001.6790001,
     "consecutive_failures": 1
   },
   "Boston Consulting Group (BCG)": {
     "jobs": [],
-    "checked_at": 1788961975.035146,
-    "consecutive_failures": 1
-  },
-  "Deutsche Bank::friend_logic_v1": {
-    "jobs": [],
-    "checked_at": 1788961977.4951003,
+    "checked_at": 1788963007.6901133,
     "consecutive_failures": 1
   },
   "EXL": {
     "jobs": [],
-    "checked_at": 1788961981.303909,
+    "checked_at": 1788963016.290823,
+    "consecutive_failures": 1
+  },
+  "Deutsche Bank::friend_logic_v1": {
+    "jobs": [],
+    "checked_at": 1788963017.2422314,
     "consecutive_failures": 1
   }
 }
