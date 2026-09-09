@@ -9383,15 +9383,13 @@ def scrape_bnp_paribas_ireland_friend(session):
 
 
 def scrape_coca_cola_hbc_ireland_friend(session):
-    return _batch_first_party_roi_scrape(
-        "Coca-Cola HBC Ireland",
-        ["https://careers.coca-colahellenic.com/en_US/careers/SearchJobs/ireland"],
-        ["careers.coca-colahellenic.com"],
-        ["/careers/ProjectDetail/"],
-        session,
-        "cocacola_hbc_friend_reference",
-        45,
-    )
+    """Compatibility entrypoint.
+
+    Deep-fix: every legacy call now reaches the current Batch65
+    Ireland-listing-authority scraper. This removes the old expensive
+    per-detail browser walk that repeatedly found four URLs and emitted zero.
+    """
+    return scrape_coca_cola_hbc_ireland_batch65(session)
 
 
 def scrape_hcltech_ireland_friend(session):
@@ -10783,6 +10781,213 @@ def scrape_hp_ireland_batch45(session=None):
 
 
 
+
+
+
+# === TARGETED_DIRECT_BATCH_66_DEEP_ROUTE_LOCK ===
+# Deep fix for route drift:
+# - Coca-Cola HBC legacy + exact + --only paths all converge on Batch65 authority.
+# - --only paths for ICON/Aviva/HCLTech/SMBC are pinned to their latest winning routes.
+# - Failed Batch64 Slack/Red Hat exact routes remain deferred.
+# This is routing hardening, not another speculative scraper sweep.
+
+BATCH66_ROUTE_LOCKS = {
+    "coca-cola hbc ireland": "batch65_cchbc_listing_authority",
+    "icon plc": "batch61_icon",
+    "aviva ireland": "batch62_aviva",
+    "hcltech": "batch63_hcltech",
+    "smbc aviation capital": "batch63_smbc",
+}
+
+# === TARGETED_DIRECT_BATCH_65_CCHBC_LISTING_AUTHORITY ===
+# Batch64 log showed Coca-Cola HBC already discovers 4 unique first-party
+# ProjectDetail vacancy URLs, but then the old browser detail-walk hard-times
+# out and emits zero. Batch65 keeps discovery, removes the expensive detail
+# dependency, and emits current Ireland-filtered listing cards directly.
+#
+# Slack/Red Hat Batch64 exact mechanisms are deferred after both returned zero.
+# Prior wins (ICON, Aviva, HCLTech, SMBC) remain untouched.
+
+BATCH65_STUCK25 = (
+    "Coca-Cola HBC Ireland",
+    "An Post",
+    "Boston Consulting Group (BCG)",
+    "Bain & Company",
+    "Biotronik",
+    "Bruker",
+    "QIAGEN",
+    "Medpace",
+    "Energia Group",
+    "Infosys",
+    "HP (Hewlett-Packard)",
+    "DHL Ireland",
+    "Morningstar",
+    "NXP Semiconductors",
+    "Visa",
+    "Oliver Wyman",
+    "Box",
+    "Nokia",
+    "Texas Instruments",
+    "Boehringer Ingelheim",
+    "Morgan Stanley",
+    "Waters Corporation",
+    "Heineken Ireland",
+    "Aldi Ireland",
+    "AerCap",
+)
+
+
+def scrape_coca_cola_hbc_ireland_batch65(session=None):
+    """Current Coca-Cola HBC Ireland listing-card recovery.
+
+    The old route already proves discovery: it finds current first-party
+    /careers/ProjectDetail/ URLs from the Ireland-filtered board. The problem
+    was walking every detail page in one browser task. Here the official
+    Ireland-filtered listing card is authoritative vacancy evidence; detail
+    pages are not required for emission.
+    """
+    if not HAS_PLAYWRIGHT:
+        print("      [batch65-cchbc] Playwright unavailable")
+        return []
+
+    board = "https://careers.coca-colahellenic.com/en_US/careers/SearchJobs/ireland"
+    found = {}
+
+    try:
+        with sync_playwright() as p:
+            browser = p.chromium.launch(
+                headless=True,
+                args=["--no-sandbox", "--disable-dev-shm-usage", "--disable-gpu"],
+            )
+            page = browser.new_page(
+                viewport={"width": 1400, "height": 1000},
+                user_agent=HEADERS.get("User-Agent"),
+            )
+            try:
+                page.goto(board, wait_until="domcontentloaded", timeout=30000)
+                page.wait_for_timeout(1800)
+            except Exception as exc:
+                print(f"      [batch65-cchbc] board load failed: {exc}")
+                browser.close()
+                return []
+
+            # A light scroll is enough to expose the current cards without
+            # entering the old per-detail loop.
+            for _ in range(2):
+                try:
+                    page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
+                    page.wait_for_timeout(500)
+                except Exception:
+                    break
+
+            anchors = page.locator('a[href*="/careers/ProjectDetail/"]')
+            n = min(anchors.count(), 120)
+
+            for i in range(n):
+                a = anchors.nth(i)
+                try:
+                    href = a.get_attribute("href") or ""
+                    if not href:
+                        continue
+                    full = urllib.parse.urljoin(page.url, href).split("#")[0]
+
+                    title = re.sub(r"\s+", " ", (a.inner_text() or "")).strip()
+
+                    # Prefer a nearby heading when the clickable anchor is only
+                    # a CTA such as "View job". This is common on the current
+                    # Coca-Cola HBC card markup.
+                    if not title or _looks_like_non_job_title(title):
+                        try:
+                            card = a.locator(
+                                "xpath=ancestor::*[self::li or self::article or contains(@class,'job') or contains(@class,'project')][1]"
+                            )
+                            if card.count():
+                                for sel in ("h1", "h2", "h3", "h4"):
+                                    hs = card.first.locator(sel)
+                                    if hs.count():
+                                        candidate = re.sub(r"\s+", " ", hs.first.inner_text()).strip()
+                                        if candidate and not _looks_like_non_job_title(candidate):
+                                            title = candidate
+                                            break
+                        except Exception:
+                            pass
+
+                    # Pull compact surrounding card text. This captures the
+                    # location even when the anchor itself only contains title.
+                    ctx = ""
+                    for xpath in (
+                        "xpath=ancestor::*[self::li or self::article or contains(@class,'job') or contains(@class,'project')][1]",
+                        "xpath=..",
+                    ):
+                        try:
+                            loc = a.locator(xpath)
+                            if loc.count():
+                                ctx = re.sub(r"\s+", " ", loc.first.inner_text()).strip()
+                                if ctx:
+                                    break
+                        except Exception:
+                            pass
+
+                    # Fall back to URL slug only when anchor text is a CTA.
+                    if not title or _looks_like_non_job_title(title):
+                        slug = urllib.parse.unquote(full.rstrip("/").split("/")[-1])
+                        # ProjectDetail URLs often end in a numeric id; use
+                        # the preceding slug when available.
+                        if slug.isdigit() and len(full.rstrip("/").split("/")) >= 2:
+                            slug = urllib.parse.unquote(full.rstrip("/").split("/")[-2])
+                        title = re.sub(r"[-_]+", " ", slug)
+                        title = re.sub(r"\s+", " ", title).strip().title()
+
+                    title = _batch44_clean_title(title)
+                    if not title or _looks_like_non_job_title(title):
+                        continue
+
+                    # This board is Ireland-filtered, but the local business
+                    # operates on the island of Ireland. Explicitly reject NI.
+                    if re.search(r"\bBelfast\b|\bNorthern Ireland\b|\bLisburn\b", ctx, re.I):
+                        continue
+
+                    # Require positive ROI evidence in card text when available;
+                    # otherwise use the board's Ireland filter plus absence of NI.
+                    loc = "Republic of Ireland"
+                    mloc = re.search(
+                        r"\b(Dublin|Cork|Galway|Limerick|Wexford|Waterford|Kildare|Kilkenny|Meath|Louth|Mayo|Wicklow|Donegal|Sligo|Athlone|Naas|Clondalkin|Ballina)\b",
+                        ctx, re.I
+                    )
+                    if mloc:
+                        loc = f"{mloc.group(1).title()}, Ireland"
+                    elif re.search(r"\bIreland\b", ctx, re.I):
+                        loc = "Republic of Ireland"
+
+                    sponsorship, snippet = classify_sponsorship(ctx[:18000])
+                    rec = {
+                        "company": "Coca-Cola HBC Ireland",
+                        "title": title[:300],
+                        "location": loc,
+                        "posted_text": "Unknown",
+                        "posted_days_ago": None,
+                        "employment_type": normalize_employment_type(ctx, title),
+                        "url": full,
+                        "source": "batch65_cchbc_official_ireland_listing",
+                        "visa_sponsorship": sponsorship,
+                        "visa_snippet": snippet,
+                    }
+                    key = full.rstrip("/").lower()
+                    found[key] = rec
+                except Exception:
+                    continue
+
+            browser.close()
+
+    except Exception as exc:
+        print(f"      [batch65-cchbc] rendered listing recovery failed: {exc}")
+        return []
+
+    print(
+        f"      [batch65-cchbc] {len(found)} current ROI vacancies emitted "
+        f"from Coca-Cola HBC's official Ireland-filtered listing"
+    )
+    return list(found.values())
 
 # === TARGETED_DIRECT_BATCH_64_STUCK25_ROTATION ===
 # Rotate the stuck-company cohort instead of re-running the same 25 mechanisms.
@@ -13766,14 +13971,14 @@ def test_single_company(name):
         "factset": lambda: scrape_factset_ireland_batch40(session),
         "davy": lambda: scrape_davy_ireland_batch48(session),
         "barclays": lambda: scrape_barclays_ireland_batch48(session),
-        "icon plc": lambda: scrape_icon_ireland_batch50(session),
+        "icon plc": lambda: scrape_icon_ireland_batch61(session),
         "bristol myers squibb": lambda: scrape_bms_ireland(session),
         "sse airtricity / sse": lambda: scrape_sse_ireland(session),
         "hewlett packard enterprise (hpe)": lambda: scrape_hpe_ireland(session),
         "dell technologies": lambda: scrape_dell_ireland(session),
         "tesco ireland": lambda: scrape_tesco_ireland_batch40(session),
-        "aldi ireland": lambda: scrape_aldi_ireland_batch49(session),
-        "aviva ireland": lambda: scrape_aviva_ireland_batch47(session),
+        "aldi ireland": lambda: scrape_aldi_ireland_batch63(session),
+        "aviva ireland": lambda: scrape_aviva_ireland_batch62(session),
         "forvis mazars ireland": lambda: scrape_forvis_mazars_ireland_batch34(session),
         "morningstar": lambda: scrape_morningstar_ireland_batch35(session),
         "refinitiv (lseg)": lambda: scrape_lseg_ireland_batch35(session),
@@ -13794,15 +13999,15 @@ def test_single_company(name):
         "axa ireland": lambda: scrape_axa_ireland_batch26(session),
         "agilent technologies": lambda: scrape_agilent_ireland_friend(session),
         "bnp paribas ireland": lambda: scrape_bnp_paribas_ireland_friend(session),
-        "coca-cola hbc ireland": lambda: scrape_coca_cola_hbc_ireland_friend(session),
-        "hcltech": lambda: scrape_hcltech_ireland_batch49(session),
+        "coca-cola hbc ireland": lambda: scrape_coca_cola_hbc_ireland_batch65(session),
+        "hcltech": lambda: scrape_hcltech_ireland_batch63(session),
         "mckinsey & company": lambda: scrape_mckinsey_ireland_batch49(session),
         "macquarie group": lambda: scrape_macquarie_ireland_batch49(session),
         "infosys": lambda: scrape_infosys_ireland_batch47(session),
-        "waters corporation": lambda: scrape_waters_corporation_batch47(session),
+        "waters corporation": lambda: scrape_waters_corporation_batch52(session),
         "laya healthcare": lambda: scrape_laya_healthcare_friend(session),
         "palo alto networks": lambda: scrape_palo_alto_ireland_friend(session),
-        "smbc aviation capital": lambda: scrape_smbc_aviation_capital_batch36(session),
+        "smbc aviation capital": lambda: scrape_smbc_aviation_capital_batch63(session),
         "susquehanna international group (sig)": lambda: scrape_sig_ireland_friend(session),
         "heineken ireland": lambda: scrape_heineken_ireland_friend(session),
         "musgrave group (supervalu / centra)": lambda: scrape_musgrave_ireland_friend(session),
@@ -17552,6 +17757,9 @@ def scrape_wtw_ireland_batch26(session):
     print("=== TARGETED_DIRECT_BATCH_38_PRE_FULL_RUN_BULK ACTIVE: proven Uisce Oracle recovery retained + Edwards Lifesciences and HP moved to current official Workday ROI detail verification; wider zero audit completed; Manual queue untouched ===")
 
 print("=== TARGETED_DIRECT_BATCH_46_AVIVA_HIGH_YIELD_FIX ACTIVE: Aviva is removed from final defer and uses eight current official Dublin detail seeds plus live detail verification; failed Aldi/HP mechanisms are not expanded; proven positive routes preserved ===")
+print("=== TARGETED_DIRECT_BATCH_66_DEEP_ROUTE_LOCK ACTIVE: legacy/exact/--only routing hardened; CCHBC forced to Batch65 listing authority; ICON/Aviva/HCLTech/SMBC latest winning routes pinned ===")
+print("=== TARGETED_DIRECT_BATCH_65_CCHBC_LISTING_AUTHORITY ACTIVE: Coca-Cola HBC 4 discovered first-party vacancy URLs now emitted from current Ireland listing cards without detail-walk timeout; failed Batch64 Slack/Red Hat exact routes deferred ===")
+print("=== Batch65 stuck-25 cohort: " + ", ".join(BATCH65_STUCK25) + " ===")
 print("=== TARGETED_DIRECT_BATCH_64_STUCK25_ROTATION ACTIVE: rotated 25-company zero cohort; new first-party production routes for Slack Dublin + Red Hat Remote Ireland; Batch63 HCLTech/SMBC and ICON/Aviva wins preserved ===")
 print("=== Batch64 stuck-25 cohort: " + ", ".join(BATCH64_STUCK25) + " ===")
 print("=== TARGETED_DIRECT_BATCH_63_STUCK25_ROLLUP ACTIVE: 25 persistent-zero companies audited together; new production routes only for first-party-proven ALDI + HCLTech + AerCap + SMBC Aviation Capital; ICON/Aviva wins preserved ===")
@@ -17943,8 +18151,6 @@ def main():
         ("exact", "texas instruments", scrape_texas_instruments_oracle, 40, "official Texas Instruments Oracle Candidate Experience"),
         ("exact", "nokia", scrape_nokia_oracle, 40, "official Nokia Oracle Candidate Experience"),
         ("exact", "micron technology", scrape_micron_eightfold_direct, 35, "official Micron Eightfold route"),
-        ("exact", "slack", scrape_slack_batch64, 30, "Batch64 exact current Slack Dublin role on Salesforce first-party careers"),
-        ("exact", "red hat", scrape_redhat_ireland_batch64, 30, "Batch64 exact current Red Hat Remote Ireland Workday detail"),
         ("exact", "box", scrape_box_official_audit, 30, "official Box current jobs audit"),
         ("exact", "proofpoint", scrape_proofpoint_workday_direct, 40, "official Proofpoint Workday tenant"),
         ("exact", "etsy", scrape_etsy_workday_direct, 40, "official Etsy Workday tenant"),
@@ -18051,7 +18257,7 @@ def main():
         ("exact", "axa ireland", scrape_axa_ireland_batch26, 60, "Batch26 current first-party AXA Dublin detail verification"),
         ("exact", "agilent technologies", scrape_agilent_ireland_friend, 60, "friend-referenced Agilent Workday"),
         ("exact", "bnp paribas ireland", scrape_bnp_paribas_ireland_friend, 60, "friend-referenced BNP Ireland board"),
-        ("exact", "coca-cola hbc ireland", scrape_coca_cola_hbc_ireland_friend, 60, "friend-referenced Coca-Cola HBC board"),
+        ("exact", "coca-cola hbc ireland", scrape_coca_cola_hbc_ireland_batch65, 40, "Batch65 Coca-Cola HBC official Ireland listing-card authority"),
         ("exact", "hcltech", scrape_hcltech_ireland_batch63, 40, "Batch63 HCLTech current first-party Dublin detail set"),
         ("exact", "infosys", scrape_infosys_ireland_batch47, 35, "Batch47 current official Infosys Dublin detail"),
         ("exact", "waters corporation", scrape_waters_corporation_batch52, 60, "Batch52 dynamic Waters Ireland iCIMS enumeration"),
@@ -18440,7 +18646,10 @@ def main():
             # Batch53: mechanism upgrades for previously-positive companies must
             # be regression-safe.  This final override intentionally occurs
             # after all older cache-key branches so it cannot be overwritten.
-            if _key in {"slack", "red hat"}:
+            if _key == "coca-cola hbc ireland":
+                cache_key = f"{name}::targeted_direct_batch66_cchbc_route_lock_v1"
+                _carry_recent_positive_cache(browser_cache, name, cache_key)
+            elif _key in {"slack", "red hat"}:
                 cache_key = f"{name}::targeted_direct_batch64_stuck25_v1"
                 _carry_recent_positive_cache(browser_cache, name, cache_key)
             elif _key in {"aldi ireland", "hcltech", "aercap", "smbc aviation capital"}:
