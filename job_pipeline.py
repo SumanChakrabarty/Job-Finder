@@ -10786,6 +10786,9 @@ def scrape_hp_ireland_batch45(session=None):
 
 
 
+# === TARGETED_DIRECT_BATCH_69_REGEX_ESCAPE_FIX ===
+# Critical fix: Batch68 raw regexes were double-escaped, so Sky Dublin text
+# and ALDI vacancy URLs could never match. Corrected without touching proven routes.
 # === TARGETED_DIRECT_BATCH_68_SKY_ALDI_DOM_LINK_DEEPFIX ===
 
 def scrape_sky_ireland_batch68(session=None):
@@ -10813,15 +10816,15 @@ def scrape_sky_ireland_batch68(session=None):
                 page.goto(url, wait_until="domcontentloaded", timeout=30000)
                 page.wait_for_timeout(1200)
                 body = re.sub(
-                    r"\\s+", " ",
+                    r"\s+", " ",
                     page.locator("body").inner_text(timeout=5000) or ""
                 ).strip()
 
                 if (
-                    re.search(r"\\bDirector of Operations\\b", body, re.I)
-                    and re.search(r"\\bDublin\\b", body, re.I)
+                    re.search(r"\bDirector of Operations\b", body, re.I)
+                    and re.search(r"\bDublin\b", body, re.I)
                     and not re.search(
-                        r"\\bjob is no longer available\\b|\\bno longer accepting applications\\b",
+                        r"\bjob is no longer available\b|\bno longer accepting applications\b",
                         body,
                         re.I,
                     )
@@ -10829,7 +10832,7 @@ def scrape_sky_ireland_batch68(session=None):
                     title = expected_title
                     try:
                         h1 = re.sub(
-                            r"\\s+", " ",
+                            r"\s+", " ",
                             page.locator("h1").first.inner_text(timeout=1500) or ""
                         ).strip()
                         if h1 and not _looks_like_non_job_title(h1):
@@ -10847,7 +10850,7 @@ def scrape_sky_ireland_batch68(session=None):
                         "posted_days_ago": None,
                         "employment_type": (
                             "Full-time"
-                            if re.search(r"\\bFull time\\b|\\bFull-time\\b", body, re.I)
+                            if re.search(r"\bFull time\b|\bFull-time\b", body, re.I)
                             else normalize_employment_type(body, title)
                         ),
                         "url": final,
@@ -10880,13 +10883,13 @@ def scrape_aldi_ireland_batch68(session=None):
     queue = [start]
 
     def clean(value):
-        return re.sub(r"\\s+", " ", str(value or "")).strip()
+        return re.sub(r"\s+", " ", str(value or "")).strip()
 
     def title_from_url(url):
         try:
             path = urllib.parse.urlparse(url).path.rstrip("/")
             slug = path.split("/")[-1]
-            slug = re.sub(r"\\.html?$", "", slug, flags=re.I)
+            slug = re.sub(r"\.html?$", "", slug, flags=re.I)
             title = urllib.parse.unquote(slug).replace("-", " ").replace("_", " ")
             title = clean(title)
             return " ".join(w if w.isupper() else w.capitalize() for w in title.split())
@@ -10930,7 +10933,7 @@ def scrape_aldi_ireland_batch68(session=None):
                             continue
                         full = urllib.parse.urljoin(page.url, href).split("#")[0]
                         if re.search(
-                            r"careers\\.aldirecruitment\\.ie/vacancies/\\d+/[^/?#]+\\.html$",
+                            r"careers\.aldirecruitment\.ie/vacancies/\d+/[^/?#]+\.html$",
                             full,
                             re.I,
                         ):
@@ -10982,7 +10985,7 @@ def scrape_aldi_ireland_batch68(session=None):
                                     txt = clean(node.inner_text(timeout=500) or "")
                                 except Exception:
                                     txt = ""
-                                if re.search(r"\\bLocations?\\b", txt, re.I):
+                                if re.search(r"\bLocations?\b", txt, re.I):
                                     context = txt
                                     break
                                 try:
@@ -10993,12 +10996,12 @@ def scrape_aldi_ireland_batch68(session=None):
                         pass
 
                     if context:
-                        if re.search(r"\\bBelfast\\b|\\bNorthern Ireland\\b|\\bLisburn\\b", context, re.I):
+                        if re.search(r"\bBelfast\b|\bNorthern Ireland\b|\bLisburn\b", context, re.I):
                             continue
 
                         lm = re.search(
-                            r"\\bLocations?\\b\\s*[:\\-]?\\s*(.{1,120}?)"
-                            r"(?=\\bClosing Date\\b|\\bContract Type\\b|\\bAdvertising Salary\\b|\\bMore Info\\b|\\bApply\\b|$)",
+                            r"\bLocations?\b\s*[:\-]?\s*(.{1,120}?)"
+                            r"(?=\bClosing Date\b|\bContract Type\b|\bAdvertising Salary\b|\bMore Info\b|\bApply\b|$)",
                             context,
                             re.I,
                         )
@@ -11008,8 +11011,8 @@ def scrape_aldi_ireland_batch68(session=None):
                                 location = f"{loc}, Ireland"
 
                         cm = re.search(
-                            r"\\bContract Type\\b\\s*[:\\-]?\\s*(.{1,80}?)"
-                            r"(?=\\bLocations?\\b|\\bClosing Date\\b|\\bAdvertising Salary\\b|$)",
+                            r"\bContract Type\b\s*[:\-]?\s*(.{1,80}?)"
+                            r"(?=\bLocations?\b|\bClosing Date\b|\bAdvertising Salary\b|$)",
                             context,
                             re.I,
                         )
@@ -18310,6 +18313,7 @@ def scrape_wtw_ireland_batch26(session):
     print("=== TARGETED_DIRECT_BATCH_38_PRE_FULL_RUN_BULK ACTIVE: proven Uisce Oracle recovery retained + Edwards Lifesciences and HP moved to current official Workday ROI detail verification; wider zero audit completed; Manual queue untouched ===")
 
 print("=== TARGETED_DIRECT_BATCH_46_AVIVA_HIGH_YIELD_FIX ACTIVE: Aviva is removed from final defer and uses eight current official Dublin detail seeds plus live detail verification; failed Aldi/HP mechanisms are not expanded; proven positive routes preserved ===")
+print("=== TARGETED_DIRECT_BATCH_69_REGEX_ESCAPE_FIX ACTIVE: corrected Batch68 double-escaped regexes that blocked Sky Dublin and ALDI detail-link matching; proven positive routes preserved ===")
 print("=== TARGETED_DIRECT_BATCH_68_SKY_ALDI_DOM_LINK_DEEPFIX ACTIVE: Sky exact detail now rendered; ALDI now enumerates real first-party vacancy detail URLs from the current Ireland board instead of h2/card assumptions ===")
 print("=== TARGETED_DIRECT_BATCH_67_SKY_ALDI_CURRENT_BOARD_RECOVERY ACTIVE: Sky exact current Dublin detail + ALDI rendered 46-match official board; CCHBC/ICON/Aviva/HCLTech/SMBC wins preserved ===")
 print("=== Batch67 stuck-25 cohort: " + ", ".join(BATCH67_STUCK25) + " ===")
@@ -19203,7 +19207,7 @@ def main():
             # be regression-safe.  This final override intentionally occurs
             # after all older cache-key branches so it cannot be overwritten.
             if _key in {"sky ireland", "aldi ireland"}:
-                cache_key = f"{name}::targeted_direct_batch68_sky_aldi_domlink_v1"
+                cache_key = f"{name}::targeted_direct_batch69_regexfix_v1"
                 _carry_recent_positive_cache(browser_cache, name, cache_key)
             elif _key == "coca-cola hbc ireland":
                 cache_key = f"{name}::targeted_direct_batch66_cchbc_route_lock_v1"
