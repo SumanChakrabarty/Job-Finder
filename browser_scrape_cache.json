@@ -10880,8 +10880,8 @@
   },
   "Bain & Company": {
     "jobs": [],
-    "checked_at": 1789044207.069313,
-    "consecutive_failures": 219
+    "checked_at": 1789049103.2564893,
+    "consecutive_failures": 220
   },
   "FTI Consulting": {
     "jobs": [],
@@ -11757,8 +11757,8 @@
   },
   "Alkermes": {
     "jobs": [],
-    "checked_at": 1789043988.4437742,
-    "consecutive_failures": 231
+    "checked_at": 1789049096.2253168,
+    "consecutive_failures": 232
   },
   "Visa": {
     "jobs": [],
@@ -11782,13 +11782,13 @@
   },
   "Bruker": {
     "jobs": [],
-    "checked_at": 1789044206.9317272,
-    "consecutive_failures": 229
+    "checked_at": 1789049094.2686718,
+    "consecutive_failures": 230
   },
   "Biotronik": {
     "jobs": [],
-    "checked_at": 1789044212.5750153,
-    "consecutive_failures": 229
+    "checked_at": 1789049099.50402,
+    "consecutive_failures": 230
   },
   "Carbery Group": {
     "jobs": [],
@@ -12481,13 +12481,13 @@
   },
   "Slack": {
     "jobs": [],
-    "checked_at": 1789044216.7286777,
-    "consecutive_failures": 140
+    "checked_at": 1789049105.3693545,
+    "consecutive_failures": 141
   },
   "Smurfit Westrock": {
     "jobs": [],
-    "checked_at": 1789044217.3417056,
-    "consecutive_failures": 224
+    "checked_at": 1789049105.6719925,
+    "consecutive_failures": 225
   },
   "Stena Line Ireland": {
     "jobs": [],
@@ -39092,8 +39092,8 @@
   },
   "NXP Semiconductors::zero_only_batch20_v1": {
     "jobs": [],
-    "checked_at": 1789044030.2107153,
-    "consecutive_failures": 76
+    "checked_at": 1789049118.4002864,
+    "consecutive_failures": 77
   },
   "Haleon::zero_only_batch20_v1": {
     "jobs": [
@@ -46099,72 +46099,72 @@
   },
   "Kepak Group::targeted_direct_batch7_multi_v1": {
     "jobs": [],
-    "checked_at": 1789047574.5306728,
+    "checked_at": 1789049089.3512816,
     "consecutive_failures": 1
   },
   "AerCap::targeted_direct_batch63_stuck25_v1": {
     "jobs": [],
-    "checked_at": 1789047575.2855773,
+    "checked_at": 1789049090.1410015,
     "consecutive_failures": 1
   },
   "HP (Hewlett-Packard)::friend_next4_v1": {
     "jobs": [],
-    "checked_at": 1789047575.3506863,
+    "checked_at": 1789049090.5030308,
     "consecutive_failures": 1
   },
   "Infosys::targeted_direct_batch47_v1": {
     "jobs": [],
-    "checked_at": 1789047575.7479053,
+    "checked_at": 1789049090.8668978,
     "consecutive_failures": 1
   },
   "VMware (Broadcom)::zero_only_batch20_v1": {
     "jobs": [],
-    "checked_at": 1789047577.2169685,
+    "checked_at": 1789049091.4414158,
     "consecutive_failures": 1
   },
   "Aldi Ireland::targeted_direct_batch70_aldi_text_sky_bounded_v1": {
     "jobs": [],
-    "checked_at": 1789047577.7391846,
+    "checked_at": 1789049093.3659554,
     "consecutive_failures": 1
   },
   "DHL Ireland::targeted_direct_batch54_multi_v1": {
     "jobs": [],
-    "checked_at": 1789047577.9581509,
+    "checked_at": 1789049093.7835011,
     "consecutive_failures": 1
   },
   "An Post": {
     "jobs": [],
-    "checked_at": 1789047581.3689008,
+    "checked_at": 1789049095.6823268,
     "consecutive_failures": 1
   },
   "QIAGEN::zero_only_batch20_v1": {
     "jobs": [],
-    "checked_at": 1789047581.8981428,
+    "checked_at": 1789049096.3830557,
     "consecutive_failures": 1
   },
   "GlaxoSmithKline (GSK)::targeted_direct_batch9_bulk_v1": {
     "jobs": [],
-    "checked_at": 1789047583.782259,
+    "checked_at": 1789049102.0896,
     "consecutive_failures": 1
   },
   "Red Hat": {
     "jobs": [],
-    "checked_at": 1789047583.8144763,
+    "checked_at": 1789049103.2625015,
     "consecutive_failures": 1
   },
   "Boston Consulting Group (BCG)": {
     "jobs": [],
-    "checked_at": 1789047587.741074,
-    "consecutive_failures": 1
-  },
-  "Deutsche Bank::friend_logic_v1": {
-    "jobs": [],
-    "checked_at": 1789047601.2503,
+    "checked_at": 1789049109.2054794,
     "consecutive_failures": 1
   },
   "EXL": {
     "jobs": [],
-    "checked_at": 1789047606.814323,
+    "checked_at": 1789049110.656015,
+    "consecutive_failures": 1
+  },
+  "Deutsche Bank::friend_logic_v1": {
+    "jobs": [],
+    "checked_at": 1789049115.5474327,
     "consecutive_failures": 1
   }
 }
