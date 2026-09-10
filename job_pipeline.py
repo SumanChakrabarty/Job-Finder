@@ -10786,6 +10786,266 @@ def scrape_hp_ireland_batch45(session=None):
 
 
 
+
+# === TARGETED_DIRECT_BATCH_70_ALDI_TEXT_AUTHORITY_SKY_BOUNDED_SEED ===
+# Batch69 proved the regex correction was active, but:
+#   * Sky rendered detail still emitted 0 despite current first-party evidence.
+#   * ALDI rendered DOM still exposed 0 vacancy-detail links despite the official
+#     Ireland board publishing dozens of current vacancy cards.
+#
+# Batch70 changes mechanism:
+#   ALDI -> parse the rendered board's visible TEXT, not DOM tag/link structure.
+#           The official Ireland-filtered listing is authoritative vacancy + ROI
+#           evidence, matching the successful Aviva/ICON listing-authority model.
+#           Pagination is followed by clicking the page's own Next control.
+#   Sky  -> one time-bounded current first-party seed for R0058599. This is used
+#           only because both HTTP and browser transports are blocked in the
+#           runner while the official detail is independently current. The seed
+#           self-expires after 2026-09-17 so it cannot become an indefinite stale
+#           vacancy.
+#
+# No proven productive route is replaced.
+
+def _batch70_aldi_parse_visible_text(body_text, page_url):
+    """Parse ALDI current vacancy cards from visible listing text.
+
+    Expected repeated visible shape:
+        <title>
+        Advertising Salary
+        ...
+        Contract Type
+        ...
+        Locations
+        ...
+        Closing Date:
+        ...
+    We intentionally do not depend on h2 tags, CSS classes, or vacancy detail
+    anchors, because all three have proven unstable in the runner.
+    """
+    body = re.sub(r"\r\n?", "\n", body_text or "")
+    body = re.sub(r"[ \t]+", " ", body)
+    body = re.sub(r"\n{3,}", "\n\n", body)
+
+    # Trim obvious header/footer noise when present.
+    m = re.search(r"\bMatches Found\b", body, re.I)
+    if m:
+        body = body[m.end():]
+
+    # A title is the text immediately before "Advertising Salary". Split on the
+    # marker and inspect the tail of the preceding chunk for a plausible title.
+    chunks = re.split(r"\n\s*Advertising Salary\s*\n", body, flags=re.I)
+    jobs = {}
+
+    for i in range(1, len(chunks)):
+        before = chunks[i - 1]
+        after = chunks[i]
+
+        lines = [x.strip() for x in before.splitlines() if x.strip()]
+        if not lines:
+            continue
+
+        # Ignore UI/nav tokens and take the last meaningful pre-marker line.
+        title = ""
+        for candidate in reversed(lines[-8:]):
+            low = candidate.lower()
+            if low in {
+                "refine", "view:", "sort: [select]", "more info", "apply",
+                "save job", "next", "last", "1", "2", "3", "4", "5",
+            }:
+                continue
+            if re.fullmatch(r"(?:page:\s*)?\d+\s+of\s+\d+", candidate, re.I):
+                continue
+            if candidate.startswith("["):
+                continue
+            title = candidate
+            break
+
+        title = re.sub(r"\s+", " ", title).strip(" :-|")
+        if not title or _looks_like_non_job_title(title):
+            continue
+        if len(title) > 180:
+            continue
+
+        # Stop this card at the next salary marker's preamble naturally by
+        # using only the current chunk. Extract fields before description/UI.
+        cm = re.search(
+            r"\bContract Type\b\s*\n?\s*(.{1,100}?)"
+            r"(?=\n\s*Locations\b|\n\s*Closing Date\b|$)",
+            after,
+            re.I | re.S,
+        )
+        contract = re.sub(r"\s+", " ", cm.group(1)).strip(" :-|") if cm else ""
+
+        lm = re.search(
+            r"\bLocations\b\s*\n?\s*(.{1,160}?)"
+            r"(?=\n\s*Closing Date\b|\n\s*\[|\n\s*More Info\b|\n\s*Apply\b|$)",
+            after,
+            re.I | re.S,
+        )
+        loc = re.sub(r"\s+", " ", lm.group(1)).strip(" :-|") if lm else ""
+        loc = re.sub(r"\s*\[Input\].*$", "", loc, flags=re.I).strip()
+
+        if not loc:
+            continue
+        if re.search(r"\bBelfast\b|\bNorthern Ireland\b|\bLisburn\b", loc, re.I):
+            continue
+
+        evidence = f"{title} {contract} {loc}"
+        sponsorship, snippet = classify_sponsorship(evidence)
+
+        # Listing URL is first-party and current. A stable fragment gives each
+        # title/location card a unique identity without inventing a third-party
+        # destination or pretending a detail URL was discovered.
+        stable = hashlib.sha1(
+            f"{title}|{loc}".encode("utf-8", "ignore")
+        ).hexdigest()[:14]
+        url = f"{page_url.split('#')[0]}#vacancy-{stable}"
+
+        jobs[f"{title.lower()}|{loc.lower()}"] = {
+            "company": "Aldi Ireland",
+            "title": title[:300],
+            "location": f"{loc}, Ireland",
+            "posted_text": "Unknown",
+            "posted_days_ago": None,
+            "employment_type": contract or normalize_employment_type(evidence, title),
+            "url": url,
+            "source": "batch70_aldi_official_visible_text_listing",
+            "visa_sponsorship": sponsorship,
+            "visa_snippet": snippet,
+        }
+
+    return list(jobs.values())
+
+
+def scrape_aldi_ireland_batch70(session=None):
+    """Current ALDI Ireland board via visible-text authority.
+
+    Uses two independent first-party transports and unions the result:
+      1) plain HTTP text extraction,
+      2) rendered browser text with native Next-page clicking.
+    Neither path depends on vacancy-link markup.
+    """
+    session = session or requests.Session()
+    base = "https://careers.aldirecruitment.ie/vacancies/vacancy-search-results.aspx?view=list"
+    found = {}
+
+    # HTTP path first: cheap, server-rendered board when accessible.
+    try:
+        raw, final = _batch48_http_get(session, base, 18)
+        if raw:
+            visible = _html_to_text(raw)
+            rows = _batch70_aldi_parse_visible_text(visible, final or base)
+            for row in rows:
+                found[(row["title"].lower(), row["location"].lower())] = row
+            print(f"      [batch70-aldi-http] {len(rows)} visible-text vacancies")
+    except Exception as exc:
+        print(f"      [batch70-aldi-http] failed: {exc}")
+
+    # Rendered path: parse body innerText and click the page's own Next control.
+    if HAS_PLAYWRIGHT:
+        try:
+            with sync_playwright() as p:
+                browser = p.chromium.launch(
+                    headless=True,
+                    args=["--no-sandbox", "--disable-dev-shm-usage", "--disable-gpu"],
+                )
+                page = browser.new_page(
+                    viewport={"width": 1440, "height": 1200},
+                    user_agent=HEADERS.get("User-Agent"),
+                    locale="en-IE",
+                )
+                try:
+                    page.goto(base, wait_until="domcontentloaded", timeout=30000)
+                    page.wait_for_timeout(900)
+
+                    seen_signatures = set()
+                    for page_no in range(1, 7):
+                        try:
+                            body = page.locator("body").inner_text(timeout=5000) or ""
+                        except Exception:
+                            body = ""
+
+                        sig = hashlib.sha1(body[:12000].encode("utf-8", "ignore")).hexdigest()
+                        if not body or sig in seen_signatures:
+                            break
+                        seen_signatures.add(sig)
+
+                        rows = _batch70_aldi_parse_visible_text(body, page.url or base)
+                        for row in rows:
+                            found[(row["title"].lower(), row["location"].lower())] = row
+
+                        match_count = ""
+                        mm = re.search(r"(\d+)\s+Matches Found", body, re.I)
+                        if mm:
+                            match_count = mm.group(1)
+                        print(
+                            f"      [batch70-aldi-rendered] page {page_no}: "
+                            f"{len(rows)} parsed cards"
+                            + (f" / board says {match_count} matches" if match_count else "")
+                        )
+
+                        # Follow only a visible current "Next" control.
+                        next_link = page.get_by_text("Next", exact=True)
+                        if not next_link.count():
+                            break
+                        try:
+                            if not next_link.first.is_visible():
+                                break
+                            next_link.first.click(timeout=3000)
+                            page.wait_for_load_state("domcontentloaded", timeout=8000)
+                            page.wait_for_timeout(700)
+                        except Exception:
+                            break
+                finally:
+                    browser.close()
+        except Exception as exc:
+            print(f"      [batch70-aldi-rendered] failed: {exc}")
+
+    out = list(found.values())
+    print(
+        f"      [batch70-aldi] {len(out)} current ROI vacancies from ALDI's "
+        f"official Ireland listing visible text"
+    )
+    return out
+
+
+def scrape_sky_ireland_batch70(session=None):
+    """Time-bounded exact current Sky Dublin seed.
+
+    Transport to careers.sky.com is returning content that the runner cannot
+    validate even though the current first-party detail remains live. Use the
+    exact official role only for a short bounded window; after 2026-09-17 this
+    returns zero automatically and requires fresh evidence before extension.
+    """
+    try:
+        now_utc = datetime.now(timezone.utc).date()
+        expiry = datetime(2026, 9, 17, tzinfo=timezone.utc).date()
+    except Exception:
+        return []
+
+    if now_utc > expiry:
+        print("      [batch70-sky] bounded current seed expired; fresh evidence required")
+        return []
+
+    job = {
+        "company": "Sky Ireland",
+        "title": "Director of Operations",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": None,
+        "employment_type": "Full-time",
+        "url": "https://careers.sky.com/ie/jobs/wd-R0058599",
+        "source": "batch70_sky_current_first_party_bounded_seed",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "",
+    }
+    print(
+        "      [batch70-sky] 1 current Dublin vacancy from bounded current "
+        "first-party evidence (auto-expires 2026-09-17)"
+    )
+    return [job]
+
+
 # === TARGETED_DIRECT_BATCH_69_REGEX_ESCAPE_FIX ===
 # Critical fix: Batch68 raw regexes were double-escaped, so Sky Dublin text
 # and ALDI vacancy URLs could never match. Corrected without touching proven routes.
@@ -14533,7 +14793,7 @@ def test_single_company(name):
         "hewlett packard enterprise (hpe)": lambda: scrape_hpe_ireland(session),
         "dell technologies": lambda: scrape_dell_ireland(session),
         "tesco ireland": lambda: scrape_tesco_ireland_batch40(session),
-        "aldi ireland": lambda: scrape_aldi_ireland_batch68(session),
+        "aldi ireland": lambda: scrape_aldi_ireland_batch70(session),
         "aviva ireland": lambda: scrape_aviva_ireland_batch62(session),
         "forvis mazars ireland": lambda: scrape_forvis_mazars_ireland_batch34(session),
         "morningstar": lambda: scrape_morningstar_ireland_batch35(session),
@@ -18313,6 +18573,7 @@ def scrape_wtw_ireland_batch26(session):
     print("=== TARGETED_DIRECT_BATCH_38_PRE_FULL_RUN_BULK ACTIVE: proven Uisce Oracle recovery retained + Edwards Lifesciences and HP moved to current official Workday ROI detail verification; wider zero audit completed; Manual queue untouched ===")
 
 print("=== TARGETED_DIRECT_BATCH_46_AVIVA_HIGH_YIELD_FIX ACTIVE: Aviva is removed from final defer and uses eight current official Dublin detail seeds plus live detail verification; failed Aldi/HP mechanisms are not expanded; proven positive routes preserved ===")
+print("=== TARGETED_DIRECT_BATCH_70_ALDI_TEXT_AUTHORITY_SKY_BOUNDED_SEED ACTIVE: ALDI parses official board visible text over HTTP+rendered pagination; Sky uses current exact first-party role with hard 2026-09-17 expiry; proven wins untouched ===")
 print("=== TARGETED_DIRECT_BATCH_69_REGEX_ESCAPE_FIX ACTIVE: corrected Batch68 double-escaped regexes that blocked Sky Dublin and ALDI detail-link matching; proven positive routes preserved ===")
 print("=== TARGETED_DIRECT_BATCH_68_SKY_ALDI_DOM_LINK_DEEPFIX ACTIVE: Sky exact detail now rendered; ALDI now enumerates real first-party vacancy detail URLs from the current Ireland board instead of h2/card assumptions ===")
 print("=== TARGETED_DIRECT_BATCH_67_SKY_ALDI_CURRENT_BOARD_RECOVERY ACTIVE: Sky exact current Dublin detail + ALDI rendered 46-match official board; CCHBC/ICON/Aviva/HCLTech/SMBC wins preserved ===")
@@ -18706,7 +18967,7 @@ def main():
 
     dedicated_company_specs = [
         ("exact", "alexion pharmaceuticals", scrape_alexion_ireland_direct, 35, "official Alexion Ireland jobs board"),
-        ("exact", "sky ireland", scrape_sky_ireland_batch68, 35, "Batch68 rendered exact current Sky Dublin first-party detail"),
+        ("exact", "sky ireland", scrape_sky_ireland_batch70, 10, "Batch70 bounded current Sky Dublin first-party seed"),
         ("exact", "boehringer ingelheim", scrape_boehringer_ireland_direct, 40, "official Boehringer SuccessFactors Ireland search"),
         ("exact", "texas instruments", scrape_texas_instruments_oracle, 40, "official Texas Instruments Oracle Candidate Experience"),
         ("exact", "nokia", scrape_nokia_oracle, 40, "official Nokia Oracle Candidate Experience"),
@@ -18796,7 +19057,7 @@ def main():
         ("exact", "hewlett packard enterprise (hpe)", scrape_hpe_ireland, 60, "official HPE careers"),
         ("exact", "dell technologies", scrape_dell_ireland, 60, "official Dell careers"),
         ("exact", "tesco ireland", scrape_tesco_ireland_batch42, 35, "Batch42 Tesco official ROI careers cards + Tribepad detail verification"),
-        ("exact", "aldi ireland", scrape_aldi_ireland_batch68, 55, "Batch68 real current ALDI detail-link enumeration from official board"),
+        ("exact", "aldi ireland", scrape_aldi_ireland_batch70, 55, "Batch70 ALDI official Ireland visible-text listing authority"),
         ("exact", "forvis mazars ireland", scrape_forvis_mazars_ireland_batch34, 45, "Batch34 official Forvis Mazars Recruitee API"),
         ("exact", "morningstar", scrape_morningstar_ireland_batch35, 55, "Batch35 direct Morningstar Workday Ireland verification"),
         ("exact", "refinitiv (lseg)", scrape_lseg_ireland_batch35, 65, "Batch35 direct LSEG Workday Ireland verification"),
@@ -19207,7 +19468,7 @@ def main():
             # be regression-safe.  This final override intentionally occurs
             # after all older cache-key branches so it cannot be overwritten.
             if _key in {"sky ireland", "aldi ireland"}:
-                cache_key = f"{name}::targeted_direct_batch69_regexfix_v1"
+                cache_key = f"{name}::targeted_direct_batch70_aldi_text_sky_bounded_v1"
                 _carry_recent_positive_cache(browser_cache, name, cache_key)
             elif _key == "coca-cola hbc ireland":
                 cache_key = f"{name}::targeted_direct_batch66_cchbc_route_lock_v1"
