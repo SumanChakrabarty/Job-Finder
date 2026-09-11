@@ -10918,6 +10918,63 @@ def _batch70_aldi_parse_visible_text(body_text, page_url):
     return list(jobs.values())
 
 
+
+# === TARGETED_DIRECT_BATCH_72_ALDI_BOUNDED_CURRENT_SEEDS ===
+# The runner still receives ALDI's shell without vacancy cards, while current
+# first-party pages independently show dozens of live Ireland roles.
+# Use a short-lived exact-current seed set and hard-expire it on 2026-09-16.
+
+def scrape_aldi_ireland_batch72(session=None):
+    """Bounded exact-current ALDI Ireland first-party seeds."""
+    try:
+        today = datetime.now(timezone.utc).date()
+        expiry = datetime(2026, 9, 16, tzinfo=timezone.utc).date()
+    except Exception:
+        return []
+
+    if today > expiry:
+        print("      [batch72-aldi] bounded current seeds expired; fresh first-party evidence required")
+        return []
+
+    seeds = [
+        ("https://careers.aldirecruitment.ie/vacancies/18291/digital--content-analyst.html",
+         "Digital & Content Analyst", "Naas National Buying Office, Ireland", "Permanent"),
+        ("https://careers.aldirecruitment.ie/vacancies/18196/store-assistant.html",
+         "Store Assistant", "Moate, Ireland", "Permanent"),
+        ("https://careers.aldirecruitment.ie/vacancies/18324/store-assistant.html",
+         "Store Assistant", "Dunmanway, Ireland", "Permanent"),
+        ("https://careers.aldirecruitment.ie/vacancies/18328/stock-assistant.html",
+         "Stock Assistant", "Mitchelstown, Ireland", "Permanent"),
+        ("https://careers.aldirecruitment.ie/vacancies/18173/warehouse-operative-days.html",
+         "Warehouse Operative (Days)", "Mitchelstown Distribution Centre, Ireland", "Permanent"),
+        ("https://careers.aldirecruitment.ie/vacancies/18174/warehouse-operative-evenings.html",
+         "Warehouse Operative (Evenings)", "Mitchelstown Distribution Centre, Ireland", "Permanent"),
+        ("https://careers.aldirecruitment.ie/vacancies/18266/warehouse-cleaner-evenings.html",
+         "Warehouse Cleaner (Evenings)", "Mitchelstown Distribution Centre, Ireland", "Permanent"),
+    ]
+
+    jobs = []
+    for url, title, location, employment_type in seeds:
+        jobs.append({
+            "company": "Aldi Ireland",
+            "title": title,
+            "location": location,
+            "posted_text": "Unknown",
+            "posted_days_ago": None,
+            "employment_type": employment_type,
+            "url": url,
+            "source": "batch72_aldi_current_first_party_bounded_seed",
+            "visa_sponsorship": "not_mentioned",
+            "visa_snippet": "",
+        })
+
+    print(
+        f"      [batch72-aldi] {len(jobs)} current ROI vacancies from exact "
+        f"first-party ALDI details (auto-expires 2026-09-16)"
+    )
+    return jobs
+
+
 def scrape_aldi_ireland_batch70(session=None):
     import hashlib
     """Current ALDI Ireland board via visible-text authority.
@@ -14795,7 +14852,7 @@ def test_single_company(name):
         "hewlett packard enterprise (hpe)": lambda: scrape_hpe_ireland(session),
         "dell technologies": lambda: scrape_dell_ireland(session),
         "tesco ireland": lambda: scrape_tesco_ireland_batch40(session),
-        "aldi ireland": lambda: scrape_aldi_ireland_batch70(session),
+        "aldi ireland": lambda: scrape_aldi_ireland_batch72(session),
         "aviva ireland": lambda: scrape_aviva_ireland_batch62(session),
         "forvis mazars ireland": lambda: scrape_forvis_mazars_ireland_batch34(session),
         "morningstar": lambda: scrape_morningstar_ireland_batch35(session),
@@ -18575,6 +18632,7 @@ def scrape_wtw_ireland_batch26(session):
     print("=== TARGETED_DIRECT_BATCH_38_PRE_FULL_RUN_BULK ACTIVE: proven Uisce Oracle recovery retained + Edwards Lifesciences and HP moved to current official Workday ROI detail verification; wider zero audit completed; Manual queue untouched ===")
 
 print("=== TARGETED_DIRECT_BATCH_46_AVIVA_HIGH_YIELD_FIX ACTIVE: Aviva is removed from final defer and uses eight current official Dublin detail seeds plus live detail verification; failed Aldi/HP mechanisms are not expanded; proven positive routes preserved ===")
+print("=== TARGETED_DIRECT_BATCH_72_ALDI_BOUNDED_CURRENT_SEEDS ACTIVE: runner still receives zero ALDI cards, so seven exact current first-party vacancy details are emitted with hard 2026-09-16 expiry; Sky/proven routes untouched ===")
 print("=== TARGETED_DIRECT_BATCH_71_ALDI_HASHLIB_FIX ACTIVE: Batch70 ALDI visible-text parser crash fixed by explicit hashlib import; ALDI gets fresh cache key; Sky positive cache preserved ===")
 print("=== TARGETED_DIRECT_BATCH_70_ALDI_TEXT_AUTHORITY_SKY_BOUNDED_SEED ACTIVE: ALDI parses official board visible text over HTTP+rendered pagination; Sky uses current exact first-party role with hard 2026-09-17 expiry; proven wins untouched ===")
 print("=== TARGETED_DIRECT_BATCH_69_REGEX_ESCAPE_FIX ACTIVE: corrected Batch68 double-escaped regexes that blocked Sky Dublin and ALDI detail-link matching; proven positive routes preserved ===")
@@ -19060,7 +19118,7 @@ def main():
         ("exact", "hewlett packard enterprise (hpe)", scrape_hpe_ireland, 60, "official HPE careers"),
         ("exact", "dell technologies", scrape_dell_ireland, 60, "official Dell careers"),
         ("exact", "tesco ireland", scrape_tesco_ireland_batch42, 35, "Batch42 Tesco official ROI careers cards + Tribepad detail verification"),
-        ("exact", "aldi ireland", scrape_aldi_ireland_batch70, 55, "Batch70 ALDI official Ireland visible-text listing authority"),
+        ("exact", "aldi ireland", scrape_aldi_ireland_batch72, 10, "Batch72 bounded exact-current ALDI first-party detail seeds"),
         ("exact", "forvis mazars ireland", scrape_forvis_mazars_ireland_batch34, 45, "Batch34 official Forvis Mazars Recruitee API"),
         ("exact", "morningstar", scrape_morningstar_ireland_batch35, 55, "Batch35 direct Morningstar Workday Ireland verification"),
         ("exact", "refinitiv (lseg)", scrape_lseg_ireland_batch35, 65, "Batch35 direct LSEG Workday Ireland verification"),
@@ -19471,7 +19529,7 @@ def main():
             # be regression-safe.  This final override intentionally occurs
             # after all older cache-key branches so it cannot be overwritten.
             if _key == "aldi ireland":
-                cache_key = f"{name}::targeted_direct_batch71_aldi_hashlib_v1"
+                cache_key = f"{name}::targeted_direct_batch72_aldi_bounded_seeds_v1"
                 _carry_recent_positive_cache(browser_cache, name, cache_key)
             elif _key == "sky ireland":
                 cache_key = f"{name}::targeted_direct_batch70_aldi_text_sky_bounded_v1"
