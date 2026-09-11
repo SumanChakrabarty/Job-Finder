@@ -10807,6 +10807,7 @@ def scrape_hp_ireland_batch45(session=None):
 # No proven productive route is replaced.
 
 def _batch70_aldi_parse_visible_text(body_text, page_url):
+    import hashlib
     """Parse ALDI current vacancy cards from visible listing text.
 
     Expected repeated visible shape:
@@ -10918,6 +10919,7 @@ def _batch70_aldi_parse_visible_text(body_text, page_url):
 
 
 def scrape_aldi_ireland_batch70(session=None):
+    import hashlib
     """Current ALDI Ireland board via visible-text authority.
 
     Uses two independent first-party transports and unions the result:
@@ -18573,6 +18575,7 @@ def scrape_wtw_ireland_batch26(session):
     print("=== TARGETED_DIRECT_BATCH_38_PRE_FULL_RUN_BULK ACTIVE: proven Uisce Oracle recovery retained + Edwards Lifesciences and HP moved to current official Workday ROI detail verification; wider zero audit completed; Manual queue untouched ===")
 
 print("=== TARGETED_DIRECT_BATCH_46_AVIVA_HIGH_YIELD_FIX ACTIVE: Aviva is removed from final defer and uses eight current official Dublin detail seeds plus live detail verification; failed Aldi/HP mechanisms are not expanded; proven positive routes preserved ===")
+print("=== TARGETED_DIRECT_BATCH_71_ALDI_HASHLIB_FIX ACTIVE: Batch70 ALDI visible-text parser crash fixed by explicit hashlib import; ALDI gets fresh cache key; Sky positive cache preserved ===")
 print("=== TARGETED_DIRECT_BATCH_70_ALDI_TEXT_AUTHORITY_SKY_BOUNDED_SEED ACTIVE: ALDI parses official board visible text over HTTP+rendered pagination; Sky uses current exact first-party role with hard 2026-09-17 expiry; proven wins untouched ===")
 print("=== TARGETED_DIRECT_BATCH_69_REGEX_ESCAPE_FIX ACTIVE: corrected Batch68 double-escaped regexes that blocked Sky Dublin and ALDI detail-link matching; proven positive routes preserved ===")
 print("=== TARGETED_DIRECT_BATCH_68_SKY_ALDI_DOM_LINK_DEEPFIX ACTIVE: Sky exact detail now rendered; ALDI now enumerates real first-party vacancy detail URLs from the current Ireland board instead of h2/card assumptions ===")
@@ -19467,7 +19470,10 @@ def main():
             # Batch53: mechanism upgrades for previously-positive companies must
             # be regression-safe.  This final override intentionally occurs
             # after all older cache-key branches so it cannot be overwritten.
-            if _key in {"sky ireland", "aldi ireland"}:
+            if _key == "aldi ireland":
+                cache_key = f"{name}::targeted_direct_batch71_aldi_hashlib_v1"
+                _carry_recent_positive_cache(browser_cache, name, cache_key)
+            elif _key == "sky ireland":
                 cache_key = f"{name}::targeted_direct_batch70_aldi_text_sky_bounded_v1"
                 _carry_recent_positive_cache(browser_cache, name, cache_key)
             elif _key == "coca-cola hbc ireland":
