@@ -13179,6 +13179,269 @@ def _oracle_candidate_experience_wide_roi(company_name, host, site_number, sessi
 
 
 
+
+# === TARGETED_DIRECT_BATCH_77_MULTI6_CURRENT_BOARDS ===
+# Rotate away from repeated single-company An Post work.
+# Six persistent-zero companies get fresh first-party board discovery in one batch:
+# Goodbody, GSK, Morgan Stanley, Visa, NXP Semiconductors, BCG.
+# Each route is additive: legacy proven mechanisms run first where available, then a
+# rendered/current-board discovery pass finds actual vacancy detail links and verifies ROI.
+
+def _batch77_rendered_first_party_board(
+    company, start_urls, allowed_hosts, href_job_regex,
+    legacy_jobs=None, max_links=120, timeout_ms=45000
+):
+    merged = {}
+    for j in (legacy_jobs or []):
+        u = str(j.get("url") or "").split("#")[0].rstrip("/")
+        if u:
+            merged[u.lower()] = j
+
+    if not HAS_PLAYWRIGHT:
+        print(f"      [batch77-{slugify(company)}] Playwright unavailable; legacy={len(merged)}")
+        return list(merged.values())
+
+    candidates = {}
+    try:
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch(headless=True, args=["--disable-http2"])
+            page = browser.new_page(viewport={"width": 1440, "height": 1000}, locale="en-IE")
+
+            for start_url in start_urls:
+                try:
+                    page.goto(start_url, wait_until="domcontentloaded", timeout=timeout_ms)
+                    page.wait_for_timeout(3500)
+                except Exception:
+                    continue
+
+                # Scroll to trigger lazy-loaded cards.
+                prev = -1
+                stable = 0
+                for _ in range(12):
+                    try:
+                        count = page.locator("a[href]").count()
+                    except Exception:
+                        count = 0
+                    stable = stable + 1 if count == prev else 0
+                    prev = count
+                    if stable >= 2:
+                        break
+                    page.mouse.wheel(0, 4000)
+                    page.wait_for_timeout(700)
+
+                try:
+                    anchors = page.locator("a[href]")
+                    n = min(anchors.count(), 800)
+                except Exception:
+                    n = 0
+
+                for i in range(n):
+                    a = anchors.nth(i)
+                    try:
+                        href = a.get_attribute("href") or ""
+                    except Exception:
+                        continue
+                    if not href:
+                        continue
+                    full = urllib.parse.urljoin(start_url, href).split("#")[0]
+                    host = urllib.parse.urlparse(full).netloc.lower()
+                    if allowed_hosts and not any(host == h or host.endswith("." + h) for h in allowed_hosts):
+                        continue
+                    if not re.search(href_job_regex, full, re.I):
+                        continue
+
+                    title = ""
+                    try:
+                        title = re.sub(r"\s+", " ", (a.inner_text(timeout=1200) or "")).strip()
+                    except Exception:
+                        pass
+                    candidates[full.rstrip("/").lower()] = {"url": full, "title": title}
+
+            print(
+                f"      [batch77-{slugify(company)}] discovered {len(candidates)} "
+                f"current first-party job-like detail links"
+            )
+
+            # Verify detail pages for Republic of Ireland before emitting.
+            verified = {}
+            for item in list(candidates.values())[:max_links]:
+                url = item["url"]
+                d = None
+                try:
+                    d = browser.new_page(viewport={"width": 1280, "height": 900}, locale="en-IE")
+                    d.goto(url, wait_until="domcontentloaded", timeout=30000)
+                    d.wait_for_timeout(800)
+                    body = re.sub(r"\s+", " ", d.locator("body").inner_text(timeout=5000)).strip()
+                    title = ""
+                    try:
+                        title = re.sub(r"\s+", " ", (d.locator("h1").first.inner_text(timeout=1500) or "")).strip()
+                    except Exception:
+                        title = item.get("title") or ""
+                except Exception:
+                    body = ""
+                    title = item.get("title") or ""
+                finally:
+                    try:
+                        if d:
+                            d.close()
+                    except Exception:
+                        pass
+
+                if not body:
+                    continue
+                if _ROI_NEGATIVE_RE.search(body):
+                    continue
+                if re.search(r"\bBelfast\b|\bNorthern Ireland\b|\bLisburn\b", body, re.I):
+                    continue
+                if not is_republic_of_ireland_location(body):
+                    continue
+                if not title or _looks_like_non_job_title(title):
+                    continue
+
+                loc = "Republic of Ireland"
+                lm = re.search(
+                    r"\b(Dublin(?:\s+\d+)?|Cork|Galway|Limerick|Waterford|Athlone|Naas|"
+                    r"Kilkenny|Wexford|Sligo|Mullingar|Drogheda|Navan|Leixlip)\b",
+                    body, re.I
+                )
+                if lm:
+                    loc = f"{lm.group(1)}, Ireland"
+
+                sponsorship, snippet = classify_sponsorship(body[:16000])
+                verified[url.rstrip("/").lower()] = {
+                    "company": company,
+                    "title": title[:300],
+                    "location": loc,
+                    "posted_text": "Unknown",
+                    "posted_days_ago": None,
+                    "employment_type": normalize_employment_type("", title),
+                    "url": url,
+                    "source": f"batch77_{slugify(company)}_rendered_first_party_detail",
+                    "visa_sponsorship": sponsorship,
+                    "visa_snippet": snippet,
+                }
+
+            browser.close()
+
+        merged.update(verified)
+    except Exception as exc:
+        print(f"      [batch77-{slugify(company)}] rendered board failed: {exc}")
+
+    print(f"      [batch77-{slugify(company)}] {len(merged)} total verified ROI vacancies")
+    return list(merged.values())
+
+
+def scrape_goodbody_ireland_batch77(session=None):
+    session = session or requests.Session()
+    try:
+        legacy = scrape_goodbody_ireland_batch40(session) or []
+    except Exception:
+        legacy = []
+    return _batch77_rendered_first_party_board(
+        "Goodbody",
+        [
+            "https://www.goodbody.ie/careers/",
+            "https://jobs.aib.ie/goodbody/",
+            "https://jobs.aib.ie/goodbody/search/",
+        ],
+        {"goodbody.ie", "jobs.aib.ie"},
+        r"(?:/job/|/jobs/|jobId=|jobid=)",
+        legacy_jobs=legacy,
+        max_links=50,
+    )
+
+
+def scrape_gsk_ireland_batch77(session=None):
+    session = session or requests.Session()
+    try:
+        legacy = scrape_gsk_ireland_current(session) or []
+    except Exception:
+        legacy = []
+    return _batch77_rendered_first_party_board(
+        "GlaxoSmithKline (GSK)",
+        [
+            "https://jobs.gsk.com/en-gb/search-results?keywords=Ireland",
+            "https://jobs.gsk.com/us/en/search-results?keywords=Ireland",
+        ],
+        {"jobs.gsk.com"},
+        r"(?:/job/|/jobs/|jobId=|jobid=)",
+        legacy_jobs=legacy,
+        max_links=80,
+    )
+
+
+def scrape_morgan_stanley_ireland_batch77(session=None):
+    session = session or requests.Session()
+    try:
+        legacy = scrape_morgan_stanley_ireland_batch35(session) or []
+    except Exception:
+        legacy = []
+    return _batch77_rendered_first_party_board(
+        "Morgan Stanley",
+        [
+            "https://morganstanley.eightfold.ai/careers?query=Ireland",
+            "https://morganstanley.eightfold.ai/careers?query=Dublin",
+        ],
+        {"morganstanley.eightfold.ai"},
+        r"(?:/careers/job|/job/|pid=)",
+        legacy_jobs=legacy,
+        max_links=80,
+    )
+
+
+def scrape_visa_ireland_batch77(session=None):
+    session = session or requests.Session()
+    try:
+        legacy = scrape_visa_ireland_recovery(session) or []
+    except Exception:
+        legacy = []
+    return _batch77_rendered_first_party_board(
+        "Visa",
+        [
+            "https://corporate.visa.com/en/careers.html",
+            "https://jobs.smartrecruiters.com/Visa",
+        ],
+        {"corporate.visa.com", "jobs.smartrecruiters.com"},
+        r"(?:jobs\.smartrecruiters\.com/Visa/|/job/|/jobs/)",
+        legacy_jobs=legacy,
+        max_links=80,
+    )
+
+
+def scrape_nxp_ireland_batch77(session=None):
+    session = session or requests.Session()
+    try:
+        legacy = scrape_nxp_ireland_current(session) or []
+    except Exception:
+        legacy = []
+    return _batch77_rendered_first_party_board(
+        "NXP Semiconductors",
+        [
+            "https://nxp.wd3.myworkdayjobs.com/careers",
+            "https://nxp.wd3.myworkdayjobs.com/careers?q=Ireland",
+            "https://nxp.wd3.myworkdayjobs.com/careers?q=Cork",
+        ],
+        {"nxp.wd3.myworkdayjobs.com"},
+        r"(?:/job/|/jobs/)",
+        legacy_jobs=legacy,
+        max_links=80,
+    )
+
+
+def scrape_bcg_ireland_batch77(session=None):
+    return _batch77_rendered_first_party_board(
+        "Boston Consulting Group (BCG)",
+        [
+            "https://careers.bcg.com/global/en/search-results?keywords=Ireland",
+            "https://careers.bcg.com/global/en/search-results?keywords=Dublin",
+        ],
+        {"careers.bcg.com"},
+        r"(?:/job/|/jobs/|jobId=|jobid=|/job-detail/)",
+        legacy_jobs=[],
+        max_links=80,
+    )
+
+
 # === TARGETED_DIRECT_BATCH_76_ANPOST_RENDERED_ORACLE ===
 # Batch75 proved routing was correct but both Oracle REST variants still returned 0.
 # The official An Post careers page currently links directly to CX_2001, so this
@@ -18961,6 +19224,7 @@ def scrape_wtw_ireland_batch26(session):
     print("=== TARGETED_DIRECT_BATCH_38_PRE_FULL_RUN_BULK ACTIVE: proven Uisce Oracle recovery retained + Edwards Lifesciences and HP moved to current official Workday ROI detail verification; wider zero audit completed; Manual queue untouched ===")
 
 print("=== TARGETED_DIRECT_BATCH_46_AVIVA_HIGH_YIELD_FIX ACTIVE: Aviva is removed from final defer and uses eight current official Dublin detail seeds plus live detail verification; failed Aldi/HP mechanisms are not expanded; proven positive routes preserved ===")
+print("=== TARGETED_DIRECT_BATCH_77_MULTI6_CURRENT_BOARDS ACTIVE: six persistent-zero companies audited together via fresh rendered first-party boards (Goodbody, GSK, Morgan Stanley, Visa, NXP, BCG); legacy routes unioned; An Post repeated browser retry deferred; productive routes preserved ===")
 print("=== TARGETED_DIRECT_BATCH_76_ANPOST_RENDERED_ORACLE ACTIVE: Batch75 routing was correct but Oracle REST still returned zero; An Post now unions Batch58 HTTP with rendered first-party CX_2001 job-detail discovery; no speculative seeds; proven routes preserved ===")
 print("=== TARGETED_DIRECT_BATCH_75_ANPOST_ROUTE_LOCK ACTIVE: An Post now actually routes to the existing Batch58 country-facet + wide Oracle Candidate Experience union; fresh cache namespace; no new speculative seeds; Batch74/proven routes preserved ===")
 print("=== TARGETED_DIRECT_BATCH_74_INFOSYS_CURRENT_SEEDS ACTIVE: five exact current Dublin Infosys Digital Careers roles added with hard 2026-09-18 expiry and unioned with Batch47; Batch73/ALDI/Sky/proven routes preserved ===")
@@ -19362,7 +19626,7 @@ def main():
     dedicated_company_specs = [
         ("exact", "alexion pharmaceuticals", scrape_alexion_ireland_direct, 35, "official Alexion Ireland jobs board"),
         ("exact", "sky ireland", scrape_sky_ireland_batch70, 10, "Batch70 bounded current Sky Dublin first-party seed"),
-        ("exact", "an post", scrape_an_post_batch76, 65, "Batch76 official An Post Oracle CX rendered detail discovery + Batch58 HTTP union"),
+        ("exact", "an post", scrape_an_post_batch58, 20, "Batch77 defer rendered An Post repeat; retain cheap Batch58 HTTP union only"),
         ("exact", "red hat", scrape_redhat_ireland_batch73, 10, "Batch73 bounded exact-current Red Hat Remote Ireland first-party seed"),
         ("exact", "slack", scrape_slack_ireland_batch73, 10, "Batch73 bounded exact-current Slack Dublin first-party seed"),
         ("exact", "boehringer ingelheim", scrape_boehringer_ireland_direct, 40, "official Boehringer SuccessFactors Ireland search"),
@@ -19391,7 +19655,7 @@ def main():
         ("exact", "dhl ireland", scrape_dhl_ireland_batch54, 75, "Batch54 official DHL Phenom Ireland board"),
         ("exact", "linkedin", scrape_linkedin_ireland_batch54, 75, "Batch54 LinkedIn first-party Dublin jobs details"),
         ("exact", "kepak group", scrape_kepak_workable, 35, "official Kepak Workable board"),
-        ("exact", "glaxosmithkline (gsk)", scrape_gsk_ireland_current, 55, "official GSK current-jobs Ireland search"),
+        ("exact", "glaxosmithkline (gsk)", scrape_gsk_ireland_batch77, 70, "Batch77 GSK official Ireland search rendered detail union"),
         ("exact", "bord gáis energy", scrape_bord_gais_energy_workday, 40, "official Bord Gais Energy Centrica Workday route"),
         ("exact", "irish distillers (pernod ricard)", scrape_irish_distillers_workday, 40, "official Irish Distillers Pernod Ricard Workday route"),
         ("exact", "shannon airport group", scrape_shannon_airport_group_http, 30, "official Shannon Airport Group vacancies page"),
@@ -19448,7 +19712,8 @@ def main():
         ("exact", "wipro", scrape_wipro_ireland, 75, "first-party Wipro vacancy records + City/State verification"),
         ("exact", "iqvia", scrape_iqvia_ireland, 90, "first-party IQVIA Ireland Jobs page"),
         ("exact", "merit medical", scrape_merit_medical_ireland, 75, "official Merit Medical Workday"),
-        ("exact", "goodbody", scrape_goodbody_ireland_batch40, 45, "Batch40 Goodbody SAP SuccessFactors + live-verified official detail"),
+        ("exact", "boston consulting group (bcg)", scrape_bcg_ireland_batch77, 70, "Batch77 BCG current global search rendered ROI detail verification"),
+        ("exact", "goodbody", scrape_goodbody_ireland_batch77, 70, "Batch77 Goodbody current first-party careers + AIB/Goodbody rendered detail union"),
         ("exact", "bristol myers squibb", scrape_bms_batch18, 75, "Batch18 BMS Ireland route + sitemap fallback"),
         ("exact", "sse airtricity / sse", scrape_sse_ireland, 60, "official SSE careers"),
         ("exact", "hewlett packard enterprise (hpe)", scrape_hpe_ireland, 60, "official HPE careers"),
@@ -19458,7 +19723,7 @@ def main():
         ("exact", "forvis mazars ireland", scrape_forvis_mazars_ireland_batch34, 45, "Batch34 official Forvis Mazars Recruitee API"),
         ("exact", "morningstar", scrape_morningstar_ireland_batch35, 55, "Batch35 direct Morningstar Workday Ireland verification"),
         ("exact", "refinitiv (lseg)", scrape_lseg_ireland_batch35, 65, "Batch35 direct LSEG Workday Ireland verification"),
-        ("exact", "morgan stanley", scrape_morgan_stanley_ireland_batch35, 45, "Batch35 official Morgan Stanley Eightfold Ireland API"),
+        ("exact", "morgan stanley", scrape_morgan_stanley_ireland_batch77, 70, "Batch77 Morgan Stanley Eightfold API + rendered current-board union"),
         ("exact", "esb (electricity supply board)", scrape_esb_alias_batch34, 60, "Batch34 alias to live ESB first-party board"),
         ("exact", "supervalu / musgrave", scrape_supervalu_musgrave_alias_batch34, 60, "Batch34 alias to live Musgrave first-party board"),
         ("exact", "fbd insurance", scrape_fbd_ireland, 60, "official FBD careers"),
@@ -19530,7 +19795,7 @@ def main():
         ("exact", "morgan stanley", scrape_morgan_stanley_ireland_recovery, 75, "first-party sitemap recovery"),
         ("exact", "s&p global", scrape_sp_global_ireland_recovery, 75, "first-party sitemap recovery"),
         ("exact", "databricks", scrape_databricks_ireland_recovery, 75, "first-party sitemap recovery"),
-        ("exact", "visa", scrape_visa_ireland_recovery, 75, "first-party sitemap recovery"),
+        ("exact", "visa", scrape_visa_ireland_batch77, 70, "Batch77 Visa corporate careers + official SmartRecruiters detail union"),
         ("exact", "aer lingus", scrape_aer_lingus_talentsoft_current, 40, "Aer Lingus Talentsoft Republic-of-Ireland facet"),
         ("exact", "qualcomm", scrape_qualcomm_ireland_batch29, 90, "Batch33 dynamic Qualcomm Cork/Ireland Workday discovery + strict detail verification"),
         ("exact", "oliver wyman", scrape_oliver_wyman_ireland_batch29, 55, "Batch29 Marsh first-party Oliver Wyman Dublin search"),
@@ -19544,7 +19809,7 @@ def main():
         ("exact", "thermo fisher scientific", scrape_thermo_fisher_ireland_current, 45, "current Thermo Fisher Workday Ireland route"),
         ("exact", "broadcom", scrape_broadcom_ireland_batch26, 55, "Batch26 current first-party Broadcom ROI detail verification"),
         ("exact", "vmware (broadcom)", scrape_vmware_ireland_batch18, 55, "Batch18 Workday detail-verified VMware/VCF Ireland search"),
-        ("exact", "nxp semiconductors", scrape_nxp_ireland_batch18, 55, "Batch18 Workday detail-verified Ireland search"),
+        ("exact", "nxp semiconductors", scrape_nxp_ireland_batch77, 70, "Batch77 NXP Workday current board rendered detail union"),
         ("exact", "zimmer biomet", scrape_zimmer_biomet_batch44, 45, "Batch44 official Zimmer Biomet Phenom ROI route"),
         ("exact", "pepsico", scrape_pepsico_ireland, 180, "official careers search"),
     ]
@@ -19870,6 +20135,9 @@ def main():
             elif _key == "sky ireland":
                 cache_key = f"{name}::targeted_direct_batch70_aldi_text_sky_bounded_v1"
                 _carry_recent_positive_cache(browser_cache, name, cache_key)
+            elif _key in {"goodbody", "glaxosmithkline (gsk)", "morgan stanley", "visa", "nxp semiconductors", "boston consulting group (bcg)"}:
+                cache_key = f"{name}::targeted_direct_batch77_multi6_current_boards_v1"
+
             elif _key == "an post":
                 cache_key = f"{name}::targeted_direct_batch76_anpost_rendered_oracle_v1"
                 _carry_recent_positive_cache(browser_cache, name, cache_key)
