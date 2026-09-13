@@ -13178,6 +13178,176 @@ def _oracle_candidate_experience_wide_roi(company_name, host, site_number, sessi
     return list(found.values())
 
 
+
+# === TARGETED_DIRECT_BATCH_76_ANPOST_RENDERED_ORACLE ===
+# Batch75 proved routing was correct but both Oracle REST variants still returned 0.
+# The official An Post careers page currently links directly to CX_2001, so this
+# mechanism renders that exact first-party Oracle Candidate Experience board and
+# extracts real vacancy detail links/cards instead of guessing another REST shape.
+
+def scrape_an_post_batch76(session=None):
+    # Preserve both prior HTTP mechanisms first.
+    session = session or requests.Session()
+    merged = {}
+    try:
+        for j in scrape_an_post_batch58(session) or []:
+            key = (j.get("url") or "").split("#")[0].rstrip("/").lower()
+            if key:
+                merged[key] = j
+    except Exception as exc:
+        print(f"      [batch76-anpost] Batch58 union failed: {exc}")
+
+    if not HAS_PLAYWRIGHT:
+        print(f"      [batch76-anpost-rendered] Playwright unavailable; HTTP union={len(merged)}")
+        return list(merged.values())
+
+    board = (
+        "https://fa-ewnd-saasfaprod1.fa.ocs.oraclecloud.com/"
+        "hcmUI/CandidateExperience/en/sites/CX_2001/?mode=location"
+    )
+    rendered = {}
+
+    try:
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch(headless=True, args=["--disable-http2"])
+            page = browser.new_page(
+                viewport={"width": 1440, "height": 1000},
+                locale="en-IE",
+            )
+            page.goto(board, wait_until="domcontentloaded", timeout=60000)
+            page.wait_for_timeout(4500)
+
+            # Oracle CX often lazy-loads the requisition list.
+            last_count = -1
+            stable = 0
+            for _ in range(18):
+                anchors = page.locator('a[href*="/job/"]')
+                count = anchors.count()
+                stable = stable + 1 if count == last_count else 0
+                last_count = count
+                if stable >= 3:
+                    break
+                page.mouse.wheel(0, 4500)
+                page.wait_for_timeout(900)
+
+            anchors = page.locator('a[href*="/job/"]')
+            candidates = {}
+            for i in range(min(anchors.count(), 120)):
+                a = anchors.nth(i)
+                try:
+                    href = a.get_attribute("href") or ""
+                except Exception:
+                    continue
+                if not href:
+                    continue
+                full = urllib.parse.urljoin(board, href)
+                if "/job/" not in full:
+                    continue
+
+                card = _browser_card(a)
+                title = _browser_text(a)
+
+                # Prefer a real job-looking anchor title, but if Oracle uses a
+                # generic CTA link, recover the title from the nearest card.
+                if not title or _looks_like_non_job_title(title) or len(title) > 220:
+                    lines = [re.sub(r"\s+", " ", x).strip() for x in card.splitlines() if x.strip()]
+                    title = next(
+                        (
+                            x for x in lines
+                            if len(x) >= 3
+                            and len(x) <= 220
+                            and not _looks_like_non_job_title(x)
+                            and not re.search(
+                                r"^(?:apply|view|details|location|posted|job id|requisition|"
+                                r"full[- ]?time|part[- ]?time)$",
+                                x,
+                                re.I,
+                            )
+                        ),
+                        "",
+                    )
+
+                candidates[full.split("#")[0].rstrip("/").lower()] = {
+                    "url": full.split("#")[0],
+                    "card": card,
+                    "title": title.strip(),
+                }
+
+            print(
+                f"      [batch76-anpost-rendered] discovered {len(candidates)} "
+                f"official Oracle job detail links"
+            )
+
+            # Detail-page verification keeps the existing strict ROI rule.
+            for item in list(candidates.values())[:80]:
+                full = item["url"]
+                try:
+                    detail = browser.new_page(
+                        viewport={"width": 1280, "height": 900},
+                        locale="en-IE",
+                    )
+                    detail.goto(full, wait_until="domcontentloaded", timeout=30000)
+                    detail.wait_for_timeout(1300)
+                    body = re.sub(r"\s+", " ", detail.locator("body").inner_text(timeout=5000)).strip()
+                    h1 = detail.locator("h1").first
+                    title = _browser_text(h1) or item["title"]
+                    detail.close()
+                except Exception:
+                    body = item["card"]
+                    title = item["title"]
+
+                if not body:
+                    continue
+                if re.search(r"\bBelfast\b|\bNorthern Ireland\b|\bLisburn\b", body, re.I):
+                    continue
+                if not re.search(
+                    r"\b(?:Ireland|Dublin|Cork|Galway|Limerick|Waterford|Athlone|Naas|"
+                    r"Portlaoise|Kilkenny|Wexford|Sligo|Mullingar|Drogheda|Navan)\b",
+                    body,
+                    re.I,
+                ):
+                    continue
+                if not title or _looks_like_non_job_title(title):
+                    continue
+
+                # Best-effort location from the page/card, with Ireland-only fallback.
+                location = "Republic of Ireland"
+                lm = re.search(
+                    r"\b(Dublin(?:\s+\d+)?|Cork|Galway|Limerick|Waterford|Athlone|Naas|"
+                    r"Portlaoise|Kilkenny|Wexford|Sligo|Mullingar|Drogheda|Navan)\b",
+                    body,
+                    re.I,
+                )
+                if lm:
+                    location = f"{lm.group(1)}, Ireland"
+
+                sponsorship, snippet = classify_sponsorship(body[:12000])
+                rendered[full.rstrip("/").lower()] = {
+                    "company": "An Post",
+                    "title": title[:300],
+                    "location": location[:180],
+                    "posted_text": "Unknown",
+                    "posted_days_ago": None,
+                    "employment_type": normalize_employment_type("", title),
+                    "url": full,
+                    "source": "batch76_anpost_official_oracle_rendered_detail",
+                    "visa_sponsorship": sponsorship,
+                    "visa_snippet": snippet,
+                }
+
+            browser.close()
+    except Exception as exc:
+        print(f"      [batch76-anpost-rendered] failed: {exc}")
+
+    # Additive union: never replace a working HTTP route with the rendered route.
+    merged.update(rendered)
+    print(
+        f"      [batch76-anpost] {len(merged)} total ROI vacancies after "
+        f"Batch58 HTTP + rendered Oracle CX union"
+    )
+    return list(merged.values())
+
+
 def scrape_an_post_batch58(session=None):
     session=session or requests.Session()
     # Keep the existing country-filtered route, then add a genuinely different
@@ -18791,6 +18961,7 @@ def scrape_wtw_ireland_batch26(session):
     print("=== TARGETED_DIRECT_BATCH_38_PRE_FULL_RUN_BULK ACTIVE: proven Uisce Oracle recovery retained + Edwards Lifesciences and HP moved to current official Workday ROI detail verification; wider zero audit completed; Manual queue untouched ===")
 
 print("=== TARGETED_DIRECT_BATCH_46_AVIVA_HIGH_YIELD_FIX ACTIVE: Aviva is removed from final defer and uses eight current official Dublin detail seeds plus live detail verification; failed Aldi/HP mechanisms are not expanded; proven positive routes preserved ===")
+print("=== TARGETED_DIRECT_BATCH_76_ANPOST_RENDERED_ORACLE ACTIVE: Batch75 routing was correct but Oracle REST still returned zero; An Post now unions Batch58 HTTP with rendered first-party CX_2001 job-detail discovery; no speculative seeds; proven routes preserved ===")
 print("=== TARGETED_DIRECT_BATCH_75_ANPOST_ROUTE_LOCK ACTIVE: An Post now actually routes to the existing Batch58 country-facet + wide Oracle Candidate Experience union; fresh cache namespace; no new speculative seeds; Batch74/proven routes preserved ===")
 print("=== TARGETED_DIRECT_BATCH_74_INFOSYS_CURRENT_SEEDS ACTIVE: five exact current Dublin Infosys Digital Careers roles added with hard 2026-09-18 expiry and unioned with Batch47; Batch73/ALDI/Sky/proven routes preserved ===")
 print("=== TARGETED_DIRECT_BATCH_73_REDHAT_SLACK_CURRENT_SEEDS ACTIVE: fresh exact first-party Red Hat Remote Ireland + Slack Dublin vacancies added with hard 2026-09-16 expiry; ALDI/Sky/proven routes preserved ===")
@@ -19191,7 +19362,7 @@ def main():
     dedicated_company_specs = [
         ("exact", "alexion pharmaceuticals", scrape_alexion_ireland_direct, 35, "official Alexion Ireland jobs board"),
         ("exact", "sky ireland", scrape_sky_ireland_batch70, 10, "Batch70 bounded current Sky Dublin first-party seed"),
-        ("exact", "an post", scrape_an_post_batch58, 45, "Batch75 route lock to existing Batch58 An Post Oracle CX country + wide ROI union"),
+        ("exact", "an post", scrape_an_post_batch76, 65, "Batch76 official An Post Oracle CX rendered detail discovery + Batch58 HTTP union"),
         ("exact", "red hat", scrape_redhat_ireland_batch73, 10, "Batch73 bounded exact-current Red Hat Remote Ireland first-party seed"),
         ("exact", "slack", scrape_slack_ireland_batch73, 10, "Batch73 bounded exact-current Slack Dublin first-party seed"),
         ("exact", "boehringer ingelheim", scrape_boehringer_ireland_direct, 40, "official Boehringer SuccessFactors Ireland search"),
@@ -19700,7 +19871,7 @@ def main():
                 cache_key = f"{name}::targeted_direct_batch70_aldi_text_sky_bounded_v1"
                 _carry_recent_positive_cache(browser_cache, name, cache_key)
             elif _key == "an post":
-                cache_key = f"{name}::targeted_direct_batch75_anpost_route_lock_v1"
+                cache_key = f"{name}::targeted_direct_batch76_anpost_rendered_oracle_v1"
                 _carry_recent_positive_cache(browser_cache, name, cache_key)
             elif _key == "coca-cola hbc ireland":
                 cache_key = f"{name}::targeted_direct_batch66_cchbc_route_lock_v1"
