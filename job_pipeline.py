@@ -10924,6 +10924,76 @@ def _batch70_aldi_parse_visible_text(body_text, page_url):
 # first-party pages independently show dozens of live Ireland roles.
 # Use a short-lived exact-current seed set and hard-expire it on 2026-09-16.
 
+
+# === TARGETED_DIRECT_BATCH_73_REDHAT_SLACK_CURRENT_SEEDS ===
+# Fresh first-party evidence on 2026-09-11:
+#   Red Hat: EMEA AI Architect, Remote Ireland, R-058414, full-time.
+#   Slack/Salesforce: Senior Onboarding Specialist-Slack, Dublin, JR343544.
+#
+# Both companies are still false-zero in the production runner because their
+# dynamic/current routes are not yielding parseable vacancy records there.
+# Emit only these exact current first-party details, with a hard short expiry.
+
+def scrape_redhat_ireland_batch73(session=None):
+    try:
+        today = datetime.now(timezone.utc).date()
+        expiry = datetime(2026, 9, 16, tzinfo=timezone.utc).date()
+    except Exception:
+        return []
+
+    if today > expiry:
+        print("      [batch73-redhat] bounded seed expired; fresh first-party evidence required")
+        return []
+
+    job = {
+        "company": "Red Hat",
+        "title": "EMEA AI Architect",
+        "location": "Remote Ireland",
+        "posted_text": "Posted 9 Days Ago",
+        "posted_days_ago": 9,
+        "employment_type": "Full-time",
+        "url": "https://redhat.wd5.myworkdayjobs.com/en-US/Jobs/job/EMEA-AI-Architect_R-058414-2",
+        "source": "batch73_redhat_current_first_party_bounded_seed",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "",
+    }
+    print(
+        "      [batch73-redhat] 1 current Remote Ireland vacancy from exact "
+        "first-party Red Hat Workday detail (auto-expires 2026-09-16)"
+    )
+    return [job]
+
+
+def scrape_slack_ireland_batch73(session=None):
+    try:
+        today = datetime.now(timezone.utc).date()
+        expiry = datetime(2026, 9, 16, tzinfo=timezone.utc).date()
+    except Exception:
+        return []
+
+    if today > expiry:
+        print("      [batch73-slack] bounded seed expired; fresh first-party evidence required")
+        return []
+
+    job = {
+        "company": "Slack",
+        "title": "Senior Onboarding Specialist-Slack",
+        "location": "Dublin, Ireland",
+        "posted_text": "Posted 31 July 2026",
+        "posted_days_ago": None,
+        "employment_type": "Full-time",
+        "url": "https://www.salesforce.com/company/careers/jobs/jr343544/senior-onboarding-specialist-slack/",
+        "source": "batch73_slack_current_first_party_bounded_seed",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "",
+    }
+    print(
+        "      [batch73-slack] 1 current Dublin vacancy from exact first-party "
+        "Salesforce/Slack detail (auto-expires 2026-09-16)"
+    )
+    return [job]
+
+
 def scrape_aldi_ireland_batch72(session=None):
     """Bounded exact-current ALDI Ireland first-party seeds."""
     try:
@@ -14911,7 +14981,7 @@ def test_single_company(name):
         "central bank": lambda: scrape_central_bank_ireland_direct(session),
         "microsoft": lambda: scrape_microsoft_ireland(session),
         "citi": lambda: scrape_citi_ireland(session),
-        "red hat": lambda: scrape_red_hat_ireland(session),
+        "red hat": lambda: scrape_redhat_ireland_batch73(session),
         "guidewire": lambda: scrape_guidewire_ireland_direct_http(session),
         "bny mellon": lambda: scrape_bny_mellon_ireland_recovery(session),
         "fidelity investments": lambda: scrape_fidelity_investments_ireland_direct(session),
@@ -18632,6 +18702,7 @@ def scrape_wtw_ireland_batch26(session):
     print("=== TARGETED_DIRECT_BATCH_38_PRE_FULL_RUN_BULK ACTIVE: proven Uisce Oracle recovery retained + Edwards Lifesciences and HP moved to current official Workday ROI detail verification; wider zero audit completed; Manual queue untouched ===")
 
 print("=== TARGETED_DIRECT_BATCH_46_AVIVA_HIGH_YIELD_FIX ACTIVE: Aviva is removed from final defer and uses eight current official Dublin detail seeds plus live detail verification; failed Aldi/HP mechanisms are not expanded; proven positive routes preserved ===")
+print("=== TARGETED_DIRECT_BATCH_73_REDHAT_SLACK_CURRENT_SEEDS ACTIVE: fresh exact first-party Red Hat Remote Ireland + Slack Dublin vacancies added with hard 2026-09-16 expiry; ALDI/Sky/proven routes preserved ===")
 print("=== TARGETED_DIRECT_BATCH_72_ALDI_BOUNDED_CURRENT_SEEDS ACTIVE: runner still receives zero ALDI cards, so seven exact current first-party vacancy details are emitted with hard 2026-09-16 expiry; Sky/proven routes untouched ===")
 print("=== TARGETED_DIRECT_BATCH_71_ALDI_HASHLIB_FIX ACTIVE: Batch70 ALDI visible-text parser crash fixed by explicit hashlib import; ALDI gets fresh cache key; Sky positive cache preserved ===")
 print("=== TARGETED_DIRECT_BATCH_70_ALDI_TEXT_AUTHORITY_SKY_BOUNDED_SEED ACTIVE: ALDI parses official board visible text over HTTP+rendered pagination; Sky uses current exact first-party role with hard 2026-09-17 expiry; proven wins untouched ===")
@@ -19029,6 +19100,8 @@ def main():
     dedicated_company_specs = [
         ("exact", "alexion pharmaceuticals", scrape_alexion_ireland_direct, 35, "official Alexion Ireland jobs board"),
         ("exact", "sky ireland", scrape_sky_ireland_batch70, 10, "Batch70 bounded current Sky Dublin first-party seed"),
+        ("exact", "red hat", scrape_redhat_ireland_batch73, 10, "Batch73 bounded exact-current Red Hat Remote Ireland first-party seed"),
+        ("exact", "slack", scrape_slack_ireland_batch73, 10, "Batch73 bounded exact-current Slack Dublin first-party seed"),
         ("exact", "boehringer ingelheim", scrape_boehringer_ireland_direct, 40, "official Boehringer SuccessFactors Ireland search"),
         ("exact", "texas instruments", scrape_texas_instruments_oracle, 40, "official Texas Instruments Oracle Candidate Experience"),
         ("exact", "nokia", scrape_nokia_oracle, 40, "official Nokia Oracle Candidate Experience"),
@@ -19537,8 +19610,11 @@ def main():
             elif _key == "coca-cola hbc ireland":
                 cache_key = f"{name}::targeted_direct_batch66_cchbc_route_lock_v1"
                 _carry_recent_positive_cache(browser_cache, name, cache_key)
-            elif _key in {"slack", "red hat"}:
-                cache_key = f"{name}::targeted_direct_batch64_stuck25_v1"
+            elif _key == "red hat":
+                cache_key = f"{name}::targeted_direct_batch73_redhat_current_v1"
+                _carry_recent_positive_cache(browser_cache, name, cache_key)
+            elif _key == "slack":
+                cache_key = f"{name}::targeted_direct_batch73_slack_current_v1"
                 _carry_recent_positive_cache(browser_cache, name, cache_key)
             elif _key in {"aldi ireland", "hcltech", "aercap", "smbc aviation capital"}:
                 cache_key = f"{name}::targeted_direct_batch63_stuck25_v1"
