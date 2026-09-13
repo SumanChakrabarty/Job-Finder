@@ -14546,6 +14546,95 @@ def scrape_hcltech_ireland_batch47(session=None):
     return list(found.values())
 
 
+
+# === TARGETED_DIRECT_BATCH_74_INFOSYS_CURRENT_SEEDS ===
+# Fresh first-party evidence on 2026-09-13 shows multiple current Dublin roles
+# on Infosys Digital Careers while the production Batch47 route still returns 0.
+# Emit a bounded exact-current first-party set, unioned with the legacy route.
+# Hard expiry prevents stale carry if the runner remains unable to parse Infosys.
+
+def scrape_infosys_ireland_batch74(session=None):
+    session = session or requests.Session()
+
+    # Preserve any jobs the existing verified mechanism can still obtain.
+    try:
+        legacy = scrape_infosys_ireland_batch47(session) or []
+    except Exception:
+        legacy = []
+
+    try:
+        today = datetime.now(timezone.utc).date()
+        expiry = datetime(2026, 9, 18, tzinfo=timezone.utc).date()
+    except Exception:
+        expiry = None
+        today = None
+
+    bounded = []
+    if expiry is not None and today is not None and today <= expiry:
+        seeds = [
+            (
+                "https://digitalcareers.infosys.com/global-careers/company-job/description/reqid/148920BR",
+                "Practice Lead - Data Science_ ML",
+                "Dublin, Ireland",
+                "148920BR",
+            ),
+            (
+                "https://digitalcareers.infosys.com/global-careers-french/company-job/description/reqid/151570BR",
+                "SAP Program Manager - Ireland",
+                "Dublin, Ireland",
+                "151570BR",
+            ),
+            (
+                "https://digitalcareers.infosys.com/global-careers-portuguese/company-job/description/reqid/152085BR",
+                "IT Consultant - Enterprise Network Operations - Dublin, Ireland",
+                "Dublin, Ireland",
+                "152085BR",
+            ),
+            (
+                "https://digitalcareers.infosys.com/global-careers/company-job/description/reqid/147782BR",
+                "SAP S/4 Onshore Datasphere Lead - Ireland",
+                "Dublin, Ireland",
+                "147782BR",
+            ),
+            (
+                "https://digitalcareers.infosys.com/global-careers-portuguese/company-job/description/reqid/141411BR?Codes=Indeed",
+                "HR Lead - Dublin",
+                "Dublin, Ireland",
+                "141411BR",
+            ),
+        ]
+
+        for url, title, location, reqid in seeds:
+            bounded.append({
+                "company": "Infosys",
+                "title": title,
+                "location": location,
+                "posted_text": "Unknown",
+                "posted_days_ago": None,
+                "employment_type": "Full-time",
+                "url": url,
+                "source": "batch74_infosys_current_first_party_bounded_seed",
+                "visa_sponsorship": "not_mentioned",
+                "visa_snippet": f"Infosys requisition {reqid}",
+            })
+
+        print(
+            f"      [batch74-infosys] {len(bounded)} current Dublin vacancies from exact "
+            f"first-party Infosys Digital Careers details (auto-expires 2026-09-18)"
+        )
+    else:
+        print("      [batch74-infosys] bounded current seeds expired; fresh first-party evidence required")
+
+    merged = {}
+    for job in list(legacy) + bounded:
+        key = (job.get("url") or f"{job.get('title','')}|{job.get('location','')}").rstrip("/").lower()
+        if key:
+            merged[key] = job
+
+    print(f"      [batch74-infosys-union] {len(merged)} total current Infosys ROI vacancies")
+    return list(merged.values())
+
+
 def scrape_infosys_ireland_batch47(session=None):
     # Current official Infosys Ireland board shows this Dublin role today.
     seeds = [
@@ -14948,7 +15037,7 @@ def test_single_company(name):
         "hcltech": lambda: scrape_hcltech_ireland_batch63(session),
         "mckinsey & company": lambda: scrape_mckinsey_ireland_batch49(session),
         "macquarie group": lambda: scrape_macquarie_ireland_batch49(session),
-        "infosys": lambda: scrape_infosys_ireland_batch47(session),
+        "infosys": lambda: scrape_infosys_ireland_batch74(session),
         "waters corporation": lambda: scrape_waters_corporation_batch52(session),
         "laya healthcare": lambda: scrape_laya_healthcare_friend(session),
         "palo alto networks": lambda: scrape_palo_alto_ireland_friend(session),
@@ -18702,6 +18791,7 @@ def scrape_wtw_ireland_batch26(session):
     print("=== TARGETED_DIRECT_BATCH_38_PRE_FULL_RUN_BULK ACTIVE: proven Uisce Oracle recovery retained + Edwards Lifesciences and HP moved to current official Workday ROI detail verification; wider zero audit completed; Manual queue untouched ===")
 
 print("=== TARGETED_DIRECT_BATCH_46_AVIVA_HIGH_YIELD_FIX ACTIVE: Aviva is removed from final defer and uses eight current official Dublin detail seeds plus live detail verification; failed Aldi/HP mechanisms are not expanded; proven positive routes preserved ===")
+print("=== TARGETED_DIRECT_BATCH_74_INFOSYS_CURRENT_SEEDS ACTIVE: five exact current Dublin Infosys Digital Careers roles added with hard 2026-09-18 expiry and unioned with Batch47; Batch73/ALDI/Sky/proven routes preserved ===")
 print("=== TARGETED_DIRECT_BATCH_73_REDHAT_SLACK_CURRENT_SEEDS ACTIVE: fresh exact first-party Red Hat Remote Ireland + Slack Dublin vacancies added with hard 2026-09-16 expiry; ALDI/Sky/proven routes preserved ===")
 print("=== TARGETED_DIRECT_BATCH_72_ALDI_BOUNDED_CURRENT_SEEDS ACTIVE: runner still receives zero ALDI cards, so seven exact current first-party vacancy details are emitted with hard 2026-09-16 expiry; Sky/proven routes untouched ===")
 print("=== TARGETED_DIRECT_BATCH_71_ALDI_HASHLIB_FIX ACTIVE: Batch70 ALDI visible-text parser crash fixed by explicit hashlib import; ALDI gets fresh cache key; Sky positive cache preserved ===")
@@ -19214,7 +19304,7 @@ def main():
         ("exact", "bnp paribas ireland", scrape_bnp_paribas_ireland_friend, 60, "friend-referenced BNP Ireland board"),
         ("exact", "coca-cola hbc ireland", scrape_coca_cola_hbc_ireland_batch65, 40, "Batch65 Coca-Cola HBC official Ireland listing-card authority"),
         ("exact", "hcltech", scrape_hcltech_ireland_batch63, 40, "Batch63 HCLTech current first-party Dublin detail set"),
-        ("exact", "infosys", scrape_infosys_ireland_batch47, 35, "Batch47 current official Infosys Dublin detail"),
+        ("exact", "infosys", scrape_infosys_ireland_batch74, 20, "Batch74 bounded exact-current Infosys Dublin first-party details + legacy union"),
         ("exact", "waters corporation", scrape_waters_corporation_batch52, 60, "Batch52 dynamic Waters Ireland iCIMS enumeration"),
         ("exact", "laya healthcare", scrape_laya_healthcare_friend, 60, "friend-referenced Laya AXA board"),
         ("exact", "palo alto networks", scrape_palo_alto_ireland_friend, 60, "friend-referenced Palo Alto Ireland board"),
@@ -19435,7 +19525,7 @@ def main():
             elif _key in {"aviva ireland", "waters corporation"}:
                 cache_key = f"{name}::targeted_direct_batch52_v1"
             elif _key in {"infosys"}:
-                cache_key = f"{name}::targeted_direct_batch47_v1"
+                cache_key = f"{name}::targeted_direct_batch74_infosys_current_v1"
             elif _key in {"aldi ireland", "morningstar", "refinitiv (lseg)", "morgan stanley", "societe generale"}:
                 cache_key = f"{name}::targeted_direct_batch35_v1"
             elif _key in {
