@@ -18791,6 +18791,7 @@ def scrape_wtw_ireland_batch26(session):
     print("=== TARGETED_DIRECT_BATCH_38_PRE_FULL_RUN_BULK ACTIVE: proven Uisce Oracle recovery retained + Edwards Lifesciences and HP moved to current official Workday ROI detail verification; wider zero audit completed; Manual queue untouched ===")
 
 print("=== TARGETED_DIRECT_BATCH_46_AVIVA_HIGH_YIELD_FIX ACTIVE: Aviva is removed from final defer and uses eight current official Dublin detail seeds plus live detail verification; failed Aldi/HP mechanisms are not expanded; proven positive routes preserved ===")
+print("=== TARGETED_DIRECT_BATCH_75_ANPOST_ROUTE_LOCK ACTIVE: An Post now actually routes to the existing Batch58 country-facet + wide Oracle Candidate Experience union; fresh cache namespace; no new speculative seeds; Batch74/proven routes preserved ===")
 print("=== TARGETED_DIRECT_BATCH_74_INFOSYS_CURRENT_SEEDS ACTIVE: five exact current Dublin Infosys Digital Careers roles added with hard 2026-09-18 expiry and unioned with Batch47; Batch73/ALDI/Sky/proven routes preserved ===")
 print("=== TARGETED_DIRECT_BATCH_73_REDHAT_SLACK_CURRENT_SEEDS ACTIVE: fresh exact first-party Red Hat Remote Ireland + Slack Dublin vacancies added with hard 2026-09-16 expiry; ALDI/Sky/proven routes preserved ===")
 print("=== TARGETED_DIRECT_BATCH_72_ALDI_BOUNDED_CURRENT_SEEDS ACTIVE: runner still receives zero ALDI cards, so seven exact current first-party vacancy details are emitted with hard 2026-09-16 expiry; Sky/proven routes untouched ===")
@@ -19190,6 +19191,7 @@ def main():
     dedicated_company_specs = [
         ("exact", "alexion pharmaceuticals", scrape_alexion_ireland_direct, 35, "official Alexion Ireland jobs board"),
         ("exact", "sky ireland", scrape_sky_ireland_batch70, 10, "Batch70 bounded current Sky Dublin first-party seed"),
+        ("exact", "an post", scrape_an_post_batch58, 45, "Batch75 route lock to existing Batch58 An Post Oracle CX country + wide ROI union"),
         ("exact", "red hat", scrape_redhat_ireland_batch73, 10, "Batch73 bounded exact-current Red Hat Remote Ireland first-party seed"),
         ("exact", "slack", scrape_slack_ireland_batch73, 10, "Batch73 bounded exact-current Slack Dublin first-party seed"),
         ("exact", "boehringer ingelheim", scrape_boehringer_ireland_direct, 40, "official Boehringer SuccessFactors Ireland search"),
@@ -19697,6 +19699,9 @@ def main():
             elif _key == "sky ireland":
                 cache_key = f"{name}::targeted_direct_batch70_aldi_text_sky_bounded_v1"
                 _carry_recent_positive_cache(browser_cache, name, cache_key)
+            elif _key == "an post":
+                cache_key = f"{name}::targeted_direct_batch75_anpost_route_lock_v1"
+                _carry_recent_positive_cache(browser_cache, name, cache_key)
             elif _key == "coca-cola hbc ireland":
                 cache_key = f"{name}::targeted_direct_batch66_cchbc_route_lock_v1"
                 _carry_recent_positive_cache(browser_cache, name, cache_key)
@@ -19721,7 +19726,7 @@ def main():
             elif _key == "hubspot":
                 cache_key = f"{name}::targeted_direct_batch59_high_yield_v1"
                 _carry_recent_positive_cache(browser_cache, name, cache_key)
-            elif _key in {"mckinsey & company", "paypal", "an post"}:
+            elif _key in {"mckinsey & company", "paypal"}:
                 cache_key = f"{name}::targeted_direct_batch58_multi_v1"
                 _carry_recent_positive_cache(browser_cache, name, cache_key)
             elif _key in {"daa (dublin airport authority)", "eli lilly", "dhl ireland", "linkedin"}:
