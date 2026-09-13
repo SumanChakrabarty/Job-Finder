@@ -6661,21 +6661,6 @@
     "jobs": [
       {
         "company": "BlackRock",
-        "title": "Associate, Private Credit Fund Accounting, PFS - Dublin",
-        "location": "Dublin, Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.blackrock.com/job/dublin/associate-private-credit-fund-accounting-pfs-dublin/45831/98511190128",
-        "source": "blackrock_browser",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-13T05:38:38.171334+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "BlackRock",
         "title": "Fund Reporting - Regulatory & Sustainability, Associate",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
@@ -6688,9 +6673,24 @@
         "new_since_last_check": false,
         "first_seen_at": "2026-08-26T16:13:43.716592+00:00",
         "posted_age_known": false
+      },
+      {
+        "company": "BlackRock",
+        "title": "Associate, Private Credit Fund Accounting, PFS - Dublin",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.blackrock.com/job/dublin/associate-private-credit-fund-accounting-pfs-dublin/45831/98511190128",
+        "source": "blackrock_browser",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-13T05:38:38.171334+00:00",
+        "posted_age_known": false
       }
     ],
-    "checked_at": 1789280518.2841823,
+    "checked_at": 1789313050.7969837,
     "consecutive_failures": 0
   },
   "Arup": {
@@ -46058,7 +46058,7 @@
         "source": "dxc_batch20_rendered",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-13T15:09:50.818066+00:00",
         "posted_age_known": false
       },
@@ -46073,7 +46073,7 @@
         "source": "dxc_batch20_rendered",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-13T15:09:50.818066+00:00",
         "posted_age_known": false
       },
@@ -46201,16 +46201,6 @@
     "checked_at": 1789310049.0591214,
     "consecutive_failures": 0
   },
-  "Kepak Group::targeted_direct_batch7_multi_v1": {
-    "jobs": [],
-    "checked_at": 1789312100.7686467,
-    "consecutive_failures": 1
-  },
-  "AerCap::targeted_direct_batch63_stuck25_v1": {
-    "jobs": [],
-    "checked_at": 1789312101.1657443,
-    "consecutive_failures": 1
-  },
   "Infosys::targeted_direct_batch74_infosys_current_v1": {
     "jobs": [
       {
@@ -46239,7 +46229,7 @@
         "source": "batch74_infosys_current_first_party_bounded_seed",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": "Infosys requisition 151570BR",
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-13T15:09:50.818066+00:00",
         "posted_age_known": false
       },
@@ -46254,7 +46244,7 @@
         "source": "batch74_infosys_current_first_party_bounded_seed",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": "Infosys requisition 152085BR",
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-13T15:09:50.818066+00:00",
         "posted_age_known": false
       },
@@ -46269,7 +46259,7 @@
         "source": "batch74_infosys_current_first_party_bounded_seed",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": "Infosys requisition 147782BR",
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-13T15:09:50.818066+00:00",
         "posted_age_known": false
       },
@@ -46284,7 +46274,7 @@
         "source": "batch74_infosys_current_first_party_bounded_seed",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": "Infosys requisition 141411BR",
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-13T15:09:50.818066+00:00",
         "posted_age_known": false
       }
@@ -46292,49 +46282,59 @@
     "checked_at": 1789312101.87879,
     "consecutive_failures": 0
   },
-  "VMware (Broadcom)::zero_only_batch20_v1": {
+  "Kepak Group::targeted_direct_batch7_multi_v1": {
     "jobs": [],
-    "checked_at": 1789312102.2335155,
+    "checked_at": 1789313039.2228959,
+    "consecutive_failures": 1
+  },
+  "AerCap::targeted_direct_batch63_stuck25_v1": {
+    "jobs": [],
+    "checked_at": 1789313039.7791882,
     "consecutive_failures": 1
   },
   "HP (Hewlett-Packard)::friend_next4_v1": {
     "jobs": [],
-    "checked_at": 1789312102.4279835,
+    "checked_at": 1789313040.2124174,
     "consecutive_failures": 1
   },
-  "QIAGEN::zero_only_batch20_v1": {
+  "VMware (Broadcom)::zero_only_batch20_v1": {
     "jobs": [],
-    "checked_at": 1789312106.7314606,
+    "checked_at": 1789313040.7850718,
     "consecutive_failures": 1
   },
   "An Post": {
     "jobs": [],
-    "checked_at": 1789312107.515671,
+    "checked_at": 1789313045.0036025,
+    "consecutive_failures": 1
+  },
+  "QIAGEN::zero_only_batch20_v1": {
+    "jobs": [],
+    "checked_at": 1789313045.0104842,
     "consecutive_failures": 1
   },
   "GlaxoSmithKline (GSK)::targeted_direct_batch9_bulk_v1": {
     "jobs": [],
-    "checked_at": 1789312109.0958223,
+    "checked_at": 1789313047.119798,
     "consecutive_failures": 1
   },
   "Goodbody::batch_dedicated_v1": {
     "jobs": [],
-    "checked_at": 1789312112.4565842,
+    "checked_at": 1789313050.521718,
     "consecutive_failures": 1
   },
   "Boston Consulting Group (BCG)": {
     "jobs": [],
-    "checked_at": 1789312114.0312335,
+    "checked_at": 1789313056.2535005,
     "consecutive_failures": 1
   },
   "Deutsche Bank::friend_logic_v1": {
     "jobs": [],
-    "checked_at": 1789312125.0334022,
+    "checked_at": 1789313063.8115773,
     "consecutive_failures": 1
   },
   "EXL": {
     "jobs": [],
-    "checked_at": 1789312128.4412568,
+    "checked_at": 1789313066.7218168,
     "consecutive_failures": 1
   }
 }
