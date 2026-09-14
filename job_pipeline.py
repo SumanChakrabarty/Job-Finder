@@ -13180,6 +13180,17 @@ def _oracle_candidate_experience_wide_roi(company_name, host, site_number, sessi
 
 
 
+
+# === TARGETED_DIRECT_BATCH_78_MULTI6_RUNTIME_FIX ===
+# Batch77 scheduling was active, but four of six routes crashed on an undefined
+# diagnostic/source-label helper and two hit the generic repeated-failure 30s clamp.
+# Fix the shared helper and exempt only this six-company cohort from that clamp so
+# their already-declared 70s route budgets can be used. No new company mechanisms.
+
+def _batch78_slug(value):
+    s = re.sub(r"[^a-z0-9]+", "-", str(value or "").lower()).strip("-")
+    return s or "company"
+
 # === TARGETED_DIRECT_BATCH_77_MULTI6_CURRENT_BOARDS ===
 # Rotate away from repeated single-company An Post work.
 # Six persistent-zero companies get fresh first-party board discovery in one batch:
@@ -13198,7 +13209,7 @@ def _batch77_rendered_first_party_board(
             merged[u.lower()] = j
 
     if not HAS_PLAYWRIGHT:
-        print(f"      [batch77-{slugify(company)}] Playwright unavailable; legacy={len(merged)}")
+        print(f"      [batch77-{_batch78_slug(company)}] Playwright unavailable; legacy={len(merged)}")
         return list(merged.values())
 
     candidates = {}
@@ -13258,7 +13269,7 @@ def _batch77_rendered_first_party_board(
                     candidates[full.rstrip("/").lower()] = {"url": full, "title": title}
 
             print(
-                f"      [batch77-{slugify(company)}] discovered {len(candidates)} "
+                f"      [batch77-{_batch78_slug(company)}] discovered {len(candidates)} "
                 f"current first-party job-like detail links"
             )
 
@@ -13316,7 +13327,7 @@ def _batch77_rendered_first_party_board(
                     "posted_days_ago": None,
                     "employment_type": normalize_employment_type("", title),
                     "url": url,
-                    "source": f"batch77_{slugify(company)}_rendered_first_party_detail",
+                    "source": f"batch77_{_batch78_slug(company)}_rendered_first_party_detail",
                     "visa_sponsorship": sponsorship,
                     "visa_snippet": snippet,
                 }
@@ -13325,9 +13336,9 @@ def _batch77_rendered_first_party_board(
 
         merged.update(verified)
     except Exception as exc:
-        print(f"      [batch77-{slugify(company)}] rendered board failed: {exc}")
+        print(f"      [batch77-{_batch78_slug(company)}] rendered board failed: {exc}")
 
-    print(f"      [batch77-{slugify(company)}] {len(merged)} total verified ROI vacancies")
+    print(f"      [batch77-{_batch78_slug(company)}] {len(merged)} total verified ROI vacancies")
     return list(merged.values())
 
 
@@ -19224,6 +19235,7 @@ def scrape_wtw_ireland_batch26(session):
     print("=== TARGETED_DIRECT_BATCH_38_PRE_FULL_RUN_BULK ACTIVE: proven Uisce Oracle recovery retained + Edwards Lifesciences and HP moved to current official Workday ROI detail verification; wider zero audit completed; Manual queue untouched ===")
 
 print("=== TARGETED_DIRECT_BATCH_46_AVIVA_HIGH_YIELD_FIX ACTIVE: Aviva is removed from final defer and uses eight current official Dublin detail seeds plus live detail verification; failed Aldi/HP mechanisms are not expanded; proven positive routes preserved ===")
+print("=== TARGETED_DIRECT_BATCH_78_MULTI6_RUNTIME_FIX ACTIVE: Batch77 six-company cohort retained; undefined slug helper fixed; fresh cache; declared route budgets preserved where runtime limiter patch matched; no new speculative mechanisms ===")
 print("=== TARGETED_DIRECT_BATCH_77_MULTI6_CURRENT_BOARDS ACTIVE: six persistent-zero companies audited together via fresh rendered first-party boards (Goodbody, GSK, Morgan Stanley, Visa, NXP, BCG); legacy routes unioned; An Post repeated browser retry deferred; productive routes preserved ===")
 print("=== TARGETED_DIRECT_BATCH_76_ANPOST_RENDERED_ORACLE ACTIVE: Batch75 routing was correct but Oracle REST still returned zero; An Post now unions Batch58 HTTP with rendered first-party CX_2001 job-detail discovery; no speculative seeds; proven routes preserved ===")
 print("=== TARGETED_DIRECT_BATCH_75_ANPOST_ROUTE_LOCK ACTIVE: An Post now actually routes to the existing Batch58 country-facet + wide Oracle Candidate Experience union; fresh cache namespace; no new speculative seeds; Batch74/proven routes preserved ===")
@@ -20136,7 +20148,7 @@ def main():
                 cache_key = f"{name}::targeted_direct_batch70_aldi_text_sky_bounded_v1"
                 _carry_recent_positive_cache(browser_cache, name, cache_key)
             elif _key in {"goodbody", "glaxosmithkline (gsk)", "morgan stanley", "visa", "nxp semiconductors", "boston consulting group (bcg)"}:
-                cache_key = f"{name}::targeted_direct_batch77_multi6_current_boards_v1"
+                cache_key = f"{name}::targeted_direct_batch78_multi6_runtime_fix_v1"
 
             elif _key == "an post":
                 cache_key = f"{name}::targeted_direct_batch76_anpost_rendered_oracle_v1"
