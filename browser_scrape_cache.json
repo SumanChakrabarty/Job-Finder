@@ -44893,66 +44893,6 @@
     "checked_at": 1789553914.7487106,
     "consecutive_failures": 0
   },
-  "ABP Food Group::targeted_direct_batch9_bulk_v1": {
-    "jobs": [],
-    "checked_at": 1789553886.6906002,
-    "consecutive_failures": 1
-  },
-  "Kepak Group::targeted_direct_batch7_multi_v1": {
-    "jobs": [],
-    "checked_at": 1789553875.681467,
-    "consecutive_failures": 1
-  },
-  "HP (Hewlett-Packard)::friend_next4_v1": {
-    "jobs": [],
-    "checked_at": 1789553877.195298,
-    "consecutive_failures": 1
-  },
-  "GlaxoSmithKline (GSK)::targeted_direct_batch79_multi5_backend_rotation_v1": {
-    "jobs": [],
-    "checked_at": 1789553877.2343905,
-    "consecutive_failures": 1
-  },
-  "An Post::targeted_direct_batch76_anpost_rendered_oracle_v1": {
-    "jobs": [],
-    "checked_at": 1789553877.4182885,
-    "consecutive_failures": 1
-  },
-  "VMware (Broadcom)::zero_only_batch20_v1": {
-    "jobs": [],
-    "checked_at": 1789553878.4131315,
-    "consecutive_failures": 1
-  },
-  "DHL Ireland::targeted_direct_batch54_multi_v1": {
-    "jobs": [],
-    "checked_at": 1789553880.009947,
-    "consecutive_failures": 1
-  },
-  "QIAGEN::zero_only_batch20_v1": {
-    "jobs": [],
-    "checked_at": 1789553881.4061449,
-    "consecutive_failures": 1
-  },
-  "Boston Consulting Group (BCG)": {
-    "jobs": [],
-    "checked_at": 1789553899.2153947,
-    "consecutive_failures": 1
-  },
-  "Deutsche Bank::friend_logic_v1": {
-    "jobs": [],
-    "checked_at": 1789553902.1353924,
-    "consecutive_failures": 1
-  },
-  "EXL": {
-    "jobs": [],
-    "checked_at": 1789553905.506367,
-    "consecutive_failures": 1
-  },
-  "Haleon::zero_only_batch20_v1": {
-    "jobs": [],
-    "checked_at": 1789553907.0915697,
-    "consecutive_failures": 1
-  },
   "DXC Technology::friend_logic_v1": {
     "jobs": [
       {
@@ -44966,7 +44906,7 @@
         "source": "dxc_batch20_rendered",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-16T10:18:51.976690+00:00",
         "posted_age_known": false
       },
@@ -44981,7 +44921,7 @@
         "source": "dxc_batch20_rendered",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-16T10:18:51.976690+00:00",
         "posted_age_known": false
       },
@@ -44996,7 +44936,7 @@
         "source": "dxc_batch20_rendered",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-16T10:18:51.976690+00:00",
         "posted_age_known": false
       },
@@ -45011,7 +44951,7 @@
         "source": "dxc_batch20_rendered",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-16T10:18:51.976690+00:00",
         "posted_age_known": false
       },
@@ -45026,7 +44966,7 @@
         "source": "dxc_batch20_rendered",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-16T10:18:51.976690+00:00",
         "posted_age_known": false
       },
@@ -45041,7 +44981,7 @@
         "source": "dxc_batch20_rendered",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-16T10:18:51.976690+00:00",
         "posted_age_known": false
       },
@@ -45071,7 +45011,7 @@
         "source": "dxc_batch20_rendered",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-16T10:18:51.976690+00:00",
         "posted_age_known": false
       },
@@ -45086,7 +45026,7 @@
         "source": "dxc_batch20_rendered",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-16T10:18:51.976690+00:00",
         "posted_age_known": false
       },
@@ -45101,7 +45041,7 @@
         "source": "dxc_batch20_rendered",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-16T10:18:51.976690+00:00",
         "posted_age_known": false
       }
@@ -45654,5 +45594,362 @@
     ],
     "checked_at": 1789553931.9249432,
     "consecutive_failures": 0
+  },
+  "Sky Ireland::targeted_direct_batch81_multi7_cache_lock_v1": {
+    "jobs": [
+      {
+        "company": "Sky Ireland",
+        "title": "Director of Operations",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Full-time",
+        "url": "https://careers.sky.com/ie/jobs/wd-R0058599",
+        "source": "batch80_sky_current_first_party_bounded_seed",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "",
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-27T15:25:17.885150+00:00",
+        "posted_age_known": false
+      }
+    ],
+    "checked_at": 1789536957.3700109,
+    "consecutive_failures": 0
+  },
+  "Red Hat::targeted_direct_batch81_multi7_cache_lock_v1": {
+    "jobs": [
+      {
+        "company": "Red Hat",
+        "title": "EMEA AI Architect",
+        "location": "Remote Ireland",
+        "posted_text": "Posted 9 Days Ago",
+        "posted_days_ago": 9.0,
+        "employment_type": "Full-time",
+        "url": "https://redhat.wd5.myworkdayjobs.com/en-US/Jobs/job/EMEA-AI-Architect_R-058414-2",
+        "source": "batch80_redhat_current_first_party_bounded_seed",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "",
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-13T14:37:52.457554+00:00",
+        "posted_age_known": true
+      }
+    ],
+    "checked_at": 1789536957.3714018,
+    "consecutive_failures": 0
+  },
+  "Slack::targeted_direct_batch81_multi7_cache_lock_v1": {
+    "jobs": [
+      {
+        "company": "Slack",
+        "title": "Senior Onboarding Specialist-Slack",
+        "location": "Dublin, Ireland",
+        "posted_text": "Posted 31 July 2026",
+        "posted_days_ago": 47.0,
+        "employment_type": "Full-time",
+        "url": "https://careers.salesforce.com/en/jobs/jr343544/senior-onboarding-specialist-slack/",
+        "source": "batch80_slack_current_first_party_bounded_seed",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "",
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-14T19:28:02.159753+00:00",
+        "posted_age_known": true
+      }
+    ],
+    "checked_at": 1789536957.3713858,
+    "consecutive_failures": 0
+  },
+  "Goodbody::targeted_direct_batch81_multi7_cache_lock_v1": {
+    "jobs": [
+      {
+        "company": "Goodbody",
+        "title": "Senior Wealth Executive - Cork",
+        "location": "Cork, Ireland",
+        "posted_text": "15 Jul 2026",
+        "posted_days_ago": 63.0,
+        "employment_type": "Permanent",
+        "url": "https://jobs.aib.ie/goodbody/job/Cork-Senior-Wealth-Executive-Cork-IE/1366706857/",
+        "source": "batch80_goodbody_current_first_party_bounded_seed",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "",
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-14T19:28:02.159753+00:00",
+        "posted_age_known": true
+      }
+    ],
+    "checked_at": 1789536967.4099705,
+    "consecutive_failures": 0
+  },
+  "Aldi Ireland::targeted_direct_batch81_multi7_cache_lock_v1": {
+    "jobs": [
+      {
+        "company": "Aldi Ireland",
+        "title": "Digital & Content Analyst",
+        "location": "Naas National Buying Office, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Permanent",
+        "url": "https://careers.aldirecruitment.ie/vacancies/18291/digital--content-analyst.html",
+        "source": "batch80_aldi_current_first_party_bounded_seed",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "",
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-11T12:35:25.226244+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Aldi Ireland",
+        "title": "Store Assistant",
+        "location": "Moate, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Permanent",
+        "url": "https://careers.aldirecruitment.ie/vacancies/18196/store-assistant.html",
+        "source": "batch72_aldi_current_first_party_bounded_seed",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "",
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-11T12:35:25.226244+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Aldi Ireland",
+        "title": "Store Assistant",
+        "location": "Dunmanway, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Permanent",
+        "url": "https://careers.aldirecruitment.ie/vacancies/18324/store-assistant.html",
+        "source": "batch72_aldi_current_first_party_bounded_seed",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "",
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-11T12:35:25.226244+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Aldi Ireland",
+        "title": "Stock Assistant",
+        "location": "Mitchelstown, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Permanent",
+        "url": "https://careers.aldirecruitment.ie/vacancies/18328/stock-assistant.html",
+        "source": "batch72_aldi_current_first_party_bounded_seed",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "",
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-11T12:35:25.226244+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Aldi Ireland",
+        "title": "Warehouse Operative (Days)",
+        "location": "Mitchelstown Distribution Centre, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Permanent",
+        "url": "https://careers.aldirecruitment.ie/vacancies/18173/warehouse-operative-days.html",
+        "source": "batch72_aldi_current_first_party_bounded_seed",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "",
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-11T12:35:25.226244+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Aldi Ireland",
+        "title": "Warehouse Operative (Evenings)",
+        "location": "Mitchelstown Distribution Centre, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Permanent",
+        "url": "https://careers.aldirecruitment.ie/vacancies/18174/warehouse-operative-evenings.html",
+        "source": "batch72_aldi_current_first_party_bounded_seed",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "",
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-11T12:35:25.226244+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Aldi Ireland",
+        "title": "Warehouse Cleaner (Evenings)",
+        "location": "Mitchelstown Distribution Centre, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Permanent",
+        "url": "https://careers.aldirecruitment.ie/vacancies/18266/warehouse-cleaner-evenings.html",
+        "source": "batch72_aldi_current_first_party_bounded_seed",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "",
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-11T12:35:25.226244+00:00",
+        "posted_age_known": false
+      }
+    ],
+    "checked_at": 1789536969.2680898,
+    "consecutive_failures": 0
+  },
+  "Infosys::targeted_direct_batch81_multi7_cache_lock_v1": {
+    "jobs": [
+      {
+        "company": "Infosys",
+        "title": "Practice Lead - Data Science_ ML",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Full-time",
+        "url": "https://digitalcareers.infosys.com/global-careers/company-job/description/reqid/148920BR",
+        "source": "batch80_infosys_current_first_party_bounded_seed",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "",
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-03T14:04:00.692189+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Infosys",
+        "title": "SAP Program Manager - Ireland",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Full-time",
+        "url": "https://digitalcareers.infosys.com/global-careers-french/company-job/description/reqid/151570BR",
+        "source": "batch74_infosys_current_first_party_bounded_seed",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "Infosys requisition 151570BR",
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-13T15:09:50.818066+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Infosys",
+        "title": "IT Consultant - Enterprise Network Operations - Dublin, Ireland",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Full-time",
+        "url": "https://digitalcareers.infosys.com/global-careers-portuguese/company-job/description/reqid/152085BR",
+        "source": "batch74_infosys_current_first_party_bounded_seed",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "Infosys requisition 152085BR",
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-13T15:09:50.818066+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Infosys",
+        "title": "SAP S/4 Onshore Datasphere Lead - Ireland",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Full-time",
+        "url": "https://digitalcareers.infosys.com/global-careers/company-job/description/reqid/147782BR",
+        "source": "batch74_infosys_current_first_party_bounded_seed",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "Infosys requisition 147782BR",
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-13T15:09:50.818066+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Infosys",
+        "title": "HR Lead - Dublin",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Full-time",
+        "url": "https://digitalcareers.infosys.com/global-careers-portuguese/company-job/description/reqid/141411BR?Codes=Indeed",
+        "source": "batch74_infosys_current_first_party_bounded_seed",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "Infosys requisition 141411BR",
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-13T15:09:50.818066+00:00",
+        "posted_age_known": false
+      }
+    ],
+    "checked_at": 1789536975.3245153,
+    "consecutive_failures": 0
+  },
+  "Waters Corporation::targeted_direct_batch81_multi7_cache_lock_v1": {
+    "jobs": [
+      {
+        "company": "Waters Corporation",
+        "title": "Technical Operations Manager",
+        "location": "Wexford, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Full-time",
+        "url": "https://internationalcareers-waters.icims.com/jobs/27188/technical-operations-manager/job?in_iframe=1",
+        "source": "batch80_waters_current_first_party_bounded_seed",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": "",
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-14T19:28:02.159753+00:00",
+        "posted_age_known": false
+      }
+    ],
+    "checked_at": 1789536976.0922139,
+    "consecutive_failures": 0
+  },
+  "Kepak Group::targeted_direct_batch7_multi_v1": {
+    "jobs": [],
+    "checked_at": 1789556544.1987534,
+    "consecutive_failures": 1
+  },
+  "An Post::targeted_direct_batch76_anpost_rendered_oracle_v1": {
+    "jobs": [],
+    "checked_at": 1789556544.9695058,
+    "consecutive_failures": 1
+  },
+  "HP (Hewlett-Packard)::friend_next4_v1": {
+    "jobs": [],
+    "checked_at": 1789556545.1863625,
+    "consecutive_failures": 1
+  },
+  "GlaxoSmithKline (GSK)::targeted_direct_batch79_multi5_backend_rotation_v1": {
+    "jobs": [],
+    "checked_at": 1789556546.0626125,
+    "consecutive_failures": 1
+  },
+  "VMware (Broadcom)::zero_only_batch20_v1": {
+    "jobs": [],
+    "checked_at": 1789556546.3166077,
+    "consecutive_failures": 1
+  },
+  "DHL Ireland::targeted_direct_batch54_multi_v1": {
+    "jobs": [],
+    "checked_at": 1789556546.950502,
+    "consecutive_failures": 1
+  },
+  "QIAGEN::zero_only_batch20_v1": {
+    "jobs": [],
+    "checked_at": 1789556549.4280899,
+    "consecutive_failures": 1
+  },
+  "ABP Food Group::targeted_direct_batch9_bulk_v1": {
+    "jobs": [],
+    "checked_at": 1789556550.8840914,
+    "consecutive_failures": 1
+  },
+  "Boston Consulting Group (BCG)": {
+    "jobs": [],
+    "checked_at": 1789556559.4572139,
+    "consecutive_failures": 1
+  },
+  "Haleon::targeted_direct_batch81_haleon_union_v1": {
+    "jobs": [],
+    "checked_at": 1789556569.6273894,
+    "consecutive_failures": 1
+  },
+  "Deutsche Bank::friend_logic_v1": {
+    "jobs": [],
+    "checked_at": 1789556570.1109402,
+    "consecutive_failures": 1
+  },
+  "EXL": {
+    "jobs": [],
+    "checked_at": 1789556571.8243713,
+    "consecutive_failures": 1
   }
 }
