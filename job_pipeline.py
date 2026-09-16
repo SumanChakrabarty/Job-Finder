@@ -13183,6 +13183,42 @@ def _oracle_candidate_experience_wide_roi(company_name, host, site_number, sessi
 
 
 
+
+# === TARGETED_DIRECT_BATCH_81_CACHE_LOCK_HALEON_RECOVERY ===
+# Log-driven repair:
+# - Batch80 was active, but ALDI/Sky still used older cache namespaces because
+#   their older cache overrides occurred before the Batch80 cohort override.
+# - Haleon is a clean false-zero candidate: current first-party Haleon Ireland
+#   detail pages are discoverable, while the routed Batch18 Phenom/rendered path
+#   returned zero. Preserve Batch18, then union the existing strict direct-HTTP
+#   verifier instead of adding a generic sweep.
+
+def scrape_haleon_batch81(session=None):
+    session = session or requests.Session()
+    merged = {}
+
+    try:
+        for j in scrape_haleon_batch18(session) or []:
+            key = (j.get("url") or "").split("#")[0].rstrip("/").lower()
+            if key:
+                merged[key] = j
+    except Exception as exc:
+        print(f"      [batch81-haleon] Batch18 route failed: {exc}")
+
+    try:
+        direct = scrape_haleon_direct_http(session) or []
+        for j in direct:
+            key = (j.get("url") or "").split("#")[0].rstrip("/").lower()
+            if key:
+                merged[key] = j
+        print(f"      [batch81-haleon-direct] {len(direct)} ROI vacancies from strict first-party Haleon detail verification")
+    except Exception as exc:
+        print(f"      [batch81-haleon-direct] direct HTTP route failed: {exc}")
+
+    print(f"      [batch81-haleon-union] {len(merged)} total Haleon ROI vacancies")
+    return list(merged.values())
+
+
 # === TARGETED_DIRECT_BATCH_80_MULTI7_REFRESH_AND_RECOVERY ===
 # Seven-company evidence refresh in one batch.
 # Fresh first-party evidence checked 2026-09-14:
@@ -19713,6 +19749,7 @@ def scrape_wtw_ireland_batch26(session):
     print("=== TARGETED_DIRECT_BATCH_38_PRE_FULL_RUN_BULK ACTIVE: proven Uisce Oracle recovery retained + Edwards Lifesciences and HP moved to current official Workday ROI detail verification; wider zero audit completed; Manual queue untouched ===")
 
 print("=== TARGETED_DIRECT_BATCH_46_AVIVA_HIGH_YIELD_FIX ACTIVE: Aviva is removed from final defer and uses eight current official Dublin detail seeds plus live detail verification; failed Aldi/HP mechanisms are not expanded; proven positive routes preserved ===")
+print("=== TARGETED_DIRECT_BATCH_81_CACHE_LOCK_HALEON_RECOVERY ACTIVE: Batch80 seven-company cache precedence locked so ALDI/Sky cannot fall back to old namespaces; Haleon now unions the existing Batch18 route with strict first-party direct HTTP verification; no speculative generic sweep; productive routes preserved ===")
 print("=== TARGETED_DIRECT_BATCH_80_MULTI7_REFRESH_AND_RECOVERY ACTIVE: seven-company evidence refresh in one batch: Waters + Goodbody false-zero recovery, plus ALDI/Red Hat/Slack/Sky/Infosys current first-party evidence refreshed before expiry; legacy productive routes preserved ===")
 print("=== TARGETED_DIRECT_BATCH_79_MULTI5_BACKEND_ROTATION ACTIVE: rotated five companies together to backend-specific first-party mechanisms (AerCap, Goodbody, Morgan Stanley, Visa, GSK); AerCap has two fresh bounded Dublin seeds; no generic rendered sweep; prior productive routes preserved ===")
 print("=== TARGETED_DIRECT_BATCH_78_MULTI6_RUNTIME_FIX ACTIVE: Batch77 six-company cohort retained; undefined slug helper fixed; fresh cache; declared route budgets preserved where runtime limiter patch matched; no new speculative mechanisms ===")
@@ -20158,7 +20195,7 @@ def main():
         ("exact", "energia group", scrape_energia_group_direct_http, 30, "official Energia Group vacancies board"),
         ("exact", "glanbia / tirlán", scrape_glanbia_tirlan_direct, 55, "official Glanbia/Tirlan SuccessFactors ROI routes"),
         ("exact", "ornua", scrape_ornua_direct, 45, "official Ornua SuccessFactors ROI routes"),
-        ("exact", "haleon", scrape_haleon_batch18, 60, "Batch18 Haleon current routes + sitemap fallback"),
+        ("exact", "haleon", scrape_haleon_batch81, 60, "Batch81 Haleon Batch18 union + strict first-party direct HTTP detail verification"),
         ("exact", "zurich insurance", scrape_zurich_ireland_direct, 40, "official Zurich SuccessFactors Ireland search"),
         ("exact", "eir", scrape_eir_ireland_direct, 30, "official eir server-rendered jobs board"),
         ("exact", "gas networks ireland", scrape_gas_networks_ireland_direct, 30, "official GNI current vacancies page"),
@@ -20620,14 +20657,12 @@ def main():
             # Batch53: mechanism upgrades for previously-positive companies must
             # be regression-safe.  This final override intentionally occurs
             # after all older cache-key branches so it cannot be overwritten.
-            if _key == "aldi ireland":
-                cache_key = f"{name}::targeted_direct_batch72_aldi_bounded_seeds_v1"
+            if _key in {"waters corporation", "goodbody", "aldi ireland", "red hat", "slack", "sky ireland", "infosys"}:
+                cache_key = f"{name}::targeted_direct_batch81_multi7_cache_lock_v1"
                 _carry_recent_positive_cache(browser_cache, name, cache_key)
-            elif _key == "sky ireland":
-                cache_key = f"{name}::targeted_direct_batch70_aldi_text_sky_bounded_v1"
+            elif _key == "haleon":
+                cache_key = f"{name}::targeted_direct_batch81_haleon_union_v1"
                 _carry_recent_positive_cache(browser_cache, name, cache_key)
-            elif _key in {"waters corporation", "goodbody", "aldi ireland", "red hat", "slack", "sky ireland", "infosys"}:
-                cache_key = f"{name}::targeted_direct_batch80_multi7_refresh_v1"
 
             elif _key in {"aercap", "goodbody", "glaxosmithkline (gsk)", "morgan stanley", "visa"}:
                 cache_key = f"{name}::targeted_direct_batch79_multi5_backend_rotation_v1"
