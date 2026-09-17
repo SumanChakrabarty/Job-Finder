@@ -19863,6 +19863,7 @@ def scrape_wtw_ireland_batch26(session):
     print("=== TARGETED_DIRECT_BATCH_38_PRE_FULL_RUN_BULK ACTIVE: proven Uisce Oracle recovery retained + Edwards Lifesciences and HP moved to current official Workday ROI detail verification; wider zero audit completed; Manual queue untouched ===")
 
 print("=== TARGETED_DIRECT_BATCH_46_AVIVA_HIGH_YIELD_FIX ACTIVE: Aviva is removed from final defer and uses eight current official Dublin detail seeds plus live detail verification; failed Aldi/HP mechanisms are not expanded; proven positive routes preserved ===")
+print("=== TARGETED_DIRECT_BATCH_84_PRODUCTION_STATUS_STABILITY ACTIVE: clean automated-zero status is protected from transient Manual/Error deterioration for max 36h/2 misses; underlying errors remain diagnostic; Batch83 live continuity + Batch82 stale-none rotation preserved ===")
 print("=== TARGETED_DIRECT_BATCH_83_PRODUCTION_CONTINUITY_GUARD ACTIVE: publication continuity now survives a second transient scraper miss with a strict 36h/2-miss cap; genuine current results refresh state; stale vacancies cannot persist indefinitely; Batch82 ATS refresh preserved ===")
 print("=== TARGETED_DIRECT_BATCH_82_STALE_NONE_DIRECT_ATS_REFRESH ACTIVE: bounded stale ATS-none cohort is rechecked through each company supplied careers URL, redirects, and embedded ATS links; global PROBE_VERSION stays 18; productive routes/caches preserved ===")
 
@@ -20140,6 +20141,7 @@ def main():
     # regression safety net: one transient zero/error must not instantly erase
     # a company that was live in the preceding run.
     _previous_live_jobs = []
+    _previous_payload = {}
     if os.path.exists(args.output):
         try:
             with open(args.output, encoding="utf-8") as _pf:
@@ -21658,6 +21660,99 @@ def main():
     if official_permit_stats:
         print(f"Merged official DETE permit records for {len(official_permit_stats)} companies "
               f"(run visa_stats.py separately, monthly, to refresh this).")
+
+    # Batch84 production STATUS continuity.
+    # A clean automated-zero company must not jump to "Manual / Fetching Error"
+    # on the public site because of one transient transport/runtime failure.
+    # Keep the prior clean zero classification for at most 2 consecutive failed
+    # publications and 36 hours. The underlying error remains in `errors`, so
+    # diagnostics are not hidden. Live-company continuity is handled separately
+    # by Batch83 above.
+    _status_state_path = "production_status_continuity.json"
+    _status_state = {}
+    if os.path.exists(_status_state_path):
+        try:
+            with open(_status_state_path, encoding="utf-8") as _sf:
+                _raw_status_state = json.load(_sf)
+            if isinstance(_raw_status_state, dict):
+                _status_state = _raw_status_state
+        except Exception:
+            _status_state = {}
+
+    _prior_zero_entries = {}
+    if isinstance(_previous_payload, dict):
+        for _z in (_previous_payload.get("automated_zero_companies") or []):
+            if isinstance(_z, dict):
+                _zn = str(_z.get("company") or _z.get("company_name") or "").strip()
+                if _zn:
+                    _prior_zero_entries[_zn] = dict(_z)
+
+    _live_names_now = {
+        str((j or {}).get("company") or "").strip()
+        for j in live_jobs if str((j or {}).get("company") or "").strip()
+    }
+    _zero_names_now = set(automated_zero.keys())
+    _manual_by_name = {}
+    for _m in manual_check:
+        if isinstance(_m, dict):
+            _mn = str(_m.get("company") or _m.get("company_name") or "").strip()
+            if _mn:
+                _manual_by_name[_mn] = _m
+
+    _status_now = datetime.now(timezone.utc)
+
+    for _name in (_live_names_now | _zero_names_now):
+        _status_state[_name] = {
+            "last_clean_at": _status_now.isoformat(),
+            "miss_streak": 0,
+            "last_clean_status": "live" if _name in _live_names_now else "zero",
+        }
+
+    _status_preserved = []
+    for _name, _prior_entry in _prior_zero_entries.items():
+        if _name not in _manual_by_name or _name in _live_names_now or _name in _zero_names_now:
+            continue
+
+        _state = _status_state.get(_name) or {
+            "last_clean_at": str((_previous_payload or {}).get("generated_at") or _status_now.isoformat()),
+            "miss_streak": 0,
+            "last_clean_status": "zero",
+        }
+        try:
+            _clean_dt = datetime.fromisoformat(str(_state.get("last_clean_at") or "").replace("Z", "+00:00"))
+            if _clean_dt.tzinfo is None:
+                _clean_dt = _clean_dt.replace(tzinfo=timezone.utc)
+            _status_age_h = (_status_now - _clean_dt.astimezone(timezone.utc)).total_seconds() / 3600.0
+        except Exception:
+            _status_age_h = 999999.0
+        _status_miss = int(_state.get("miss_streak") or 0)
+
+        if _status_miss < 2 and _status_age_h <= 36.0:
+            _kept_zero = dict(_prior_entry)
+            _kept_zero["status_guard"] = "production_zero_status_verification_pending"
+            _kept_zero["verification_pending"] = True
+            automated_zero[_name] = _kept_zero
+            manual_check = [
+                _m for _m in manual_check
+                if str((_m or {}).get("company") or (_m or {}).get("company_name") or "").strip() != _name
+            ]
+            _state["miss_streak"] = _status_miss + 1
+            _state["last_clean_status"] = "zero"
+            _status_state[_name] = _state
+            _status_preserved.append((_name, _state["miss_streak"], round(_status_age_h, 1)))
+        else:
+            _status_state.pop(_name, None)
+
+    if _status_preserved:
+        print("=== PRODUCTION STATUS CONTINUITY: transient manual/error deterioration suppressed ===")
+        for _name, _streak, _age in sorted(_status_preserved):
+            print(f"      [status-continuity] {_name}: kept prior clean zero status; miss {_streak}/2; age {_age}h")
+
+    try:
+        with open(_status_state_path, "w", encoding="utf-8") as _sf:
+            json.dump(_status_state, _sf, indent=2)
+    except Exception as _exc:
+        print(f"      [status-continuity] could not save {_status_state_path}: {_exc}")
 
     # Normalize posted age for EVERY source before writing jobs.json. Time
     # filtering stays cumulative exactly as the dashboard expects: 24 hours
