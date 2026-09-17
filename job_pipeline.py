@@ -7366,7 +7366,7 @@ def _probe_one_company_platform(entry):
     return entry, platform, slug
 
 
-def probe_ats_for_manual_companies(manual_companies, session, cache_path, fetch_descriptions=True):
+def probe_ats_for_manual_companies(manual_companies, session, cache_path, fetch_descriptions=True, priority_zero_names=None):
     """For companies with no known API (custom sites), try a few likely
     Greenhouse / Lever / SmartRecruiters / Ashby board slugs. If one hits,
     that company's Ireland jobs get pulled automatically from then on
@@ -7422,11 +7422,19 @@ def probe_ats_for_manual_companies(manual_companies, session, cache_path, fetch_
     # Batch82 bounded stale-none refresh using the new direct careers-URL mechanism.
     batch82_refresh = []
     if STALE_NONE_DIRECT_REFRESH_PER_RUN > 0:
+        # Batch85: spend the bounded refresh budget on companies that were actually
+        # classified Currently-No-Jobs in the previous production output first.
+        # This keeps Batch82's evidence-based ATS discovery, but points it at the
+        # metric we need to improve instead of whichever names happen to occur first.
+        _p85 = {str(x).strip().lower() for x in (priority_zero_names or set()) if str(x).strip()}
+        _due82 = []
         for entry in manual_companies:
-            if len(batch82_refresh) >= STALE_NONE_DIRECT_REFRESH_PER_RUN: break
             cached = cache.get(entry["company"])
             if cached and cached.get("platform") == "none" and _batch82_none_refresh_due(cached):
-                batch82_refresh.append(entry)
+                _due82.append(entry)
+        _due82.sort(key=lambda e: (0 if str(e.get("company") or "").strip().lower() in _p85 else 1,
+                                   str(e.get("company") or "").lower()))
+        batch82_refresh = _due82[:STALE_NONE_DIRECT_REFRESH_PER_RUN]
         if batch82_refresh:
             chosen = {e["company"] for e in batch82_refresh}
             still_manual = [e for e in still_manual if e.get("company") not in chosen]
@@ -19863,6 +19871,7 @@ def scrape_wtw_ireland_batch26(session):
     print("=== TARGETED_DIRECT_BATCH_38_PRE_FULL_RUN_BULK ACTIVE: proven Uisce Oracle recovery retained + Edwards Lifesciences and HP moved to current official Workday ROI detail verification; wider zero audit completed; Manual queue untouched ===")
 
 print("=== TARGETED_DIRECT_BATCH_46_AVIVA_HIGH_YIELD_FIX ACTIVE: Aviva is removed from final defer and uses eight current official Dublin detail seeds plus live detail verification; failed Aldi/HP mechanisms are not expanded; proven positive routes preserved ===")
+print("=== TARGETED_DIRECT_BATCH_85_FALSE_ZERO_FRESHNESS_ROTATION ACTIVE: bounded rotating prior-zero browser-cache bypass + Batch82 stale-none ATS refresh now prioritizes prior production zeros; positive caches and productive routes preserved ===")
 print("=== TARGETED_DIRECT_BATCH_84_PRODUCTION_STATUS_STABILITY ACTIVE: clean automated-zero status is protected from transient Manual/Error deterioration for max 36h/2 misses; underlying errors remain diagnostic; Batch83 live continuity + Batch82 stale-none rotation preserved ===")
 print("=== TARGETED_DIRECT_BATCH_83_PRODUCTION_CONTINUITY_GUARD ACTIVE: publication continuity now survives a second transient scraper miss with a strict 36h/2-miss cap; genuine current results refresh state; stale vacancies cannot persist indefinitely; Batch82 ATS refresh preserved ===")
 print("=== TARGETED_DIRECT_BATCH_82_STALE_NONE_DIRECT_ATS_REFRESH ACTIVE: bounded stale ATS-none cohort is rechecked through each company supplied careers URL, redirects, and embedded ATS links; global PROBE_VERSION stays 18; productive routes/caches preserved ===")
@@ -20111,6 +20120,53 @@ def main():
             "for companies that produced valid jobs before ==="
         )
 
+    # === TARGETED_DIRECT_BATCH_85_FALSE_ZERO_FRESHNESS_ROTATION ===
+    # A six-hour zero cache is useful for runtime, but it also means repeated production
+    # runs can never discover a newly-opened vacancy at a company currently labelled zero.
+    # Recheck a bounded rotating cohort of PRIOR zero companies on every run. Positive
+    # cache entries are never touched. A persistent cursor prevents hammering the same
+    # companies and keeps the production runtime bounded.
+    _b85_limit = max(0, int(os.environ.get("FALSE_ZERO_FRESH_RECHECK_PER_RUN", "24")))
+    _b85_state_path = "false_zero_freshness_state.json"
+    _b85_state = {}
+    try:
+        if os.path.exists(_b85_state_path):
+            with open(_b85_state_path, encoding="utf-8") as _f85:
+                _b85_state = json.load(_f85) or {}
+    except Exception:
+        _b85_state = {}
+    _b85_candidates = sorted(prior_automated_zero, key=str.lower)
+    _b85_selected = []
+    if _b85_limit and _b85_candidates:
+        _b85_cursor = int(_b85_state.get("cursor", 0) or 0) % len(_b85_candidates)
+        _b85_order = _b85_candidates[_b85_cursor:] + _b85_candidates[:_b85_cursor]
+        for _b85_name in _b85_order:
+            if len(_b85_selected) >= _b85_limit:
+                break
+            _b85_prefix = str(_b85_name).strip().lower()
+            _removed = False
+            for _ck in list(browser_cache.keys()):
+                _ce = browser_cache.get(_ck) or {}
+                _base = str(_ck).split("::", 1)[0].strip().lower()
+                # Only invalidate cached zeroes. Never throw away a productive positive.
+                if _base == _b85_prefix and not _ce.get("jobs"):
+                    browser_cache.pop(_ck, None)
+                    _removed = True
+            if _removed:
+                _b85_selected.append(_b85_name)
+        _b85_advance = max(1, min(_b85_limit, len(_b85_candidates)))
+        _b85_state = {"cursor": (_b85_cursor + _b85_advance) % len(_b85_candidates),
+                      "updated_at": datetime.now(timezone.utc).isoformat(),
+                      "last_selected": _b85_selected}
+        try:
+            with open(_b85_state_path, "w", encoding="utf-8") as _f85:
+                json.dump(_b85_state, _f85, indent=2)
+        except Exception as _e85:
+            print(f"=== Batch85 freshness state warning: {_e85} ===")
+    if _b85_selected:
+        print(f"=== Batch85 false-zero freshness: bypassed zero browser cache for {len(_b85_selected)} rotating prior-zero companies ===")
+        print("    " + ", ".join(_b85_selected))
+
     # Persistent last-known-nonzero snapshot. Unlike jobs.json, this does not
     # forget a company after one or more zero runs. It is generated/maintained
     # automatically by the pipeline; no manual file replacement is required.
@@ -20260,7 +20316,7 @@ def main():
           f"(cached — only new/changed companies are actually re-probed)...")
     discovered_jobs, manual_check, ats_automated_zero = probe_ats_for_manual_companies(
         manual_check, session, cache_path="ats_platform_cache.json",
-        fetch_descriptions=not args.no_descriptions)
+        fetch_descriptions=not args.no_descriptions, priority_zero_names=prior_automated_zero)
     for item in ats_automated_zero:
         automated_zero[item["company"]] = item
     if discovered_jobs:
