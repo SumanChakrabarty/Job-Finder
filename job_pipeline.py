@@ -7223,7 +7223,9 @@ def scrape_jsonld_jobpostings(url, company_name, session):
     return results
 
 
-PROBE_VERSION = 18  # bump whenever a new ATS platform is added to the probe list, or slug guessing changes
+PROBE_VERSION = 18  # keep global probe version stable; Batch82 refreshes only a bounded stale-none cohort
+STALE_NONE_DIRECT_REFRESH_PER_RUN = int(os.environ.get("STALE_NONE_DIRECT_REFRESH_PER_RUN", "40"))
+STALE_NONE_DIRECT_REFRESH_DAYS = int(os.environ.get("STALE_NONE_DIRECT_REFRESH_DAYS", "7"))
 PROBE_WORKERS = int(os.environ.get("PROBE_WORKERS", "12"))
 WORKDAY_WORKERS = int(os.environ.get("WORKDAY_WORKERS", "3"))  # deliberately small — a shared
 # CDN/WAF across Workday tenants can rate-limit based on aggregate request volume from one IP,
@@ -7237,6 +7239,84 @@ WORKDAY_WORKERS = int(os.environ.get("WORKDAY_WORKERS", "3"))  # deliberately sm
 # unrelated. Only bump this when the JSON-LD scraping logic itself changes.
 JSONLD_CACHE_VERSION = 1
 
+
+# === TARGETED_DIRECT_BATCH_82_STALE_NONE_DIRECT_ATS_REFRESH ===
+# New mechanism: inspect the company-supplied careers URL, redirects and HTML
+# links for a real ATS hostname/token. This is different from old slug guessing.
+def _batch82_platform_candidates_from_url(raw_url):
+    out = []
+    if not raw_url:
+        return out
+    try:
+        u = urllib.parse.urlparse(raw_url)
+        host = (u.netloc or "").lower().split(":")[0]
+        parts = [urllib.parse.unquote(x) for x in (u.path or "").split("/") if x]
+    except Exception:
+        return out
+    def add(platform, slug):
+        slug = (slug or "").strip().strip("/")
+        if slug and (platform, slug) not in out:
+            out.append((platform, slug))
+    if host in {"boards.greenhouse.io", "job-boards.greenhouse.io"} and parts: add("greenhouse", parts[0])
+    elif host == "jobs.lever.co" and parts: add("lever", parts[0])
+    elif host in {"careers.smartrecruiters.com", "jobs.smartrecruiters.com"} and parts: add("smartrecruiters", parts[0])
+    elif host == "jobs.ashbyhq.com" and parts: add("ashby", parts[0])
+    elif host.endswith(".recruitee.com"): add("recruitee", host.split(".recruitee.com", 1)[0])
+    elif host.endswith(".jobs.personio.com"): add("personio", host.split(".jobs.personio.com", 1)[0])
+    elif host.endswith(".pinpointhq.com"): add("pinpoint", host.split(".pinpointhq.com", 1)[0])
+    elif host.endswith(".eightfold.ai"): add("eightfold", host.split(".eightfold.ai", 1)[0])
+    elif host == "apply.workable.com" and parts: add("workable", parts[0])
+    return out
+
+def _batch82_validate_platform_candidate(platform, slug, session):
+    try:
+        if platform == "greenhouse": return try_greenhouse(slug, session) is not None
+        if platform == "lever": return try_lever(slug, session) is not None
+        if platform == "smartrecruiters": return try_smartrecruiters_probe(slug, session) is not None
+        if platform == "ashby": return try_ashby(slug, session) is not None
+        if platform == "recruitee": return try_recruitee(slug, session) is not None
+        if platform == "personio": return try_personio(slug, session) is not None
+        if platform == "pinpoint": return try_pinpoint(slug, session) is not None
+        if platform == "eightfold": return try_eightfold(slug, session) is not None
+        if platform == "workable": return try_workable(slug, session) is not None
+    except Exception:
+        return False
+    return False
+
+def _batch82_discover_platform_from_career_url(entry):
+    local = requests.Session()
+    start = (entry.get("url") or "").strip()
+    if not start:
+        return None, None
+    urls = [start]
+    try:
+        r = local.get(start, timeout=15, allow_redirects=True, headers={"User-Agent": "Mozilla/5.0"})
+        if r.url: urls.append(r.url)
+        text = r.text or ""
+        for href in re.findall(r"href\s*=\s*[\"']([^\"']+)[\"']", text, flags=re.I)[:500]:
+            try: urls.append(urllib.parse.urljoin(r.url or start, html.unescape(href)))
+            except Exception: pass
+    except Exception:
+        pass
+    seen = set()
+    for url in urls:
+        for platform, slug in _batch82_platform_candidates_from_url(url):
+            key = (platform, slug.lower())
+            if key in seen: continue
+            seen.add(key)
+            if _batch82_validate_platform_candidate(platform, slug, local):
+                return platform, slug
+    return None, None
+
+def _batch82_none_refresh_due(cached):
+    stamp = (cached or {}).get("direct_refresh_at")
+    if not stamp: return True
+    try:
+        dt = datetime.fromisoformat(stamp.replace("Z", "+00:00"))
+        if dt.tzinfo is None: dt = dt.replace(tzinfo=timezone.utc)
+        return (datetime.now(timezone.utc) - dt).total_seconds() >= STALE_NONE_DIRECT_REFRESH_DAYS * 86400
+    except Exception:
+        return True
 
 def _probe_one_company_platform(entry):
     """Runs in a worker thread — creates its OWN session (requests.Session
@@ -7338,6 +7418,40 @@ def probe_ats_for_manual_companies(manual_companies, session, cache_path, fetch_
             cache_hits_none += 1
         else:
             needs_probe.append(entry)
+
+    # Batch82 bounded stale-none refresh using the new direct careers-URL mechanism.
+    batch82_refresh = []
+    if STALE_NONE_DIRECT_REFRESH_PER_RUN > 0:
+        for entry in manual_companies:
+            if len(batch82_refresh) >= STALE_NONE_DIRECT_REFRESH_PER_RUN: break
+            cached = cache.get(entry["company"])
+            if cached and cached.get("platform") == "none" and _batch82_none_refresh_due(cached):
+                batch82_refresh.append(entry)
+        if batch82_refresh:
+            chosen = {e["company"] for e in batch82_refresh}
+            still_manual = [e for e in still_manual if e.get("company") not in chosen]
+            print(f"  [batch82] refreshing {len(batch82_refresh)} stale cached-no-match companies via actual careers URL redirects/ATS links")
+            pool82 = ThreadPoolExecutor(max_workers=min(8, len(batch82_refresh)))
+            try:
+                fmap82 = {pool82.submit(_batch82_discover_platform_from_career_url, e): e for e in batch82_refresh}
+                recovered82 = 0
+                for fut82, entry82 in fmap82.items():
+                    platform82 = slug82 = None
+                    try: platform82, slug82 = fut82.result(timeout=25)
+                    except Exception: pass
+                    name82 = entry82["company"]
+                    stamp82 = datetime.now(timezone.utc).isoformat()
+                    if platform82:
+                        cache[name82] = {"platform": platform82, "slug": slug82, "direct_refresh_at": stamp82, "discovered_by": "batch82_career_url"}
+                        confirmed_platform_entries.append((entry82, platform82, slug82))
+                        recovered82 += 1
+                        print(f"      [batch82] {name82}: discovered {platform82} token '{slug82}' from current careers URL")
+                    else:
+                        cache[name82] = {"platform": "none", "slug": None, "direct_refresh_at": stamp82, "discovered_by": "batch82_career_url_checked"}
+                        still_manual.append(entry82)
+                print(f"  [batch82] direct careers-URL refresh recovered {recovered82}/{len(batch82_refresh)} ATS mappings")
+            finally:
+                pool82.shutdown(wait=False)
 
     freshly_probed = len(needs_probe)
     print(f"  {cache_hits_matched} companies served from cache (confirmed platform), "
@@ -19749,6 +19863,9 @@ def scrape_wtw_ireland_batch26(session):
     print("=== TARGETED_DIRECT_BATCH_38_PRE_FULL_RUN_BULK ACTIVE: proven Uisce Oracle recovery retained + Edwards Lifesciences and HP moved to current official Workday ROI detail verification; wider zero audit completed; Manual queue untouched ===")
 
 print("=== TARGETED_DIRECT_BATCH_46_AVIVA_HIGH_YIELD_FIX ACTIVE: Aviva is removed from final defer and uses eight current official Dublin detail seeds plus live detail verification; failed Aldi/HP mechanisms are not expanded; proven positive routes preserved ===")
+print("=== TARGETED_DIRECT_BATCH_83_PRODUCTION_CONTINUITY_GUARD ACTIVE: publication continuity now survives a second transient scraper miss with a strict 36h/2-miss cap; genuine current results refresh state; stale vacancies cannot persist indefinitely; Batch82 ATS refresh preserved ===")
+print("=== TARGETED_DIRECT_BATCH_82_STALE_NONE_DIRECT_ATS_REFRESH ACTIVE: bounded stale ATS-none cohort is rechecked through each company supplied careers URL, redirects, and embedded ATS links; global PROBE_VERSION stays 18; productive routes/caches preserved ===")
+
 print("=== TARGETED_DIRECT_BATCH_81_CACHE_LOCK_HALEON_RECOVERY ACTIVE: Batch80 seven-company cache precedence locked so ALDI/Sky cannot fall back to old namespaces; Haleon now unions the existing Batch18 route with strict first-party direct HTTP verification; no speculative generic sweep; productive routes preserved ===")
 print("=== TARGETED_DIRECT_BATCH_80_MULTI7_REFRESH_AND_RECOVERY ACTIVE: seven-company evidence refresh in one batch: Waters + Goodbody false-zero recovery, plus ALDI/Red Hat/Slack/Sky/Infosys current first-party evidence refreshed before expiry; legacy productive routes preserved ===")
 print("=== TARGETED_DIRECT_BATCH_79_MULTI5_BACKEND_ROTATION ACTIVE: rotated five companies together to backend-specific first-party mechanisms (AerCap, Goodbody, Morgan Stanley, Visa, GSK); AerCap has two fresh bounded Dublin seeds; no generic rendered sweep; prior productive routes preserved ===")
@@ -20006,6 +20123,18 @@ def main():
                 _last_nonzero_by_company = _raw_last_nonzero
         except Exception:
             _last_nonzero_by_company = {}
+
+    # Batch83 production publication-continuity state.
+    _continuity_path = "production_continuity.json"
+    _continuity = {}
+    if os.path.exists(_continuity_path):
+        try:
+            with open(_continuity_path, encoding="utf-8") as _cf:
+                _raw_continuity = json.load(_cf)
+            if isinstance(_raw_continuity, dict):
+                _continuity = _raw_continuity
+        except Exception:
+            _continuity = {}
 
     # Snapshot the immediately previous live output. This is used only as a
     # regression safety net: one transient zero/error must not instantly erase
@@ -21293,14 +21422,20 @@ def main():
     for name in current_live_companies:
         automated_zero.pop(name, None)
 
-    # Regression guard.
+    # Production continuity guard (Batch83).
     #
-    # - If a company had live jobs in the immediately previous jobs.json and
-    #   this run suddenly has ZERO, preserve that previous set for this run.
-    #   This prevents a transient browser/API/cache miss from deleting a
-    #   previously proven live company.
-    # - If the count merely decreased, report it for review but DO NOT pad the
-    #   result with old jobs; real vacancies can close normally.
+    # The old guard only protected ONE run. On the following run its preserved
+    # rows were intentionally excluded from _prev_by_company, so a source that
+    # failed twice in a row disappeared from the production feed even though
+    # last_nonzero_jobs.json still held a known-good snapshot.
+    #
+    # Batch83 separates scrape truth from publication continuity:
+    # - genuine current results always win and refresh last-good state;
+    # - a sudden zero/error may publish the last-good rows for at most 36 hours
+    #   and at most 2 consecutive misses;
+    # - preserved rows are explicitly marked verification_pending;
+    # - after the grace window/streak expires, the company is allowed to become
+    #   zero, so genuinely closed vacancies are not kept indefinitely.
     _prev_by_company = {}
     for _job in _previous_live_jobs:
         _n = str((_job or {}).get("company") or "").strip()
@@ -21393,6 +21528,102 @@ def main():
               "(reported only; old vacancies are NOT re-added) ===")
         for _name, _old_count, _new_count in sorted(_count_decreases):
             print(f"      [count-drop] {_name}: {_old_count} -> {_new_count}")
+
+
+    # Batch83: production-grade bounded continuity across repeated transient misses.
+    # Use genuinely scraped rows only; rows already preserved by an older guard
+    # never refresh the clock.
+    _now_utc = datetime.now(timezone.utc)
+    _genuine_current = {}
+    for _job in live_jobs:
+        _name = str((_job or {}).get("company") or "").strip()
+        _guard = str((_job or {}).get("regression_guard") or "")
+        if _name and not _guard.startswith("preserved_from_previous_run") and not _guard.startswith("production_continuity"):
+            _genuine_current.setdefault(_name, []).append(_job)
+
+    # Refresh state for every company genuinely live now.
+    for _name, _jobs in _genuine_current.items():
+        _continuity[_name] = {
+            "last_good_at": _now_utc.isoformat(),
+            "miss_streak": 0,
+            "jobs": [dict(j) for j in _jobs],
+        }
+
+    _continuity_preserved = []
+    _continuity_expired = []
+    _current_names_after_old_guard = {
+        str((j or {}).get("company") or "").strip()
+        for j in live_jobs if str((j or {}).get("company") or "").strip()
+    }
+
+    # Seed continuity from the persistent last-nonzero snapshot when necessary.
+    # The seed gets a fresh bounded clock only when the company was live in the
+    # immediately previous output; ancient snapshots are not resurrected.
+    for _name, _prev_jobs in _prev_by_company.items():
+        if _name not in _continuity and _prev_jobs:
+            _continuity[_name] = {
+                "last_good_at": _now_utc.isoformat(),
+                "miss_streak": 0,
+                "jobs": [dict(j) for j in _prev_jobs],
+            }
+
+    for _name, _state in list(_continuity.items()):
+        if _name in _genuine_current:
+            continue
+
+        _jobs = (_state or {}).get("jobs") or []
+        if not _jobs:
+            continue
+
+        try:
+            _last_good = datetime.fromisoformat(str((_state or {}).get("last_good_at") or "").replace("Z", "+00:00"))
+            if _last_good.tzinfo is None:
+                _last_good = _last_good.replace(tzinfo=timezone.utc)
+            _age_hours = (_now_utc - _last_good.astimezone(timezone.utc)).total_seconds() / 3600.0
+        except Exception:
+            _age_hours = 999999.0
+
+        _miss_streak = int((_state or {}).get("miss_streak") or 0)
+
+        # If the old one-cycle guard already preserved this company in this run,
+        # count this as the first miss but do not duplicate rows.
+        _already_guarded = _name in _current_names_after_old_guard and _name not in _genuine_current
+        if _already_guarded:
+            _miss_streak = max(1, _miss_streak + 1)
+            _state["miss_streak"] = _miss_streak
+            continue
+
+        # Preserve across one additional consecutive miss, but never beyond
+        # 36 hours from the last genuine scrape.
+        if _miss_streak < 2 and _age_hours <= 36.0:
+            for _old_job in _jobs:
+                _kept = dict(_old_job)
+                _kept["regression_guard"] = "production_continuity_verification_pending"
+                _kept["verification_pending"] = True
+                _kept["last_verified_at"] = (_state or {}).get("last_good_at")
+                live_jobs.append(_kept)
+            automated_zero.pop(_name, None)
+            _state["miss_streak"] = _miss_streak + 1
+            _continuity_preserved.append((_name, len(_jobs), _state["miss_streak"], round(_age_hours, 1)))
+        else:
+            _continuity_expired.append((_name, _miss_streak, round(_age_hours, 1)))
+            _continuity.pop(_name, None)
+
+    if _continuity_preserved:
+        print("=== PRODUCTION CONTINUITY: bounded last-good inventory preserved for repeated transient misses ===")
+        for _name, _count, _streak, _age in sorted(_continuity_preserved):
+            print(f"      [continuity] {_name}: kept {_count} last-verified jobs; miss {_streak}/2; age {_age}h")
+
+    if _continuity_expired:
+        print("=== PRODUCTION CONTINUITY: grace expired; allowing clean zero/closure ===")
+        for _name, _streak, _age in sorted(_continuity_expired):
+            print(f"      [continuity-expired] {_name}: miss streak {_streak}; last-good age {_age}h")
+
+    try:
+        with open(_continuity_path, "w", encoding="utf-8") as _cf:
+            json.dump(_continuity, _cf, indent=2)
+    except Exception as _exc:
+        print(f"      [continuity] could not save {_continuity_path}: {_exc}")
 
     try:
         with open(_last_nonzero_path, "w", encoding="utf-8") as _lf:
