@@ -43511,7 +43511,7 @@
         "source": "grant_oracle_job_detail",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-17T11:17:59.160136+00:00",
         "posted_age_known": false
       },
@@ -43526,7 +43526,7 @@
         "source": "grant_oracle_job_detail",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-17T11:17:59.160136+00:00",
         "posted_age_known": false
       },
@@ -44619,11 +44619,6 @@
     ],
     "checked_at": 1789643867.569024,
     "consecutive_failures": 0
-  },
-  "DXC Technology::friend_logic_v1": {
-    "jobs": [],
-    "checked_at": 1789643833.428633,
-    "consecutive_failures": 1
   },
   "Abbott::friend_logic_v1": {
     "jobs": [
@@ -46388,62 +46383,218 @@
   },
   "Kepak Group::targeted_direct_batch7_multi_v1": {
     "jobs": [],
-    "checked_at": 1789643820.5807612,
+    "checked_at": 1789645725.2703862,
     "consecutive_failures": 1
   },
   "An Post::targeted_direct_batch76_anpost_rendered_oracle_v1": {
     "jobs": [],
-    "checked_at": 1789643821.9265566,
-    "consecutive_failures": 1
-  },
-  "GlaxoSmithKline (GSK)::targeted_direct_batch79_multi5_backend_rotation_v1": {
-    "jobs": [],
-    "checked_at": 1789643822.057272,
+    "checked_at": 1789645725.8690863,
     "consecutive_failures": 1
   },
   "Aer Lingus::targeted_zero_deferred_batch15_v1": {
     "jobs": [],
-    "checked_at": 1789643823.0531461,
-    "consecutive_failures": 1
-  },
-  "VMware (Broadcom)::zero_only_batch20_v1": {
-    "jobs": [],
-    "checked_at": 1789643823.4590585,
+    "checked_at": 1789645725.9737332,
     "consecutive_failures": 1
   },
   "HP (Hewlett-Packard)::friend_next4_v1": {
     "jobs": [],
-    "checked_at": 1789643823.6087427,
+    "checked_at": 1789645726.2666876,
+    "consecutive_failures": 1
+  },
+  "GlaxoSmithKline (GSK)::targeted_direct_batch79_multi5_backend_rotation_v1": {
+    "jobs": [],
+    "checked_at": 1789645726.7704613,
+    "consecutive_failures": 1
+  },
+  "VMware (Broadcom)::zero_only_batch20_v1": {
+    "jobs": [],
+    "checked_at": 1789645727.2485626,
     "consecutive_failures": 1
   },
   "DHL Ireland::targeted_direct_batch54_multi_v1": {
     "jobs": [],
-    "checked_at": 1789643824.7599032,
+    "checked_at": 1789645727.8452702,
     "consecutive_failures": 1
   },
   "QIAGEN::zero_only_batch20_v1": {
     "jobs": [],
-    "checked_at": 1789643826.431733,
-    "consecutive_failures": 1
-  },
-  "Deutsche Bank::friend_logic_v1": {
-    "jobs": [],
-    "checked_at": 1789643847.2088087,
+    "checked_at": 1789645730.6755574,
     "consecutive_failures": 1
   },
   "Boston Consulting Group (BCG)": {
     "jobs": [],
-    "checked_at": 1789643848.558122,
+    "checked_at": 1789645740.4114501,
     "consecutive_failures": 1
   },
   "Haleon::targeted_direct_batch81_haleon_union_v1": {
     "jobs": [],
-    "checked_at": 1789643852.0229642,
+    "checked_at": 1789645750.8036938,
+    "consecutive_failures": 1
+  },
+  "Deutsche Bank::friend_logic_v1": {
+    "jobs": [],
+    "checked_at": 1789645751.2978506,
     "consecutive_failures": 1
   },
   "EXL": {
     "jobs": [],
-    "checked_at": 1789643855.2663667,
+    "checked_at": 1789645757.5088832,
     "consecutive_failures": 1
+  },
+  "DXC Technology::friend_logic_v1": {
+    "jobs": [
+      {
+        "company": "DXC Technology",
+        "title": "Vantage/wmA Developer",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.dxc.com/job/23881358/vantage-wma-developer-noida-in/",
+        "source": "dxc_batch20_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-09-17T11:49:17.632748+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "DXC Technology",
+        "title": "Associate Manager Software Engineering (Finacle Support L3)",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.dxc.com/job/23881497/associate-manager-software-engineering-finacle-support-l3-chennai-in/",
+        "source": "dxc_batch20_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-09-17T11:49:17.632748+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "DXC Technology",
+        "title": "Technical Security Architect – Secure, on site Hampshire",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.dxc.com/job/23793542/technical-security-architect-secure-on-site-hampshire/",
+        "source": "dxc_batch20_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-09-17T11:49:17.632748+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "DXC Technology",
+        "title": "Senior Project Manager – Federal Government",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.dxc.com/job/23881361/senior-project-manager-federal-government-canberra-au/",
+        "source": "dxc_batch20_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-09-17T11:49:17.632748+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "DXC Technology",
+        "title": "Integration Architect",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.dxc.com/job/23881382/integration-architect-vilnius-lt/",
+        "source": "dxc_batch20_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-09-17T11:49:17.632748+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "DXC Technology",
+        "title": "SAP MM (Materials Management) Consultant (S/4HANA Rollout)",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.dxc.com/job/23881664/sap-mm-materials-management-consultant-s-4hana-rollout-warsaw-pl/",
+        "source": "dxc_batch20_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-09-17T11:49:17.632748+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "DXC Technology",
+        "title": "SAP Sales and Distribution (SAP SD) Consultant (S/4HANA Rollout)",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.dxc.com/job/23881498/sap-sales-and-distribution-sap-sd-consultant-s-4hana-rollout-warsaw-pl/",
+        "source": "dxc_batch20_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-09-17T11:49:17.632748+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "DXC Technology",
+        "title": "SAP FICO Consultant (S/4HANA Rollout)",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.dxc.com/job/23881663/sap-fico-consultant-s-4hana-rollout-warsaw-pl/",
+        "source": "dxc_batch20_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-09-17T11:49:17.632748+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "DXC Technology",
+        "title": "About DXC Bulgaria We are DXC \\u2013 a Fortune 500 global IT services leader. We are among the largest IT employers, delivering the full spectrum of the company\\u2019s diverse technical portfolio. Our teams work across cutting-edge technologies, contributing to projects that span industries and geog",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.dxc.com/job/23881665/gsd-first-line-tech-support-with-portuguese-sofia-bg/",
+        "source": "dxc_batch20_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-09-17T11:49:17.632748+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "DXC Technology",
+        "title": "SAP Controlling (CO) Consultant (S/4HANA Rollout)",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.dxc.com/job/23881662/sap-controlling-co-consultant-s-4hana-rollout-warsaw-pl/",
+        "source": "dxc_batch20_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-09-17T11:49:17.632748+00:00",
+        "posted_age_known": false
+      }
+    ],
+    "checked_at": 1789645757.5467837,
+    "consecutive_failures": 0
   }
 }
