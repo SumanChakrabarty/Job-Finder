@@ -11316,8 +11316,8 @@
   },
   "Bain & Company": {
     "jobs": [],
-    "checked_at": 1789762591.2766902,
-    "consecutive_failures": 284
+    "checked_at": 1789771232.5675986,
+    "consecutive_failures": 285
   },
   "Fiserv": {
     "jobs": [
@@ -34343,7 +34343,7 @@
         "posted_age_known": true
       }
     ],
-    "checked_at": 1789742213.8024106,
+    "checked_at": 1789771229.5371776,
     "consecutive_failures": 0
   },
   "Syneos Health::targeted_bulk_batch18_v1": {
@@ -36787,7 +36787,7 @@
         "source": "batch44_zimmer_official_phenom",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-18T20:17:17.616666+00:00",
         "posted_age_known": true
       }
@@ -46602,7 +46602,7 @@
         "source": "dxc_batch20_rendered",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-18T20:17:17.616666+00:00",
         "posted_age_known": false
       },
@@ -46617,7 +46617,7 @@
         "source": "dxc_batch20_rendered",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-18T20:17:17.616666+00:00",
         "posted_age_known": false
       },
@@ -46632,7 +46632,7 @@
         "source": "dxc_batch20_rendered",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-18T20:17:17.616666+00:00",
         "posted_age_known": false
       },
@@ -46647,7 +46647,7 @@
         "source": "dxc_batch20_rendered",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-18T20:17:17.616666+00:00",
         "posted_age_known": false
       },
@@ -46662,7 +46662,7 @@
         "source": "dxc_batch20_rendered",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-18T20:17:17.616666+00:00",
         "posted_age_known": false
       },
@@ -46677,7 +46677,7 @@
         "source": "dxc_batch20_rendered",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-18T20:17:17.616666+00:00",
         "posted_age_known": false
       },
@@ -46737,7 +46737,7 @@
         "source": "dxc_batch20_rendered",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-18T20:17:17.616666+00:00",
         "posted_age_known": false
       },
@@ -46752,7 +46752,7 @@
         "source": "dxc_batch20_rendered",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-18T20:17:17.616666+00:00",
         "posted_age_known": false
       },
@@ -46767,7 +46767,7 @@
         "source": "dxc_batch20_rendered",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-18T20:17:17.616666+00:00",
         "posted_age_known": false
       },
@@ -47264,7 +47264,7 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1789742260.4332447,
+    "checked_at": 1789771280.267619,
     "consecutive_failures": 0
   },
   "ABP Food Group::targeted_direct_batch9_bulk_v1": {
@@ -47756,7 +47756,7 @@
         "posted_age_known": true
       }
     ],
-    "checked_at": 1789742194.7784026,
+    "checked_at": 1789771214.2461183,
     "consecutive_failures": 0
   },
   "Barclays::targeted_direct_batch48_v1": {
@@ -47833,147 +47833,147 @@
   },
   "Kepak Group::targeted_direct_batch7_multi_v1": {
     "jobs": [],
-    "checked_at": 1789762566.2049975,
+    "checked_at": 1789771211.2257748,
     "consecutive_failures": 1
   },
   "SentinelOne": {
     "jobs": [],
-    "checked_at": 1789762566.3078005,
-    "consecutive_failures": 1
-  },
-  "Visa::targeted_direct_batch79_multi5_backend_rotation_v1": {
-    "jobs": [],
-    "checked_at": 1789762566.666525,
-    "consecutive_failures": 1
-  },
-  "Texas Instruments::targeted_direct_batch11_bulk_v1": {
-    "jobs": [],
-    "checked_at": 1789762566.7841802,
-    "consecutive_failures": 1
-  },
-  "Energia Group::targeted_direct_batch5_multi_v1": {
-    "jobs": [],
-    "checked_at": 1789762567.089702,
-    "consecutive_failures": 1
-  },
-  "Morgan Stanley::targeted_direct_batch79_multi5_backend_rotation_v1": {
-    "jobs": [],
-    "checked_at": 1789762567.0961597,
-    "consecutive_failures": 1
-  },
-  "Micron Technology::targeted_direct_batch10_bulk_v1": {
-    "jobs": [],
-    "checked_at": 1789762567.130134,
+    "checked_at": 1789771211.3707798,
     "consecutive_failures": 1
   },
   "Medpace::targeted_direct_batch8_bulk_v1": {
     "jobs": [],
-    "checked_at": 1789762567.3916914,
+    "checked_at": 1789771211.675494,
+    "consecutive_failures": 1
+  },
+  "Visa::targeted_direct_batch79_multi5_backend_rotation_v1": {
+    "jobs": [],
+    "checked_at": 1789771211.6836567,
+    "consecutive_failures": 1
+  },
+  "Energia Group::targeted_direct_batch5_multi_v1": {
+    "jobs": [],
+    "checked_at": 1789771212.0115497,
+    "consecutive_failures": 1
+  },
+  "Texas Instruments::targeted_direct_batch11_bulk_v1": {
+    "jobs": [],
+    "checked_at": 1789771212.260318,
     "consecutive_failures": 1
   },
   "Nokia::targeted_direct_batch11_bulk_v1": {
     "jobs": [],
-    "checked_at": 1789762567.4048543,
-    "consecutive_failures": 1
-  },
-  "An Post::targeted_direct_batch76_anpost_rendered_oracle_v1": {
-    "jobs": [],
-    "checked_at": 1789762567.864082,
-    "consecutive_failures": 1
-  },
-  "Box::targeted_direct_batch10_bulk_v1": {
-    "jobs": [],
-    "checked_at": 1789762568.0628347,
-    "consecutive_failures": 1
-  },
-  "HP (Hewlett-Packard)::friend_next4_v1": {
-    "jobs": [],
-    "checked_at": 1789762568.0994763,
+    "checked_at": 1789771212.5069892,
     "consecutive_failures": 1
   },
   "Aer Lingus::targeted_zero_deferred_batch15_v1": {
     "jobs": [],
-    "checked_at": 1789762568.4429498,
+    "checked_at": 1789771212.5737221,
     "consecutive_failures": 1
   },
-  "Heineken Ireland::friend_next4_v1": {
+  "An Post::targeted_direct_batch76_anpost_rendered_oracle_v1": {
     "jobs": [],
-    "checked_at": 1789762568.5241122,
-    "consecutive_failures": 1
-  },
-  "GlaxoSmithKline (GSK)::targeted_direct_batch79_multi5_backend_rotation_v1": {
-    "jobs": [],
-    "checked_at": 1789762568.5643554,
+    "checked_at": 1789771212.6178563,
     "consecutive_failures": 1
   },
   "Boehringer Ingelheim::targeted_direct_batch11_bulk_v1": {
     "jobs": [],
-    "checked_at": 1789762568.7053437,
+    "checked_at": 1789771212.6589036,
+    "consecutive_failures": 1
+  },
+  "Morgan Stanley::targeted_direct_batch79_multi5_backend_rotation_v1": {
+    "jobs": [],
+    "checked_at": 1789771212.7875376,
+    "consecutive_failures": 1
+  },
+  "Box::targeted_direct_batch10_bulk_v1": {
+    "jobs": [],
+    "checked_at": 1789771212.8575065,
+    "consecutive_failures": 1
+  },
+  "Micron Technology::targeted_direct_batch10_bulk_v1": {
+    "jobs": [],
+    "checked_at": 1789771213.0170548,
+    "consecutive_failures": 1
+  },
+  "GlaxoSmithKline (GSK)::targeted_direct_batch79_multi5_backend_rotation_v1": {
+    "jobs": [],
+    "checked_at": 1789771213.198741,
+    "consecutive_failures": 1
+  },
+  "HP (Hewlett-Packard)::friend_next4_v1": {
+    "jobs": [],
+    "checked_at": 1789771213.3312266,
     "consecutive_failures": 1
   },
   "VMware (Broadcom)::zero_only_batch20_v1": {
     "jobs": [],
-    "checked_at": 1789762569.2627687,
+    "checked_at": 1789771213.7783213,
+    "consecutive_failures": 1
+  },
+  "Heineken Ireland::friend_next4_v1": {
+    "jobs": [],
+    "checked_at": 1789771214.1804996,
     "consecutive_failures": 1
   },
   "QIAGEN::zero_only_batch20_v1": {
     "jobs": [],
-    "checked_at": 1789762572.1843464,
-    "consecutive_failures": 1
-  },
-  "Bruker": {
-    "jobs": [],
-    "checked_at": 1789762572.3096318,
+    "checked_at": 1789771216.5032716,
     "consecutive_failures": 1
   },
   "Oliver Wyman": {
     "jobs": [],
-    "checked_at": 1789762572.872568,
+    "checked_at": 1789771217.0948074,
     "consecutive_failures": 1
   },
-  "Alkermes": {
+  "Bruker": {
     "jobs": [],
-    "checked_at": 1789762572.944932,
+    "checked_at": 1789771217.7664015,
     "consecutive_failures": 1
   },
   "Biotronik": {
     "jobs": [],
-    "checked_at": 1789762583.0773087,
+    "checked_at": 1789771224.852055,
     "consecutive_failures": 1
   },
-  "Morningstar::targeted_direct_batch35_v1": {
+  "Alkermes": {
     "jobs": [],
-    "checked_at": 1789762587.3705719,
+    "checked_at": 1789771225.7918334,
     "consecutive_failures": 1
   },
   "Smurfit Westrock": {
     "jobs": [],
-    "checked_at": 1789762588.695084,
+    "checked_at": 1789771230.7326329,
+    "consecutive_failures": 1
+  },
+  "Morningstar::targeted_direct_batch35_v1": {
+    "jobs": [],
+    "checked_at": 1789771231.6020203,
     "consecutive_failures": 1
   },
   "Deutsche Bank::friend_logic_v1": {
     "jobs": [],
-    "checked_at": 1789762592.343576,
+    "checked_at": 1789771235.9070392,
     "consecutive_failures": 1
   },
   "Baxter International::targeted_zero_deferred_batch13_v1": {
     "jobs": [],
-    "checked_at": 1789762593.09373,
+    "checked_at": 1789771236.9315345,
     "consecutive_failures": 1
   },
   "Boston Consulting Group (BCG)": {
     "jobs": [],
-    "checked_at": 1789762599.0889041,
+    "checked_at": 1789771237.8769398,
     "consecutive_failures": 1
   },
   "Haleon::targeted_direct_batch81_haleon_union_v1": {
     "jobs": [],
-    "checked_at": 1789762605.7186825,
+    "checked_at": 1789771239.187533,
     "consecutive_failures": 1
   },
   "Agilent Technologies::friend_workday_return_v2": {
     "jobs": [],
-    "checked_at": 1789762605.9827695,
+    "checked_at": 1789771250.2746398,
     "consecutive_failures": 1
   }
 }
