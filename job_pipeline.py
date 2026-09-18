@@ -496,14 +496,17 @@ def run_company_tasks_in_parallel(tasks, browser_workers=None, http_workers=None
                     print(f"  -> {company}: HARD TIMEOUT after {timeout_s}s; preserving "
                           f"{len(fallback_jobs)} last-known positive cached jobs")
                     results.append((label, company, fallback_jobs))
-                    # The worker thread cannot be force-killed. Keep a reference
-                    # and harvest it later if it finishes before the batch ends.
-                    late_positive_futures.append((fut, label, company, len(fallback_jobs)))
                 else:
                     print(f"  -> {company}: HARD TIMEOUT after {timeout_s}s "
                           f"(pipeline continues normally with whatever else it already found)")
                     failed_companies.add(company)
                     errors.append(f"{label}/{company}: timed out after {timeout_s}s")
+                # Batch86: always retain the still-running future. The latest production
+                # log proved that a company can print verified ROI results shortly after
+                # its hard-timeout line (Societe Generale did exactly this). Previously
+                # only companies WITH a stale-positive fallback were eligible for the
+                # late-result harvest, so a genuine recovery could be discarded.
+                late_positive_futures.append((fut, label, company, len(fallback_jobs)))
             for fut in not_reached_now:
                 pending.discard(fut)
                 label, company, timeout_s, task_id = future_map[fut]
@@ -535,10 +538,17 @@ def run_company_tasks_in_parallel(tasks, browser_workers=None, http_workers=None
             if _jobs:
                 results.append((_label, _company, _jobs))
                 _late_recovered += max(0, len(_jobs) - _fallback_count)
+                # A completed worker with verified jobs is no longer a fetch failure.
+                failed_companies.discard(_company)
+                errors[:] = [
+                    _err for _err in errors
+                    if not (_err.startswith(f"{_label}/{_company}:")
+                            and ("timed out after" in _err or "not reached" in _err))
+                ]
                 print(f"  -> {_company}: late completion harvested {len(_jobs)} current jobs "
-                      f"after timeout (fallback had {_fallback_count})")
+                      f"after timeout (fallback had {_fallback_count}); timeout status cleared")
         if late_positive_futures:
-            print(f"=== Batch57 late-positive harvest: {_late_recovered} net additional current jobs "
+            print(f"=== Batch86 late-timeout harvest: {_late_recovered} net additional current jobs "
                   f"recovered from workers that finished after their timeout ===")
     finally:
         browser_pool.shutdown(wait=False)
@@ -19871,6 +19881,7 @@ def scrape_wtw_ireland_batch26(session):
     print("=== TARGETED_DIRECT_BATCH_38_PRE_FULL_RUN_BULK ACTIVE: proven Uisce Oracle recovery retained + Edwards Lifesciences and HP moved to current official Workday ROI detail verification; wider zero audit completed; Manual queue untouched ===")
 
 print("=== TARGETED_DIRECT_BATCH_46_AVIVA_HIGH_YIELD_FIX ACTIVE: Aviva is removed from final defer and uses eight current official Dublin detail seeds plus live detail verification; failed Aldi/HP mechanisms are not expanded; proven positive routes preserved ===")
+print("=== TARGETED_DIRECT_BATCH_86_LATE_TIMEOUT_RECOVERY ACTIVE: all timed-out dedicated workers are eligible for non-blocking late-result harvest; a verified late success clears its earlier timeout failure; Batch85 rotation and production continuity guards preserved ===")
 print("=== TARGETED_DIRECT_BATCH_85_FALSE_ZERO_FRESHNESS_ROTATION ACTIVE: bounded rotating prior-zero browser-cache bypass + Batch82 stale-none ATS refresh now prioritizes prior production zeros; positive caches and productive routes preserved ===")
 print("=== TARGETED_DIRECT_BATCH_84_PRODUCTION_STATUS_STABILITY ACTIVE: clean automated-zero status is protected from transient Manual/Error deterioration for max 36h/2 misses; underlying errors remain diagnostic; Batch83 live continuity + Batch82 stale-none rotation preserved ===")
 print("=== TARGETED_DIRECT_BATCH_83_PRODUCTION_CONTINUITY_GUARD ACTIVE: publication continuity now survives a second transient scraper miss with a strict 36h/2-miss cap; genuine current results refresh state; stale vacancies cannot persist indefinitely; Batch82 ATS refresh preserved ===")
