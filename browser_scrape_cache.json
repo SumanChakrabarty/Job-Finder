@@ -318,7 +318,7 @@
         "source": "amazon_json",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-19T00:49:50.225919+00:00",
         "posted_age_known": false
       },
@@ -333,7 +333,7 @@
         "source": "amazon_json",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-19T00:49:50.225919+00:00",
         "posted_age_known": false
       },
@@ -363,7 +363,7 @@
         "source": "amazon_json",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-19T00:49:50.225919+00:00",
         "posted_age_known": false
       },
@@ -378,7 +378,7 @@
         "source": "amazon_json",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-19T00:49:50.225919+00:00",
         "posted_age_known": false
       },
@@ -3840,7 +3840,7 @@
         "source": "tiktok_browser",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-19T00:49:50.225919+00:00",
         "posted_age_known": false
       },
@@ -7308,7 +7308,7 @@
         "source": "citi_browser",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-19T00:49:50.225919+00:00",
         "posted_age_known": false
       },
@@ -10647,8 +10647,8 @@
   },
   "Bain & Company": {
     "jobs": [],
-    "checked_at": 1789778927.8064642,
-    "consecutive_failures": 286
+    "checked_at": 1789794607.74018,
+    "consecutive_failures": 287
   },
   "Fiserv": {
     "jobs": [
@@ -13372,7 +13372,7 @@
         "source": "siemens_direct_http",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-19T00:49:50.225919+00:00",
         "posted_age_known": false
       },
@@ -13387,7 +13387,7 @@
         "source": "siemens_direct_http",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-19T00:49:50.225919+00:00",
         "posted_age_known": false
       },
@@ -13402,7 +13402,7 @@
         "source": "siemens_direct_http",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-19T00:49:50.225919+00:00",
         "posted_age_known": false
       },
@@ -13417,7 +13417,7 @@
         "source": "siemens_direct_http",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-19T00:49:50.225919+00:00",
         "posted_age_known": false
       },
@@ -13432,7 +13432,7 @@
         "source": "siemens_direct_http",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-19T00:49:50.225919+00:00",
         "posted_age_known": false
       },
@@ -13447,7 +13447,7 @@
         "source": "siemens_direct_http",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-19T00:49:50.225919+00:00",
         "posted_age_known": false
       }
@@ -14638,7 +14638,7 @@
         "source": "novartis_first_party",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-19T00:49:50.225919+00:00",
         "posted_age_known": false
       }
@@ -18747,120 +18747,150 @@
         "title": "Machine Learning Engineer",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.docusign.com/careers-home/jobs/28784?lang=en-us&previousLocale=en-US",
         "source": "docusign_rendered_attempt2",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-25T12:38:48.567655+00:00",
+        "posted_age_known": false
       },
       {
         "company": "DocuSign",
         "title": "Machine Learning Engineer",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.docusign.com/careers-home/jobs/28785?lang=en-us&previousLocale=en-US",
         "source": "docusign_rendered_attempt2",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-25T12:38:48.567655+00:00",
+        "posted_age_known": false
       },
       {
         "company": "DocuSign",
         "title": "Senior Machine Learning Engineer",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.docusign.com/careers-home/jobs/28806?lang=en-us&previousLocale=en-US",
         "source": "docusign_rendered_attempt2",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-25T12:38:48.567655+00:00",
+        "posted_age_known": false
       },
       {
         "company": "DocuSign",
         "title": "Account Executive, SMB - Dutch Speaking (Future Opportunities)",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.docusign.com/careers-home/jobs/29062?lang=en-us&previousLocale=en-US",
         "source": "docusign_rendered_attempt2",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-25T12:38:48.567655+00:00",
+        "posted_age_known": false
       },
       {
         "company": "DocuSign",
         "title": "Senior Product Marketing Manager",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.docusign.com/careers-home/jobs/29845?lang=en-us&previousLocale=en-US",
         "source": "docusign_rendered_attempt2",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-01T13:48:37.788688+00:00",
+        "posted_age_known": false
       },
       {
         "company": "DocuSign",
         "title": "Machine Learning Engineer",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.docusign.com/careers-home/jobs/29916?lang=en-us&previousLocale=en-US",
         "source": "docusign_rendered_attempt2",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-25T12:38:48.567655+00:00",
+        "posted_age_known": false
       },
       {
         "company": "DocuSign",
         "title": "Account Executive, SMB - Benelux Market",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.docusign.com/careers-home/jobs/30058?lang=en-us&previousLocale=en-US",
         "source": "docusign_rendered_attempt2",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-25T12:38:48.567655+00:00",
+        "posted_age_known": false
       },
       {
         "company": "DocuSign",
         "title": "Lead AI Solution Deployment Engineer",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.docusign.com/careers-home/jobs/30190?lang=en-us&previousLocale=en-US",
         "source": "docusign_rendered_attempt2",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-31T13:38:16.858486+00:00",
+        "posted_age_known": false
       },
       {
         "company": "DocuSign",
         "title": "Channel Account Manager",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.docusign.com/careers-home/jobs/30270?lang=en-us&previousLocale=en-US",
         "source": "docusign_rendered_attempt2",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-07T14:21:43.120196+00:00",
+        "posted_age_known": false
       },
       {
         "company": "DocuSign",
         "title": "Director, Demand & Field Marketing – New Business, EMEA",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.docusign.com/careers-home/jobs/30381?lang=en-us&previousLocale=en-US",
         "source": "docusign_rendered_attempt2",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-18T17:59:17.963668+00:00",
+        "posted_age_known": false
       }
     ],
     "checked_at": 1789778810.846578,
@@ -18873,144 +18903,180 @@
         "title": "Associate Engineer (Transportation)",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.atkinsrealis.com/en/jobs/associate-engineer-transportation-r-163801",
         "source": "atkinsrealis_ireland_newbatch",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-18T17:59:17.963668+00:00",
+        "posted_age_known": false
       },
       {
         "company": "AtkinsRéalis",
         "title": "Principal Engineer (Transportation)",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.atkinsrealis.com/en/jobs/principal-engineer-transportation-r-163804",
         "source": "atkinsrealis_ireland_newbatch",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-18T17:59:17.963668+00:00",
+        "posted_age_known": false
       },
       {
         "company": "AtkinsRéalis",
         "title": "Project Engineer",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.atkinsrealis.com/en/jobs/project-engineer-r-162864",
         "source": "atkinsrealis_ireland_newbatch",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-31T23:31:20.892410+00:00",
+        "posted_age_known": false
       },
       {
         "company": "AtkinsRéalis",
         "title": "Project Engineer (Transportation)",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.atkinsrealis.com/en/jobs/project-engineer-transportation-r-163800",
         "source": "atkinsrealis_ireland_newbatch",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-18T17:59:17.963668+00:00",
+        "posted_age_known": false
       },
       {
         "company": "AtkinsRéalis",
         "title": "Project Manager (Transportation)",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.atkinsrealis.com/en/jobs/project-manager-transportation-r-163802",
         "source": "atkinsrealis_ireland_newbatch",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-18T17:59:17.963668+00:00",
+        "posted_age_known": false
       },
       {
         "company": "AtkinsRéalis",
         "title": "Resident Engineer",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.atkinsrealis.com/en/jobs/resident-engineer-r-163752",
         "source": "atkinsrealis_ireland_newbatch",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-18T17:59:17.963668+00:00",
+        "posted_age_known": false
       },
       {
         "company": "AtkinsRéalis",
         "title": "Senior Engineer (Transportation)",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.atkinsrealis.com/en/jobs/senior-engineer-transportation-r-163803",
         "source": "atkinsrealis_ireland_newbatch",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-18T17:59:17.963668+00:00",
+        "posted_age_known": false
       },
       {
         "company": "AtkinsRéalis",
         "title": "Senior Water Engineer",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.atkinsrealis.com/en/jobs/senior-water-engineer-r-159573",
         "source": "atkinsrealis_ireland_newbatch",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-25T12:38:48.567655+00:00",
+        "posted_age_known": false
       },
       {
         "company": "AtkinsRéalis",
         "title": "Senior Water Engineer",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.atkinsrealis.com/en/jobs/senior-water-engineer-r-159576",
         "source": "atkinsrealis_ireland_newbatch",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-25T12:38:48.567655+00:00",
+        "posted_age_known": false
       },
       {
         "company": "AtkinsRéalis",
         "title": "Structural Technician",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.atkinsrealis.com/en/jobs/structural-technician-r-162142",
         "source": "atkinsrealis_ireland_newbatch",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-26T09:14:56.155203+00:00",
+        "posted_age_known": false
       },
       {
         "company": "AtkinsRéalis",
         "title": "Transport Major Projects Manager",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.atkinsrealis.com/en/jobs/transport-major-projects-manager-r-158401",
         "source": "atkinsrealis_ireland_newbatch",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-18T17:59:17.963668+00:00",
+        "posted_age_known": false
       },
       {
         "company": "AtkinsRéalis",
         "title": "Water Framework Directive Scientist",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.atkinsrealis.com/en/jobs/water-framework-directive-scientist-r-164244",
         "source": "atkinsrealis_ireland_newbatch",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-15T12:20:36.872275+00:00",
+        "posted_age_known": false
       }
     ],
     "checked_at": 1789778844.487147,
@@ -27597,7 +27663,7 @@
         "source": "oracle_cx",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-19T00:49:50.225919+00:00",
         "posted_age_known": false
       },
@@ -29520,7 +29586,7 @@
         "source": "dsv_ireland_direct",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-19T00:49:50.225919+00:00",
         "posted_age_known": false
       },
@@ -29655,7 +29721,7 @@
         "source": "dsv_ireland_direct",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-19T00:49:50.225919+00:00",
         "posted_age_known": false
       },
@@ -31056,7 +31122,7 @@
         "source": "ey_successfactors",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-19T00:49:50.225919+00:00",
         "posted_age_known": false
       },
@@ -33248,7 +33314,7 @@
         "posted_age_known": true
       }
     ],
-    "checked_at": 1789771229.5371776,
+    "checked_at": 1789794596.479503,
     "consecutive_failures": 0
   },
   "Syneos Health::targeted_bulk_batch18_v1": {
@@ -33396,7 +33462,7 @@
         "source": "schneider_sitemap_batch18",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-19T00:49:50.225919+00:00",
         "posted_age_known": false
       },
@@ -33441,7 +33507,7 @@
         "source": "schneider_sitemap_batch18",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-19T00:49:50.225919+00:00",
         "posted_age_known": false
       },
@@ -33501,7 +33567,7 @@
         "source": "schneider_sitemap_batch18",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-19T00:49:50.225919+00:00",
         "posted_age_known": false
       },
@@ -33531,7 +33597,7 @@
         "source": "schneider_sitemap_batch18",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-19T00:49:50.225919+00:00",
         "posted_age_known": false
       },
@@ -33546,7 +33612,7 @@
         "source": "schneider_sitemap_batch18",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-19T00:49:50.225919+00:00",
         "posted_age_known": false
       },
@@ -33576,7 +33642,7 @@
         "source": "schneider_sitemap_batch18",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-19T00:49:50.225919+00:00",
         "posted_age_known": false
       },
@@ -33636,7 +33702,7 @@
         "source": "schneider_sitemap_batch18",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-19T00:49:50.225919+00:00",
         "posted_age_known": false
       },
@@ -33666,7 +33732,7 @@
         "source": "schneider_sitemap_batch18",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-19T00:49:50.225919+00:00",
         "posted_age_known": false
       },
@@ -33681,7 +33747,7 @@
         "source": "schneider_sitemap_batch18",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-19T00:49:50.225919+00:00",
         "posted_age_known": false
       },
@@ -33726,7 +33792,7 @@
         "source": "schneider_sitemap_batch18",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-19T00:49:50.225919+00:00",
         "posted_age_known": false
       },
@@ -33876,7 +33942,7 @@
         "source": "schneider_sitemap_batch18",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-09-19T00:49:50.225919+00:00",
         "posted_age_known": false
       }
@@ -35565,8 +35631,8 @@
         "company": "Zimmer Biomet",
         "title": "Principal Additive Manufacturing Engineer",
         "location": "Galway, Connacht, Ireland",
-        "posted_text": "Posted 1 days ago",
-        "posted_days_ago": 1.0,
+        "posted_text": "Posted 2 days ago",
+        "posted_days_ago": 2.0,
         "employment_type": "Unspecified",
         "url": "https://career8.successfactors.com/careers?company=zimmerin01&loginFlowRequired=true&career_os=job_listing&career_ns=job_application&career_job_req_id=12326&_s.crb=25fvCmbM9Lad2rza%252fxJs%252fNp1mhY1RYUVrVIMdAiM2RI%253d",
         "source": "batch44_zimmer_official_phenom",
@@ -35580,8 +35646,8 @@
         "company": "Zimmer Biomet",
         "title": "Supplier Quality Engineer",
         "location": "Shannon, Munster, Ireland",
-        "posted_text": "Posted 8 days ago",
-        "posted_days_ago": 8.0,
+        "posted_text": "Posted 9 days ago",
+        "posted_days_ago": 9.0,
         "employment_type": "Unspecified",
         "url": "https://career8.successfactors.com/careers?company=zimmerin01&loginFlowRequired=true&career_os=job_listing&career_ns=job_application&career_job_req_id=12406&_s.crb=25fvCmbM9Lad2rza%252fxJs%252fNp1mhY1RYUVrVIMdAiM2RI%253d",
         "source": "batch44_zimmer_official_phenom",
@@ -35595,8 +35661,8 @@
         "company": "Zimmer Biomet",
         "title": "Quality Engineer - Evening Shift",
         "location": "Galway, Connacht, Ireland",
-        "posted_text": "Posted 11 days ago",
-        "posted_days_ago": 11.0,
+        "posted_text": "Posted 12 days ago",
+        "posted_days_ago": 12.0,
         "employment_type": "Unspecified",
         "url": "https://career8.successfactors.com/careers?company=zimmerin01&loginFlowRequired=true&career_os=job_listing&career_ns=job_application&career_job_req_id=11131&_s.crb=25fvCmbM9Lad2rza%252fxJs%252fNp1mhY1RYUVrVIMdAiM2RI%253d",
         "source": "batch44_zimmer_official_phenom",
@@ -35610,8 +35676,8 @@
         "company": "Zimmer Biomet",
         "title": "Transfer Planning Lead",
         "location": "Remote, Remote, Ireland",
-        "posted_text": "Posted 16 days ago",
-        "posted_days_ago": 16.0,
+        "posted_text": "Posted 17 days ago",
+        "posted_days_ago": 17.0,
         "employment_type": "Unspecified",
         "url": "https://career8.successfactors.com/careers?company=zimmerin01&loginFlowRequired=true&career_os=job_listing&career_ns=job_application&career_job_req_id=11988&_s.crb=25fvCmbM9Lad2rza%252fxJs%252fNp1mhY1RYUVrVIMdAiM2RI%253d",
         "source": "batch44_zimmer_official_phenom",
@@ -35622,7 +35688,7 @@
         "posted_age_known": true
       }
     ],
-    "checked_at": 1789762570.1773217,
+    "checked_at": 1789794584.9095821,
     "consecutive_failures": 0
   },
   "SSE Airtricity / SSE::batch_dedicated_v1": {
@@ -35975,7 +36041,7 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1789762570.8027205,
+    "checked_at": 1789794586.2764962,
     "consecutive_failures": 0
   },
   "Davy::targeted_direct_batch48_v1": {
@@ -36254,96 +36320,120 @@
         "title": "Staff Design Verification Engineer",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.amd.com/careers-home/jobs/75360?lang=en-us",
         "source": "amd_current_career_attempt2",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-25T14:49:35.756406+00:00",
+        "posted_age_known": false
       },
       {
         "company": "Advanced Micro Devices (AMD)",
         "title": "Staff Silicon Design Verification Engineer (PCIe)",
         "location": "Cork, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.amd.com/careers-home/jobs/89120?lang=en-us",
         "source": "amd_current_career_attempt2",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-25T14:49:35.756406+00:00",
+        "posted_age_known": false
       },
       {
         "company": "Advanced Micro Devices (AMD)",
         "title": "CPU Verification Engineer",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.amd.com/careers-home/jobs/89733?lang=en-us",
         "source": "amd_current_career_attempt2",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-25T14:49:35.756406+00:00",
+        "posted_age_known": false
       },
       {
         "company": "Advanced Micro Devices (AMD)",
         "title": "Spring 2027 Engineering Placement Intern",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Internship",
         "url": "https://careers.amd.com/careers-home/jobs/90223?lang=en-us",
         "source": "amd_current_career_attempt2",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-03T17:20:24.574453+00:00",
+        "posted_age_known": false
       },
       {
         "company": "Advanced Micro Devices (AMD)",
         "title": "2027 Engineering Placement Intern",
         "location": "Cork, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Internship",
         "url": "https://careers.amd.com/careers-home/jobs/90226?lang=en-us",
         "source": "amd_current_career_attempt2",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-03T17:20:24.574453+00:00",
+        "posted_age_known": false
       },
       {
         "company": "Advanced Micro Devices (AMD)",
         "title": "Senior Staff Physical Design Engineer (CORES)",
         "location": "Cork, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.amd.com/careers-home/jobs/91055?lang=en-us",
         "source": "amd_current_career_attempt2",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-02T19:58:37.093177+00:00",
+        "posted_age_known": false
       },
       {
         "company": "Advanced Micro Devices (AMD)",
         "title": "Lead Embedded Software Development Engineer",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.amd.com/careers-home/jobs/92335?lang=en-us",
         "source": "amd_current_career_attempt2",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-16T21:54:28.686268+00:00",
+        "posted_age_known": false
       },
       {
         "company": "Advanced Micro Devices (AMD)",
         "title": "Product Application Engineer - Embedded x86",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://careers.amd.com/careers-home/jobs/92462?lang=en-us",
         "source": "amd_current_career_attempt2",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-18T17:59:17.963668+00:00",
+        "posted_age_known": false
       }
     ],
     "checked_at": 1789778795.446165,
@@ -41469,252 +41559,315 @@
         "title": "Group Leader, Biopharma (Core day & Morning shift) - Athlone, Ireland",
         "location": "Athlone, Ireland",
         "posted_text": "Posted Today",
-        "posted_days_ago": 0,
+        "posted_days_ago": 0.0,
         "employment_type": "Unspecified",
         "url": "https://thermofisher.wd5.myworkdayjobs.com/ThermoFisherCareers/job/Athlone-Ireland/Group-Leader--Biopharma--Core-day-shift----Athlone--Ireland_R-01348913",
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
+        "posted_age_known": true
       },
       {
         "company": "Thermo Fisher Scientific",
         "title": "Snr Validation Analyst",
         "location": "Athlone, Ireland",
         "posted_text": "Posted Today",
-        "posted_days_ago": 0,
+        "posted_days_ago": 0.0,
         "employment_type": "Unspecified",
         "url": "https://thermofisher.wd5.myworkdayjobs.com/ThermoFisherCareers/job/Athlone-Ireland/Snr-Validation-Analyst_R-01366725",
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-18T17:59:17.963668+00:00",
+        "posted_age_known": true
       },
       {
         "company": "Thermo Fisher Scientific",
         "title": "Shipping Assistant",
         "location": "Athlone, Ireland",
         "posted_text": "Posted Yesterday",
-        "posted_days_ago": 1,
+        "posted_days_ago": 1.0,
         "employment_type": "Unspecified",
         "url": "https://thermofisher.wd5.myworkdayjobs.com/ThermoFisherCareers/job/Athlone-Ireland/Shipping-Assistant_R-01366009",
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-17T08:04:17.571241+00:00",
+        "posted_age_known": true
       },
       {
         "company": "Thermo Fisher Scientific",
         "title": "Scientist I - Microbiology",
         "location": "Athlone, Ireland",
         "posted_text": "Posted 3 Days Ago",
-        "posted_days_ago": 3,
+        "posted_days_ago": 3.0,
         "employment_type": "Unspecified",
         "url": "https://thermofisher.wd5.myworkdayjobs.com/ThermoFisherCareers/job/Athlone-Ireland/Scientist-I---Microbiology_R-01362438",
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-15T12:20:36.872275+00:00",
+        "posted_age_known": true
       },
       {
         "company": "Thermo Fisher Scientific",
         "title": "Field Service Engineer lll",
         "location": "Remote, Ireland",
         "posted_text": "Posted 7 Days Ago",
-        "posted_days_ago": 7,
+        "posted_days_ago": 7.0,
         "employment_type": "Unspecified",
         "url": "https://thermofisher.wd5.myworkdayjobs.com/ThermoFisherCareers/job/Remote-Ireland/Field-Service-Engineer-lll_R-01351804",
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-02T13:34:57.860140+00:00",
+        "posted_age_known": true
       },
       {
         "company": "Thermo Fisher Scientific",
         "title": "Study Lead, Biopharma",
         "location": "Athlone, Ireland",
         "posted_text": "Posted 9 Days Ago",
-        "posted_days_ago": 9,
+        "posted_days_ago": 9.0,
         "employment_type": "Unspecified",
         "url": "https://thermofisher.wd5.myworkdayjobs.com/ThermoFisherCareers/job/Athlone-Ireland/Associate-Research-Scientist--Biopharma_R-01346687",
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-09T09:57:32.027334+00:00",
+        "posted_age_known": true
       },
       {
         "company": "Thermo Fisher Scientific",
         "title": "Business Manager",
         "location": "Athlone, Ireland",
         "posted_text": "Posted 16 Days Ago",
-        "posted_days_ago": 16,
+        "posted_days_ago": 16.0,
         "employment_type": "Unspecified",
         "url": "https://thermofisher.wd5.myworkdayjobs.com/ThermoFisherCareers/job/Athlone-Ireland/Business-Manager_R-01362071-1",
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-02T19:58:37.093177+00:00",
+        "posted_age_known": true
       },
       {
         "company": "Thermo Fisher Scientific",
         "title": "Material Handler (fully based in Limerick, Ireland)",
         "location": "Limerick, Ireland",
         "posted_text": "Posted 21 Days Ago",
-        "posted_days_ago": 21,
+        "posted_days_ago": 21.0,
         "employment_type": "Unspecified",
         "url": "https://thermofisher.wd5.myworkdayjobs.com/ThermoFisherCareers/job/Limerick-Ireland/Material-Handler--fully-based-in-Limerick--Ireland-_R-01365169",
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
+        "posted_age_known": true
       },
       {
         "company": "Thermo Fisher Scientific",
         "title": "Clinical Auditing Specialist III",
         "location": "Remote, Ireland",
         "posted_text": "Posted 30 Days Ago",
-        "posted_days_ago": 30,
+        "posted_days_ago": 30.0,
         "employment_type": "Unspecified",
         "url": "https://thermofisher.wd5.myworkdayjobs.com/ThermoFisherCareers/job/Remote-Ireland/Clinical-Auditing-Specialist-III_R-01361556",
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
+        "posted_age_known": true
       },
       {
         "company": "Thermo Fisher Scientific",
         "title": "Manager Labs, Pharma",
         "location": "Athlone, Ireland",
         "posted_text": "Posted 30+ Days Ago",
-        "posted_days_ago": 30,
+        "posted_days_ago": 30.0,
         "employment_type": "Unspecified",
         "url": "https://thermofisher.wd5.myworkdayjobs.com/ThermoFisherCareers/job/Athlone-Ireland/Manager-Labs--Pharma_R-01348795",
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
+        "posted_age_known": true
       },
       {
         "company": "Thermo Fisher Scientific",
         "title": "Scientist II, Biopharma - Core or evening shift",
         "location": "Athlone, Ireland",
         "posted_text": "Posted 30+ Days Ago",
-        "posted_days_ago": 30,
+        "posted_days_ago": 30.0,
         "employment_type": "Unspecified",
         "url": "https://thermofisher.wd5.myworkdayjobs.com/ThermoFisherCareers/job/Athlone-Ireland/Scientist-II--Biopharma---Core-or-evening-shift_R-01348910",
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
+        "posted_age_known": true
       },
       {
         "company": "Thermo Fisher Scientific",
         "title": "Senior Technical Sales Specialist, Single-Use Technologies",
         "location": "Remote, Ireland",
         "posted_text": "Posted 30+ Days Ago",
-        "posted_days_ago": 30,
+        "posted_days_ago": 30.0,
         "employment_type": "Unspecified",
         "url": "https://thermofisher.wd5.myworkdayjobs.com/ThermoFisherCareers/job/Remote-Ireland/Senior-Technical-Sales-Specialist--Single-Use-Technologies_R-01362386",
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
+        "posted_age_known": true
       },
       {
         "company": "Thermo Fisher Scientific",
         "title": "Scientist III (Pharma)",
         "location": "Athlone, Ireland",
         "posted_text": "Posted 30+ Days Ago",
-        "posted_days_ago": 30,
+        "posted_days_ago": 30.0,
         "employment_type": "Unspecified",
         "url": "https://thermofisher.wd5.myworkdayjobs.com/ThermoFisherCareers/job/Athlone-Ireland/Scientist-III--Pharma-_R-01341510",
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
+        "posted_age_known": true
       },
       {
         "company": "Thermo Fisher Scientific",
         "title": "Scientist III (Inhalations)",
         "location": "Athlone, Ireland",
         "posted_text": "Posted 30+ Days Ago",
-        "posted_days_ago": 30,
+        "posted_days_ago": 30.0,
         "employment_type": "Unspecified",
         "url": "https://thermofisher.wd5.myworkdayjobs.com/ThermoFisherCareers/job/Athlone-Ireland/Scientist-III--Inhalations-_R-01360593",
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
+        "posted_age_known": true
       },
       {
         "company": "Thermo Fisher Scientific",
         "title": "Supervisor (People Manager), Biopharma - Athlone, Ireland",
         "location": "Athlone, Ireland",
         "posted_text": "Posted 30+ Days Ago",
-        "posted_days_ago": 30,
+        "posted_days_ago": 30.0,
         "employment_type": "Unspecified",
         "url": "https://thermofisher.wd5.myworkdayjobs.com/ThermoFisherCareers/job/Athlone-Ireland/Supervisor--People-Manager---Biopharma---Athlone--Ireland_R-01342566",
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
+        "posted_age_known": true
       },
       {
         "company": "Thermo Fisher Scientific",
         "title": "Facilities Specialist/Mechanical/Technical Facilities Expert",
         "location": "Athlone, Ireland",
         "posted_text": "Posted 30+ Days Ago",
-        "posted_days_ago": 30,
+        "posted_days_ago": 30.0,
         "employment_type": "Unspecified",
         "url": "https://thermofisher.wd5.myworkdayjobs.com/ThermoFisherCareers/job/Athlone-Ireland/Facilities-Specialist-Mechanical-Technical-Facilities-Expert_R-01358797",
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
+        "posted_age_known": true
       },
       {
         "company": "Thermo Fisher Scientific",
         "title": "Director, GMP Labs - Athlone, Ireland",
         "location": "Athlone, Ireland",
         "posted_text": "Posted 30+ Days Ago",
-        "posted_days_ago": 30,
+        "posted_days_ago": 30.0,
         "employment_type": "Unspecified",
         "url": "https://thermofisher.wd5.myworkdayjobs.com/ThermoFisherCareers/job/Athlone-Ireland/Director--GMP-Labs---Athlone--Ireland_R-01348844",
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
+        "posted_age_known": true
       },
       {
         "company": "Thermo Fisher Scientific",
         "title": "Senior Group Leader - Cell Lab",
         "location": "Athlone, Ireland",
         "posted_text": "Posted 30+ Days Ago",
-        "posted_days_ago": 30,
+        "posted_days_ago": 30.0,
         "employment_type": "Unspecified",
         "url": "https://thermofisher.wd5.myworkdayjobs.com/ThermoFisherCareers/job/Athlone-Ireland/Senior-Group-Leader---Cell-Lab_R-01348702-1",
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
+        "posted_age_known": true
       },
       {
         "company": "Thermo Fisher Scientific",
         "title": "Research Scientist, Biopharma (Core Shift)",
         "location": "Athlone, Ireland",
         "posted_text": "Posted 30+ Days Ago",
-        "posted_days_ago": 30,
+        "posted_days_ago": 30.0,
         "employment_type": "Unspecified",
         "url": "https://thermofisher.wd5.myworkdayjobs.com/ThermoFisherCareers/job/Athlone-Ireland/Research-Scientist--Biopharma--Core-Shift-_R-01353160-1",
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
+        "posted_age_known": true
       },
       {
         "company": "Thermo Fisher Scientific",
         "title": "Supervisor, Pharma labs",
         "location": "Athlone, Ireland",
         "posted_text": "Posted 30+ Days Ago",
-        "posted_days_ago": 30,
+        "posted_days_ago": 30.0,
         "employment_type": "Unspecified",
         "url": "https://thermofisher.wd5.myworkdayjobs.com/ThermoFisherCareers/job/Athlone-Ireland/Supervisor--Pharma-labs_R-01340866",
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
+        "posted_age_known": true
       },
       {
         "company": "Thermo Fisher Scientific",
         "title": "Scientist III (LCMS Pharma)",
         "location": "Athlone, Ireland",
         "posted_text": "Posted 30+ Days Ago",
-        "posted_days_ago": 30,
+        "posted_days_ago": 30.0,
         "employment_type": "Unspecified",
         "url": "https://thermofisher.wd5.myworkdayjobs.com/ThermoFisherCareers/job/Athlone-Ireland/Scientist-III--LCMS-Pharma-_R-01328306",
         "source": "workday_api",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-29T14:19:14.544848+00:00",
+        "posted_age_known": true
       }
     ],
     "checked_at": 1789778771.1142662,
@@ -44426,11 +44579,6 @@
     "checked_at": 1789778682.9905157,
     "consecutive_failures": 0
   },
-  "Goodbody::targeted_direct_batch81_multi7_cache_lock_v1": {
-    "jobs": [],
-    "checked_at": 1789778693.216007,
-    "consecutive_failures": 1
-  },
   "Aldi Ireland::targeted_direct_batch81_multi7_cache_lock_v1": {
     "jobs": [
       {
@@ -44501,252 +44649,315 @@
         "title": "Junior UX/UI Designer",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://musgravegroup.com/vacancy/junior-ux-ui-designer/",
         "source": "batch34-musgrave-alias",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-18T17:59:17.963668+00:00",
+        "posted_age_known": false
       },
       {
         "company": "SuperValu / Musgrave",
         "title": "Reorder Manager",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://musgravegroup.com/vacancy/reorder-manager-2/",
         "source": "batch34-musgrave-alias",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-11T19:57:02.127916+00:00",
+        "posted_age_known": false
       },
       {
         "company": "SuperValu / Musgrave",
         "title": "Floor Supervisor",
         "location": "Limerick, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://musgravegroup.com/vacancy/floor-supervisor/",
         "source": "batch34-musgrave-alias",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T11:11:26.698832+00:00",
+        "posted_age_known": false
       },
       {
         "company": "SuperValu / Musgrave",
         "title": "Gift Packing & Shipping Assistant",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://musgravegroup.com/vacancy/gift-packing-shipping-assistant/",
         "source": "batch34-musgrave-alias",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-15T20:08:38.164979+00:00",
+        "posted_age_known": false
       },
       {
         "company": "SuperValu / Musgrave",
         "title": "Business Development Manager",
         "location": "Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://musgravegroup.com/vacancy/business-development-manager/",
         "source": "batch34-musgrave-alias",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-15T20:08:38.164979+00:00",
+        "posted_age_known": false
       },
       {
         "company": "SuperValu / Musgrave",
         "title": "Assistant Store Manager",
         "location": "Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://musgravegroup.com/vacancy/assistant-store-manager/",
         "source": "batch34-musgrave-alias",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-15T20:08:38.164979+00:00",
+        "posted_age_known": false
       },
       {
         "company": "SuperValu / Musgrave",
         "title": "Compliance Support",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://musgravegroup.com/vacancy/compliance-support/",
         "source": "batch34-musgrave-alias",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-02T19:58:37.093177+00:00",
+        "posted_age_known": false
       },
       {
         "company": "SuperValu / Musgrave",
         "title": "Replenishment Planner",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://musgravegroup.com/vacancy/replenishment-planner/",
         "source": "batch34-musgrave-alias",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-15T12:20:36.872275+00:00",
+        "posted_age_known": false
       },
       {
         "company": "SuperValu / Musgrave",
         "title": "Finance Trading Analyst",
         "location": "Cork, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://musgravegroup.com/vacancy/finance-trading-analyst/",
         "source": "batch34-musgrave-alias",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-14T19:28:02.159753+00:00",
+        "posted_age_known": false
       },
       {
         "company": "SuperValu / Musgrave",
         "title": "Senior Data Engineer – Data Platforms",
         "location": "Cork, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://musgravegroup.com/vacancy/senior-data-engineer-data-platforms/",
         "source": "batch34-musgrave-alias",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-14T12:36:56.763995+00:00",
+        "posted_age_known": false
       },
       {
         "company": "SuperValu / Musgrave",
         "title": "Senior Data Project Manager",
         "location": "Cork, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://musgravegroup.com/vacancy/senior-data-project-manager/",
         "source": "batch34-musgrave-alias",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-14T12:36:56.763995+00:00",
+        "posted_age_known": false
       },
       {
         "company": "SuperValu / Musgrave",
         "title": "Senior Data Architect",
         "location": "Cork, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://musgravegroup.com/vacancy/senior-data-architect/",
         "source": "batch34-musgrave-alias",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-14T12:36:56.763995+00:00",
+        "posted_age_known": false
       },
       {
         "company": "SuperValu / Musgrave",
         "title": "HR Manager – Advisory and Compliance",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://musgravegroup.com/vacancy/hr-manager-advisory-and-compliance/",
         "source": "batch34-musgrave-alias",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-11T12:35:25.226244+00:00",
+        "posted_age_known": false
       },
       {
         "company": "SuperValu / Musgrave",
         "title": "Reorder Manager",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://musgravegroup.com/vacancy/reorder-manager/",
         "source": "batch34-musgrave-alias",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-09T20:25:10.456430+00:00",
+        "posted_age_known": false
       },
       {
         "company": "SuperValu / Musgrave",
         "title": "Floor Manager",
         "location": "Waterford, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://musgravegroup.com/vacancy/floor-manager/",
         "source": "batch34-musgrave-alias",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-08T20:19:24.993664+00:00",
+        "posted_age_known": false
       },
       {
         "company": "SuperValu / Musgrave",
         "title": "Data Quality and Controls Lead",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://musgravegroup.com/vacancy/data-quality-and-controls-lead/",
         "source": "batch34-musgrave-alias",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-08T20:19:24.993664+00:00",
+        "posted_age_known": false
       },
       {
         "company": "SuperValu / Musgrave",
         "title": "Data Products and Metadata Lead",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://musgravegroup.com/vacancy/data-products-and-metadata-lead/",
         "source": "batch34-musgrave-alias",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-08T20:19:24.993664+00:00",
+        "posted_age_known": false
       },
       {
         "company": "SuperValu / Musgrave",
         "title": "Data Governance and Operating Model Lead",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://musgravegroup.com/vacancy/data-governance-and-operating-model-lead/",
         "source": "batch34-musgrave-alias",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-08T20:19:24.993664+00:00",
+        "posted_age_known": false
       },
       {
         "company": "SuperValu / Musgrave",
         "title": "Own Brand Co- Ordinator",
         "location": "Cork, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://musgravegroup.com/vacancy/own-brand-co-ordinator/",
         "source": "batch34-musgrave-alias",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-08T11:40:46.410863+00:00",
+        "posted_age_known": false
       },
       {
         "company": "SuperValu / Musgrave",
         "title": "General Assistant",
         "location": "Cork, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://musgravegroup.com/vacancy/general-assistant-2/",
         "source": "batch34-musgrave-alias",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-07T13:52:48.571451+00:00",
+        "posted_age_known": false
       },
       {
         "company": "SuperValu / Musgrave",
         "title": "Store Replenishment Co-ordinator",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
-        "posted_days_ago": null,
+        "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
         "url": "https://musgravegroup.com/vacancy/store-replenishment-co-ordinator/",
         "source": "batch34-musgrave-alias",
         "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-24T11:11:26.698832+00:00",
+        "posted_age_known": false
       }
     ],
     "checked_at": 1789778820.284968,
@@ -45077,137 +45288,17 @@
     "jobs": [
       {
         "company": "DXC Technology",
-        "title": "Cyber Security Analyst",
+        "title": "Sales Director – Life & Annuity Insurance, Canada",
         "location": "Ireland",
         "posted_text": "Unknown",
         "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
-        "url": "https://careers.dxc.com/job/23888471/cyber-security-analyst-s-o-bernardo-do-campo-br/",
+        "url": "https://careers.dxc.com/job/22868342/sales-director-life-annuity-insurance-canada/",
         "source": "dxc_batch20_rendered",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-09-18T13:30:38.108390+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "DXC Technology",
-        "title": "SAP SD consultant",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.dxc.com/job/23887968/sap-sd-consultant-shanghai-cn/",
-        "source": "dxc_batch20_rendered",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-09-18T13:30:38.108390+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "DXC Technology",
-        "title": "Java Software Engineer",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.dxc.com/job/23887967/java-software-engineer-taipei-tw/",
-        "source": "dxc_batch20_rendered",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-09-18T20:17:17.616666+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "DXC Technology",
-        "title": "Técnico/a de Sistemas Linux",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.dxc.com/job/23888618/t-cnico-a-de-sistemas-linux/",
-        "source": "dxc_batch20_rendered",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-09-18T20:17:17.616666+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "DXC Technology",
-        "title": "Clearance: Must be a US Citizen with an active Secret Security Clearance Work Environment: Hybrid, on-site 2-3 days, Cristal City, Arlington, VA Responsibilities Design, develop, test, and maintain AI agents and generative AI applications using Python. Develop agent workflows that use large language",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.dxc.com/job/23889637/ai-python-developer-hybrid-arlington-va/",
-        "source": "dxc_batch20_rendered",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-09-18T20:17:17.616666+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "DXC Technology",
-        "title": "Analista SOC",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.dxc.com/job/23888467/analista-soc-s-o-bernardo-do-campo-br/",
-        "source": "dxc_batch20_rendered",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-09-18T20:17:17.616666+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "DXC Technology",
-        "title": "Analyst I Software Engineering",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.dxc.com/job/23889963/analyst-i-software-engineering/",
-        "source": "dxc_batch20_rendered",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-09-18T20:17:17.616666+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "DXC Technology",
-        "title": "Clearance: Must be a US Citizen with an active Secret Security Clearance Work Environment: Hybrid, on-site 2-3 days, Cristal City, Arlington, VA Key Responsibilities Administer and maintain the AI Workbench platform across private, on-premise, hybrid, or cloud environments. Configure user access, ro",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.dxc.com/job/23890195/ai-workbench-admin-hybrid-ashburn-va/",
-        "source": "dxc_batch20_rendered",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-09-18T20:17:17.616666+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "DXC Technology",
-        "title": "资深网络工程师",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.dxc.com/job/23887922/-shanghai-cn/",
-        "source": "dxc_batch20_rendered",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-09-18T13:30:38.108390+00:00",
+        "new_since_last_check": true,
+        "first_seen_at": "2026-09-19T05:11:11.537683+00:00",
         "posted_age_known": false
       },
       {
@@ -45227,12 +45318,12 @@
       },
       {
         "company": "DXC Technology",
-        "title": "Security Architect",
+        "title": "Oracle System Administrator",
         "location": "Ireland",
         "posted_text": "Unknown",
         "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
-        "url": "https://careers.dxc.com/job/23887811/security-architect-shanghai-cn/",
+        "url": "https://careers.dxc.com/job/23117132/oracle-system-administrator/",
         "source": "dxc_batch20_rendered",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
@@ -45242,47 +45333,17 @@
       },
       {
         "company": "DXC Technology",
-        "title": "Clearance: Must be a US Citizen with an active Secret Security Clearance Work Environment: Hybrid, on-site 2-3 days, Cristal City, Arlington, VA Responsibilities Plan and conduct user research through interviews, contextual inquiry, observation, usability testing, surveys, and task analysis to under",
+        "title": "Senior Manager, Solution Architect – Insurance",
         "location": "Ireland",
         "posted_text": "Unknown",
         "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
-        "url": "https://careers.dxc.com/job/23790582/ux-designer-researcher-hybrid-arlington-va/",
+        "url": "https://careers.dxc.com/job/23153281/senior-manager-solution-architect-insurance-petaling-jaya-my/",
         "source": "dxc_batch20_rendered",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
         "new_since_last_check": false,
-        "first_seen_at": "2026-09-18T20:17:17.616666+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "DXC Technology",
-        "title": "Engenheiro de Segurança de Banco de Dados",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.dxc.com/job/23888470/engenheiro-de-seguran-a-de-banco-de-dados-s-o-bernardo-do-campo-br/",
-        "source": "dxc_batch20_rendered",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-09-18T20:17:17.616666+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "DXC Technology",
-        "title": "Supervisor de Field Services",
-        "location": "Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.dxc.com/job/23890307/supervisor-de-field-services-santiago-cl/",
-        "source": "dxc_batch20_rendered",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-09-18T20:17:17.616666+00:00",
+        "first_seen_at": "2026-09-18T13:30:38.108390+00:00",
         "posted_age_known": false
       },
       {
@@ -45299,41 +45360,131 @@
         "new_since_last_check": false,
         "first_seen_at": "2026-09-18T13:30:38.108390+00:00",
         "posted_age_known": false
+      },
+      {
+        "company": "DXC Technology",
+        "title": "Analyst I Software Engineering",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.dxc.com/job/23889963/analyst-i-software-engineering/",
+        "source": "dxc_batch20_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-18T20:17:17.616666+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "DXC Technology",
+        "title": "Clearance: Must be a US Citizen with an active Secret Security Clearance Work Environment: Hybrid, on-site 2-3 days, Cristal City, Arlington, VA Ideal Candidate Profile A strategic architect who can bridge the gap between traditional PeopleSoft HCM platforms and modern cloud-based HR ecosystems , br",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.dxc.com/job/23720853/peoplesoft-hcm-architect-hybrid-arlington-va/",
+        "source": "dxc_batch20_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-09-19T05:11:11.537683+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "DXC Technology",
+        "title": "Delivery Lead – México",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.dxc.com/job/23885218/delivery-lead-m-xico-mexico-city-mx/",
+        "source": "dxc_batch20_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-09-19T05:11:11.537683+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "DXC Technology",
+        "title": "RR-0389730- Sr Analyst I IT Operations-10",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.dxc.com/job/23834588/rr-0389730-sr-analyst-i-it-operations-10-riyadh-sa/",
+        "source": "dxc_batch20_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-07T14:21:43.120196+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "DXC Technology",
+        "title": "Security Architect",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.dxc.com/job/23887811/security-architect-shanghai-cn/",
+        "source": "dxc_batch20_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-18T13:30:38.108390+00:00",
+        "posted_age_known": false
       }
     ],
-    "checked_at": 1789762618.0637324,
+    "checked_at": 1789794622.9789062,
     "consecutive_failures": 0
   },
   "Hewlett Packard Enterprise (HPE)::batch_dedicated_v1": {
     "jobs": [
       {
         "company": "Hewlett Packard Enterprise (HPE)",
-        "title": "Hybrid Cloud Innovation AI Internship",
-        "location": "Galway, Ireland",
+        "title": "Senior Technical Account Manager – Cloud Provider AI & Data Center Networking",
+        "location": "Republic of Ireland",
         "posted_text": "Unknown",
         "posted_days_ago": 9999.0,
-        "employment_type": "Internship",
-        "url": "https://careers.hpe.com/us/en/job/1210999/Hybrid-Cloud-Innovation-AI-Internship",
+        "employment_type": "Unspecified",
+        "url": "https://careers.hpe.com/us/en/job/1207759/Senior-Technical-Account-Manager-Cloud-Provider-AI-Data-Center-Networking%C2%A0",
         "source": "hpe_first_party",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
         "new_since_last_check": false,
-        "first_seen_at": "2026-09-09T00:46:45.215844+00:00",
+        "first_seen_at": "2026-08-24T04:32:09.012483+00:00",
         "posted_age_known": false
       },
       {
         "company": "Hewlett Packard Enterprise (HPE)",
-        "title": "Cloud Developer Internship",
+        "title": "Internship - Cloud Dev Engineering",
         "location": "Galway, Ireland",
         "posted_text": "Unknown",
         "posted_days_ago": 9999.0,
         "employment_type": "Internship",
-        "url": "https://careers.hpe.com/us/en/job/1211001/Cloud-Developer-Internship",
+        "url": "https://careers.hpe.com/us/en/job/1211017/Internship-Cloud-Dev-Engineering",
         "source": "hpe_first_party",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
         "new_since_last_check": false,
         "first_seen_at": "2026-09-04T12:01:57.859661+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Hewlett Packard Enterprise (HPE)",
+        "title": "Networking Internship - AI Engineering",
+        "location": "Galway, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Internship",
+        "url": "https://careers.hpe.com/us/en/job/1211025/Networking-Internship-AI-Engineering",
+        "source": "hpe_first_party",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-04T18:39:50.535241+00:00",
         "posted_age_known": false
       },
       {
@@ -45380,54 +45531,9 @@
         "new_since_last_check": false,
         "first_seen_at": "2026-09-04T18:39:50.535241+00:00",
         "posted_age_known": false
-      },
-      {
-        "company": "Hewlett Packard Enterprise (HPE)",
-        "title": "Senior Product Owner",
-        "location": "Galway, Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.hpe.com/us/en/job/1211894/Senior-Product-Owner",
-        "source": "hpe_first_party",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-26T14:37:48.649366+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Hewlett Packard Enterprise (HPE)",
-        "title": "Senior Financial Analyst",
-        "location": "Republic of Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.hpe.com/us/en/job/1211953/Senior-Financial-Analyst",
-        "source": "hpe_first_party",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-08-24T01:23:26.715320+00:00",
-        "posted_age_known": false
-      },
-      {
-        "company": "Hewlett Packard Enterprise (HPE)",
-        "title": "Principle Cloud Developer",
-        "location": "Galway, Ireland",
-        "posted_text": "Unknown",
-        "posted_days_ago": 9999.0,
-        "employment_type": "Unspecified",
-        "url": "https://careers.hpe.com/us/en/job/1214440/Principle-Cloud-Developer",
-        "source": "hpe_first_party",
-        "visa_sponsorship": "not_mentioned",
-        "visa_snippet": null,
-        "new_since_last_check": false,
-        "first_seen_at": "2026-09-10T09:54:44.609602+00:00",
-        "posted_age_known": false
       }
     ],
-    "checked_at": 1789762613.1500735,
+    "checked_at": 1789794628.3413777,
     "consecutive_failures": 0
   },
   "IQVIA::ireland_dedicated_v1": {
@@ -45778,11 +45884,26 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1789771280.267619,
+    "checked_at": 1789794662.0911658,
     "consecutive_failures": 0
   },
   "ABP Food Group::targeted_direct_batch9_bulk_v1": {
     "jobs": [
+      {
+        "company": "ABP Food Group",
+        "title": "WHY JOIN ABP?",
+        "location": "Republic of Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://abpfoodgroup.com/careers/why-join-abp/",
+        "source": "abp_ireland_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-22T11:49:34.357935+00:00",
+        "posted_age_known": false
+      },
       {
         "company": "ABP Food Group",
         "title": "PROFESSIONAL OPPORTUNITIES",
@@ -46249,7 +46370,7 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1789762591.7848635,
+    "checked_at": 1789794609.1326818,
     "consecutive_failures": 0
   },
   "DHL Ireland::targeted_direct_batch54_multi_v1": {
@@ -46270,7 +46391,7 @@
         "posted_age_known": true
       }
     ],
-    "checked_at": 1789771214.2461183,
+    "checked_at": 1789794585.1609602,
     "consecutive_failures": 0
   },
   "Barclays::targeted_direct_batch48_v1": {
@@ -46315,154 +46436,154 @@
     "checked_at": 1789778750.1792948,
     "consecutive_failures": 0
   },
-  "SentinelOne": {
-    "jobs": [],
-    "checked_at": 1789778683.280634,
-    "consecutive_failures": 1
-  },
   "Kepak Group::targeted_direct_batch7_multi_v1": {
     "jobs": [],
-    "checked_at": 1789778683.408075,
-    "consecutive_failures": 1
-  },
-  "Texas Instruments::targeted_direct_batch11_bulk_v1": {
-    "jobs": [],
-    "checked_at": 1789778683.7394824,
-    "consecutive_failures": 1
-  },
-  "Medpace::targeted_direct_batch8_bulk_v1": {
-    "jobs": [],
-    "checked_at": 1789778683.9285593,
+    "checked_at": 1789794580.606578,
     "consecutive_failures": 1
   },
   "Micron Technology::targeted_direct_batch10_bulk_v1": {
     "jobs": [],
-    "checked_at": 1789778684.175697,
-    "consecutive_failures": 1
-  },
-  "An Post::targeted_direct_batch76_anpost_rendered_oracle_v1": {
-    "jobs": [],
-    "checked_at": 1789778684.4105382,
-    "consecutive_failures": 1
-  },
-  "GlaxoSmithKline (GSK)::targeted_direct_batch79_multi5_backend_rotation_v1": {
-    "jobs": [],
-    "checked_at": 1789778684.5278502,
-    "consecutive_failures": 1
-  },
-  "Box::targeted_direct_batch10_bulk_v1": {
-    "jobs": [],
-    "checked_at": 1789778684.6651196,
+    "checked_at": 1789794581.3082683,
     "consecutive_failures": 1
   },
   "Energia Group::targeted_direct_batch5_multi_v1": {
     "jobs": [],
-    "checked_at": 1789778685.401361,
+    "checked_at": 1789794581.4912589,
     "consecutive_failures": 1
   },
-  "Nokia::targeted_direct_batch11_bulk_v1": {
+  "Medpace::targeted_direct_batch8_bulk_v1": {
     "jobs": [],
-    "checked_at": 1789778685.5791733,
+    "checked_at": 1789794581.5388288,
     "consecutive_failures": 1
   },
-  "Boehringer Ingelheim::targeted_direct_batch11_bulk_v1": {
+  "Texas Instruments::targeted_direct_batch11_bulk_v1": {
     "jobs": [],
-    "checked_at": 1789778686.1233504,
+    "checked_at": 1789794581.578533,
+    "consecutive_failures": 1
+  },
+  "Goodbody::targeted_direct_batch81_multi7_cache_lock_v1": {
+    "jobs": [],
+    "checked_at": 1789794581.6306996,
     "consecutive_failures": 1
   },
   "Morgan Stanley::targeted_direct_batch79_multi5_backend_rotation_v1": {
     "jobs": [],
-    "checked_at": 1789778697.3646145,
+    "checked_at": 1789794581.7954412,
     "consecutive_failures": 1
   },
-  "HP (Hewlett-Packard)::friend_next4_v1": {
+  "An Post::targeted_direct_batch76_anpost_rendered_oracle_v1": {
     "jobs": [],
-    "checked_at": 1789778703.8575644,
+    "checked_at": 1789794581.997835,
     "consecutive_failures": 1
   },
-  "Heineken Ireland::friend_next4_v1": {
+  "GlaxoSmithKline (GSK)::targeted_direct_batch79_multi5_backend_rotation_v1": {
     "jobs": [],
-    "checked_at": 1789778705.779407,
-    "consecutive_failures": 1
-  },
-  "Baxter International::targeted_zero_deferred_batch13_v1": {
-    "jobs": [],
-    "checked_at": 1789778715.9913745,
+    "checked_at": 1789794582.2739477,
     "consecutive_failures": 1
   },
   "Visa::targeted_direct_batch79_multi5_backend_rotation_v1": {
     "jobs": [],
-    "checked_at": 1789778716.1837187,
+    "checked_at": 1789794582.3423984,
+    "consecutive_failures": 1
+  },
+  "Nokia::targeted_direct_batch11_bulk_v1": {
+    "jobs": [],
+    "checked_at": 1789794582.9177897,
+    "consecutive_failures": 1
+  },
+  "HP (Hewlett-Packard)::friend_next4_v1": {
+    "jobs": [],
+    "checked_at": 1789794582.924716,
+    "consecutive_failures": 1
+  },
+  "Boehringer Ingelheim::targeted_direct_batch11_bulk_v1": {
+    "jobs": [],
+    "checked_at": 1789794583.0065765,
     "consecutive_failures": 1
   },
   "Aer Lingus::targeted_zero_deferred_batch15_v1": {
     "jobs": [],
-    "checked_at": 1789778718.068168,
+    "checked_at": 1789794583.3547666,
     "consecutive_failures": 1
   },
-  "QIAGEN::zero_only_batch20_v1": {
+  "Box::targeted_direct_batch10_bulk_v1": {
     "jobs": [],
-    "checked_at": 1789778721.6392567,
+    "checked_at": 1789794583.4586391,
     "consecutive_failures": 1
   },
-  "Oliver Wyman": {
+  "Heineken Ireland::friend_next4_v1": {
     "jobs": [],
-    "checked_at": 1789778722.8088372,
+    "checked_at": 1789794583.6191168,
     "consecutive_failures": 1
   },
   "VMware (Broadcom)::zero_only_batch20_v1": {
     "jobs": [],
-    "checked_at": 1789778728.7355924,
+    "checked_at": 1789794583.9188619,
     "consecutive_failures": 1
   },
-  "Morningstar::targeted_direct_batch35_v1": {
+  "QIAGEN::zero_only_batch20_v1": {
     "jobs": [],
-    "checked_at": 1789778734.2015603,
+    "checked_at": 1789794587.170974,
     "consecutive_failures": 1
   },
-  "Haleon::targeted_direct_batch81_haleon_union_v1": {
+  "Oliver Wyman": {
     "jobs": [],
-    "checked_at": 1789778748.0731866,
+    "checked_at": 1789794588.0930288,
     "consecutive_failures": 1
   },
   "Alkermes": {
     "jobs": [],
-    "checked_at": 1789778750.5835414,
-    "consecutive_failures": 1
-  },
-  "Agilent Technologies::friend_workday_return_v2": {
-    "jobs": [],
-    "checked_at": 1789778751.5291605,
-    "consecutive_failures": 1
-  },
-  "Boston Consulting Group (BCG)": {
-    "jobs": [],
-    "checked_at": 1789778758.0180047,
-    "consecutive_failures": 1
-  },
-  "Deutsche Bank::friend_logic_v1": {
-    "jobs": [],
-    "checked_at": 1789778911.541268,
+    "checked_at": 1789794588.325829,
     "consecutive_failures": 1
   },
   "Bruker": {
     "jobs": [],
-    "checked_at": 1789778926.452724,
+    "checked_at": 1789794588.3982215,
+    "consecutive_failures": 1
+  },
+  "SentinelOne": {
+    "jobs": [],
+    "checked_at": 1789794590.5273387,
     "consecutive_failures": 1
   },
   "Biotronik": {
     "jobs": [],
-    "checked_at": 1789778928.5618534,
+    "checked_at": 1789794596.9133596,
+    "consecutive_failures": 1
+  },
+  "Morningstar::targeted_direct_batch35_v1": {
+    "jobs": [],
+    "checked_at": 1789794605.1078324,
+    "consecutive_failures": 1
+  },
+  "Deutsche Bank::friend_logic_v1": {
+    "jobs": [],
+    "checked_at": 1789794606.7364895,
+    "consecutive_failures": 1
+  },
+  "Baxter International::targeted_zero_deferred_batch13_v1": {
+    "jobs": [],
+    "checked_at": 1789794606.7368236,
     "consecutive_failures": 1
   },
   "Smurfit Westrock": {
     "jobs": [],
-    "checked_at": 1789778932.4115136,
+    "checked_at": 1789794611.385382,
     "consecutive_failures": 1
   },
-  "NXP Semiconductors::zero_only_batch20_v1": {
+  "Boston Consulting Group (BCG)": {
     "jobs": [],
-    "checked_at": 1789778934.153373,
+    "checked_at": 1789794614.8190548,
+    "consecutive_failures": 1
+  },
+  "Agilent Technologies::friend_workday_return_v2": {
+    "jobs": [],
+    "checked_at": 1789794618.6000793,
+    "consecutive_failures": 1
+  },
+  "Haleon::targeted_direct_batch81_haleon_union_v1": {
+    "jobs": [],
+    "checked_at": 1789794622.865626,
     "consecutive_failures": 1
   }
 }
