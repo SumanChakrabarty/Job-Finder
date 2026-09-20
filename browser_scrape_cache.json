@@ -10602,8 +10602,8 @@
   },
   "Bain & Company": {
     "jobs": [],
-    "checked_at": 1789924455.1070209,
-    "consecutive_failures": 298
+    "checked_at": 1789932817.4372282,
+    "consecutive_failures": 299
   },
   "Fiserv": {
     "jobs": [
@@ -45098,11 +45098,6 @@
     "checked_at": 1789912609.2361858,
     "consecutive_failures": 0
   },
-  "DXC Technology::friend_logic_v1": {
-    "jobs": [],
-    "checked_at": 1789924445.3693593,
-    "consecutive_failures": 1
-  },
   "Hewlett Packard Enterprise (HPE)::batch_dedicated_v1": {
     "jobs": [
       {
@@ -45565,154 +45560,310 @@
     "checked_at": 1789924502.3288224,
     "consecutive_failures": 0
   },
-  "Kepak Group::targeted_direct_batch7_multi_v1": {
-    "jobs": [],
-    "checked_at": 1789924432.7335284,
-    "consecutive_failures": 1
-  },
   "SentinelOne": {
     "jobs": [],
-    "checked_at": 1789924432.7457597,
+    "checked_at": 1789932800.4362886,
     "consecutive_failures": 1
   },
   "Visa::targeted_direct_batch79_multi5_backend_rotation_v1": {
     "jobs": [],
-    "checked_at": 1789924432.9654942,
+    "checked_at": 1789932800.5603278,
     "consecutive_failures": 1
   },
   "Medpace::targeted_direct_batch8_bulk_v1": {
     "jobs": [],
-    "checked_at": 1789924432.9821153,
-    "consecutive_failures": 1
-  },
-  "Energia Group::targeted_direct_batch5_multi_v1": {
-    "jobs": [],
-    "checked_at": 1789924433.2196913,
+    "checked_at": 1789932800.6554356,
     "consecutive_failures": 1
   },
   "Texas Instruments::targeted_direct_batch11_bulk_v1": {
     "jobs": [],
-    "checked_at": 1789924433.3535104,
+    "checked_at": 1789932800.93441,
+    "consecutive_failures": 1
+  },
+  "Energia Group::targeted_direct_batch5_multi_v1": {
+    "jobs": [],
+    "checked_at": 1789932801.026274,
     "consecutive_failures": 1
   },
   "An Post::targeted_direct_batch76_anpost_rendered_oracle_v1": {
     "jobs": [],
-    "checked_at": 1789924433.5263612,
-    "consecutive_failures": 1
-  },
-  "Morgan Stanley::targeted_direct_batch79_multi5_backend_rotation_v1": {
-    "jobs": [],
-    "checked_at": 1789924433.729078,
-    "consecutive_failures": 1
-  },
-  "GlaxoSmithKline (GSK)::targeted_direct_batch79_multi5_backend_rotation_v1": {
-    "jobs": [],
-    "checked_at": 1789924433.9424036,
-    "consecutive_failures": 1
-  },
-  "Goodbody::targeted_direct_batch81_multi7_cache_lock_v1": {
-    "jobs": [],
-    "checked_at": 1789924433.9456344,
-    "consecutive_failures": 1
-  },
-  "Boehringer Ingelheim::targeted_direct_batch11_bulk_v1": {
-    "jobs": [],
-    "checked_at": 1789924433.9786105,
+    "checked_at": 1789932801.3862774,
     "consecutive_failures": 1
   },
   "Box::targeted_direct_batch10_bulk_v1": {
     "jobs": [],
-    "checked_at": 1789924434.1427364,
+    "checked_at": 1789932801.5099332,
+    "consecutive_failures": 1
+  },
+  "Goodbody::targeted_direct_batch81_multi7_cache_lock_v1": {
+    "jobs": [],
+    "checked_at": 1789932801.5724876,
     "consecutive_failures": 1
   },
   "Nokia::targeted_direct_batch11_bulk_v1": {
     "jobs": [],
-    "checked_at": 1789924434.1458013,
+    "checked_at": 1789932801.671937,
     "consecutive_failures": 1
   },
-  "Aer Lingus::targeted_zero_deferred_batch15_v1": {
+  "Morgan Stanley::targeted_direct_batch79_multi5_backend_rotation_v1": {
     "jobs": [],
-    "checked_at": 1789924434.3441954,
-    "consecutive_failures": 1
-  },
-  "VMware (Broadcom)::zero_only_batch20_v1": {
-    "jobs": [],
-    "checked_at": 1789924434.6863122,
-    "consecutive_failures": 1
-  },
-  "Heineken Ireland::friend_next4_v1": {
-    "jobs": [],
-    "checked_at": 1789924435.3574939,
-    "consecutive_failures": 1
-  },
-  "Micron Technology::targeted_direct_batch10_bulk_v1": {
-    "jobs": [],
-    "checked_at": 1789924435.4012892,
-    "consecutive_failures": 1
-  },
-  "Oliver Wyman": {
-    "jobs": [],
-    "checked_at": 1789924435.880432,
+    "checked_at": 1789932801.847001,
     "consecutive_failures": 1
   },
   "HP (Hewlett-Packard)::friend_next4_v1": {
     "jobs": [],
-    "checked_at": 1789924436.47925,
+    "checked_at": 1789932801.859123,
+    "consecutive_failures": 1
+  },
+  "Boehringer Ingelheim::targeted_direct_batch11_bulk_v1": {
+    "jobs": [],
+    "checked_at": 1789932801.8653705,
+    "consecutive_failures": 1
+  },
+  "Micron Technology::targeted_direct_batch10_bulk_v1": {
+    "jobs": [],
+    "checked_at": 1789932801.9407883,
+    "consecutive_failures": 1
+  },
+  "Aer Lingus::targeted_zero_deferred_batch15_v1": {
+    "jobs": [],
+    "checked_at": 1789932802.010196,
+    "consecutive_failures": 1
+  },
+  "GlaxoSmithKline (GSK)::targeted_direct_batch79_multi5_backend_rotation_v1": {
+    "jobs": [],
+    "checked_at": 1789932802.1696167,
+    "consecutive_failures": 1
+  },
+  "VMware (Broadcom)::zero_only_batch20_v1": {
+    "jobs": [],
+    "checked_at": 1789932802.3346968,
+    "consecutive_failures": 1
+  },
+  "Oliver Wyman": {
+    "jobs": [],
+    "checked_at": 1789932803.1512246,
+    "consecutive_failures": 1
+  },
+  "Kepak Group::targeted_direct_batch7_multi_v1": {
+    "jobs": [],
+    "checked_at": 1789932803.6511607,
+    "consecutive_failures": 1
+  },
+  "Heineken Ireland::friend_next4_v1": {
+    "jobs": [],
+    "checked_at": 1789932803.7068465,
     "consecutive_failures": 1
   },
   "QIAGEN::zero_only_batch20_v1": {
     "jobs": [],
-    "checked_at": 1789924437.4913118,
+    "checked_at": 1789932805.2976866,
     "consecutive_failures": 1
   },
   "Bruker": {
     "jobs": [],
-    "checked_at": 1789924438.490406,
-    "consecutive_failures": 1
-  },
-  "Biotronik": {
-    "jobs": [],
-    "checked_at": 1789924448.452426,
+    "checked_at": 1789932805.7713811,
     "consecutive_failures": 1
   },
   "Alkermes": {
     "jobs": [],
-    "checked_at": 1789924448.9805439,
+    "checked_at": 1789932806.9953744,
+    "consecutive_failures": 1
+  },
+  "Biotronik": {
+    "jobs": [],
+    "checked_at": 1789932813.2548554,
     "consecutive_failures": 1
   },
   "Smurfit Westrock": {
     "jobs": [],
-    "checked_at": 1789924453.4836535,
-    "consecutive_failures": 1
-  },
-  "Deutsche Bank::friend_logic_v1": {
-    "jobs": [],
-    "checked_at": 1789924457.286729,
-    "consecutive_failures": 1
-  },
-  "Baxter International::targeted_zero_deferred_batch13_v1": {
-    "jobs": [],
-    "checked_at": 1789924457.5215003,
+    "checked_at": 1789932817.5122972,
     "consecutive_failures": 1
   },
   "Boston Consulting Group (BCG)": {
     "jobs": [],
-    "checked_at": 1789924461.7973528,
+    "checked_at": 1789932824.3034132,
     "consecutive_failures": 1
   },
-  "Haleon::targeted_direct_batch81_haleon_union_v1": {
+  "Baxter International::targeted_zero_deferred_batch13_v1": {
     "jobs": [],
-    "checked_at": 1789924462.958994,
+    "checked_at": 1789932825.5796933,
+    "consecutive_failures": 1
+  },
+  "Deutsche Bank::friend_logic_v1": {
+    "jobs": [],
+    "checked_at": 1789932825.7011647,
     "consecutive_failures": 1
   },
   "Morningstar::targeted_direct_batch35_v1": {
     "jobs": [],
-    "checked_at": 1789924468.4177678,
+    "checked_at": 1789932827.760917,
     "consecutive_failures": 1
+  },
+  "Haleon::targeted_direct_batch81_haleon_union_v1": {
+    "jobs": [],
+    "checked_at": 1789932828.0964534,
+    "consecutive_failures": 1
+  },
+  "DXC Technology::friend_logic_v1": {
+    "jobs": [
+      {
+        "company": "DXC Technology",
+        "title": "Técnico de Soporte (presencial en Monterrey)",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.dxc.com/job/23894581/t-cnico-de-soporte-presencial-en-monterrey-monterrey-mx/",
+        "source": "dxc_batch20_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-09-20T19:34:31.365859+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "DXC Technology",
+        "title": "51585480 FINRA Certified – Call Center Support Representative",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.dxc.com/job/23642117/51585480-finra-certified-call-center-support-representative-nashville-tn/",
+        "source": "dxc_batch20_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-19T21:19:03.742862+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "DXC Technology",
+        "title": "Sales Director – Life & Annuity Insurance, Canada",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.dxc.com/job/22868342/sales-director-life-annuity-insurance-canada/",
+        "source": "dxc_batch20_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-19T05:11:11.537683+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "DXC Technology",
+        "title": "Administrador/a Middleware",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.dxc.com/job/22996591/administrador-a-middleware/",
+        "source": "dxc_batch20_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-18T13:30:38.108390+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "DXC Technology",
+        "title": "Oracle System Administrator",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.dxc.com/job/23117132/oracle-system-administrator/",
+        "source": "dxc_batch20_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-18T13:30:38.108390+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "DXC Technology",
+        "title": "Senior Manager, Solution Architect – Insurance",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.dxc.com/job/23153281/senior-manager-solution-architect-insurance-petaling-jaya-my/",
+        "source": "dxc_batch20_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-18T13:30:38.108390+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "DXC Technology",
+        "title": "Infrastructure Architect – Hybrid Environments | Madrid",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.dxc.com/job/23888045/infrastructure-architect-hybrid-environments-madrid-las-rozas-es/",
+        "source": "dxc_batch20_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-18T13:30:38.108390+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "DXC Technology",
+        "title": "Delivery Lead – México",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.dxc.com/job/23885218/delivery-lead-m-xico-mexico-city-mx/",
+        "source": "dxc_batch20_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-19T05:11:11.537683+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "DXC Technology",
+        "title": "Analyst I Software Engineering",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.dxc.com/job/23889963/analyst-i-software-engineering/",
+        "source": "dxc_batch20_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-18T20:17:17.616666+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "DXC Technology",
+        "title": "Clearance: Must be a US Citizen with an active Secret Security Clearance Work Environment: Hybrid, on-site 2-3 days, Cristal City, Arlington, VA Ideal Candidate Profile A strategic architect who can bridge the gap between traditional PeopleSoft HCM platforms and modern cloud-based HR ecosystems , br",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.dxc.com/job/23720853/peoplesoft-hcm-architect-hybrid-arlington-va/",
+        "source": "dxc_batch20_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-19T05:11:11.537683+00:00",
+        "posted_age_known": false
+      }
+    ],
+    "checked_at": 1789932831.8224397,
+    "consecutive_failures": 0
   },
   "Agilent Technologies::friend_workday_return_v2": {
     "jobs": [],
-    "checked_at": 1789924471.0027657,
+    "checked_at": 1789932839.62192,
     "consecutive_failures": 1
   }
 }
