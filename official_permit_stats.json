@@ -44,9 +44,9 @@
     ],
     "permits_by_year": {
       "2024": 33,
-      "2026": 10
+      "2026": 11
     },
-    "total_permits": 43
+    "total_permits": 44
   },
   "Microsoft": {
     "matched_employer_names": [
@@ -83,7 +83,8 @@
   },
   "Mastercard": {
     "matched_employer_names": [
-      "MasterCard Ireland Limited"
+      "MasterCard Ireland Limited",
+      "Mastercard Ireland Limited"
     ],
     "permits_by_year": {
       "2024": 124,
@@ -627,6 +628,15 @@
     },
     "total_permits": 51
   },
+  "Figma": {
+    "matched_employer_names": [
+      "Figma Ireland Limited"
+    ],
+    "permits_by_year": {
+      "2026": 1
+    },
+    "total_permits": 1
+  },
   "Dropbox": {
     "matched_employer_names": [
       "Dropbox International Unlimited Company"
@@ -900,12 +910,14 @@
   },
   "Coillte": {
     "matched_employer_names": [
+      "Coillte Cuideachta Ghn\u00edomha\u00edochta Ainmithe",
       "Coillte Teo"
     ],
     "permits_by_year": {
-      "2024": 6
+      "2024": 6,
+      "2026": 1
     },
-    "total_permits": 6
+    "total_permits": 7
   },
   "Gas Networks Ireland": {
     "matched_employer_names": [
@@ -970,9 +982,9 @@
     ],
     "permits_by_year": {
       "2024": 189,
-      "2026": 9
+      "2026": 10
     },
-    "total_permits": 198
+    "total_permits": 199
   },
   "LinkedIn": {
     "matched_employer_names": [
@@ -1110,9 +1122,10 @@
       "VMware International Unlimited Company"
     ],
     "permits_by_year": {
-      "2024": 9
+      "2024": 9,
+      "2026": 1
     },
-    "total_permits": 9
+    "total_permits": 10
   },
   "Rockwell Automation": {
     "matched_employer_names": [
@@ -1213,12 +1226,14 @@
   },
   "McKinsey & Company": {
     "matched_employer_names": [
+      "McKinsey & Company Inc Ireland",
       "McKinsey & Company Inc. Ireland"
     ],
     "permits_by_year": {
-      "2024": 1
+      "2024": 1,
+      "2026": 1
     },
-    "total_permits": 1
+    "total_permits": 2
   },
   "Refinitiv (LSEG)": {
     "matched_employer_names": [
@@ -1497,13 +1512,16 @@
   "Three Ireland": {
     "matched_employer_names": [
       "Three Ireland (Hutchison) Limited",
+      "Three Rock Capital Management Limited",
+      "Three Rock Rovers Hockey Club",
+      "Three Steps Limited",
       "Three Tigers Food Ltd"
     ],
     "permits_by_year": {
       "2024": 9,
-      "2026": 2
+      "2026": 5
     },
-    "total_permits": 11
+    "total_permits": 14
   },
   "Uisce \u00c9ireann (Irish Water)": {
     "matched_employer_names": [
@@ -1625,9 +1643,10 @@
       "Trend Micro EMEA Ltd"
     ],
     "permits_by_year": {
-      "2024": 4
+      "2024": 4,
+      "2026": 1
     },
-    "total_permits": 4
+    "total_permits": 5
   },
   "Jacobs": {
     "matched_employer_names": [
