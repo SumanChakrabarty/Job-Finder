@@ -12099,8 +12099,8 @@
   },
   "Bain & Company": {
     "jobs": [],
-    "checked_at": 1792021262.1999223,
-    "consecutive_failures": 424
+    "checked_at": 1792029460.1546094,
+    "consecutive_failures": 425
   },
   "Fiserv": {
     "jobs": [
@@ -48470,206 +48470,6 @@
     "checked_at": 1792021267.0880063,
     "consecutive_failures": 0
   },
-  "Sky Ireland::targeted_direct_batch81_multi7_cache_lock_v1": {
-    "jobs": [],
-    "checked_at": 1792021241.735081,
-    "consecutive_failures": 1
-  },
-  "Red Hat::targeted_direct_batch81_multi7_cache_lock_v1": {
-    "jobs": [],
-    "checked_at": 1792021241.7367585,
-    "consecutive_failures": 1
-  },
-  "Slack::targeted_direct_batch81_multi7_cache_lock_v1": {
-    "jobs": [],
-    "checked_at": 1792021241.736817,
-    "consecutive_failures": 1
-  },
-  "Aldi Ireland::targeted_direct_batch81_multi7_cache_lock_v1": {
-    "jobs": [],
-    "checked_at": 1792021241.7928524,
-    "consecutive_failures": 1
-  },
-  "Kepak Group::targeted_direct_batch7_multi_v1": {
-    "jobs": [],
-    "checked_at": 1792021241.9613442,
-    "consecutive_failures": 1
-  },
-  "HubSpot::targeted_direct_batch59_high_yield_v1": {
-    "jobs": [],
-    "checked_at": 1792021242.043704,
-    "consecutive_failures": 1
-  },
-  "SentinelOne": {
-    "jobs": [],
-    "checked_at": 1792021242.277326,
-    "consecutive_failures": 1
-  },
-  "AerCap::targeted_direct_batch79_multi5_backend_rotation_v1": {
-    "jobs": [],
-    "checked_at": 1792021242.375173,
-    "consecutive_failures": 1
-  },
-  "Micron Technology::targeted_direct_batch10_bulk_v1": {
-    "jobs": [],
-    "checked_at": 1792021242.8397694,
-    "consecutive_failures": 1
-  },
-  "Energia Group::targeted_direct_batch5_multi_v1": {
-    "jobs": [],
-    "checked_at": 1792021242.8529387,
-    "consecutive_failures": 1
-  },
-  "Medpace::targeted_direct_batch8_bulk_v1": {
-    "jobs": [],
-    "checked_at": 1792021242.8940465,
-    "consecutive_failures": 1
-  },
-  "Texas Instruments::targeted_direct_batch11_bulk_v1": {
-    "jobs": [],
-    "checked_at": 1792021242.920558,
-    "consecutive_failures": 1
-  },
-  "Goodbody::targeted_direct_batch81_multi7_cache_lock_v1": {
-    "jobs": [],
-    "checked_at": 1792021242.9207506,
-    "consecutive_failures": 1
-  },
-  "Morgan Stanley::targeted_direct_batch79_multi5_backend_rotation_v1": {
-    "jobs": [],
-    "checked_at": 1792021242.9883368,
-    "consecutive_failures": 1
-  },
-  "An Post::targeted_direct_batch76_anpost_rendered_oracle_v1": {
-    "jobs": [],
-    "checked_at": 1792021243.1208313,
-    "consecutive_failures": 1
-  },
-  "Waters Corporation::targeted_direct_batch81_multi7_cache_lock_v1": {
-    "jobs": [],
-    "checked_at": 1792021243.1881185,
-    "consecutive_failures": 1
-  },
-  "Coillte::targeted_direct_batch1_v1": {
-    "jobs": [],
-    "checked_at": 1792021243.460629,
-    "consecutive_failures": 1
-  },
-  "GlaxoSmithKline (GSK)::targeted_direct_batch79_multi5_backend_rotation_v1": {
-    "jobs": [],
-    "checked_at": 1792021243.6340477,
-    "consecutive_failures": 1
-  },
-  "Visa::targeted_direct_batch79_multi5_backend_rotation_v1": {
-    "jobs": [],
-    "checked_at": 1792021243.6673098,
-    "consecutive_failures": 1
-  },
-  "S&P Global::friend_logic_v1": {
-    "jobs": [],
-    "checked_at": 1792021243.8803453,
-    "consecutive_failures": 1
-  },
-  "Infosys::targeted_direct_batch81_multi7_cache_lock_v1": {
-    "jobs": [],
-    "checked_at": 1792021244.079464,
-    "consecutive_failures": 1
-  },
-  "Nokia::targeted_direct_batch11_bulk_v1": {
-    "jobs": [],
-    "checked_at": 1792021244.5227938,
-    "consecutive_failures": 1
-  },
-  "HP (Hewlett-Packard)::friend_next4_v1": {
-    "jobs": [],
-    "checked_at": 1792021244.682075,
-    "consecutive_failures": 1
-  },
-  "Boehringer Ingelheim::targeted_direct_batch11_bulk_v1": {
-    "jobs": [],
-    "checked_at": 1792021245.082994,
-    "consecutive_failures": 1
-  },
-  "Box::targeted_direct_batch10_bulk_v1": {
-    "jobs": [],
-    "checked_at": 1792021245.1005328,
-    "consecutive_failures": 1
-  },
-  "CrowdStrike": {
-    "jobs": [],
-    "checked_at": 1792021245.2466109,
-    "consecutive_failures": 1
-  },
-  "Heineken Ireland::friend_next4_v1": {
-    "jobs": [],
-    "checked_at": 1792021245.431753,
-    "consecutive_failures": 1
-  },
-  "VMware (Broadcom)::zero_only_batch20_v1": {
-    "jobs": [],
-    "checked_at": 1792021245.612336,
-    "consecutive_failures": 1
-  },
-  "DHL Ireland::targeted_direct_batch54_multi_v1": {
-    "jobs": [],
-    "checked_at": 1792021246.3820915,
-    "consecutive_failures": 1
-  },
-  "Bruker": {
-    "jobs": [],
-    "checked_at": 1792021247.4351707,
-    "consecutive_failures": 1
-  },
-  "QIAGEN::zero_only_batch20_v1": {
-    "jobs": [],
-    "checked_at": 1792021248.1444743,
-    "consecutive_failures": 1
-  },
-  "Oliver Wyman": {
-    "jobs": [],
-    "checked_at": 1792021248.960678,
-    "consecutive_failures": 1
-  },
-  "SAP": {
-    "jobs": [],
-    "checked_at": 1792021249.3825562,
-    "consecutive_failures": 1
-  },
-  "Alkermes": {
-    "jobs": [],
-    "checked_at": 1792021252.3017895,
-    "consecutive_failures": 1
-  },
-  "Biotronik": {
-    "jobs": [],
-    "checked_at": 1792021255.6414282,
-    "consecutive_failures": 1
-  },
-  "Morningstar::targeted_direct_batch35_v1": {
-    "jobs": [],
-    "checked_at": 1792021258.1864848,
-    "consecutive_failures": 1
-  },
-  "Smurfit Westrock": {
-    "jobs": [],
-    "checked_at": 1792021263.496405,
-    "consecutive_failures": 1
-  },
-  "Baxter International::targeted_zero_deferred_batch13_v1": {
-    "jobs": [],
-    "checked_at": 1792021268.1469164,
-    "consecutive_failures": 1
-  },
-  "Boston Consulting Group (BCG)": {
-    "jobs": [],
-    "checked_at": 1792021270.8712704,
-    "consecutive_failures": 1
-  },
-  "Agilent Technologies::friend_workday_return_v2": {
-    "jobs": [],
-    "checked_at": 1792021280.1208458,
-    "consecutive_failures": 1
-  },
   "IQVIA::ireland_dedicated_v1": {
     "jobs": [
       {
@@ -48833,7 +48633,7 @@
         "source": "iqvia_ireland_location_page",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
-        "new_since_last_check": true,
+        "new_since_last_check": false,
         "first_seen_at": "2026-10-14T23:42:11.776690+00:00",
         "posted_age_known": false
       },
@@ -49050,5 +48850,205 @@
     ],
     "checked_at": 1792021331.6461601,
     "consecutive_failures": 0
+  },
+  "Sky Ireland::targeted_direct_batch81_multi7_cache_lock_v1": {
+    "jobs": [],
+    "checked_at": 1792029445.7776618,
+    "consecutive_failures": 1
+  },
+  "Red Hat::targeted_direct_batch81_multi7_cache_lock_v1": {
+    "jobs": [],
+    "checked_at": 1792029445.7791753,
+    "consecutive_failures": 1
+  },
+  "Slack::targeted_direct_batch81_multi7_cache_lock_v1": {
+    "jobs": [],
+    "checked_at": 1792029445.7792056,
+    "consecutive_failures": 1
+  },
+  "Aldi Ireland::targeted_direct_batch81_multi7_cache_lock_v1": {
+    "jobs": [],
+    "checked_at": 1792029445.8281784,
+    "consecutive_failures": 1
+  },
+  "HubSpot::targeted_direct_batch59_high_yield_v1": {
+    "jobs": [],
+    "checked_at": 1792029445.9309373,
+    "consecutive_failures": 1
+  },
+  "Kepak Group::targeted_direct_batch7_multi_v1": {
+    "jobs": [],
+    "checked_at": 1792029446.0032814,
+    "consecutive_failures": 1
+  },
+  "SentinelOne": {
+    "jobs": [],
+    "checked_at": 1792029446.2644851,
+    "consecutive_failures": 1
+  },
+  "Medpace::targeted_direct_batch8_bulk_v1": {
+    "jobs": [],
+    "checked_at": 1792029446.5308506,
+    "consecutive_failures": 1
+  },
+  "Energia Group::targeted_direct_batch5_multi_v1": {
+    "jobs": [],
+    "checked_at": 1792029446.6415,
+    "consecutive_failures": 1
+  },
+  "Coillte::targeted_direct_batch1_v1": {
+    "jobs": [],
+    "checked_at": 1792029446.9377437,
+    "consecutive_failures": 1
+  },
+  "Goodbody::targeted_direct_batch81_multi7_cache_lock_v1": {
+    "jobs": [],
+    "checked_at": 1792029446.9507196,
+    "consecutive_failures": 1
+  },
+  "AerCap::targeted_direct_batch79_multi5_backend_rotation_v1": {
+    "jobs": [],
+    "checked_at": 1792029447.0931625,
+    "consecutive_failures": 1
+  },
+  "Texas Instruments::targeted_direct_batch11_bulk_v1": {
+    "jobs": [],
+    "checked_at": 1792029447.1986132,
+    "consecutive_failures": 1
+  },
+  "Waters Corporation::targeted_direct_batch81_multi7_cache_lock_v1": {
+    "jobs": [],
+    "checked_at": 1792029447.2324727,
+    "consecutive_failures": 1
+  },
+  "Micron Technology::targeted_direct_batch10_bulk_v1": {
+    "jobs": [],
+    "checked_at": 1792029447.2768621,
+    "consecutive_failures": 1
+  },
+  "Morgan Stanley::targeted_direct_batch79_multi5_backend_rotation_v1": {
+    "jobs": [],
+    "checked_at": 1792029447.4687219,
+    "consecutive_failures": 1
+  },
+  "An Post::targeted_direct_batch76_anpost_rendered_oracle_v1": {
+    "jobs": [],
+    "checked_at": 1792029447.5879576,
+    "consecutive_failures": 1
+  },
+  "HP (Hewlett-Packard)::friend_next4_v1": {
+    "jobs": [],
+    "checked_at": 1792029447.6045768,
+    "consecutive_failures": 1
+  },
+  "Infosys::targeted_direct_batch81_multi7_cache_lock_v1": {
+    "jobs": [],
+    "checked_at": 1792029447.6062489,
+    "consecutive_failures": 1
+  },
+  "Visa::targeted_direct_batch79_multi5_backend_rotation_v1": {
+    "jobs": [],
+    "checked_at": 1792029447.60947,
+    "consecutive_failures": 1
+  },
+  "Nokia::targeted_direct_batch11_bulk_v1": {
+    "jobs": [],
+    "checked_at": 1792029447.8994215,
+    "consecutive_failures": 1
+  },
+  "GlaxoSmithKline (GSK)::targeted_direct_batch79_multi5_backend_rotation_v1": {
+    "jobs": [],
+    "checked_at": 1792029447.913503,
+    "consecutive_failures": 1
+  },
+  "Boehringer Ingelheim::targeted_direct_batch11_bulk_v1": {
+    "jobs": [],
+    "checked_at": 1792029448.0415726,
+    "consecutive_failures": 1
+  },
+  "Box::targeted_direct_batch10_bulk_v1": {
+    "jobs": [],
+    "checked_at": 1792029448.1896331,
+    "consecutive_failures": 1
+  },
+  "S&P Global::friend_logic_v1": {
+    "jobs": [],
+    "checked_at": 1792029448.2520337,
+    "consecutive_failures": 1
+  },
+  "CrowdStrike": {
+    "jobs": [],
+    "checked_at": 1792029449.0780134,
+    "consecutive_failures": 1
+  },
+  "Heineken Ireland::friend_next4_v1": {
+    "jobs": [],
+    "checked_at": 1792029449.1104236,
+    "consecutive_failures": 1
+  },
+  "VMware (Broadcom)::zero_only_batch20_v1": {
+    "jobs": [],
+    "checked_at": 1792029449.2540712,
+    "consecutive_failures": 1
+  },
+  "DHL Ireland::targeted_direct_batch54_multi_v1": {
+    "jobs": [],
+    "checked_at": 1792029450.3024418,
+    "consecutive_failures": 1
+  },
+  "QIAGEN::zero_only_batch20_v1": {
+    "jobs": [],
+    "checked_at": 1792029450.8615842,
+    "consecutive_failures": 1
+  },
+  "Oliver Wyman": {
+    "jobs": [],
+    "checked_at": 1792029451.395166,
+    "consecutive_failures": 1
+  },
+  "Bruker": {
+    "jobs": [],
+    "checked_at": 1792029452.1243181,
+    "consecutive_failures": 1
+  },
+  "SAP": {
+    "jobs": [],
+    "checked_at": 1792029452.391384,
+    "consecutive_failures": 1
+  },
+  "Alkermes": {
+    "jobs": [],
+    "checked_at": 1792029452.6791394,
+    "consecutive_failures": 1
+  },
+  "Biotronik": {
+    "jobs": [],
+    "checked_at": 1792029457.4146686,
+    "consecutive_failures": 1
+  },
+  "Smurfit Westrock": {
+    "jobs": [],
+    "checked_at": 1792029460.0404553,
+    "consecutive_failures": 1
+  },
+  "Morningstar::targeted_direct_batch35_v1": {
+    "jobs": [],
+    "checked_at": 1792029463.771653,
+    "consecutive_failures": 1
+  },
+  "Boston Consulting Group (BCG)": {
+    "jobs": [],
+    "checked_at": 1792029468.9630466,
+    "consecutive_failures": 1
+  },
+  "Baxter International::targeted_zero_deferred_batch13_v1": {
+    "jobs": [],
+    "checked_at": 1792029471.2848146,
+    "consecutive_failures": 1
+  },
+  "Agilent Technologies::friend_workday_return_v2": {
+    "jobs": [],
+    "checked_at": 1792029486.1077597,
+    "consecutive_failures": 1
   }
 }
