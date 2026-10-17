@@ -11322,8 +11322,8 @@
   },
   "Bain & Company": {
     "jobs": [],
-    "checked_at": 1792252471.6872113,
-    "consecutive_failures": 441
+    "checked_at": 1792260616.215935,
+    "consecutive_failures": 442
   },
   "Fiserv": {
     "jobs": [
@@ -46113,11 +46113,6 @@
     "checked_at": 1792252466.6085672,
     "consecutive_failures": 0
   },
-  "DXC Technology::friend_logic_v1": {
-    "jobs": [],
-    "checked_at": 1792252464.3345199,
-    "consecutive_failures": 1
-  },
   "Musgrave Group (SuperValu / Centra)::friend_next4_v1": {
     "jobs": [
       {
@@ -46556,201 +46551,6 @@
     "checked_at": 1792252492.5664682,
     "consecutive_failures": 0
   },
-  "Sky Ireland::targeted_direct_batch81_multi7_cache_lock_v1": {
-    "jobs": [],
-    "checked_at": 1792252451.929893,
-    "consecutive_failures": 1
-  },
-  "Red Hat::targeted_direct_batch81_multi7_cache_lock_v1": {
-    "jobs": [],
-    "checked_at": 1792252451.9310915,
-    "consecutive_failures": 1
-  },
-  "Slack::targeted_direct_batch81_multi7_cache_lock_v1": {
-    "jobs": [],
-    "checked_at": 1792252451.9311218,
-    "consecutive_failures": 1
-  },
-  "Aldi Ireland::targeted_direct_batch81_multi7_cache_lock_v1": {
-    "jobs": [],
-    "checked_at": 1792252451.964522,
-    "consecutive_failures": 1
-  },
-  "Kepak Group::targeted_direct_batch7_multi_v1": {
-    "jobs": [],
-    "checked_at": 1792252452.1727698,
-    "consecutive_failures": 1
-  },
-  "HubSpot::targeted_direct_batch59_high_yield_v1": {
-    "jobs": [],
-    "checked_at": 1792252452.203553,
-    "consecutive_failures": 1
-  },
-  "SentinelOne": {
-    "jobs": [],
-    "checked_at": 1792252452.402559,
-    "consecutive_failures": 1
-  },
-  "Forvis Mazars Ireland": {
-    "jobs": [],
-    "checked_at": 1792252452.4031904,
-    "consecutive_failures": 1
-  },
-  "AerCap::targeted_direct_batch79_multi5_backend_rotation_v1": {
-    "jobs": [],
-    "checked_at": 1792252452.6987777,
-    "consecutive_failures": 1
-  },
-  "Goodbody::targeted_direct_batch81_multi7_cache_lock_v1": {
-    "jobs": [],
-    "checked_at": 1792252453.029974,
-    "consecutive_failures": 1
-  },
-  "Micron Technology::targeted_direct_batch10_bulk_v1": {
-    "jobs": [],
-    "checked_at": 1792252453.0441942,
-    "consecutive_failures": 1
-  },
-  "Texas Instruments::targeted_direct_batch11_bulk_v1": {
-    "jobs": [],
-    "checked_at": 1792252453.0480351,
-    "consecutive_failures": 1
-  },
-  "Energia Group::targeted_direct_batch5_multi_v1": {
-    "jobs": [],
-    "checked_at": 1792252453.0607326,
-    "consecutive_failures": 1
-  },
-  "Medpace::targeted_direct_batch8_bulk_v1": {
-    "jobs": [],
-    "checked_at": 1792252453.06193,
-    "consecutive_failures": 1
-  },
-  "Coillte::targeted_direct_batch1_v1": {
-    "jobs": [],
-    "checked_at": 1792252453.119066,
-    "consecutive_failures": 1
-  },
-  "An Post::targeted_direct_batch76_anpost_rendered_oracle_v1": {
-    "jobs": [],
-    "checked_at": 1792252453.3908617,
-    "consecutive_failures": 1
-  },
-  "Morgan Stanley::targeted_direct_batch79_multi5_backend_rotation_v1": {
-    "jobs": [],
-    "checked_at": 1792252453.569227,
-    "consecutive_failures": 1
-  },
-  "Box::targeted_direct_batch10_bulk_v1": {
-    "jobs": [],
-    "checked_at": 1792252453.6558464,
-    "consecutive_failures": 1
-  },
-  "S&P Global::friend_logic_v1": {
-    "jobs": [],
-    "checked_at": 1792252453.814583,
-    "consecutive_failures": 1
-  },
-  "Visa::targeted_direct_batch79_multi5_backend_rotation_v1": {
-    "jobs": [],
-    "checked_at": 1792252453.836182,
-    "consecutive_failures": 1
-  },
-  "Infosys::targeted_direct_batch81_multi7_cache_lock_v1": {
-    "jobs": [],
-    "checked_at": 1792252454.0087771,
-    "consecutive_failures": 1
-  },
-  "Waters Corporation::targeted_direct_batch81_multi7_cache_lock_v1": {
-    "jobs": [],
-    "checked_at": 1792252454.146369,
-    "consecutive_failures": 1
-  },
-  "Nokia::targeted_direct_batch11_bulk_v1": {
-    "jobs": [],
-    "checked_at": 1792252454.2457592,
-    "consecutive_failures": 1
-  },
-  "GlaxoSmithKline (GSK)::targeted_direct_batch79_multi5_backend_rotation_v1": {
-    "jobs": [],
-    "checked_at": 1792252454.6091473,
-    "consecutive_failures": 1
-  },
-  "Boehringer Ingelheim::targeted_direct_batch11_bulk_v1": {
-    "jobs": [],
-    "checked_at": 1792252454.6141005,
-    "consecutive_failures": 1
-  },
-  "CrowdStrike": {
-    "jobs": [],
-    "checked_at": 1792252455.035108,
-    "consecutive_failures": 1
-  },
-  "Heineken Ireland::friend_next4_v1": {
-    "jobs": [],
-    "checked_at": 1792252455.7973201,
-    "consecutive_failures": 1
-  },
-  "VMware (Broadcom)::zero_only_batch20_v1": {
-    "jobs": [],
-    "checked_at": 1792252455.8510413,
-    "consecutive_failures": 1
-  },
-  "DHL Ireland::targeted_direct_batch54_multi_v1": {
-    "jobs": [],
-    "checked_at": 1792252456.4872384,
-    "consecutive_failures": 1
-  },
-  "IQVIA::ireland_dedicated_v1": {
-    "jobs": [],
-    "checked_at": 1792252457.3890173,
-    "consecutive_failures": 1
-  },
-  "HP (Hewlett-Packard)::friend_next4_v1": {
-    "jobs": [],
-    "checked_at": 1792252458.1776686,
-    "consecutive_failures": 1
-  },
-  "Bruker": {
-    "jobs": [],
-    "checked_at": 1792252458.2930987,
-    "consecutive_failures": 1
-  },
-  "QIAGEN::zero_only_batch20_v1": {
-    "jobs": [],
-    "checked_at": 1792252458.3271265,
-    "consecutive_failures": 1
-  },
-  "Alkermes": {
-    "jobs": [],
-    "checked_at": 1792252459.0176697,
-    "consecutive_failures": 1
-  },
-  "SAP": {
-    "jobs": [],
-    "checked_at": 1792252459.2885077,
-    "consecutive_failures": 1
-  },
-  "Oliver Wyman": {
-    "jobs": [],
-    "checked_at": 1792252459.5505025,
-    "consecutive_failures": 1
-  },
-  "Biotronik": {
-    "jobs": [],
-    "checked_at": 1792252467.1266563,
-    "consecutive_failures": 1
-  },
-  "Morningstar::targeted_direct_batch35_v1": {
-    "jobs": [],
-    "checked_at": 1792252472.88738,
-    "consecutive_failures": 1
-  },
-  "Smurfit Westrock": {
-    "jobs": [],
-    "checked_at": 1792252473.1269574,
-    "consecutive_failures": 1
-  },
   "Merit Medical::workday_dedicated_v1": {
     "jobs": [
       {
@@ -46877,24 +46677,450 @@
     "checked_at": 1792252476.3206701,
     "consecutive_failures": 0
   },
-  "Baxter International::targeted_zero_deferred_batch13_v1": {
+  "Sky Ireland::targeted_direct_batch81_multi7_cache_lock_v1": {
     "jobs": [],
-    "checked_at": 1792252477.992497,
+    "checked_at": 1792260597.299919,
+    "consecutive_failures": 1
+  },
+  "Red Hat::targeted_direct_batch81_multi7_cache_lock_v1": {
+    "jobs": [],
+    "checked_at": 1792260597.3001215,
+    "consecutive_failures": 1
+  },
+  "Slack::targeted_direct_batch81_multi7_cache_lock_v1": {
+    "jobs": [],
+    "checked_at": 1792260597.300152,
+    "consecutive_failures": 1
+  },
+  "Aldi Ireland::targeted_direct_batch81_multi7_cache_lock_v1": {
+    "jobs": [],
+    "checked_at": 1792260597.3306952,
+    "consecutive_failures": 1
+  },
+  "HubSpot::targeted_direct_batch59_high_yield_v1": {
+    "jobs": [],
+    "checked_at": 1792260597.5466068,
+    "consecutive_failures": 1
+  },
+  "Kepak Group::targeted_direct_batch7_multi_v1": {
+    "jobs": [],
+    "checked_at": 1792260597.6420395,
+    "consecutive_failures": 1
+  },
+  "Forvis Mazars Ireland": {
+    "jobs": [],
+    "checked_at": 1792260597.81103,
+    "consecutive_failures": 1
+  },
+  "SentinelOne": {
+    "jobs": [],
+    "checked_at": 1792260597.8174753,
+    "consecutive_failures": 1
+  },
+  "AerCap::targeted_direct_batch79_multi5_backend_rotation_v1": {
+    "jobs": [],
+    "checked_at": 1792260598.1846976,
+    "consecutive_failures": 1
+  },
+  "Medpace::targeted_direct_batch8_bulk_v1": {
+    "jobs": [],
+    "checked_at": 1792260598.368407,
+    "consecutive_failures": 1
+  },
+  "Energia Group::targeted_direct_batch5_multi_v1": {
+    "jobs": [],
+    "checked_at": 1792260598.3775241,
+    "consecutive_failures": 1
+  },
+  "Goodbody::targeted_direct_batch81_multi7_cache_lock_v1": {
+    "jobs": [],
+    "checked_at": 1792260598.420069,
+    "consecutive_failures": 1
+  },
+  "Coillte::targeted_direct_batch1_v1": {
+    "jobs": [],
+    "checked_at": 1792260598.4415553,
+    "consecutive_failures": 1
+  },
+  "An Post::targeted_direct_batch76_anpost_rendered_oracle_v1": {
+    "jobs": [],
+    "checked_at": 1792260598.54414,
+    "consecutive_failures": 1
+  },
+  "Texas Instruments::targeted_direct_batch11_bulk_v1": {
+    "jobs": [],
+    "checked_at": 1792260598.6901925,
+    "consecutive_failures": 1
+  },
+  "Micron Technology::targeted_direct_batch10_bulk_v1": {
+    "jobs": [],
+    "checked_at": 1792260598.9507525,
+    "consecutive_failures": 1
+  },
+  "Box::targeted_direct_batch10_bulk_v1": {
+    "jobs": [],
+    "checked_at": 1792260599.0497289,
+    "consecutive_failures": 1
+  },
+  "Visa::targeted_direct_batch79_multi5_backend_rotation_v1": {
+    "jobs": [],
+    "checked_at": 1792260599.0583615,
+    "consecutive_failures": 1
+  },
+  "Nokia::targeted_direct_batch11_bulk_v1": {
+    "jobs": [],
+    "checked_at": 1792260599.2721643,
+    "consecutive_failures": 1
+  },
+  "S&P Global::friend_logic_v1": {
+    "jobs": [],
+    "checked_at": 1792260599.3492076,
+    "consecutive_failures": 1
+  },
+  "Boehringer Ingelheim::targeted_direct_batch11_bulk_v1": {
+    "jobs": [],
+    "checked_at": 1792260599.580748,
+    "consecutive_failures": 1
+  },
+  "Infosys::targeted_direct_batch81_multi7_cache_lock_v1": {
+    "jobs": [],
+    "checked_at": 1792260599.896872,
+    "consecutive_failures": 1
+  },
+  "Morgan Stanley::targeted_direct_batch79_multi5_backend_rotation_v1": {
+    "jobs": [],
+    "checked_at": 1792260599.9006078,
+    "consecutive_failures": 1
+  },
+  "HP (Hewlett-Packard)::friend_next4_v1": {
+    "jobs": [],
+    "checked_at": 1792260600.0555658,
+    "consecutive_failures": 1
+  },
+  "Waters Corporation::targeted_direct_batch81_multi7_cache_lock_v1": {
+    "jobs": [],
+    "checked_at": 1792260600.2835698,
+    "consecutive_failures": 1
+  },
+  "GlaxoSmithKline (GSK)::targeted_direct_batch79_multi5_backend_rotation_v1": {
+    "jobs": [],
+    "checked_at": 1792260600.428617,
+    "consecutive_failures": 1
+  },
+  "CrowdStrike": {
+    "jobs": [],
+    "checked_at": 1792260600.8669455,
+    "consecutive_failures": 1
+  },
+  "Heineken Ireland::friend_next4_v1": {
+    "jobs": [],
+    "checked_at": 1792260601.0020714,
+    "consecutive_failures": 1
+  },
+  "VMware (Broadcom)::zero_only_batch20_v1": {
+    "jobs": [],
+    "checked_at": 1792260601.7737398,
+    "consecutive_failures": 1
+  },
+  "Oliver Wyman": {
+    "jobs": [],
+    "checked_at": 1792260602.5615418,
+    "consecutive_failures": 1
+  },
+  "DHL Ireland::targeted_direct_batch54_multi_v1": {
+    "jobs": [],
+    "checked_at": 1792260602.6205196,
+    "consecutive_failures": 1
+  },
+  "IQVIA::ireland_dedicated_v1": {
+    "jobs": [],
+    "checked_at": 1792260603.1933832,
+    "consecutive_failures": 1
+  },
+  "Bruker": {
+    "jobs": [],
+    "checked_at": 1792260603.8308003,
+    "consecutive_failures": 1
+  },
+  "QIAGEN::zero_only_batch20_v1": {
+    "jobs": [],
+    "checked_at": 1792260604.0598433,
+    "consecutive_failures": 1
+  },
+  "SAP": {
+    "jobs": [],
+    "checked_at": 1792260604.1174645,
+    "consecutive_failures": 1
+  },
+  "Alkermes": {
+    "jobs": [],
+    "checked_at": 1792260607.0486815,
+    "consecutive_failures": 1
+  },
+  "Biotronik": {
+    "jobs": [],
+    "checked_at": 1792260612.1998618,
+    "consecutive_failures": 1
+  },
+  "Smurfit Westrock": {
+    "jobs": [],
+    "checked_at": 1792260615.5514135,
+    "consecutive_failures": 1
+  },
+  "Morningstar::targeted_direct_batch35_v1": {
+    "jobs": [],
+    "checked_at": 1792260617.690983,
     "consecutive_failures": 1
   },
   "Boston Consulting Group (BCG)": {
     "jobs": [],
-    "checked_at": 1792252478.1388574,
+    "checked_at": 1792260622.6763513,
+    "consecutive_failures": 1
+  },
+  "Baxter International::targeted_zero_deferred_batch13_v1": {
+    "jobs": [],
+    "checked_at": 1792260623.2796197,
     "consecutive_failures": 1
   },
   "Haleon::targeted_direct_batch81_haleon_union_v1": {
     "jobs": [],
-    "checked_at": 1792252485.0994372,
+    "checked_at": 1792260627.6135125,
     "consecutive_failures": 1
   },
   "Agilent Technologies::friend_workday_return_v2": {
     "jobs": [],
-    "checked_at": 1792252490.7484632,
+    "checked_at": 1792260636.7683198,
     "consecutive_failures": 1
+  },
+  "DXC Technology::friend_logic_v1": {
+    "jobs": [
+      {
+        "company": "DXC Technology",
+        "title": "Sales Professional",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.dxc.com/job/24017715/sales-professional-beijing-cn/",
+        "source": "dxc_batch20_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-10-16T11:08:33.978509+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "DXC Technology",
+        "title": "Manager Software Engineering",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.dxc.com/job/24018716/manager-software-engineering/",
+        "source": "dxc_batch20_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-10-17T18:11:10.017937+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "DXC Technology",
+        "title": "Scrum Master",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.dxc.com/job/24018573/scrum-master-farnborough-gb/",
+        "source": "dxc_batch20_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-10-17T18:11:10.017937+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "DXC Technology",
+        "title": "Senior System Engineer",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.dxc.com/job/24017751/senior-system-engineer-shanghai-cn/",
+        "source": "dxc_batch20_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-10-16T11:08:33.978509+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "DXC Technology",
+        "title": "ServiceNow Developer",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.dxc.com/job/24020665/servicenow-developer-nashville-tn/",
+        "source": "dxc_batch20_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-10-17T18:11:10.017937+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "DXC Technology",
+        "title": "Senior Technical Analyst / Developer",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.dxc.com/job/24017682/senior-technical-analyst-developer-bangkok-th/",
+        "source": "dxc_batch20_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-10-16T11:08:33.978509+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "DXC Technology",
+        "title": "2027 NZ Graduate – Business Consultant",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.dxc.com/job/24017432/2027-nz-graduate-business-consultant-wellington-nz/",
+        "source": "dxc_batch20_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-10-16T11:08:33.978509+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "DXC Technology",
+        "title": "腾讯运维工程师(公有云)",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.dxc.com/job/24017767/-shanghai-cn/",
+        "source": "dxc_batch20_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-10-16T11:08:33.978509+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "DXC Technology",
+        "title": "阿里云运维工程师",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.dxc.com/job/24017755/-shanghai-cn/",
+        "source": "dxc_batch20_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-10-17T18:11:10.017937+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "DXC Technology",
+        "title": "Sr Manager Business Development – Sales Origination",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.dxc.com/job/24020639/sr-manager-business-development-sales-origination-toronto-ca/",
+        "source": "dxc_batch20_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-10-17T18:11:10.017937+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "DXC Technology",
+        "title": "Solution Consultant-Insurance Software",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.dxc.com/job/23536271/solution-consultant-insurance-software/",
+        "source": "dxc_batch20_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-10-16T11:08:33.978509+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "DXC Technology",
+        "title": "Associate Manager Software Engineering (Vantage-One/wmA)",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.dxc.com/job/23722453/associate-manager-software-engineering-vantage-one-wma-noida-in/",
+        "source": "dxc_batch20_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-10-16T11:08:33.978509+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "DXC Technology",
+        "title": "INFRASTRUCTURE ENGINEER VMware – Azure- IA MADRID",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.dxc.com/job/23888045/infrastructure-engineer-vmware-azure-ia-madrid-las-rozas-es/",
+        "source": "dxc_batch20_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-10-16T11:08:33.978509+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "DXC Technology",
+        "title": "Analyst III BPT",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.dxc.com/job/24019420/analyst-iii-bpt-lisbon-pt/",
+        "source": "dxc_batch20_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-10-16T18:58:49.375556+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "DXC Technology",
+        "title": "DevOps Specialist",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.dxc.com/job/24020002/devops-specialist-guadalajara-mx/",
+        "source": "dxc_batch20_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-10-17T08:45:00.358998+00:00",
+        "posted_age_known": false
+      }
+    ],
+    "checked_at": 1792260640.7195446,
+    "consecutive_failures": 0
   }
 }
