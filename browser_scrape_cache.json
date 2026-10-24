@@ -10896,8 +10896,8 @@
   },
   "Bain & Company": {
     "jobs": [],
-    "checked_at": 1792877174.7217357,
-    "consecutive_failures": 487
+    "checked_at": 1792884967.2761889,
+    "consecutive_failures": 488
   },
   "Fiserv": {
     "jobs": [
@@ -44112,7 +44112,7 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1792859294.4365149,
+    "checked_at": 1792884937.173937,
     "consecutive_failures": 0
   },
   "S&P Global::friend_logic_v1": {
@@ -44592,7 +44592,7 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1792859295.6240976,
+    "checked_at": 1792884937.2155826,
     "consecutive_failures": 0
   },
   "Aon::targeted_direct_batch50_v1": {
@@ -44628,7 +44628,7 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1792859296.7217937,
+    "checked_at": 1792884939.6379817,
     "consecutive_failures": 0
   },
   "DHL Ireland::targeted_direct_batch54_multi_v1": {
@@ -44649,7 +44649,7 @@
         "posted_age_known": true
       }
     ],
-    "checked_at": 1792859299.784712,
+    "checked_at": 1792884940.1535947,
     "consecutive_failures": 0
   },
   "Haleon::targeted_direct_batch81_haleon_union_v1": {
@@ -44670,11 +44670,26 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1792859329.701903,
+    "checked_at": 1792884978.3964462,
     "consecutive_failures": 0
   },
   "Hewlett Packard Enterprise (HPE)::batch_dedicated_v1": {
     "jobs": [
+      {
+        "company": "Hewlett Packard Enterprise (HPE)",
+        "title": "Senior QA Engineer - Software Engineering",
+        "location": "Republic of Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.hpe.com/us/en/job/1211879/Senior-QA-Engineer-Software-Engineering",
+        "source": "hpe_first_party",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-10-15T20:17:00.324519+00:00",
+        "posted_age_known": false
+      },
       {
         "company": "Hewlett Packard Enterprise (HPE)",
         "title": "Backend Tech Lead",
@@ -44722,12 +44737,42 @@
       },
       {
         "company": "Hewlett Packard Enterprise (HPE)",
-        "title": "Customer Experience Marketing Manager",
+        "title": "Cloud Developer - Senior",
         "location": "Galway, Ireland",
         "posted_text": "Unknown",
         "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
-        "url": "https://careers.hpe.com/us/en/job/1216176/Customer-Experience-Marketing-Manager",
+        "url": "https://careers.hpe.com/us/en/job/1214799/Cloud-Developer-Senior",
+        "source": "hpe_first_party",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-10-13T23:06:58.730699+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Hewlett Packard Enterprise (HPE)",
+        "title": "Innovation Engineer",
+        "location": "Republic of Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.hpe.com/us/en/job/1216254/Innovation-Engineer",
+        "source": "hpe_first_party",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-10-15T20:17:00.324519+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Hewlett Packard Enterprise (HPE)",
+        "title": "Innovation Engineer",
+        "location": "Republic of Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.hpe.com/us/en/job/1216255/Innovation-Engineer",
         "source": "hpe_first_party",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
@@ -44751,7 +44796,7 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1792859342.7703762,
+    "checked_at": 1792884984.9366279,
     "consecutive_failures": 0
   },
   "Musgrave Group (SuperValu / Centra)::friend_next4_v1": {
@@ -44892,7 +44937,7 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1792859335.4840739,
+    "checked_at": 1792884981.446821,
     "consecutive_failures": 0
   },
   "Coillte::targeted_direct_batch1_v1": {
@@ -45525,7 +45570,7 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1792859299.773369,
+    "checked_at": 1792884941.0150867,
     "consecutive_failures": 0
   },
   "Allianz": {
@@ -45576,7 +45621,7 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1792859313.9060369,
+    "checked_at": 1792884956.9362369,
     "consecutive_failures": 0
   },
   "DXC Technology::friend_logic_v1": {
@@ -45732,7 +45777,7 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1792859339.7443721,
+    "checked_at": 1792884982.0621865,
     "consecutive_failures": 0
   },
   "SuperValu / Musgrave::attempt2_plus_new_v2": {
@@ -45873,7 +45918,7 @@
         "posted_age_known": false
       }
     ],
-    "checked_at": 1792859335.4835792,
+    "checked_at": 1792884981.0478384,
     "consecutive_failures": 0
   },
   "Apple": {
@@ -46184,202 +46229,202 @@
   },
   "Sky Ireland::targeted_direct_batch81_multi7_cache_lock_v1": {
     "jobs": [],
-    "checked_at": 1792877158.1521318,
-    "consecutive_failures": 1
-  },
-  "Red Hat::targeted_direct_batch81_multi7_cache_lock_v1": {
-    "jobs": [],
-    "checked_at": 1792877158.153352,
+    "checked_at": 1792884935.920473,
     "consecutive_failures": 1
   },
   "Slack::targeted_direct_batch81_multi7_cache_lock_v1": {
     "jobs": [],
-    "checked_at": 1792877158.1533866,
+    "checked_at": 1792884935.9217765,
+    "consecutive_failures": 1
+  },
+  "Red Hat::targeted_direct_batch81_multi7_cache_lock_v1": {
+    "jobs": [],
+    "checked_at": 1792884935.9243178,
     "consecutive_failures": 1
   },
   "Aldi Ireland::targeted_direct_batch81_multi7_cache_lock_v1": {
     "jobs": [],
-    "checked_at": 1792877158.1881099,
+    "checked_at": 1792884935.9609444,
     "consecutive_failures": 1
   },
   "Kepak Group::targeted_direct_batch7_multi_v1": {
     "jobs": [],
-    "checked_at": 1792877158.2580116,
+    "checked_at": 1792884936.0553796,
     "consecutive_failures": 1
   },
   "Forvis Mazars Ireland": {
     "jobs": [],
-    "checked_at": 1792877158.4111557,
+    "checked_at": 1792884936.212274,
     "consecutive_failures": 1
   },
   "AerCap::targeted_direct_batch79_multi5_backend_rotation_v1": {
     "jobs": [],
-    "checked_at": 1792877158.4559977,
+    "checked_at": 1792884936.281286,
     "consecutive_failures": 1
   },
   "SentinelOne": {
     "jobs": [],
-    "checked_at": 1792877158.6127567,
-    "consecutive_failures": 1
-  },
-  "Medpace::targeted_direct_batch8_bulk_v1": {
-    "jobs": [],
-    "checked_at": 1792877158.7675674,
-    "consecutive_failures": 1
-  },
-  "Energia Group::targeted_direct_batch5_multi_v1": {
-    "jobs": [],
-    "checked_at": 1792877158.8557122,
-    "consecutive_failures": 1
-  },
-  "Visa::targeted_direct_batch79_multi5_backend_rotation_v1": {
-    "jobs": [],
-    "checked_at": 1792877158.9862757,
-    "consecutive_failures": 1
-  },
-  "An Post::targeted_direct_batch76_anpost_rendered_oracle_v1": {
-    "jobs": [],
-    "checked_at": 1792877158.9948618,
+    "checked_at": 1792884936.2910776,
     "consecutive_failures": 1
   },
   "Texas Instruments::targeted_direct_batch11_bulk_v1": {
     "jobs": [],
-    "checked_at": 1792877159.0452125,
-    "consecutive_failures": 1
-  },
-  "Waters Corporation::targeted_direct_batch81_multi7_cache_lock_v1": {
-    "jobs": [],
-    "checked_at": 1792877159.0999286,
+    "checked_at": 1792884936.5469997,
     "consecutive_failures": 1
   },
   "Goodbody::targeted_direct_batch81_multi7_cache_lock_v1": {
     "jobs": [],
-    "checked_at": 1792877159.1634517,
-    "consecutive_failures": 1
-  },
-  "Infosys::targeted_direct_batch81_multi7_cache_lock_v1": {
-    "jobs": [],
-    "checked_at": 1792877159.324096,
-    "consecutive_failures": 1
-  },
-  "Nokia::targeted_direct_batch11_bulk_v1": {
-    "jobs": [],
-    "checked_at": 1792877159.368889,
+    "checked_at": 1792884936.8479848,
     "consecutive_failures": 1
   },
   "Micron Technology::targeted_direct_batch10_bulk_v1": {
     "jobs": [],
-    "checked_at": 1792877159.5801556,
+    "checked_at": 1792884936.999618,
     "consecutive_failures": 1
   },
-  "Boehringer Ingelheim::targeted_direct_batch11_bulk_v1": {
+  "Energia Group::targeted_direct_batch5_multi_v1": {
     "jobs": [],
-    "checked_at": 1792877159.8670044,
-    "consecutive_failures": 1
-  },
-  "GlaxoSmithKline (GSK)::targeted_direct_batch79_multi5_backend_rotation_v1": {
-    "jobs": [],
-    "checked_at": 1792877159.8999104,
-    "consecutive_failures": 1
-  },
-  "Box::targeted_direct_batch10_bulk_v1": {
-    "jobs": [],
-    "checked_at": 1792877160.2219062,
-    "consecutive_failures": 1
-  },
-  "HP (Hewlett-Packard)::friend_next4_v1": {
-    "jobs": [],
-    "checked_at": 1792877160.2389808,
+    "checked_at": 1792884937.1335487,
     "consecutive_failures": 1
   },
   "Morgan Stanley::targeted_direct_batch79_multi5_backend_rotation_v1": {
     "jobs": [],
-    "checked_at": 1792877160.4524643,
+    "checked_at": 1792884937.4318037,
+    "consecutive_failures": 1
+  },
+  "Medpace::targeted_direct_batch8_bulk_v1": {
+    "jobs": [],
+    "checked_at": 1792884937.489419,
+    "consecutive_failures": 1
+  },
+  "An Post::targeted_direct_batch76_anpost_rendered_oracle_v1": {
+    "jobs": [],
+    "checked_at": 1792884937.6116915,
+    "consecutive_failures": 1
+  },
+  "Nokia::targeted_direct_batch11_bulk_v1": {
+    "jobs": [],
+    "checked_at": 1792884937.8536212,
+    "consecutive_failures": 1
+  },
+  "Infosys::targeted_direct_batch81_multi7_cache_lock_v1": {
+    "jobs": [],
+    "checked_at": 1792884937.9009311,
+    "consecutive_failures": 1
+  },
+  "Visa::targeted_direct_batch79_multi5_backend_rotation_v1": {
+    "jobs": [],
+    "checked_at": 1792884938.014859,
+    "consecutive_failures": 1
+  },
+  "Box::targeted_direct_batch10_bulk_v1": {
+    "jobs": [],
+    "checked_at": 1792884938.373061,
+    "consecutive_failures": 1
+  },
+  "Waters Corporation::targeted_direct_batch81_multi7_cache_lock_v1": {
+    "jobs": [],
+    "checked_at": 1792884938.580716,
+    "consecutive_failures": 1
+  },
+  "GlaxoSmithKline (GSK)::targeted_direct_batch79_multi5_backend_rotation_v1": {
+    "jobs": [],
+    "checked_at": 1792884938.658091,
+    "consecutive_failures": 1
+  },
+  "Boehringer Ingelheim::targeted_direct_batch11_bulk_v1": {
+    "jobs": [],
+    "checked_at": 1792884938.8325295,
     "consecutive_failures": 1
   },
   "Heineken Ireland::friend_next4_v1": {
     "jobs": [],
-    "checked_at": 1792877160.4635425,
+    "checked_at": 1792884939.3926685,
+    "consecutive_failures": 1
+  },
+  "HP (Hewlett-Packard)::friend_next4_v1": {
+    "jobs": [],
+    "checked_at": 1792884939.628652,
     "consecutive_failures": 1
   },
   "VMware (Broadcom)::zero_only_batch20_v1": {
     "jobs": [],
-    "checked_at": 1792877160.4654603,
+    "checked_at": 1792884940.018135,
     "consecutive_failures": 1
   },
   "Oliver Wyman": {
     "jobs": [],
-    "checked_at": 1792877160.818903,
+    "checked_at": 1792884942.620335,
     "consecutive_failures": 1
   },
   "IQVIA::ireland_dedicated_v1": {
     "jobs": [],
-    "checked_at": 1792877163.7928667,
+    "checked_at": 1792884942.9781775,
     "consecutive_failures": 1
   },
   "SAP": {
     "jobs": [],
-    "checked_at": 1792877164.7355475,
+    "checked_at": 1792884943.6973515,
     "consecutive_failures": 1
   },
   "Refinitiv (LSEG)::targeted_direct_batch35_v1": {
     "jobs": [],
-    "checked_at": 1792877164.8184357,
-    "consecutive_failures": 1
-  },
-  "Bruker": {
-    "jobs": [],
-    "checked_at": 1792877165.0622406,
+    "checked_at": 1792884944.4970136,
     "consecutive_failures": 1
   },
   "Alkermes": {
     "jobs": [],
-    "checked_at": 1792877165.9449031,
+    "checked_at": 1792884945.141186,
     "consecutive_failures": 1
   },
   "Bank of Ireland": {
     "jobs": [],
-    "checked_at": 1792877168.974192,
+    "checked_at": 1792884950.3898091,
     "consecutive_failures": 1
   },
-  "Biotronik": {
+  "Bruker": {
     "jobs": [],
-    "checked_at": 1792877170.7733743,
-    "consecutive_failures": 1
-  },
-  "Smurfit Westrock": {
-    "jobs": [],
-    "checked_at": 1792877174.335244,
+    "checked_at": 1792884952.1970587,
     "consecutive_failures": 1
   },
   "Morningstar::targeted_direct_batch35_v1": {
     "jobs": [],
-    "checked_at": 1792877176.5785463,
+    "checked_at": 1792884953.1654334,
     "consecutive_failures": 1
   },
   "EXL": {
     "jobs": [],
-    "checked_at": 1792877179.0206704,
+    "checked_at": 1792884957.1396224,
     "consecutive_failures": 1
   },
-  "Boston Consulting Group (BCG)": {
+  "Biotronik": {
     "jobs": [],
-    "checked_at": 1792877182.234845,
+    "checked_at": 1792884961.2975266,
     "consecutive_failures": 1
   },
   "Baxter International::targeted_zero_deferred_batch13_v1": {
     "jobs": [],
-    "checked_at": 1792877182.4203722,
+    "checked_at": 1792884961.3947809,
     "consecutive_failures": 1
   },
   "Deutsche Bank::friend_logic_v1": {
     "jobs": [],
-    "checked_at": 1792877184.422841,
+    "checked_at": 1792884962.1293263,
+    "consecutive_failures": 1
+  },
+  "Smurfit Westrock": {
+    "jobs": [],
+    "checked_at": 1792884972.3941422,
     "consecutive_failures": 1
   },
   "Agilent Technologies::friend_workday_return_v2": {
     "jobs": [],
-    "checked_at": 1792877197.3874273,
+    "checked_at": 1792884973.8396418,
+    "consecutive_failures": 1
+  },
+  "Boston Consulting Group (BCG)": {
+    "jobs": [],
+    "checked_at": 1792884975.6594794,
     "consecutive_failures": 1
   }
 }
