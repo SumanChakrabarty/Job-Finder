@@ -10989,8 +10989,8 @@
   },
   "Bain & Company": {
     "jobs": [],
-    "checked_at": 1792792581.2782843,
-    "consecutive_failures": 480
+    "checked_at": 1792800432.3445873,
+    "consecutive_failures": 481
   },
   "Fiserv": {
     "jobs": [
@@ -44812,21 +44812,36 @@
     "jobs": [
       {
         "company": "Barclays",
-        "title": "Audit Director – Head of Audit Ireland",
+        "title": "Private Banking Executive",
         "location": "Dublin, Ireland",
         "posted_text": "Unknown",
         "posted_days_ago": 9999.0,
         "employment_type": "Unspecified",
-        "url": "https://search.jobs.barclays/en/job/dublin/audit-director-head-of-audit-ireland/13015/91339010640",
+        "url": "https://search.jobs.barclays/en/job/dublin/private-banking-executive/13015/101462762080",
+        "source": "batch48_barclays_ireland_search",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-10-24T00:08:10.426104+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "Barclays",
+        "title": "Senior Corporate Operations Analyst",
+        "location": "Dublin, Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://search.jobs.barclays/en/job/dublin/senior-corporate-operations-analyst/13015/99528478656",
         "source": "batch48_barclays_ireland_search",
         "visa_sponsorship": "not_mentioned",
         "visa_snippet": null,
         "new_since_last_check": false,
-        "first_seen_at": "2026-10-12T17:15:56.785721+00:00",
+        "first_seen_at": "2026-09-29T22:40:41.014923+00:00",
         "posted_age_known": false
       }
     ],
-    "checked_at": 1792655722.3368866,
+    "checked_at": 1792800420.448999,
     "consecutive_failures": 0
   },
   "S&P Global::friend_logic_v1": {
@@ -45774,11 +45789,6 @@
     "checked_at": 1792792601.8759406,
     "consecutive_failures": 0
   },
-  "DXC Technology::friend_logic_v1": {
-    "jobs": [],
-    "checked_at": 1792792572.504283,
-    "consecutive_failures": 1
-  },
   "Musgrave Group (SuperValu / Centra)::friend_next4_v1": {
     "jobs": [
       {
@@ -46636,202 +46646,358 @@
   },
   "Sky Ireland::targeted_direct_batch81_multi7_cache_lock_v1": {
     "jobs": [],
-    "checked_at": 1792792559.122582,
-    "consecutive_failures": 1
-  },
-  "Red Hat::targeted_direct_batch81_multi7_cache_lock_v1": {
-    "jobs": [],
-    "checked_at": 1792792559.124155,
+    "checked_at": 1792800419.2380936,
     "consecutive_failures": 1
   },
   "Slack::targeted_direct_batch81_multi7_cache_lock_v1": {
     "jobs": [],
-    "checked_at": 1792792559.1241813,
+    "checked_at": 1792800419.2393675,
+    "consecutive_failures": 1
+  },
+  "Red Hat::targeted_direct_batch81_multi7_cache_lock_v1": {
+    "jobs": [],
+    "checked_at": 1792800419.2422256,
     "consecutive_failures": 1
   },
   "Aldi Ireland::targeted_direct_batch81_multi7_cache_lock_v1": {
     "jobs": [],
-    "checked_at": 1792792559.1565094,
+    "checked_at": 1792800419.2585342,
     "consecutive_failures": 1
   },
   "Kepak Group::targeted_direct_batch7_multi_v1": {
     "jobs": [],
-    "checked_at": 1792792559.3421934,
+    "checked_at": 1792800419.4038363,
     "consecutive_failures": 1
   },
   "Forvis Mazars Ireland": {
     "jobs": [],
-    "checked_at": 1792792559.3910716,
+    "checked_at": 1792800419.5712354,
     "consecutive_failures": 1
   },
   "SentinelOne": {
     "jobs": [],
-    "checked_at": 1792792559.6244726,
-    "consecutive_failures": 1
-  },
-  "AerCap::targeted_direct_batch79_multi5_backend_rotation_v1": {
-    "jobs": [],
-    "checked_at": 1792792559.8102336,
-    "consecutive_failures": 1
-  },
-  "Energia Group::targeted_direct_batch5_multi_v1": {
-    "jobs": [],
-    "checked_at": 1792792559.8949761,
-    "consecutive_failures": 1
-  },
-  "Micron Technology::targeted_direct_batch10_bulk_v1": {
-    "jobs": [],
-    "checked_at": 1792792560.0204375,
-    "consecutive_failures": 1
-  },
-  "Goodbody::targeted_direct_batch81_multi7_cache_lock_v1": {
-    "jobs": [],
-    "checked_at": 1792792560.2614987,
-    "consecutive_failures": 1
-  },
-  "Medpace::targeted_direct_batch8_bulk_v1": {
-    "jobs": [],
-    "checked_at": 1792792560.4159606,
-    "consecutive_failures": 1
-  },
-  "Texas Instruments::targeted_direct_batch11_bulk_v1": {
-    "jobs": [],
-    "checked_at": 1792792560.4257174,
-    "consecutive_failures": 1
-  },
-  "An Post::targeted_direct_batch76_anpost_rendered_oracle_v1": {
-    "jobs": [],
-    "checked_at": 1792792560.7411647,
-    "consecutive_failures": 1
-  },
-  "Visa::targeted_direct_batch79_multi5_backend_rotation_v1": {
-    "jobs": [],
-    "checked_at": 1792792561.024703,
-    "consecutive_failures": 1
-  },
-  "GlaxoSmithKline (GSK)::targeted_direct_batch79_multi5_backend_rotation_v1": {
-    "jobs": [],
-    "checked_at": 1792792561.0707748,
-    "consecutive_failures": 1
-  },
-  "Nokia::targeted_direct_batch11_bulk_v1": {
-    "jobs": [],
-    "checked_at": 1792792561.2080653,
-    "consecutive_failures": 1
-  },
-  "Infosys::targeted_direct_batch81_multi7_cache_lock_v1": {
-    "jobs": [],
-    "checked_at": 1792792561.2610176,
-    "consecutive_failures": 1
-  },
-  "Morgan Stanley::targeted_direct_batch79_multi5_backend_rotation_v1": {
-    "jobs": [],
-    "checked_at": 1792792561.6307437,
+    "checked_at": 1792800419.592041,
     "consecutive_failures": 1
   },
   "Waters Corporation::targeted_direct_batch81_multi7_cache_lock_v1": {
     "jobs": [],
-    "checked_at": 1792792561.898266,
+    "checked_at": 1792800419.8131258,
+    "consecutive_failures": 1
+  },
+  "AerCap::targeted_direct_batch79_multi5_backend_rotation_v1": {
+    "jobs": [],
+    "checked_at": 1792800419.9436278,
+    "consecutive_failures": 1
+  },
+  "Energia Group::targeted_direct_batch5_multi_v1": {
+    "jobs": [],
+    "checked_at": 1792800419.995743,
+    "consecutive_failures": 1
+  },
+  "Goodbody::targeted_direct_batch81_multi7_cache_lock_v1": {
+    "jobs": [],
+    "checked_at": 1792800420.0388184,
+    "consecutive_failures": 1
+  },
+  "An Post::targeted_direct_batch76_anpost_rendered_oracle_v1": {
+    "jobs": [],
+    "checked_at": 1792800420.0400262,
+    "consecutive_failures": 1
+  },
+  "Medpace::targeted_direct_batch8_bulk_v1": {
+    "jobs": [],
+    "checked_at": 1792800420.040645,
     "consecutive_failures": 1
   },
   "Box::targeted_direct_batch10_bulk_v1": {
     "jobs": [],
-    "checked_at": 1792792561.9807737,
+    "checked_at": 1792800420.256047,
     "consecutive_failures": 1
   },
-  "Boehringer Ingelheim::targeted_direct_batch11_bulk_v1": {
+  "Texas Instruments::targeted_direct_batch11_bulk_v1": {
     "jobs": [],
-    "checked_at": 1792792562.2431917,
+    "checked_at": 1792800420.3028555,
+    "consecutive_failures": 1
+  },
+  "Micron Technology::targeted_direct_batch10_bulk_v1": {
+    "jobs": [],
+    "checked_at": 1792800420.4397032,
+    "consecutive_failures": 1
+  },
+  "Visa::targeted_direct_batch79_multi5_backend_rotation_v1": {
+    "jobs": [],
+    "checked_at": 1792800420.4429686,
+    "consecutive_failures": 1
+  },
+  "Nokia::targeted_direct_batch11_bulk_v1": {
+    "jobs": [],
+    "checked_at": 1792800420.4884036,
+    "consecutive_failures": 1
+  },
+  "Infosys::targeted_direct_batch81_multi7_cache_lock_v1": {
+    "jobs": [],
+    "checked_at": 1792800420.853344,
+    "consecutive_failures": 1
+  },
+  "GlaxoSmithKline (GSK)::targeted_direct_batch79_multi5_backend_rotation_v1": {
+    "jobs": [],
+    "checked_at": 1792800421.1025507,
     "consecutive_failures": 1
   },
   "HP (Hewlett-Packard)::friend_next4_v1": {
     "jobs": [],
-    "checked_at": 1792792562.3865385,
+    "checked_at": 1792800421.2349916,
     "consecutive_failures": 1
   },
-  "Heineken Ireland::friend_next4_v1": {
+  "Morgan Stanley::targeted_direct_batch79_multi5_backend_rotation_v1": {
     "jobs": [],
-    "checked_at": 1792792564.0786128,
+    "checked_at": 1792800421.282537,
+    "consecutive_failures": 1
+  },
+  "Boehringer Ingelheim::targeted_direct_batch11_bulk_v1": {
+    "jobs": [],
+    "checked_at": 1792800421.6360755,
     "consecutive_failures": 1
   },
   "VMware (Broadcom)::zero_only_batch20_v1": {
     "jobs": [],
-    "checked_at": 1792792564.3188202,
+    "checked_at": 1792800422.1298237,
+    "consecutive_failures": 1
+  },
+  "Heineken Ireland::friend_next4_v1": {
+    "jobs": [],
+    "checked_at": 1792800422.2111082,
     "consecutive_failures": 1
   },
   "IQVIA::ireland_dedicated_v1": {
     "jobs": [],
-    "checked_at": 1792792565.1944215,
+    "checked_at": 1792800424.33139,
     "consecutive_failures": 1
   },
   "SAP": {
     "jobs": [],
-    "checked_at": 1792792566.176416,
-    "consecutive_failures": 1
-  },
-  "Refinitiv (LSEG)::targeted_direct_batch35_v1": {
-    "jobs": [],
-    "checked_at": 1792792566.7005079,
-    "consecutive_failures": 1
-  },
-  "Alkermes": {
-    "jobs": [],
-    "checked_at": 1792792567.4476826,
-    "consecutive_failures": 1
-  },
-  "Oliver Wyman": {
-    "jobs": [],
-    "checked_at": 1792792567.65304,
-    "consecutive_failures": 1
-  },
-  "Bank of Ireland": {
-    "jobs": [],
-    "checked_at": 1792792571.0124662,
+    "checked_at": 1792800424.5704768,
     "consecutive_failures": 1
   },
   "Bruker": {
     "jobs": [],
-    "checked_at": 1792792573.593419,
+    "checked_at": 1792800424.6823115,
     "consecutive_failures": 1
   },
-  "Morningstar::targeted_direct_batch35_v1": {
+  "Oliver Wyman": {
     "jobs": [],
-    "checked_at": 1792792574.5991094,
+    "checked_at": 1792800425.790313,
+    "consecutive_failures": 1
+  },
+  "Refinitiv (LSEG)::targeted_direct_batch35_v1": {
+    "jobs": [],
+    "checked_at": 1792800425.969698,
+    "consecutive_failures": 1
+  },
+  "Alkermes": {
+    "jobs": [],
+    "checked_at": 1792800426.2012286,
+    "consecutive_failures": 1
+  },
+  "Bank of Ireland": {
+    "jobs": [],
+    "checked_at": 1792800427.3584447,
     "consecutive_failures": 1
   },
   "Biotronik": {
     "jobs": [],
-    "checked_at": 1792792579.689461,
-    "consecutive_failures": 1
-  },
-  "EXL": {
-    "jobs": [],
-    "checked_at": 1792792581.1198447,
-    "consecutive_failures": 1
-  },
-  "Baxter International::targeted_zero_deferred_batch13_v1": {
-    "jobs": [],
-    "checked_at": 1792792584.754538,
+    "checked_at": 1792800429.9720736,
     "consecutive_failures": 1
   },
   "Smurfit Westrock": {
     "jobs": [],
-    "checked_at": 1792792585.1883304,
+    "checked_at": 1792800431.104859,
     "consecutive_failures": 1
   },
-  "Deutsche Bank::friend_logic_v1": {
+  "Morningstar::targeted_direct_batch35_v1": {
     "jobs": [],
-    "checked_at": 1792792586.4322138,
+    "checked_at": 1792800438.7959301,
     "consecutive_failures": 1
   },
   "Boston Consulting Group (BCG)": {
     "jobs": [],
-    "checked_at": 1792792590.0487053,
+    "checked_at": 1792800439.6927521,
+    "consecutive_failures": 1
+  },
+  "DXC Technology::friend_logic_v1": {
+    "jobs": [
+      {
+        "company": "DXC Technology",
+        "title": "Associate Manager – z/OS",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.dxc.com/job/24047427/associate-manager-z-os-noida-in/",
+        "source": "dxc_batch20_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-10-23T14:34:52.869109+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "DXC Technology",
+        "title": "招采专员",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.dxc.com/job/23775925/-shanghai-cn/",
+        "source": "dxc_batch20_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-30T14:20:26.622749+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "DXC Technology",
+        "title": "French Bilingual Customer Service Representative (Life Insurance)",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.dxc.com/job/23895010/french-bilingual-customer-service-representative-life-insurance-taguig-city-ph/",
+        "source": "dxc_batch20_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-10-06T14:49:50.396980+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "DXC Technology",
+        "title": "Delivery Manager",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.dxc.com/job/23721672/delivery-manager-shanghai-cn/",
+        "source": "dxc_batch20_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-08-30T14:20:26.622749+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "DXC Technology",
+        "title": "Analista SOC",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.dxc.com/job/23963764/analista-soc-s-o-paulo-br/",
+        "source": "dxc_batch20_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-10-23T14:34:52.869109+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "DXC Technology",
+        "title": "Java Developer with Italian",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.dxc.com/job/24047333/java-developer-with-italian-sofia-bg/",
+        "source": "dxc_batch20_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-10-23T14:34:52.869109+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "DXC Technology",
+        "title": "Junior Security Analyst",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.dxc.com/job/23935934/junior-security-analyst-sofia-bg/",
+        "source": "dxc_batch20_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-09-30T22:40:50.676432+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "DXC Technology",
+        "title": "Analyst II Infrastructure Services",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.dxc.com/job/24049117/analyst-ii-infrastructure-services-cockeysville-md/",
+        "source": "dxc_batch20_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-10-24T00:08:10.426104+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "DXC Technology",
+        "title": "Sr Analyst I Software Engineering",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.dxc.com/job/24048319/sr-analyst-i-software-engineering-chicago-il/",
+        "source": "dxc_batch20_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": true,
+        "first_seen_at": "2026-10-24T00:08:10.426104+00:00",
+        "posted_age_known": false
+      },
+      {
+        "company": "DXC Technology",
+        "title": "Associate Manager Solution Architecture (RR-0455912)",
+        "location": "Ireland",
+        "posted_text": "Unknown",
+        "posted_days_ago": 9999.0,
+        "employment_type": "Unspecified",
+        "url": "https://careers.dxc.com/job/24047424/associate-manager-solution-architecture-rr-0455912-noida-in/",
+        "source": "dxc_batch20_rendered",
+        "visa_sponsorship": "not_mentioned",
+        "visa_snippet": null,
+        "new_since_last_check": false,
+        "first_seen_at": "2026-10-23T14:34:52.869109+00:00",
+        "posted_age_known": false
+      }
+    ],
+    "checked_at": 1792800440.2898235,
+    "consecutive_failures": 0
+  },
+  "EXL": {
+    "jobs": [],
+    "checked_at": 1792800443.255921,
+    "consecutive_failures": 1
+  },
+  "Baxter International::targeted_zero_deferred_batch13_v1": {
+    "jobs": [],
+    "checked_at": 1792800444.3113306,
+    "consecutive_failures": 1
+  },
+  "Deutsche Bank::friend_logic_v1": {
+    "jobs": [],
+    "checked_at": 1792800446.1250951,
     "consecutive_failures": 1
   },
   "Agilent Technologies::friend_workday_return_v2": {
     "jobs": [],
-    "checked_at": 1792792598.4684167,
+    "checked_at": 1792800458.2796588,
     "consecutive_failures": 1
   }
 }
