@@ -203,13 +203,14 @@
   "Deloitte Ireland": {
     "matched_employer_names": [
       "Deloitte Ireland LLP",
-      "Deloitte Services Unlimited Company"
+      "Deloitte Services Unlimited Company",
+      "Deloitte Technology & Transformation Unlimited Company"
     ],
     "permits_by_year": {
       "2024": 220,
-      "2026": 5
+      "2026": 6
     },
-    "total_permits": 225
+    "total_permits": 226
   },
   "Workday": {
     "matched_employer_names": [
@@ -370,9 +371,10 @@
       "Autodesk Ireland Operations Unlimited Company"
     ],
     "permits_by_year": {
-      "2024": 10
+      "2024": 10,
+      "2026": 1
     },
-    "total_permits": 10
+    "total_permits": 11
   },
   "Cadence Design Systems": {
     "matched_employer_names": [
@@ -514,9 +516,9 @@
     ],
     "permits_by_year": {
       "2024": 14,
-      "2026": 1
+      "2026": 2
     },
-    "total_permits": 15
+    "total_permits": 16
   },
   "Wayflyer": {
     "matched_employer_names": [
@@ -598,14 +600,16 @@
   "BlackRock": {
     "matched_employer_names": [
       "Blackrock Clinic Unlimited Company",
+      "Blackrock College RFC",
+      "Blackrock Dental MO'G Ltd",
       "Blackrock Healthcare Group Unlimited",
       "Blackrock Resourcing Limited"
     ],
     "permits_by_year": {
       "2024": 45,
-      "2026": 4
+      "2026": 6
     },
-    "total_permits": 49
+    "total_permits": 51
   },
   "PayPal": {
     "matched_employer_names": [
@@ -737,9 +741,10 @@
       "Baker Tilly Ireland LP"
     ],
     "permits_by_year": {
-      "2024": 4
+      "2024": 4,
+      "2026": 1
     },
-    "total_permits": 4
+    "total_permits": 5
   },
   "Capgemini": {
     "matched_employer_names": [
@@ -793,6 +798,15 @@
       "2026": 1
     },
     "total_permits": 7
+  },
+  "Laya Healthcare": {
+    "matched_employer_names": [
+      "Laya Healthcare Limited"
+    ],
+    "permits_by_year": {
+      "2026": 1
+    },
+    "total_permits": 1
   },
   "Musgrave Group (SuperValu / Centra)": {
     "matched_employer_names": [
@@ -1103,9 +1117,10 @@
       "Takeda Ireland Limited"
     ],
     "permits_by_year": {
-      "2024": 4
+      "2024": 4,
+      "2026": 1
     },
-    "total_permits": 4
+    "total_permits": 5
   },
   "Teleflex": {
     "matched_employer_names": [
@@ -1132,9 +1147,10 @@
       "Rockwell Automation Limited"
     ],
     "permits_by_year": {
-      "2024": 4
+      "2024": 4,
+      "2026": 1
     },
-    "total_permits": 4
+    "total_permits": 5
   },
   "Oracle": {
     "matched_employer_names": [
@@ -1192,6 +1208,15 @@
     },
     "total_permits": 3
   },
+  "Goldman Sachs": {
+    "matched_employer_names": [
+      "Goldman Sachs Asset Management Fund Services Limited"
+    ],
+    "permits_by_year": {
+      "2026": 1
+    },
+    "total_permits": 1
+  },
   "Heineken Ireland": {
     "matched_employer_names": [
       "Heineken Ireland"
@@ -1220,9 +1245,10 @@
       "Macquarie Bank Europe Designated Activity Company"
     ],
     "permits_by_year": {
-      "2024": 9
+      "2024": 9,
+      "2026": 1
     },
-    "total_permits": 9
+    "total_permits": 10
   },
   "McKinsey & Company": {
     "matched_employer_names": [
@@ -1329,6 +1355,15 @@
     },
     "total_permits": 17
   },
+  "Coloplast": {
+    "matched_employer_names": [
+      "Coloplast Limited"
+    ],
+    "permits_by_year": {
+      "2026": 1
+    },
+    "total_permits": 1
+  },
   "Dexcom": {
     "matched_employer_names": [
       "Dexcom International Limited"
@@ -1388,6 +1423,15 @@
       "2026": 1
     },
     "total_permits": 13
+  },
+  "Haleon": {
+    "matched_employer_names": [
+      "Haleon Ireland Dungarvan Ltd"
+    ],
+    "permits_by_year": {
+      "2026": 1
+    },
+    "total_permits": 1
   },
   "Hollister Incorporated": {
     "matched_employer_names": [
@@ -1696,9 +1740,10 @@
       "Indeed Ireland Operations Limited"
     ],
     "permits_by_year": {
-      "2024": 1
+      "2024": 1,
+      "2026": 1
     },
-    "total_permits": 1
+    "total_permits": 2
   },
   "Etsy": {
     "matched_employer_names": [
